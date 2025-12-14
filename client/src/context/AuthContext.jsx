@@ -95,17 +95,14 @@ export const AuthProvider = ({ children }) => {
         };
 
         try {
-            const res = await axios.post('/api/auth/register', formData, config);
-            // Register doesn't auto-login if approval is needed, but for superadmin it might.
-            // The controller returns { msg: ... }.
-            // So we don't dispatch LOGIN_SUCCESS. We just return success.
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, formData, config);
             return { success: true, msg: res.data.msg };
         } catch (err) {
             dispatch({
                 type: 'REGISTER_FAIL',
-                payload: err.response.data.msg
+                payload: err.response?.data?.msg || 'Registration Error'
             });
-             return { success: false, msg: err.response.data.msg };
+             return { success: false, msg: err.response?.data?.msg || 'Registration Error' };
         }
     };
 
@@ -118,7 +115,7 @@ export const AuthProvider = ({ children }) => {
         };
 
         try {
-            const res = await axios.post('/api/auth/login', formData, config);
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, formData, config);
 
 
             // Allow token to be set
@@ -136,7 +133,7 @@ export const AuthProvider = ({ children }) => {
         } catch (err) {
             dispatch({
                 type: 'LOGIN_FAIL',
-                payload: err.response.data.msg
+                payload: err.response?.data?.msg || 'Login Error'
             });
         }
     };

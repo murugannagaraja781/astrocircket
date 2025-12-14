@@ -42,7 +42,7 @@ const UserDashboard = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.post('/api/charts/birth-chart', payload, {
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/charts/birth-chart`, payload, {
                 headers: { 'x-auth-token': token }
             });
             setChartData(res.data);

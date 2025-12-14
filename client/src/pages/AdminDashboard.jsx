@@ -8,7 +8,7 @@ const AdminDashboard = () => {
 
     const fetchPendingUsers = async () => {
         try {
-            const res = await axios.get('/api/auth/pending', {
+            const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/pending`, {
                 headers: { 'x-auth-token': token }
             });
             setPendingUsers(res.data);
@@ -19,7 +19,7 @@ const AdminDashboard = () => {
 
     const approveUser = async (id) => {
         try {
-            await axios.put(`/api/auth/approve/${id}`, {}, {
+            await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/auth/approve/${id}`, {}, {
                 headers: { 'x-auth-token': token }
             });
             // Refresh list
