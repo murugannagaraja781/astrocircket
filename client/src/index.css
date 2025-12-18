@@ -1,13 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans:wght@400;600&family=Rajdhani:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Montserrat:wght@500;700;900&family=Teko:wght@500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-    background-color: #f0fdf4;
-    /* Light green tint fallback */
-    font-family: 'Open Sans', sans-serif;
+    background-color: #c2cadc;
+    /* Dark Blue */
+    color: #f3f4f6;
+    /* Light Text */
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
 }
 
 h1,
@@ -17,5 +20,55 @@ h4,
 h5,
 h6 {
     font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
+}
+
+/* Global scrollbar fallback */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c0cee2;
+    border-radius: 3px;
+}
+
+/* Glassmorphic Scrollbar Utility */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+/* Utilities */
+.text-india-blue {
+    color: #60a5fa;
+}
+
+/* Lighter blue for dark mode */
+.text-india-orange {
+    color: #fb923c;
+}
+
+/* Lighter orange for dark mode */
+.bg-india-gradient {
+    background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%);
 }

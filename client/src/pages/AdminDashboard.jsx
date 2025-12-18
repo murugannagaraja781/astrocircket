@@ -5,6 +5,41 @@ import AuthContext from '../context/AuthContext';
 const AdminDashboard = () => {
     const { logout, token } = useContext(AuthContext);
     const [pendingUsers, setPendingUsers] = useState([]);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [uploading, setUploading] = useState(false);
+    const [uploadStatus, setUploadStatus] = useState('');
+
+    const handleFileChange = (event) => {
+        setSelectedFile(event.target.files[0]);
+        setUploadStatus('');
+    };
+
+    const handleUpload = async () => {
+        if (!selectedFile) return;
+
+        setUploading(true);
+        setUploadStatus('Uploading and Processing...');
+
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+
+        try {
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/players/upload`, formData, {
+                headers: {
+                    'x-auth-token': token,
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            setUploadStatus(`Success: ${res.data.message}`);
+            setSelectedFile(null);
+            // reset file input visually if needed, but simple clear is fine
+        } catch (err) {
+            console.error('Upload error', err);
+            setUploadStatus('Error: Failed to upload/process file.');
+        } finally {
+            setUploading(false);
+        }
+    };
 
     const fetchPendingUsers = async () => {
         try {
@@ -41,6 +76,41 @@ const AdminDashboard = () => {
             </nav>
             <div className="container mx-auto p-8">
                 <h2 className="text-2xl font-bold mb-6 text-green-900">Pending Players Selection</h2>
+
+                {/* File Upload Section */}
+                <div className="mb-8 p-6 bg-white rounded-lg shadow-md border-l-4 border-cricketGold">
+                    <h3 className="text-lg font-bold mb-4 text-green-800">Upload Player Data (JSON)</h3>
+                    <div className="flex items-center space-x-4">
+                        <input
+                            type="file"
+                            accept=".json"
+                            onChange={handleFileChange}
+                            className="block w-full text-sm text-gray-500
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-full file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-green-50 file:text-green-700
+                                hover:file:bg-green-100"
+                        />
+                        <button
+                            onClick={handleUpload}
+                            disabled={uploading || !selectedFile}
+                            className={`px-6 py-2 rounded-full font-bold uppercase text-xs tracking-widest shadow-lg transition-transform active:scale-95 ${
+                                uploading || !selectedFile
+                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                : 'bg-cricketGold text-black hover:bg-yellow-500'
+                            }`}
+                        >
+                            {uploading ? 'Processing...' : 'Upload & Sync'}
+                        </button>
+                    </div>
+                    {uploadStatus && (
+                        <p className={`mt-2 text-sm font-semibold ${uploadStatus.includes('Success') ? 'text-green-600' : 'text-red-600'}`}>
+                            {uploadStatus}
+                        </p>
+                    )}
+                </div>
+
                 <div className="bg-white shadow-md rounded-lg overflow-hidden">
                     <table className="min-w-full leading-normal">
                         <thead>

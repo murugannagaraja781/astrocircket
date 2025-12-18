@@ -40,28 +40,20 @@ const RasiChart = ({ data }) => {
     // Helper to find planets in a sign
     const getPlanetsInSign = (signId) => {
         if (!data || !data.planets) return [];
-        // Assuming data.planets is an array or object.
-        // Based on typical API: { planets: [ { name: 'Sun', sign: 5, ... }, ... ] }
-        // Or sometimes the API returns keys like "Sun": { ... sign: 5 }
-        // I'll handle both array and object.
 
         let planets = [];
 
         if (Array.isArray(data.planets)) {
-             planets = data.planets.filter(p => p.sign === signId || p.signId === signId); // Adjust based on actual API
+             planets = data.planets.filter(p => p.sign === signId || p.signId === signId);
         } else if (typeof data.planets === 'object') {
-            // Iterate keys
             Object.keys(data.planets).forEach(key => {
                 const p = data.planets[key];
-                 // Check if p has sign property.
-                 // Sometimes the key is the planet name
                  if (p.current_sign === signId || p.sign === signId) {
                      planets.push({ ...p, name: key });
                  }
             });
         }
 
-        // Also check for Ascendant (Lagna)
         if (data.ascendant && (data.ascendant.sign === signId || data.ascendant.current_sign === signId)) {
             planets.push({ name: 'Asc', isAsc: true });
         }
@@ -70,17 +62,17 @@ const RasiChart = ({ data }) => {
     };
 
     return (
-        <div className="w-full max-w-md mx-auto aspect-square bg-[#ffebcd] border-4 border-orange-800 shadow-2xl relative">
-            <div className="absolute top-0 left-0 w-full h-full grid grid-cols-4 grid-rows-4 gap-0.5 bg-orange-900">
+        <div className="w-full max-w-md mx-auto aspect-square bg-white border-4 border-gray-800 shadow-md relative">
+            <div className="absolute top-0 left-0 w-full h-full grid grid-cols-4 grid-rows-4 gap-0 bg-gray-800 border-2 border-gray-800">
                 {gridMap.map((signId, index) => {
                     if (signId === null) {
                          // Center box (merged)
                          if (index === 5) {
                             return (
-                                <div key="center" className="col-span-2 row-span-2 bg-white flex flex-col items-center justify-center p-2 text-center">
-                                    <h3 className="text-xl font-bold text-orange-800">Rasi Chart</h3>
-                                    <p className="text-xs text-gray-500">D1</p>
-                                    <div className="mt-2 text-4xl text-orange-600 opacity-20">🕉️</div>
+                                <div key="center" className="col-span-2 row-span-2 bg-white flex flex-col items-center justify-center p-2 text-center border-2 border-gray-800 m-0.5">
+                                    <h3 className="text-2xl font-serif font-black text-gray-800 uppercase tracking-widest border-b-2 border-orange-500 mb-2 pb-1">RASI CHART</h3>
+                                    <p className="text-xs text-gray-500 font-sans tracking-wider uppercase">D1 • South Indian Style</p>
+                                    <div className="mt-4 text-5xl text-orange-600 opacity-80">🕉️</div>
                                 </div>
                             );
                          }
@@ -90,13 +82,19 @@ const RasiChart = ({ data }) => {
                     const planets = getPlanetsInSign(signId);
 
                     return (
-                        <div key={signId} className="bg-[#ffebcd] relative p-1 flex flex-col hover:bg-orange-100 transition-colors">
-                            <span className="absolute top-0 right-1 text-[10px] text-gray-400 font-bold">{signId}</span>
-                            <div className="flex-1 flex flex-wrap content-center justify-center gap-1 overflow-hidden">
+                        <div key={signId} className="bg-white relative p-1 flex flex-col hover:bg-yellow-50 transition-colors border-0 m-0.5">
+                            {/* Sign Number / Label could go here but standard South Indian charts rely on position. We adding a small number for reference. */}
+                            <span className="absolute top-0 right-1 text-[9px] text-gray-400 font-mono">{signId}</span>
+
+                            <div className="flex-1 flex flex-wrap content-center justify-center gap-1.5 overflow-hidden p-1">
                                 {planets.map((p, idx) => (
                                     <span
                                         key={idx}
-                                        className={`text-xs font-bold px-1 rounded ${p.isAsc ? 'bg-red-500 text-white' : 'text-purple-900'}`}
+                                        className={`text-[11px] font-bold px-1.5 py-0.5 rounded-sm border shadow-sm items-center justify-center flex uppercase tracking-tight ${
+                                            p.isAsc
+                                            ? 'bg-red-600 text-white border-red-700'
+                                            : 'bg-indigo-50 text-indigo-900 border-indigo-200'
+                                        }`}
                                         title={p.fullDegree ? `${p.name}: ${p.fullDegree}` : p.name}
                                     >
                                         {p.name.substring(0, 2)}

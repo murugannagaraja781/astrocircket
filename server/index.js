@@ -13,14 +13,17 @@ const PORT = process.env.PORT || 5001;
 // Middleware
 app.use(cors({
     origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token']
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: '*',
+    credentials: true,
+    exposedHeaders: ['x-auth-token']
 }));
 app.use(express.json());
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/charts', chartRoutes);
+app.use('/api/players', require('./routes/players'));
 
 // Database Connection
 mongoose.connect(process.env.MONGO_URI)

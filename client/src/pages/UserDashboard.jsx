@@ -1,298 +1,354 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
 import RasiChart from '../components/RasiChart';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Typography, Box } from '@mui/material';
+import {
+    Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
+    Paper, Typography, Box, TextField, InputAdornment, TablePagination,
+    Select, MenuItem, FormControl, InputLabel, Collapse, IconButton,
+    Container, AppBar, Toolbar, Avatar, Chip, Grid, Card, CardContent, Button
+} from '@mui/material';
 
-// Player Roles & Stats Mock
+// --- DATA CONSTANTS ---
 const signs = [
     { id: 1, name: 'Aries' }, { id: 2, name: 'Taurus' }, { id: 3, name: 'Gemini' }, { id: 4, name: 'Cancer' },
     { id: 5, name: 'Leo' }, { id: 6, name: 'Virgo' }, { id: 7, name: 'Libra' }, { id: 8, name: 'Scorpio' },
     { id: 9, name: 'Sagittarius' }, { id: 10, name: 'Capricorn' }, { id: 11, name: 'Aquarius' }, { id: 12, name: 'Pisces' }
 ];
 
-const UserDashboard = () => {
-    const { logout, user } = useContext(AuthContext);
+const nakshatras = [
+    "Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashirsha", "Ardra", "Punarvasu", "Pushya", "Ashlesha",
+    "Magha", "Purva Phalguni", "Uttara Phalguni", "Hasta", "Chitra", "Swati", "Vishakha", "Anuradha", "Jyeshtha",
+    "Mula", "Purva Ashadha", "Uttara Ashadha", "Shravana", "Dhanishta", "Shatabhisha", "Purva Bhadrapada", "Uttara Bhadrapada", "Revati"
+];
 
-    // Enhanced Mock Data with "Cricket Stats"
-    const [players] = useState([
-        { id: 1, name: "Sachin Tendulkar", dob: "24-04-1973", time: "12:00", lat: 18.9750, lng: 72.8258, country: "India", role: "Master Blaster", rating: 5, online: true },
-        { id: 2, name: "Virat Kohli", dob: "05-11-1988", time: "10:30", lat: 28.6139, lng: 77.2090, country: "India", role: "Chase Master", rating: 5, online: false },
-        { id: 3, name: "MS Dhoni", dob: "07-07-1981", time: "11:15", lat: 23.3441, lng: 85.3096, country: "India", role: "Captain Cool", rating: 4, online: true },
-        { id: 4, name: "Rohit Sharma", dob: "30-04-1987", time: "09:45", lat: 21.1458, lng: 79.0882, country: "India", role: "Hitman", rating: 4, online: true },
-    ]);
+// --- HELPERS ---
+const getFlag = (player) => {
+    const tz = player.timezone || '';
+    const place = player.birthPlace || '';
+    if (tz.includes('Kolkata') || place.includes('India') || place.includes('Mumbai') || place.includes('Pune')) return '🇮🇳';
+    if (tz.includes('Australia') || place.includes('Australia')) return '🇦🇺';
+    if (tz.includes('London') || place.includes('UK') || place.includes('England')) return '🇬🇧';
+    if (tz.includes('Johannesburg') || place.includes('South Africa')) return '🇿🇦';
+    if (tz.includes('Auckland') || place.includes('New Zealand')) return '🇳🇿';
+    if (tz.includes('Colombo') || place.includes('Sri Lanka')) return '🇱🇰';
+    if (tz.includes('Karachi') || place.includes('Pakistan')) return '🇵🇰';
+    if (tz.includes('Dhaka') || place.includes('Bangladesh')) return '🇧🇩';
+    if (tz.includes('USA') || place.includes('New_York')) return '🇺🇸';
+    if (place.includes('West Indies')) return '🌴';
+    if (place.includes('Afghanistan')) return '🇦🇫';
+    return '🏳️';
+};
 
-    const [selectedPlayer, setSelectedPlayer] = useState(null);
-    const [chartData, setChartData] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [format, setFormat] = useState('T20'); // Filter state
+// --- COMPONENTS ---
 
-    const handlePlayerClick = async (player) => {
-        setSelectedPlayer(player);
-        setLoading(true);
-        setChartData(null);
-
-        const [day, month, year] = player.dob.split('-').map(Number);
-        const [hour, minute] = player.time.split(':').map(Number);
-
-        const payload = {
-            day, month, year, hour, minute,
-            latitude: player.lat, longitude: player.lng, timezone: 5.5
-        };
-
-        try {
-            const token = localStorage.getItem('token');
-            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/charts/birth-chart`, payload, {
-                headers: { 'x-auth-token': token }
-            });
-            setChartData(res.data);
-        } catch (err) {
-            console.error("Error fetching chart:", err);
-            alert("Umpire Signal: Dead Ball (API Error)");
-        } finally {
-            setLoading(false);
-        }
-    };
+// Expanded Detail View inside the Row
+const PlayerDetailPanel = ({ player }) => {
+    const chart = player.birthChart?.data || player.birthChart;
+    const planets = chart?.planets;
 
     return (
-        <div className="flex h-screen bg-pitch-sky overflow-hidden font-sans">
-            {/* Left Sidebar: Pavilion (Player List) */}
-            <div className="w-1/4 md:w-80 bg-white/90 backdrop-blur-md flex flex-col shadow-2xl z-20 border-r-4 border-cricketGold">
-                {/* Header Profile */}
-                <div className="p-4 bg-cricketGreen text-white border-b-4 border-pitchBrown shadow-sm relative overflow-hidden">
-                    <div className="relative z-10 flex justify-between items-start">
-                        <div>
-                            <h2 className="text-xl font-heading font-black italic uppercase tracking-tighter">Fan Pavilion</h2>
-                            <p className="text-xs text-cricketGold mt-1 font-score tracking-widest uppercase">ID: {user?.username?.split('@')[0]}</p>
-                        </div>
-                        <div className="flex flex-col items-end">
-                             <div className="bg-black/40 rounded px-2 py-1 text-cricketGold font-score text-xl border border-cricketGold/30">
-                                🏆 1,450
-                             </div>
-                             <span className="text-[10px] uppercase text-green-200 mt-1">Wallet Warning</span>
-                        </div>
-                    </div>
-                </div>
+        <Box sx={{ p: 3, backgroundColor: '#f8fafc' }}>
+            <Grid container spacing={3}>
+                {/* Left: Rasi Chart */}
+                <Grid item xs={12} md={4}>
+                    <Paper elevation={2} sx={{ p: 2, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <Typography variant="subtitle2" color="primary" gutterBottom sx={{ fontWeight: 'bold', letterSpacing: 1 }}>RASI CHART (D1)</Typography>
+                        {player.birthChart ? (
+                            <RasiChart data={chart} />
+                        ) : (
+                            <Box sx={{ p: 4, color: 'text.secondary' }}>No Chart Data</Box>
+                        )}
+                    </Paper>
+                </Grid>
 
-                {/* Filter Tabs (Format) */}
-                <div className="flex bg-green-800 p-1 space-x-1">
-                    {['T20', 'ODI', 'TEST'].map(f => (
-                        <button
-                            key={f}
-                            onClick={() => setFormat(f)}
-                            className={`flex-1 py-2 text-xs font-bold uppercase transition-all ${format === f ? 'bg-cricketGold text-black shadow-inner' : 'bg-transparent text-green-200 hover:bg-green-700'}`}
-                        >
-                            {f}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Player List (MUI Table) */}
-                <div className="flex-1 overflow-y-auto p-3 bg-gray-50">
-                    <TableContainer component={Paper} elevation={3} sx={{ borderRadius: 2 }}>
-                        <Table sx={{ minWidth: 300 }} aria-label="player table">
-                            <TableHead sx={{ backgroundColor: '#0A5B1D' }}>
-                                <TableRow>
-                                    <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'Montserrat' }}>PLAYER</TableCell>
-                                    <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'Montserrat' }}>DOB</TableCell>
-                                    <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'Montserrat' }}>PLACE</TableCell>
-                                    <TableCell sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'Montserrat' }}>ACTION</TableCell>
+                {/* Right: Planetary Scoreboard */}
+                <Grid item xs={12} md={8}>
+                     <Paper elevation={2} sx={{ p: 2 }}>
+                        <Typography variant="subtitle2" color="primary" gutterBottom sx={{ fontWeight: 'bold', letterSpacing: 1 }}>PLANETARY POSITIONS</Typography>
+                        <Table size="small">
+                            <TableHead>
+                                <TableRow sx={{ backgroundColor: '#e2e8f0' }}>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>Planet</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>Sign</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>Nakshatra</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>Degree</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>Status</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {players.map((player) => (
-                                    <TableRow
-                                        key={player.id}
-                                        hover
-                                        selected={selectedPlayer?.id === player.id}
-                                        sx={{
-                                            '&.Mui-selected': { backgroundColor: 'rgba(10, 91, 29, 0.08) !important' },
-                                            '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.04)' }
-                                         }}
-                                    >
-                                        <TableCell component="th" scope="row">
-                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <div className="w-8 h-8 rounded-full bg-gray-200 border-2 border-cricketGreen flex items-center justify-center mr-2 relative">
-                                                    🏏
-                                                    {player.online && (
-                                                         <span className="absolute bottom-0 right-0 w-2 h-2 bg-green-500 border-2 border-white rounded-full"></span>
-                                                     )}
-                                                </div>
-                                                <div>
-                                                    <Typography variant="subtitle2" sx={{ fontWeight: 'bold', fontFamily: 'Montserrat' }}>{player.name}</Typography>
-                                                    <Typography variant="caption" sx={{ color: 'gray' }}>{player.role}</Typography>
-                                                </div>
-                                            </Box>
-                                        </TableCell>
-                                        <TableCell sx={{ fontFamily: 'Open Sans' }}>{player.dob}</TableCell>
-                                        <TableCell>
-                                            <Typography variant="caption" display="block">{player.lat.toFixed(2)}, {player.lng.toFixed(2)}</Typography>
-                                            <Typography variant="caption" color="textSecondary">{player.country}</Typography>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Button
-                                                variant="contained"
-                                                size="small"
-                                                onClick={() => handlePlayerClick(player)}
-                                                sx={{
-                                                    backgroundColor: '#FFD700',
-                                                    color: 'black',
-                                                    fontWeight: 'bold',
-                                                    fontSize: '0.7rem',
-                                                    '&:hover': { backgroundColor: '#e6c200' }
-                                                }}
-                                            >
-                                                View Chart
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
+                                {planets ? Object.entries(planets).map(([key, p]) => {
+                                    const signName = p.current_sign ? signs.find(s => s.id == p.current_sign)?.name : p.sign;
+                                    return (
+                                        <TableRow key={key} hover>
+                                            <TableCell>
+                                                <b>{key}</b>
+                                            </TableCell>
+                                            <TableCell>{signName}</TableCell>
+                                            <TableCell>{p.nakshatra}</TableCell>
+                                            <TableCell>{p.normDegree?.toFixed(2)}°</TableCell>
+                                            <TableCell>
+                                                {p.isRetro && <Chip label="R" color="error" size="small" sx={{ height: 20, fontSize: '0.65rem' }} />}
+                                                {key === 'Jupiter' || key === 'Venus' ? <span className="ml-1 text-yellow-600">✨</span> : null}
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                }) : (
+                                    <TableRow><TableCell colSpan={5}>No planetary data</TableCell></TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                     </Paper>
+                </Grid>
+            </Grid>
+        </Box>
+    );
+};
+
+const PlayerRow = ({ player, isSelected, onClick }) => {
+    const [open, setOpen] = useState(false);
+
+    // Get basic stats
+    const chart = player.birthChart?.data || player.birthChart;
+    const moon = chart?.planets?.Moon;
+    const rasiName = moon ? signs.find(s => s.id == (moon.current_sign || moon.sign))?.name : '-';
+    const starName = moon?.nakshatra || '-';
+
+    const handleExpandIds = (e) => {
+        e.stopPropagation();
+        setOpen(!open);
+        onClick(player); // Also select contextually if needed
+    };
+
+    return (
+        <>
+            <TableRow
+                hover
+                onClick={handleExpandIds}
+                selected={open}
+                sx={{
+                    cursor: 'pointer',
+                    '&.Mui-selected': { backgroundColor: 'rgba(37, 99, 235, 0.08) !important' },
+                    '&:hover': { backgroundColor: 'rgba(0,0,0,0.02)' }
+                }}
+            >
+                <TableCell width="50">
+                    <IconButton size="small" onClick={handleExpandIds}>
+                        {open ? '▲' : '▼'}
+                    </IconButton>
+                </TableCell>
+                <TableCell>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Avatar
+                            src={player.profile}
+                            alt={player.name}
+                            sx={{ width: 40, height: 40, border: '2px solid white', boxShadow: 1 }}
+                        >
+                            {player.name?.[0]}
+                        </Avatar>
+                        <Box>
+                            <Typography variant="subtitle2" sx={{ fontWeight: 'bold', color: '#0f172a' }}>
+                                {player.name} {getFlag(player)}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                                ID: {player.id?.substring(0,6)}
+                            </Typography>
+                        </Box>
+                    </Box>
+                </TableCell>
+                <TableCell>
+                    <Typography variant="body2">{player.birthPlace || 'Unknown'}</Typography>
+                    <Typography variant="caption" color="text.secondary">{player.dob}</Typography>
+                </TableCell>
+                <TableCell>
+                    <Chip
+                        label={`Moon: ${rasiName}`}
+                        size="small"
+                        color="primary"
+                        variant="outlined"
+                        sx={{ mr: 1, borderColor: '#cad5e1', color: '#475569' }}
+                    />
+                </TableCell>
+                <TableCell align="right">
+                    <Typography variant="caption" sx={{ color: player.birthChart ? 'green' : 'gray', fontWeight: 'bold' }}>
+                        {player.birthChart ? '● Analysis Ready' : '○ Pending'}
+                    </Typography>
+                </TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                    <Collapse in={open} timeout="auto" unmountOnExit>
+                        <PlayerDetailPanel player={player} />
+                    </Collapse>
+                </TableCell>
+            </TableRow>
+        </>
+    );
+};
+
+const UserDashboard = () => {
+    const { logout, user } = useContext(AuthContext);
+
+    const [players, setPlayers] = useState([]);
+    const [filteredPlayers, setFilteredPlayers] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rasiFilter, setRasiFilter] = useState('');
+    const [nakshatraFilter, setNakshatraFilter] = useState('');
+
+    useEffect(() => {
+        const fetchPlayers = async () => {
+            try {
+                const baseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
+                const res = await axios.get(`${baseUrl}/api/players`);
+                setPlayers(res.data);
+                setFilteredPlayers(res.data);
+            } catch (err) {
+                console.error("Error fetching players:", err);
+            }
+        };
+        fetchPlayers();
+    }, []);
+
+    useEffect(() => {
+        const lowerSearch = searchTerm.toLowerCase();
+        const filtered = players.filter(p => {
+            const matchesSearch = p.name.toLowerCase().includes(lowerSearch) ||
+                                (p.birthPlace && p.birthPlace.toLowerCase().includes(lowerSearch));
+
+            let matchesRasi = true;
+            if (rasiFilter) {
+                const chart = p.birthChart?.data || p.birthChart;
+                const moonSign = chart?.planets?.Moon?.current_sign || chart?.planets?.Moon?.sign;
+                matchesRasi = moonSign == rasiFilter;
+            }
+
+            let matchesNakshatra = true;
+            if (nakshatraFilter) {
+                const chart = p.birthChart?.data || p.birthChart;
+                const moonNak = chart?.planets?.Moon?.nakshatra;
+                matchesNakshatra = moonNak && moonNak.includes(nakshatraFilter);
+            }
+
+            return matchesSearch && matchesRasi && matchesNakshatra;
+        });
+        setFilteredPlayers(filtered);
+        setPage(0);
+    }, [searchTerm, players, rasiFilter, nakshatraFilter]);
+
+    // Handle dummy click for row context
+    const handlePlayerClick = (p) => {
+        // Logic to update global state if needed in future
+    };
+
+    return (
+        <Box sx={{ minHeight: '100vh', backgroundColor: 'transparent', pb: 4 }}>
+            {/* AppBar */}
+            <AppBar position="static" sx={{ backgroundColor: 'white', color: '#1e3a8a', boxShadow: 1 }}>
+                <Toolbar>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: '900', letterSpacing: -1, display: 'flex', alignItems: 'center' }}>
+                         <span className="text-royal-blue mr-2">⚛️</span> ASTRO CRICKET <span className="ml-2 text-xs opacity-50 font-mono tracking-widest border px-1 rounded">ADMIN DATA GRID</span>
+                    </Typography>
+                    <Button color="inherit" onClick={logout} sx={{ fontSize: '0.75rem', fontWeight: 'bold' }}>Logout</Button>
+                </Toolbar>
+            </AppBar>
+
+            <Container maxWidth="xl" sx={{ mt: 4 }}>
+
+                {/* Filters */}
+                <Paper sx={{ p: 2, mb: 3, borderRadius: 2 }} elevation={0}>
+                    <Grid container spacing={2} alignItems="center">
+                        <Grid item xs={12} md={4}>
+                            <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                placeholder="Search Players, Cities..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                InputProps={{
+                                    startAdornment: <InputAdornment position="start">🔍</InputAdornment>,
+                                }}
+                                sx={{ backgroundColor: '#f8fafc' }}
+                            />
+                        </Grid>
+                        <Grid item xs={6} md={3}>
+                            <FormControl size="small" fullWidth>
+                                <Select
+                                    value={rasiFilter}
+                                    onChange={(e) => setRasiFilter(e.target.value)}
+                                    displayEmpty
+                                    sx={{ backgroundColor: '#f8fafc' }}
+                                >
+                                    <MenuItem value=""><em>All Rasi</em></MenuItem>
+                                    {signs.map((s) => <MenuItem key={s.id} value={s.id}>{s.name}</MenuItem>)}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={6} md={3}>
+                             <FormControl size="small" fullWidth>
+                                <Select
+                                    value={nakshatraFilter}
+                                    onChange={(e) => setNakshatraFilter(e.target.value)}
+                                    displayEmpty
+                                    sx={{ backgroundColor: '#f8fafc' }}
+                                >
+                                    <MenuItem value=""><em>All Nakshatras</em></MenuItem>
+                                    {nakshatras.map((n) => <MenuItem key={n} value={n}>{n}</MenuItem>)}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} md={2} textAlign="right">
+                             <Typography variant="caption" color="text.secondary">
+                                 Total: {filteredPlayers.length}
+                             </Typography>
+                        </Grid>
+                    </Grid>
+                </Paper>
+
+                {/* Main Table */}
+                <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: 3, boxShadow: 3 }}>
+                    <TableContainer sx={{ maxHeight: '75vh' }}>
+                        <Table stickyHeader aria-label="sticky table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell sx={{ backgroundColor: '#2563eb', color: 'white', width: 50 }} />
+                                    <TableCell sx={{ backgroundColor: '#2563eb', color: 'white', fontWeight: 'bold' }}>PLAYER PROFILE</TableCell>
+                                    <TableCell sx={{ backgroundColor: '#2563eb', color: 'white', fontWeight: 'bold' }}>ORIGIN</TableCell>
+                                    <TableCell sx={{ backgroundColor: '#2563eb', color: 'white', fontWeight: 'bold' }}>KEY STATS</TableCell>
+                                    <TableCell align="right" sx={{ backgroundColor: '#2563eb', color: 'white', fontWeight: 'bold' }}>STATUS</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {filteredPlayers
+                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    .map((player) => (
+                                        <PlayerRow
+                                            key={player.id}
+                                            player={player}
+                                            onClick={handlePlayerClick}
+                                        />
+                                    ))}
                             </TableBody>
                         </Table>
                     </TableContainer>
-                </div>
+                    <TablePagination
+                        rowsPerPageOptions={[10, 25, 100]}
+                        component="div"
+                        count={filteredPlayers.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={(e, newPage) => setPage(newPage)}
+                        onRowsPerPageChange={(e) => {
+                            setRowsPerPage(+e.target.value);
+                            setPage(0);
+                        }}
+                    />
+                </Paper>
 
-                {/* Footer Actions */}
-                <div className="p-4 bg-gray-100 border-t border-gray-300">
-                    <button onClick={logout} className="w-full bg-cricketRed hover:bg-red-700 text-white font-heading uppercase font-bold py-3 rounded shadow-lg transition-transform active:scale-95 flex items-center justify-center">
-                        <span className="mr-2">☝️</span> Retire Hurt (Logout)
-                    </button>
-                </div>
-            </div>
-
-            {/* Right Main Area: The Pitch */}
-            <div className="flex-1 overflow-y-auto relative bg-[url('https://www.transparenttextures.com/patterns/grass.png')] bg-fixed" style={{backgroundColor: '#0A5B1D'}}>
-                {/* Overlay gradient for depth */}
-                <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-transparent pointer-events-none"></div>
-
-                {/* Top Bar / Commentary Box Header */}
-                <div className="sticky top-0 z-10 bg-white/10 backdrop-blur-md border-b border-white/20 p-4 flex justify-between items-center text-white px-8">
-                     <div className="flex items-center space-x-3">
-                         <span className="text-3xl">🎙️</span>
-                         <div>
-                             <h1 className="font-heading font-black uppercase text-shadow-sm tracking-wide">Commentary Box</h1>
-                             <p className="text-xs text-green-200 uppercase font-score">Live from Wankhede Stadium</p>
-                         </div>
-                     </div>
-                     <div className="hidden md:flex items-center space-x-6 text-sm font-semibold font-score tracking-widest">
-                         <div className="flex flex-col items-center">
-                             <span className="text-cricketGold text-xl">00:45:00</span>
-                             <span className="text-[10px] text-green-300 uppercase">Session Time</span>
-                         </div>
-                         <div className="w-px h-8 bg-white/20"></div>
-                         <div className="text-center">
-                            <span className="block text-xl">24°C</span>
-                            <span className="text-[10px] text-green-300 uppercase">Weather</span>
-                         </div>
-                     </div>
-                </div>
-
-                <div className="p-8 relative z-0">
-                    {!selectedPlayer ? (
-                        <div className="h-[70vh] flex flex-col items-center justify-center text-white/60 animate-in fade-in zoom-in duration-500">
-                             <div className="w-32 h-32 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm mb-6 border-4 border-white/20">
-                                 <span className="text-6xl animate-bounce">🏏</span>
-                             </div>
-                            <h2 className="text-3xl font-heading font-bold uppercase tracking-widest text-white drop-shadow-lg">Pitch is Ready</h2>
-                            <p className="font-sans text-lg mt-2 text-center max-w-md">Select a player from the Pavilion to start the <span className="text-cricketGold font-bold">Pitch Report</span> (Astrology Analysis)</p>
-                        </div>
-                    ) : (
-                        <div className="max-w-6xl mx-auto space-y-6">
-                            {/* Summary Card */}
-                            <div className="bg-white rounded-xl shadow-2xl overflow-hidden border-t-8 border-cricketGold transform transition-all duration-500 hover:shadow-cricketGold/20">
-                                <div className="p-6 flex flex-col md:flex-row justify-between items-center bg-gray-50 border-b border-gray-100">
-                                    <div>
-                                        <h1 className="text-4xl font-heading font-black text-cricketGreen uppercase tracking-tight">{selectedPlayer.name}</h1>
-                                        <div className="flex space-x-4 mt-2 text-sm font-heading font-semibold text-gray-500 uppercase tracking-wide">
-                                            <span className="flex items-center"><span className="mr-1 text-pitchBrown">📅</span> {selectedPlayer.dob}</span>
-                                            <span className="flex items-center"><span className="mr-1 text-pitchBrown">⏰</span> {selectedPlayer.time}</span>
-                                            <span className="flex items-center"><span className="mr-1 text-pitchBrown">📍</span> {selectedPlayer.lat}, {selectedPlayer.lng}</span>
-                                        </div>
-                                    </div>
-                                    <div className="mt-4 md:mt-0">
-                                        <button className="bg-cricketGreen text-white px-6 py-2 rounded-full font-bold uppercase text-xs tracking-widest hover:bg-green-900 transition shadow-lg flex items-center">
-                                            <span className="mr-2 text-lg">📹</span> Request DRS (Video Call)
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Main Analysis Section */}
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                                {/* Left Column: Pitch Report (Chart) */}
-                                <div className="lg:col-span-1">
-                                    <div className="bg-white rounded-xl shadow-xl overflow-hidden h-full border border-gray-200">
-                                        <div className="bg-cricketGreen p-3 text-center border-b border-green-800">
-                                            <h2 className="text-white font-heading font-bold uppercase tracking-widest text-sm">Pitch Report (Rasi Chart)</h2>
-                                        </div>
-                                        <div className="p-6 bg-[#ffebcd]/30 flex items-center justify-center min-h-[300px]">
-                                            {loading ? (
-                                                <div className="flex flex-col items-center">
-                                                    <div className="w-12 h-12 border-4 border-cricketGreen border-t-cricketGold rounded-full animate-spin"></div>
-                                                    <p className="mt-4 font-score font-bold text-cricketGreen animate-pulse uppercase tracking-widest">Reviewing Decision...</p>
-                                                </div>
-                                            ) : chartData ? (
-                                                <div className="transform scale-[0.85] origin-top">
-                                                     <RasiChart data={chartData} />
-                                                </div>
-                                            ) : (
-                                                <p className="text-gray-400 font-bold uppercase">No Data</p>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Right Column: Match Stats (Table) */}
-                                <div className="lg:col-span-2">
-                                     <div className="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-200 h-full flex flex-col">
-                                         <div className="bg-pitchBrown p-3 flex justify-between items-center text-white border-b border-yellow-700">
-                                             <h2 className="font-heading font-bold uppercase tracking-widest text-sm">Field Placements (Planetary Positions)</h2>
-                                             <div className="text-[10px] font-score bg-black/30 px-2 py-1 rounded border border-white/20">LIVE DATA</div>
-                                         </div>
-
-                                         <div className="flex-1 overflow-x-auto p-0">
-                                             {loading ? (
-                                                 <div className="h-full w-full bg-gray-50 animate-pulse"></div>
-                                             ) : chartData ? (
-                                                <table className="w-full text-left border-collapse">
-                                                    <thead className="bg-gray-100 text-gray-600 font-heading text-xs uppercase tracking-wider">
-                                                        <tr>
-                                                            <th className="p-4 border-b">Player (Planet)</th>
-                                                            <th className="p-4 border-b">Position (Sign)</th>
-                                                            <th className="p-4 border-b">Form (Nakshatra)</th>
-                                                            <th className="p-4 border-b text-right">Deg</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody className="font-sans text-sm text-gray-700 divide-y divide-gray-100">
-                                                        {chartData.planets && Object.entries(chartData.planets).map(([key, planet], idx) => (
-                                                            <tr key={key} className="hover:bg-green-50 transition-colors group">
-                                                                <td className="p-4 font-bold text-cricketGreen group-hover:text-green-800 flex items-center">
-                                                                    <span className="w-6 h-6 rounded bg-gray-200 mr-3 flex items-center justify-center text-[10px] font-bold text-gray-500 shadow-inner">{idx + 1}</span>
-                                                                    {key}
-                                                                </td>
-                                                                <td className="p-4">
-                                                                    <span className="inline-block bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold uppercase">
-                                                                        {planet.current_sign ? signs.find(s => s.id === planet.current_sign)?.name : planet.sign}
-                                                                    </span>
-                                                                </td>
-                                                                <td className="p-4 text-gray-500 font-semibold">{planet.nakshatra || '-'}</td>
-                                                                <td className="p-4 text-right font-score font-bold tracking-widest text-gray-800">{planet.normDegree ? planet.normDegree.toFixed(2)+"°" : '-'}</td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                             ) : (
-                                                 <div className="p-8 text-center text-gray-400">Waiting for data...</div>
-                                             )}
-                                         </div>
-                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </div>
-        </div>
+            </Container>
+        </Box>
     );
 };
 
