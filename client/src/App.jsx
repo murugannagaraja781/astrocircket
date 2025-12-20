@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminDashboard from './pages/AdminDashboard';
 import UserDashboard from './pages/UserDashboard';
+import TestChart from './pages/TestChart';
 import { AuthProvider } from './context/AuthContext';
 import './index.css';
 
@@ -57,6 +58,7 @@ function App() {
 
                     {/* Default Redirect */}
                     <Route path="/" element={<Navigate to="/login" />} />
+                    <Route path="/test-chart" element={<TestChart />} />
                 </Routes>
             </div>
         </Router>

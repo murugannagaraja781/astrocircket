@@ -36,70 +36,224 @@ const gridMap = [
     9, 8, 7, 6
 ];
 
+// Fallback/Demo Data to show if API returns empty
+const DEFAULT_DATA = {
+    "1": { "sign": "Karka", "signTamil": "கடகம்", "signNumber": 4, "planets": ["Lagna"], "lord": "Moon", "degrees": 5.72, "aspectingPlanets": ["Sun", "Venus", "Jupiter"] },
+    "2": { "sign": "Simha", "signTamil": "சிம்மம்", "signNumber": 5, "planets": [], "lord": "Sun", "degrees": 0, "aspectingPlanets": [] },
+    "3": { "sign": "Kanya", "signTamil": "கன்னி", "signNumber": 6, "planets": ["Mars", "Rahu"], "lord": "Mercury", "degrees": 0, "aspectingPlanets": ["Jupiter", "Saturn", "Ketu"] },
+    "4": { "sign": "Tula", "signTamil": "துலாம்", "signNumber": 7, "planets": ["Moon"], "lord": "Venus", "degrees": 0, "aspectingPlanets": [] },
+    "5": { "sign": "Vrishchika", "signTamil": "விருச்சிகம்", "signNumber": 8, "planets": [], "lord": "Mars", "degrees": 0, "aspectingPlanets": [] },
+    "6": { "sign": "Dhanu", "signTamil": "தனுசு", "signNumber": 9, "planets": ["Mercury"], "lord": "Jupiter", "degrees": 0, "aspectingPlanets": ["Mars", "Saturn"] },
+    "7": { "sign": "Makara", "signTamil": "மகரம்", "signNumber": 10, "planets": ["Sun", "Venus", "Jupiter"], "lord": "Saturn", "degrees": 0, "aspectingPlanets": [] },
+    "8": { "sign": "Kumbha", "signTamil": "கும்பம்", "signNumber": 11, "planets": [], "lord": "Saturn", "degrees": 0, "aspectingPlanets": [] },
+    "9": { "sign": "Meena", "signTamil": "மீனம்", "signNumber": 12, "planets": ["Saturn", "Ketu"], "lord": "Jupiter", "degrees": 0, "aspectingPlanets": ["Mars", "Rahu"] },
+    "10": { "sign": "Mesha", "signTamil": "மேஷம்", "signNumber": 1, "planets": [], "lord": "Mars", "degrees": 0, "aspectingPlanets": ["Moon", "Mars"] },
+    "11": { "sign": "Vrishabha", "signTamil": "ரிஷபம்", "signNumber": 2, "planets": [], "lord": "Venus", "degrees": 0, "aspectingPlanets": ["Jupiter", "Saturn"] },
+    "12": { "sign": "Mithuna", "signTamil": "மிதுனம்", "signNumber": 3, "planets": [], "lord": "Mercury", "degrees": 0, "aspectingPlanets": ["Mercury"] }
+};
+
+const planetTamilMap = {
+    'Sun': 'சூரியன்',
+    'Moon': 'சந்திரன்',
+    'Mars': 'செவ்வாய்',
+    'Mercury': 'புதன்',
+    'Jupiter': 'குரு',
+    'Venus': 'சுக்கிரன்',
+    'Saturn': 'சனி',
+    'Rahu': 'ராகு',
+    'Ketu': 'கேது',
+    'Asc': 'ல',
+    'Lagna': 'ல'
+};
+
+const planetShortTamilMap = {
+    'Sun': 'சூ',
+    'Moon': 'சந்',
+    'Mars': 'செவ்',
+    'Mercury': 'பு',
+    'Jupiter': 'குரு',
+    'Venus': 'சுக்',
+    'Saturn': 'சனி',
+    'Rahu': 'ராகு',
+    'Ketu': 'கேது',
+    'Asc': 'ல',
+    'Lagna': 'ல'
+};
+
 const RasiChart = ({ data }) => {
+    // Determine effective data to render
+    // If no data passed, use DEFAULT_DATA to show the design layout
+    const chartData = (data && Object.keys(data).length > 0) ? data : { houses: DEFAULT_DATA, birthData: {}, moonNakshatra: {} };
+
+    // Extract parts from the full data object
+    // If data is just houses (old fallback), handle that, otherwise use full structure
+    const housesData = chartData.houses || chartData;
+    const birthData = chartData.birthData || {};
+    const nakshatraData = chartData.moonNakshatra || {};
+
+    // Helper to format date like "15 - March - 1994"
+    const formatDate = (dateStr) => {
+        if (!dateStr) return "";
+        const date = new Date(dateStr);
+        if (isNaN(date.getTime())) return dateStr;
+        const day = date.getDate();
+        const month = date.toLocaleString('default', { month: 'long' });
+        const year = date.getFullYear();
+        return `${day} - ${month} - ${year}`;
+    };
+
+    const formattedDate = formatDate(birthData.date);
+    const timeStr = birthData.time || "";
+
+    // Debug log
+    console.log("RasiChart Rendering. Data:", data, "Effective:", chartData);
+
     // Helper to find planets in a sign
-    const getPlanetsInSign = (signId) => {
-        if (!data || !data.planets) return [];
+    const getSignData = (signId) => {
+        if (!housesData) return null;
 
-        let planets = [];
+        // Check if data is in the new "Houses" format (keys "1".."12" with signNumber)
+        // We look for a value where signNumber matches our current signId
+        const houses = Object.values(housesData);
+        const houseData = houses.find(h => h.signNumber === signId);
 
-        if (Array.isArray(data.planets)) {
-             planets = data.planets.filter(p => p.sign === signId || p.signId === signId);
-        } else if (typeof data.planets === 'object') {
-            Object.keys(data.planets).forEach(key => {
-                const p = data.planets[key];
-                 if (p.current_sign === signId || p.sign === signId) {
-                     planets.push({ ...p, name: key });
-                 }
+        if (houseData) {
+            // Map the simple string planets to objects for rendering
+            const rawPlanets = houseData.planets || [];
+            const mappedPlanets = rawPlanets.map(pName => {
+                const isAsc = pName === 'Lagna' || pName === 'Asc';
+                return {
+                    name: isAsc ? 'Asc' : pName,
+                    isAsc: isAsc,
+                    // New data format doesn't seem to have per-planet degrees in this specific object
+                    // but we can pass through if we find them later
+                };
             });
+
+            return {
+                planets: mappedPlanets,
+                signTamil: houseData.signTamil,
+                degrees: houseData.degrees,
+                aspectingPlanets: houseData.aspectingPlanets || [],
+                isNewFormat: true
+            };
         }
 
-        if (data.ascendant && (data.ascendant.sign === signId || data.ascendant.current_sign === signId)) {
+        // Fallback to old format logic if house structure not matched
+        // This preserves backward compatibility if data is different
+        let planets = [];
+        if (housesData.planets) {
+             if (Array.isArray(housesData.planets)) {
+                 planets = housesData.planets.filter(p => p.sign === signId || p.signId === signId);
+            } else if (typeof housesData.planets === 'object') {
+                Object.keys(housesData.planets).forEach(key => {
+                    const p = housesData.planets[key];
+                     if (p.current_sign === signId || p.sign === signId) {
+                         planets.push({ ...p, name: key });
+                     }
+                });
+            }
+        }
+        if (housesData.ascendant && (housesData.ascendant.sign === signId || housesData.ascendant.current_sign === signId)) {
             planets.push({ name: 'Asc', isAsc: true });
         }
 
-        return planets;
+        return {
+            planets: planets,
+            signTamil: null,
+            degrees: null,
+            aspectingPlanets: [],
+            isNewFormat: false
+        };
     };
 
     return (
-        <div className="w-full max-w-md mx-auto aspect-square bg-white border-4 border-gray-800 shadow-md relative">
-            <div className="absolute top-0 left-0 w-full h-full grid grid-cols-4 grid-rows-4 gap-0 bg-gray-800 border-2 border-gray-800">
+        <div className="w-full max-w-md mx-auto aspect-square bg-[#fff8e7] border-2 border-[#8b0000] shadow-lg relative p-1" style={{ aspectRatio: '1/1' }}>
+             {/* Decorative Outer Border Effect */}
+            <div className="absolute inset-0 border border-[#8b0000] m-1 pointer-events-none"></div>
+
+            <div className="w-full h-full grid grid-cols-4 grid-rows-4 gap-0 bg-[#8b0000] border border-[#8b0000]"
+                 style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gridTemplateRows: 'repeat(4, 1fr)' }}>
                 {gridMap.map((signId, index) => {
                     if (signId === null) {
                          // Center box (merged)
                          if (index === 5) {
                             return (
-                                <div key="center" className="col-span-2 row-span-2 bg-white flex flex-col items-center justify-center p-2 text-center border-2 border-gray-800 m-0.5">
-                                    <h3 className="text-2xl font-serif font-black text-gray-800 uppercase tracking-widest border-b-2 border-orange-500 mb-2 pb-1">RASI CHART</h3>
-                                    <p className="text-xs text-gray-500 font-sans tracking-wider uppercase">D1 • South Indian Style</p>
-                                    <div className="mt-4 text-5xl text-orange-600 opacity-80">🕉️</div>
+                                <div key="center"
+                                     className="col-span-2 row-span-2 bg-[#fff8e7] flex flex-col items-center justify-center p-2 text-center relative overflow-hidden"
+                                     style={{ gridColumn: 'span 2', gridRow: 'span 2' }}>
+
+                                    {/* Ganesha Watermark */}
+                                    <div className="absolute inset-0 flex items-center justify-center opacity-15 pointer-events-none">
+                                        <img
+                                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Ganesha_line_drawing.svg/1200px-Ganesha_line_drawing.svg.png"
+                                            alt="Pillayar"
+                                            className="w-3/4 h-3/4 object-contain filter sepia"
+                                        />
+                                    </div>
+
+                                    {/* Content matching the image */}
+                                    <div className="relative z-10 flex flex-col items-center gap-1 font-serif text-[#2a2a2a]">
+                                        {formattedDate && <span className="text-sm font-bold tracking-wide">{formattedDate}</span>}
+                                        {timeStr && <span className="text-sm font-bold tracking-wide mb-1">{timeStr}</span>}
+
+                                        <span className="text-xl font-bold uppercase tracking-wider text-[#8b0000] mt-1 border-b border-[#8b0000] leading-none pb-0.5">Rasi</span>
+
+                                        {nakshatraData.name && (
+                                            <span className="text-sm font-semibold mt-1 bg-[#fff8e7]/80 px-2 rounded">
+                                                {nakshatraData.name}
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
                             );
                          }
                          return null; // Skip occupied cells
                     }
 
-                    const planets = getPlanetsInSign(signId);
+                    const { planets, signTamil, degrees, aspectingPlanets } = getSignData(signId) || { planets: [] };
 
                     return (
-                        <div key={signId} className="bg-white relative p-1 flex flex-col hover:bg-yellow-50 transition-colors border-0 m-0.5">
-                            {/* Sign Number / Label could go here but standard South Indian charts rely on position. We adding a small number for reference. */}
-                            <span className="absolute top-0 right-1 text-[9px] text-gray-400 font-mono">{signId}</span>
+                        <div key={signId} className="bg-[#fff8e7] relative p-1 flex flex-col items-center justify-between border-[0.5px] border-[#8b0000] hover:bg-[#fffdf5] transition-colors overflow-hidden h-full">
+                            {/* Header: Sign ID (Top Left) & Tamil Name (Top Center) */}
+                            <div className="w-full flex justify-between items-start px-1 pt-0.5">
+                                <span className="text-[10px] font-bold text-[#b91c1c] leading-none">
+                                    {signId}
+                                </span>
+                                {signTamil && (
+                                     <span className="text-[9px] text-[#5c3a21] font-serif font-bold leading-none mt-0.5 opacity-90">
+                                        {signTamil}
+                                     </span>
+                                )}
+                                <span className="w-2"></span> {/* Spacer */}
+                            </div>
 
-                            <div className="flex-1 flex flex-wrap content-center justify-center gap-1.5 overflow-hidden p-1">
+                            {/* Planets List - Center - Traditional Look */}
+                            <div className="flex-1 flex flex-col items-center justify-center gap-0.5 w-full my-1">
                                 {planets.map((p, idx) => (
-                                    <span
-                                        key={idx}
-                                        className={`text-[11px] font-bold px-1.5 py-0.5 rounded-sm border shadow-sm items-center justify-center flex uppercase tracking-tight ${
-                                            p.isAsc
-                                            ? 'bg-red-600 text-white border-red-700'
-                                            : 'bg-indigo-50 text-indigo-900 border-indigo-200'
-                                        }`}
-                                        title={p.fullDegree ? `${p.name}: ${p.fullDegree}` : p.name}
-                                    >
-                                        {p.name.substring(0, 2)}
-                                    </span>
+                                    <div key={idx} className="flex items-center leading-none">
+                                        <span className={`text-sm font-bold font-serif ${p.isAsc ? 'text-red-700' : 'text-[#1a1a1a]'}`}>
+                                            {planetShortTamilMap[p.name] || p.name.substring(0, 2)}
+                                        </span>
+                                    </div>
                                 ))}
+                            </div>
+
+                            {/* Footer: Aspecting Planets & Degrees */}
+                            <div className="w-full flex flex-col items-center">
+                                {/* Aspecting Planets - Very Small */}
+                                {aspectingPlanets && aspectingPlanets.length > 0 && (
+                                    <div className="text-[7px] text-[#8b4513] leading-none text-center opacity-70 mb-0.5">
+                                        (Pa: {aspectingPlanets.map(ap => planetShortTamilMap[ap] || ap.substring(0,2)).join(' ')})
+                                    </div>
+                                )}
+
+                                {/* Degrees - Bottom Right Corner */}
+                                {degrees !== null && degrees !== undefined && degrees > 0 && (
+                                    <div className="self-end text-[8px] font-mono text-[#4a5568] leading-none px-0.5 uppercase">
+
+                                    </div>
+                                )}
                             </div>
                         </div>
                     );
