@@ -80,6 +80,9 @@ const planetShortTamilMap = {
     'Lagna': 'ல'
 };
 
+// Reliable embedded SVG for Pillayar (Om Symbol) to ensure no broken images
+const GANESHA_SVG = "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='60%25' font-size='80' text-anchor='middle' dominant-baseline='middle' fill='%238b0000'%3E%F0%9F%95%89%EF%B8%8F%3C/text%3E%3C/svg%3E";
+
 const RasiChart = ({ data }) => {
     // Determine effective data to render
     // If no data passed, use DEFAULT_DATA to show the design layout
@@ -198,12 +201,13 @@ const RasiChart = ({ data }) => {
                                          backgroundColor: '#fff8e7'
                                      }}>
 
-                                    {/* Ganesha Watermark */}
-                                    <div className="absolute inset-0 flex items-center justify-center opacity-15 pointer-events-none">
+                                    {/* Ganesha Watermark - Using reliable data URI for Om/Pillayar */}
+                                    <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
                                         <img
-                                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Ganesha_line_drawing.svg/1200px-Ganesha_line_drawing.svg.png"
-                                            alt="Pillayar"
-                                            className="w-3/4 h-3/4 object-contain filter sepia"
+                                            src={GANESHA_SVG}
+                                            alt="Pillayar 🕉️"
+                                            className="w-3/4 h-3/4 object-contain"
+                                            style={{ filter: 'sepia(1) hue-rotate(-50deg)' }}
                                         />
                                     </div>
 
