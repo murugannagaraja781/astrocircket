@@ -47,6 +47,7 @@ const PlanetaryTable = ({ rawPlanets }) => {
                     <TableRow>
                         <TableCell><b>Planet</b></TableCell>
                         <TableCell><b>Sign</b></TableCell>
+                        <TableCell><b>Lord</b></TableCell>
                         <TableCell><b>Nakshatra</b></TableCell>
                         <TableCell><b>Deg</b></TableCell>
                         <TableCell><b>Dignity</b></TableCell>
@@ -66,6 +67,12 @@ const PlanetaryTable = ({ rawPlanets }) => {
                                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                     <span>{p.sign}</span>
                                     <span className="text-xs text-gray-500">{p.signTamil}</span>
+                                </Box>
+                            </TableCell>
+                            <TableCell>
+                                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                    <span className="font-medium text-gray-700">{p.lord}</span>
+                                    <span className="text-xs text-gray-500">{p.lordTamil}</span>
                                 </Box>
                             </TableCell>
                             <TableCell>
