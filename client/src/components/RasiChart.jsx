@@ -168,20 +168,35 @@ const RasiChart = ({ data }) => {
     };
 
     return (
-        <div className="w-full max-w-md mx-auto aspect-square bg-[#fff8e7] border-2 border-[#8b0000] shadow-lg relative p-1" style={{ aspectRatio: '1/1' }}>
+        <div
+            className="w-full max-w-md mx-auto aspect-square shadow-lg relative p-1"
+            style={{ backgroundColor: '#fff8e7', border: '2px solid #8b0000', aspectRatio: '1/1' }}
+        >
              {/* Decorative Outer Border Effect */}
-            <div className="absolute inset-0 border border-[#8b0000] m-1 pointer-events-none"></div>
+            <div className="absolute inset-0 m-1 pointer-events-none" style={{ border: '1px solid #8b0000' }}></div>
 
-            <div className="w-full h-full grid grid-cols-4 grid-rows-4 gap-0 bg-[#8b0000] border border-[#8b0000]"
-                 style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gridTemplateRows: 'repeat(4, 1fr)' }}>
+            <div
+                className="w-full h-full grid grid-cols-4 grid-rows-4 gap-0"
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(4, 1fr)',
+                    gridTemplateRows: 'repeat(4, 1fr)',
+                    backgroundColor: '#8b0000',
+                    border: '1px solid #8b0000'
+                }}
+            >
                 {gridMap.map((signId, index) => {
                     if (signId === null) {
                          // Center box (merged)
                          if (index === 5) {
                             return (
                                 <div key="center"
-                                     className="col-span-2 row-span-2 bg-[#fff8e7] flex flex-col items-center justify-center p-2 text-center relative overflow-hidden"
-                                     style={{ gridColumn: 'span 2', gridRow: 'span 2' }}>
+                                     className="col-span-2 row-span-2 flex flex-col items-center justify-center p-2 text-center relative overflow-hidden"
+                                     style={{
+                                         gridColumn: 'span 2',
+                                         gridRow: 'span 2',
+                                         backgroundColor: '#fff8e7'
+                                     }}>
 
                                     {/* Ganesha Watermark */}
                                     <div className="absolute inset-0 flex items-center justify-center opacity-15 pointer-events-none">
@@ -193,14 +208,14 @@ const RasiChart = ({ data }) => {
                                     </div>
 
                                     {/* Content matching the image */}
-                                    <div className="relative z-10 flex flex-col items-center gap-1 font-serif text-[#2a2a2a]">
+                                    <div className="relative z-10 flex flex-col items-center gap-1 font-serif" style={{ color: '#2a2a2a' }}>
                                         {formattedDate && <span className="text-sm font-bold tracking-wide">{formattedDate}</span>}
                                         {timeStr && <span className="text-sm font-bold tracking-wide mb-1">{timeStr}</span>}
 
-                                        <span className="text-xl font-bold uppercase tracking-wider text-[#8b0000] mt-1 border-b border-[#8b0000] leading-none pb-0.5">Rasi</span>
+                                        <span className="text-xl font-bold uppercase tracking-wider mt-1 leading-none pb-0.5" style={{ color: '#8b0000', borderBottom: '1px solid #8b0000' }}>Rasi</span>
 
                                         {nakshatraData.name && (
-                                            <span className="text-sm font-semibold mt-1 bg-[#fff8e7]/80 px-2 rounded">
+                                            <span className="text-sm font-semibold mt-1 px-2 rounded" style={{ backgroundColor: 'rgba(255, 248, 231, 0.8)' }}>
                                                 {nakshatraData.name}
                                             </span>
                                         )}
@@ -214,14 +229,21 @@ const RasiChart = ({ data }) => {
                     const { planets, signTamil, degrees, aspectingPlanets } = getSignData(signId) || { planets: [] };
 
                     return (
-                        <div key={signId} className="bg-[#fff8e7] relative p-1 flex flex-col items-center justify-between border-[0.5px] border-[#8b0000] hover:bg-[#fffdf5] transition-colors overflow-hidden h-full">
+                        <div
+                            key={signId}
+                            className="relative p-1 flex flex-col items-center justify-between hover:bg-[#fffdf5] transition-colors overflow-hidden h-full"
+                            style={{
+                                backgroundColor: '#fff8e7',
+                                border: '0.5px solid #8b0000'
+                            }}
+                        >
                             {/* Header: Sign ID (Top Left) & Tamil Name (Top Center) */}
                             <div className="w-full flex justify-between items-start px-1 pt-0.5">
-                                <span className="text-[10px] font-bold text-[#b91c1c] leading-none">
+                                <span className="text-[10px] font-bold leading-none" style={{ color: '#b91c1c' }}>
                                     {signId}
                                 </span>
                                 {signTamil && (
-                                     <span className="text-[9px] text-[#5c3a21] font-serif font-bold leading-none mt-0.5 opacity-90">
+                                     <span className="text-[9px] font-serif font-bold leading-none mt-0.5 opacity-90" style={{ color: '#5c3a21' }}>
                                         {signTamil}
                                      </span>
                                 )}
@@ -232,7 +254,10 @@ const RasiChart = ({ data }) => {
                             <div className="flex-1 flex flex-col items-center justify-center gap-0.5 w-full my-1">
                                 {planets.map((p, idx) => (
                                     <div key={idx} className="flex items-center leading-none">
-                                        <span className={`text-sm font-bold font-serif ${p.isAsc ? 'text-red-700' : 'text-[#1a1a1a]'}`}>
+                                        <span
+                                            className={`text-sm font-bold font-serif`}
+                                            style={{ color: p.isAsc ? '#b91c1c' : '#1a1a1a' }}
+                                        >
                                             {planetShortTamilMap[p.name] || p.name.substring(0, 2)}
                                         </span>
                                     </div>
@@ -243,14 +268,14 @@ const RasiChart = ({ data }) => {
                             <div className="w-full flex flex-col items-center">
                                 {/* Aspecting Planets - Very Small */}
                                 {aspectingPlanets && aspectingPlanets.length > 0 && (
-                                    <div className="text-[7px] text-[#8b4513] leading-none text-center opacity-70 mb-0.5">
+                                    <div className="text-[7px] leading-none text-center opacity-70 mb-0.5" style={{ color: '#8b4513' }}>
                                         (Pa: {aspectingPlanets.map(ap => planetShortTamilMap[ap] || ap.substring(0,2)).join(' ')})
                                     </div>
                                 )}
 
                                 {/* Degrees - Bottom Right Corner */}
                                 {degrees !== null && degrees !== undefined && degrees > 0 && (
-                                    <div className="self-end text-[8px] font-mono text-[#4a5568] leading-none px-0.5 uppercase">
+                                    <div className="self-end text-[8px] font-mono leading-none px-0.5 uppercase" style={{ color: '#4a5568' }}>
 
                                     </div>
                                 )}

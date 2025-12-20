@@ -2,12 +2,14 @@ import React, { useContext, useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
 import RasiChart from '../components/RasiChart';
+import { evaluateBatsman, evaluateBowler } from '../utils/predictionRules';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     Paper, Typography, Box, TextField, InputAdornment, TablePagination,
     Select, MenuItem, FormControl, InputLabel, Collapse, IconButton,
     Container, AppBar, Toolbar, Avatar, Chip, Grid, Card, CardContent, Button,
-    CircularProgress, Tabs, Tab, Divider, useMediaQuery, useTheme
+    CircularProgress, Tabs, Tab, Divider, useMediaQuery, useTheme,
+    Dialog, DialogTitle, DialogContent, DialogActions, Tooltip
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -15,6 +17,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PublicIcon from '@mui/icons-material/Public';
+import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 
 // --- HELPERS ---
 const getFlag = (player) => {
@@ -35,6 +38,33 @@ const getFlag = (player) => {
 };
 
 // --- SUB-COMPONENTS ---
+
+// Prediction Chip
+const PredictionChip = ({ score, type, report }) => {
+    let color = 'default';
+    let label = 'Neutral';
+
+    if (score >= 2) { color = 'success'; label = 'Excellent'; }
+    else if (score > 0) { color = 'primary'; label = 'Good'; }
+    else { color = 'error'; label = 'Flop'; }
+
+    return (
+        <Tooltip title={
+            <div className="text-xs">
+                {report.map((r, i) => <div key={i}>• {r}</div>)}
+                {report.length === 0 && "No rules matched"}
+            </div>
+        } arrow placement="top">
+            <Chip
+                label={`${type}: ${label}`}
+                size="small"
+                color={color}
+                variant={score > 0 ? 'filled' : 'outlined'}
+                sx={{ mr: 1, fontWeight: 'bold' }}
+            />
+        </Tooltip>
+    );
+};
 
 // 1. Planetary Details Table
 const PlanetaryTable = ({ rawPlanets }) => {
@@ -221,7 +251,7 @@ const PlayerDetailPanel = ({ player }) => {
     );
 };
 
-const PlayerRow = ({ player }) => {
+const PlayerRow = ({ player, matchChart }) => {
     const [open, setOpen] = useState(false);
 
     // Summary info for the row
@@ -229,6 +259,15 @@ const PlayerRow = ({ player }) => {
     const rasi = chart?.moonSign?.english || chart?.planets?.Moon?.sign || '-';
     // Use first letter of name for Avatar
     const avatarLetter = player.name ? player.name.charAt(0).toUpperCase() : '?';
+
+    // Calculate Permissions if Match Chart is available
+    let batResult = null;
+    let bowlResult = null;
+
+    if (matchChart && chart) {
+        batResult = evaluateBatsman(chart, matchChart.data);
+        bowlResult = evaluateBowler(chart, matchChart.data);
+    }
 
     return (
         <>
@@ -274,14 +313,24 @@ const PlayerRow = ({ player }) => {
                         <Typography variant="body2">{player.timezone || '-'}</Typography>
                     </Box>
                 </TableCell>
-                 <TableCell>
-                    <Chip
-                        label={rasi !== '-' ? `Moon: ${rasi}` : 'No Data'}
-                        size="small"
-                        color={rasi !== '-' ? "primary" : "default"}
-                        variant={rasi !== '-' ? "outlined" : "filled"}
-                    />
-                </TableCell>
+
+                {matchChart ? (
+                     <TableCell>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                            <PredictionChip type="Bat" score={batResult?.score} report={batResult?.report} />
+                            <PredictionChip type="Bowl" score={bowlResult?.score} report={bowlResult?.report} />
+                        </Box>
+                     </TableCell>
+                ) : (
+                     <TableCell>
+                        <Chip
+                            label={rasi !== '-' ? `Moon: ${rasi}` : 'No Data'}
+                            size="small"
+                            color={rasi !== '-' ? "primary" : "default"}
+                            variant={rasi !== '-' ? "outlined" : "filled"}
+                        />
+                    </TableCell>
+                )}
             </TableRow>
             <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -302,6 +351,12 @@ const UserDashboard = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
+    // Match Prediction State
+    const [openDialog, setOpenDialog] = useState(false);
+    const [matchData, setMatchData] = useState({ date: '', time: '', location: 'Mumbai', lat: '19.0760', long: '72.8777' });
+    const [matchChart, setMatchChart] = useState(null);
+    const [predicting, setPredicting] = useState(false);
+
     // Fetch Players
     useEffect(() => {
         const fetchPlayers = async () => {
@@ -320,6 +375,32 @@ const UserDashboard = () => {
         };
         fetchPlayers();
     }, []);
+
+    const handleRunPrediction = async () => {
+        setPredicting(true);
+        try {
+             // 1. Fetch Chart for the Match Time
+            const baseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
+            const payload = {
+                date: matchData.date, // YYYY-MM-DD
+                time: matchData.time, // HH:MM
+                lat: parseFloat(matchData.lat),
+                long: parseFloat(matchData.long),
+                timezone: "Asia/Kolkata"
+            };
+
+            const res = await axios.post(`${baseUrl}/api/charts/birth-chart`, payload);
+            if (res.data && res.data.success) {
+                setMatchChart(res.data); // Store the match chart
+                setOpenDialog(false); // Close dialog
+            }
+        } catch (error) {
+            console.error("Prediction Logic Failed", error);
+            alert("Failed to calculate Match Chart. Check Date/Time.");
+        } finally {
+            setPredicting(false);
+        }
+    };
 
     // Filter Logic
     const filteredPlayers = useMemo(() => {
@@ -364,9 +445,15 @@ const UserDashboard = () => {
                          <Chip label="ADMIN DASHBOARD" size="small" sx={{ ml: 2, height: 20, fontSize: '0.65rem' }} />
                     </Typography>
                     <Box>
-                         <Typography variant="caption" display="block" align="right" color="text.secondary">
-                            Total Players: {players.length}
-                        </Typography>
+                        {matchChart && <Chip label="Prediction ON" color="success" sx={{ mr: 2 }} onDelete={() => setMatchChart(null)} />}
+                        <Button
+                            variant="outlined"
+                            startIcon={<SportsCricketIcon />}
+                            onClick={() => setOpenDialog(true)}
+                            sx={{ mr: 2 }}
+                        >
+                            Predict Match
+                        </Button>
                     </Box>
                     <Button color="inherit" onClick={logout} sx={{ ml: 2, fontSize: '0.8rem' }}>Logout</Button>
                 </Toolbar>
@@ -409,13 +496,19 @@ const UserDashboard = () => {
                                             <TableCell sx={{ bgcolor: '#1e40af', color: 'white', fontWeight: 'bold' }}>PLAYER PROFILE</TableCell>
                                             <TableCell sx={{ bgcolor: '#1e40af', color: 'white', fontWeight: 'bold' }}>BIRTH PLACE</TableCell>
                                             <TableCell sx={{ bgcolor: '#1e40af', color: 'white', fontWeight: 'bold' }}>TIMEZONE</TableCell>
-                                            <TableCell sx={{ bgcolor: '#1e40af', color: 'white', fontWeight: 'bold' }}>CHART SUMMARY</TableCell>
+                                            <TableCell sx={{ bgcolor: '#1e40af', color: 'white', fontWeight: 'bold' }}>
+                                                {matchChart ? "PREDICTION RESULT" : "CHART SUMMARY"}
+                                            </TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {paginatedPlayers.length > 0 ? (
                                             paginatedPlayers.map((player) => (
-                                                <PlayerRow key={player._id || player.id} player={player} />
+                                                <PlayerRow
+                                                    key={player._id || player.id}
+                                                    player={player}
+                                                    matchChart={matchChart}
+                                                />
                                             ))
                                         ) : (
                                             <TableRow>
@@ -443,6 +536,53 @@ const UserDashboard = () => {
                     )}
                 </Paper>
             </Container>
+
+            {/* Match Prediction Dialog */}
+            <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+                <DialogTitle>Predict Match Performance</DialogTitle>
+                <DialogContent>
+                    <Box sx={{ pt: 1, display: 'flex', flexDirection: 'column', gap: 2, minWidth: 300 }}>
+                        <TextField
+                            label="Match Date"
+                            type="date"
+                            fullWidth
+                            InputLabelProps={{ shrink: true }}
+                            value={matchData.date}
+                            onChange={(e) => setMatchData({...matchData, date: e.target.value})}
+                        />
+                        <TextField
+                            label="Match Time"
+                            type="time"
+                            fullWidth
+                            InputLabelProps={{ shrink: true }}
+                            value={matchData.time}
+                            onChange={(e) => setMatchData({...matchData, time: e.target.value})}
+                        />
+                        <TextField
+                            label="Location Lat"
+                            fullWidth
+                            value={matchData.lat}
+                            onChange={(e) => setMatchData({...matchData, lat: e.target.value})}
+                        />
+                         <TextField
+                            label="Location Long"
+                            fullWidth
+                            value={matchData.long}
+                            onChange={(e) => setMatchData({...matchData, long: e.target.value})}
+                        />
+                        <Typography variant="caption" color="text.secondary">
+                            Defaults to Mumbai (19.07, 72.87) for testing.
+                        </Typography>
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
+                    <Button onClick={handleRunPrediction} variant="contained" disabled={predicting}>
+                        {predicting ? "Calculating..." : "Run Analysis"}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
         </Box>
     );
 };
