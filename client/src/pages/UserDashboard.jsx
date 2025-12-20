@@ -379,24 +379,66 @@ const UserDashboard = () => {
     const handleRunPrediction = async () => {
         setPredicting(true);
         try {
-             // 1. Fetch Chart for the Match Time
+            // Parse Date: "2023-10-30" -> components
+            // WARNING: "2023-10-30" string splits to [2023, 10, 30] which is Year, Month, Day.
+            // Be careful with field ordering in split.
+            const parts = matchData.date.split('-'); // ["2025", "12", "21"]
+            const year = parseInt(parts[0]);
+            const month = parseInt(parts[1]);
+            const day = parseInt(parts[2]);
+
+            // Parse Time: "14:30" -> components
+            const timeParts = matchData.time.split(':');
+            const hour = parseInt(timeParts[0]);
+            const minute = parseInt(timeParts[1]);
+
+            if (!day || !month || !year || isNaN(hour) || isNaN(minute)) {
+                alert("Please select a valid Date and Time.");
+                setPredicting(false);
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert("Session expired. Please login again.");
+                logout();
+                return;
+            }
+
             const baseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
+
+            // Backend expects explicit fields, not date strings
             const payload = {
-                date: matchData.date, // YYYY-MM-DD
-                time: matchData.time, // HH:MM
-                lat: parseFloat(matchData.lat),
-                long: parseFloat(matchData.long),
+                day: day,
+                month: month,
+                year: year,
+                hour: hour,
+                minute: minute,
+                latitude: parseFloat(matchData.lat),
+                longitude: parseFloat(matchData.long),
                 timezone: "Asia/Kolkata"
             };
 
-            const res = await axios.post(`${baseUrl}/api/charts/birth-chart`, payload);
+            const res = await axios.post(
+                `${baseUrl}/api/charts/birth-chart`,
+                payload,
+                { headers: { 'x-auth-token': token } }
+            );
+
             if (res.data && res.data.success) {
-                setMatchChart(res.data); // Store the match chart
-                setOpenDialog(false); // Close dialog
+                setMatchChart(res.data);
+                setOpenDialog(false);
             }
         } catch (error) {
             console.error("Prediction Logic Failed", error);
-            alert("Failed to calculate Match Chart. Check Date/Time.");
+            // Show server message if available
+            const msg = error.response?.data?.msg || error.message;
+            if (msg === 'Token is not valid') {
+                 alert("Session expired. Logging out...");
+                 logout();
+            } else {
+                 alert(`Failed to calculate Match Chart: ${msg}`);
+            }
         } finally {
             setPredicting(false);
         }
