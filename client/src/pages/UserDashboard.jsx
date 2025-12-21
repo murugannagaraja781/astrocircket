@@ -408,7 +408,7 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect }) => {
                     </Box>
                 </TableCell>
 
-                {matchChart ? (
+                {(matchChart && isSelected) ? (
                      <TableCell>
                         <Box sx={{ display: 'flex', gap: 1 }}>
                             <PredictionChip type="Bat" score={batResult?.score} report={batResult?.report} />
@@ -427,7 +427,7 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect }) => {
                 )}
             </TableRow>
             <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <PlayerDetailPanel player={player} matchChart={matchChart} />
                     </Collapse>
