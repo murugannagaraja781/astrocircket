@@ -208,4 +208,39 @@ const getPlayerById = async (req, res) => {
     }
 };
 
-module.exports = { syncPlayers, getPlayers, getPlayerById, uploadPlayers };
+// Update Player (Super Admin)
+const updatePlayer = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updates = req.body;
+
+        // Prevent ID update logic
+        delete updates._id;
+        delete updates.id;
+
+        // Find by custom 'id' field
+        const player = await Player.findOneAndUpdate(
+            { id: id },
+            { $set: updates },
+            { new: true }
+        );
+
+        if (!player) {
+            // Fallback to try finding by _id if custom id not found
+            const playerById = await Player.findByIdAndUpdate(
+                id,
+                { $set: updates },
+                { new: true }
+            );
+            if (!playerById) return res.status(404).json({ msg: 'Player not found' });
+            return res.json(playerById);
+        }
+
+        res.json(player);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+};
+
+module.exports = { syncPlayers, getPlayers, getPlayerById, uploadPlayers, updatePlayer };

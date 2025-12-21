@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Paper, Typography, Box, TextField, Button, Grid, CircularProgress, Alert } from '@mui/material';
+import { Paper, Typography, Box, TextField, Button, Grid, CircularProgress, Alert, Autocomplete } from '@mui/material';
 import axios from 'axios';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 
@@ -19,16 +19,35 @@ const MatchPredictionControl = ({ onPredictionComplete, token }) => {
         setMatchDetails(prev => ({ ...prev, [field]: value }));
     };
 
-    // Simple manual coordinate lookup for demo (should be Google Maps API in prod)
-    const handleLocationBlur = () => {
-        const loc = matchDetails.location.toLowerCase();
-        if (loc.includes('mumbai')) handleChange('lat', 19.0760);
-        else if (loc.includes('chennai')) handleChange('lat', 13.0827);
-        else if (loc.includes('bangalore')) handleChange('lat', 12.9716);
-        else if (loc.includes('delhi')) handleChange('lat', 28.6139);
-        else if (loc.includes('kolkata')) handleChange('lat', 22.5726);
-        else if (loc.includes('london')) { handleChange('lat', 51.5074); handleChange('long', -0.1278); handleChange('timezone', 0); }
-        else if (loc.includes('melbourne')) { handleChange('lat', -37.8136); handleChange('long', 144.9631); handleChange('timezone', 10); }
+    // Predefined City Data (Major Cricket Venues & Cities)
+    const cityOptions = [
+        { label: "Mumbai (மும்பை), India", lat: 19.0760, long: 72.8777, timezone: 5.5 },
+        { label: "Chennai (சென்னை), India", lat: 13.0827, long: 80.2707, timezone: 5.5 }, // Corrected Chennai Long
+        { label: "Bangalore (பெங்களூரு), India", lat: 12.9716, long: 77.5946, timezone: 5.5 },
+        { label: "Delhi (டெல்லி), India", lat: 28.6139, long: 77.2090, timezone: 5.5 },
+        { label: "Kolkata (கொல்கத்தா), India", lat: 22.5726, long: 88.3639, timezone: 5.5 },
+        { label: "Hyderabad (ஹைதராபாத்), India", lat: 17.3850, long: 78.4867, timezone: 5.5 },
+        { label: "Ahmedabad (அகமதாபாத்), India", lat: 23.0225, long: 72.5714, timezone: 5.5 },
+        { label: "Pune (புனே), India", lat: 18.5204, long: 73.8567, timezone: 5.5 },
+        { label: "London (லண்டன்), UK", lat: 51.5074, long: -0.1278, timezone: 0.0 },
+        { label: "Melbourne (மெல்போர்ன்), Australia", lat: -37.8136, long: 144.9631, timezone: 10.0 },
+        { label: "Sydney (சிட்னி), Australia", lat: -33.8688, long: 151.2093, timezone: 10.0 },
+        { label: "Dubai (துபாய்), UAE", lat: 25.276987, long: 55.296249, timezone: 4.0 },
+        { label: "Colombo (கொழும்பு), Sri Lanka", lat: 6.9271, long: 79.8612, timezone: 5.5 },
+        { label: "Johannesburg (ஜோகன்னஸ்பர்க்), SA", lat: -26.2041, long: 28.0473, timezone: 2.0 },
+        { label: "New York (நியூயார்க்), USA", lat: 40.7128, long: -74.0060, timezone: -5.0 }, // EST usually, careful with DST
+    ];
+
+    const handleCityChange = (event, newValue) => {
+        if (newValue) {
+            setMatchDetails(prev => ({
+                ...prev,
+                location: newValue.label,
+                lat: newValue.lat,
+                long: newValue.long,
+                timezone: newValue.timezone
+            }));
+        }
     };
 
     const handleRun = async () => {
@@ -69,13 +88,13 @@ const MatchPredictionControl = ({ onPredictionComplete, token }) => {
     return (
         <Paper sx={{ p: 2, mb: 3, backgroundColor: '#fff8e7', border: '1px solid #ddd' }}>
             <Typography variant="h6" color="primary" display="flex" alignItems="center" gap={1} gutterBottom>
-                <SportsCricketIcon /> Match Prediction Setup
+                <SportsCricketIcon /> Match Prediction Setup (போட்டி கணிப்பு அமைப்பு)
             </Typography>
 
             <Grid container spacing={2} alignItems="center">
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        label="Match Date"
+                        label="தேதி (Date)"
                         type="date"
                         fullWidth
                         size="small"
@@ -86,7 +105,7 @@ const MatchPredictionControl = ({ onPredictionComplete, token }) => {
                 </Grid>
                 <Grid item xs={12} sm={2}>
                     <TextField
-                        label="Time"
+                        label="நேரம் (Time)"
                         type="time"
                         fullWidth
                         size="small"
@@ -95,20 +114,30 @@ const MatchPredictionControl = ({ onPredictionComplete, token }) => {
                         InputLabelProps={{ shrink: true }}
                     />
                 </Grid>
-                 <Grid item xs={12} sm={3}>
-                    <TextField
-                        label="Location (City)"
-                        fullWidth
-                        size="small"
+                <Grid item xs={12} sm={3}>
+                    <Autocomplete
+                        freeSolo
+                        options={cityOptions}
+                        getOptionLabel={(option) => typeof option === 'string' ? option : option.label}
                         value={matchDetails.location}
-                        onChange={(e) => handleChange('location', e.target.value)}
-                        onBlur={handleLocationBlur}
-                        helperText={`Lat: ${matchDetails.lat}, Long: ${matchDetails.long}`}
+                        onChange={handleCityChange}
+                        onInputChange={(event, newInputValue) => {
+                            handleChange('location', newInputValue);
+                        }}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="இடம் (City)"
+                                size="small"
+                                fullWidth
+                                helperText={`Lat: ${matchDetails.lat}, Long: ${matchDetails.long}`}
+                            />
+                        )}
                     />
                 </Grid>
                 <Grid item xs={12} sm={2}>
                     <TextField
-                        label="Timezone"
+                        label="நேர மண்டலம் (Timezone)"
                         type="number"
                         fullWidth
                         size="small"

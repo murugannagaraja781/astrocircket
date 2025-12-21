@@ -165,6 +165,15 @@ const PlanetaryTable = ({ planets }) => {
                                     />
                                 </TableCell>
                                 <TableCell>
+                                    <Chip
+                                        label={p.avasthaTamil || '-'}
+                                        size="small"
+                                        variant="outlined"
+                                        color="primary"
+                                        sx={{ minWidth: 70 }}
+                                    />
+                                </TableCell>
+                                <TableCell>
                                     <Box sx={{ display: 'flex', gap: 0.5 }}>
                                         {p.isRetro && <Chip label="வக்ரம்" size="small" color="secondary" sx={{ height: 24, fontSize: 10 }} />}
                                         {p.isCombust && <Chip label="அஸ்தமனம்" size="small" color="warning" sx={{ height: 24, fontSize: 10 }} />}
@@ -331,7 +340,7 @@ const PlayerDetailPanel = ({ player, matchChart }) => {
     );
 };
 
-const PlayerRow = ({ player, matchChart, isSelected, onSelect }) => {
+const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit }) => {
     const [open, setOpen] = useState(false);
 
     // Summary info for the row
@@ -381,9 +390,21 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect }) => {
                             {avatarLetter}
                         </Avatar>
                         <Box>
-                            <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
-                                {player.name} {getFlag(player)}
-                            </Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+                                    {player.name} {getFlag(player)}
+                                </Typography>
+                                <IconButton
+                                    size="small"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onEdit(player);
+                                    }}
+                                    sx={{ p: 0.5 }}
+                                >
+                                    <span style={{ fontSize: '1rem' }}>✏️</span>
+                                </IconButton>
+                            </Box>
                              <Typography variant="caption" color="text.secondary">
                                 ID: {player.id}
                             </Typography>
@@ -484,6 +505,52 @@ const UserDashboard = () => {
     };
 
     const isSelected = (id) => selectedPlayerIds.indexOf(id) !== -1;
+
+    // --- EDIT PLAYER LOGIC ---
+    const [editDialogOpen, setEditDialogOpen] = useState(false);
+    const [editingPlayer, setEditingPlayer] = useState(null);
+    const [editForm, setEditForm] = useState({});
+
+    const handleEditClick = (player) => {
+        setEditingPlayer(player);
+        setEditForm({
+            name: player.name || '',
+            profile: player.profile || '',
+            dob: player.dob || '',
+            birthPlace: player.birthPlace || '',
+            timezone: player.timezone || '',
+            // Flatten birthChart helper fields if needed, but usually we just allow editing raw text if complex,
+            // OR simpler fields. User asked for DOB, Place, Time...
+            // Assuming DOB is string for now as per display.
+            // Ideally we'd validte dates.
+        });
+        setEditDialogOpen(true);
+    };
+
+    const handleEditClose = () => {
+        setEditDialogOpen(false);
+        setEditingPlayer(null);
+    };
+
+    const handleSavePlayer = async () => {
+        try {
+            const authToken = token || localStorage.getItem('x-auth-token');
+            // Optimistic update or wait? Wait.
+
+            // Assuming we use custom 'id' for URL parameter based on controller logic
+            await axios.put(`${baseUrl}/api/players/${editingPlayer.id}`, editForm, {
+                headers: { 'x-auth-token': authToken }
+            });
+
+            // Refresh list (or update locally)
+            setPlayers(prev => prev.map(p => p.id === editingPlayer.id ? { ...p, ...editForm } : p));
+            setEditDialogOpen(false);
+            // Optionally show success snackbar
+        } catch (err) {
+            console.error("Update failed", err);
+            alert("Failed to update player");
+        }
+    };
 
     const baseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
 

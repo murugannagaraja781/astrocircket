@@ -29,6 +29,48 @@ const getNakshatraLordHelper = (nakshatraName) => {
     return '-';
 };
 
+const oddSigns = new Set(['Aries', 'Gemini', 'Leo', 'Libra', 'Sagittarius', 'Aquarius']);
+
+const calculateAvastha = (signName, degree) => {
+    if (!signName || degree === undefined || degree === null) return { english: '-', tamil: '-' };
+
+    // Normalize sign name check
+    const isOdd = oddSigns.has(signName) || oddSigns.has(signName.split(' ')[0]); // Handle cases like "Aries (Mesha)" if any
+
+    // Baaladi Avasthas based on degree
+    // Odd: 0-6 Infant, 6-12 Adolescent, 12-18 Youth, 18-24 Old, 24-30 Dead
+    // Even: 0-6 Dead, 6-12 Old, 12-18 Youth, 18-24 Adolescent, 24-30 Infant
+
+    let state = '';
+
+    if (isOdd) {
+        if (degree < 6) state = 'Infant';
+        else if (degree < 12) state = 'Adolescent';
+        else if (degree < 18) state = 'Youth';
+        else if (degree < 24) state = 'Old';
+        else state = 'Dead';
+    } else {
+        if (degree < 6) state = 'Dead';
+        else if (degree < 12) state = 'Old';
+        else if (degree < 18) state = 'Youth';
+        else if (degree < 24) state = 'Adolescent';
+        else state = 'Infant';
+    }
+
+    const avasthaTamilMap = {
+        'Infant': 'பாலிய',    // Balya
+        'Adolescent': 'குமார', // Kumara
+        'Youth': 'யுவ',      // Yuva
+        'Old': 'விருத்த',   // Vriddha
+        'Dead': 'மிருத'      // Mrita
+    };
+
+    return {
+        english: state,
+        tamil: avasthaTamilMap[state] || state
+    };
+};
+
 const processSinglePlanet = (pRaw, houseContext) => {
     const pName = typeof pRaw === 'string' ? pRaw : (pRaw.name || pRaw.englishName);
     if (!pName) return null;
@@ -50,6 +92,9 @@ const processSinglePlanet = (pRaw, houseContext) => {
     const dignityEnglish = (typeof pRaw === 'object' ? (pRaw.dignity?.english || pRaw.dignity) : null) || '-';
     const dignityTamil = dignityTamilMap[dignityEnglish] || dignityEnglish;
 
+    // Calculate Avastha
+    const avastha = calculateAvastha(signName, degreeVal);
+
     return {
         planetName: pName,
         planetTamil: planetTamilMap[pName] || pName,
@@ -63,6 +108,8 @@ const processSinglePlanet = (pRaw, houseContext) => {
         degreeFormatted: degreeStr,
         dignityName: dignityEnglish,
         dignityTamil,
+        avasthaName: avastha.english,
+        avasthaTamil: avastha.tamil,
         isRetro: (typeof pRaw === 'object' ? pRaw.isRetro : false),
         isCombust: (typeof pRaw === 'object' ? pRaw.isCombust : false),
         raw: pRaw // Keep raw for debug if needed

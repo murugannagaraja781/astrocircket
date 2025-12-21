@@ -54,12 +54,7 @@ const Login = () => {
             <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md border-4 border-cricketGold relative z-10 transform transition-all hover:scale-[1.01]">
                 {/* Header Section */}
                 <div className="text-center mb-8">
-                    <div className="inline-block bg-cricketGreen text-cricketGold px-4 py-1 rounded-full text-sm font-bold uppercase tracking-wider mb-2 animate-bounce">
-                        Match Day 1
-                    </div>
-                    <h2 className="text-4xl font-heading font-extrabold text-cricketGreen uppercase drop-shadow-sm">
-                        The Toss
-                    </h2>
+
                     <p className="text-pitchBrown font-semibold mt-2">Enter credentials to start the innings</p>
                 </div>
 
