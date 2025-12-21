@@ -50,7 +50,8 @@ const MatchPredictionControl = ({ onPredictionComplete, token }) => {
             };
 
             // Fetch Match Chart
-            const res = await axios.post('/api/charts/birth-chart', payload, {
+            const baseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
+            const res = await axios.post(`${baseUrl}/api/charts/birth-chart`, payload, {
                 headers: { 'x-auth-token': token }
             });
 
