@@ -29,9 +29,10 @@ const fetchCharData = async (p) => {
 
         const response = await axios.post('https://astroweb-production.up.railway.app/api/charts/birth-chart', apiPayload);
         // Store the COMPLETE response data (houses, planets, etc.)
-        // User requested: "store example birthData... allthings store finall addatribute total json format store"
-        // The API likely returns { data: { "1": ..., "2": ... } } or just { "1": ... }
-        // We ensure we capture the full body.
+        // debug logging
+        console.log('--- FETCHED CHAR DATA ---');
+        console.log(JSON.stringify(response.data).substring(0, 500) + '...');
+
         return response.data; // This is the full JSON object including all attributes
     } catch (err) {
         console.error(`Error fetching chart for ${p.name}:`, err.message);

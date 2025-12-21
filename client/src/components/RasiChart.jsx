@@ -125,11 +125,23 @@ const RasiChart = ({ data }) => {
             const rawPlanets = houseData.planets || [];
             const mappedPlanets = rawPlanets.map(pName => {
                 const isAsc = pName === 'Lagna' || pName === 'Asc';
+                const name = isAsc ? 'Asc' : pName;
+
+                // Lookup detailed info from chartData.planets if available
+                let details = {};
+                if(chartData.planets && chartData.planets[name]) {
+                    const p = chartData.planets[name];
+                    details = {
+                        deg: parseFloat(p.degree).toFixed(0), // No decimals to save space
+                        star: p.nakshatra,
+                        starLord: p.nakshatraLord
+                    };
+                }
+
                 return {
-                    name: isAsc ? 'Asc' : pName,
+                    name: name,
                     isAsc: isAsc,
-                    // New data format doesn't seem to have per-planet degrees in this specific object
-                    // but we can pass through if we find them later
+                    ...details
                 };
             });
 
@@ -255,15 +267,23 @@ const RasiChart = ({ data }) => {
                             </div>
 
                             {/* Planets List - Center - Traditional Look */}
-                            <div className="flex-1 flex flex-col items-center justify-center gap-0.5 w-full my-1">
+                            <div className="flex-1 flex flex-col items-center justify-center gap-0.5 w-full my-1 overflow-y-auto hidden-scrollbar">
                                 {planets.map((p, idx) => (
-                                    <div key={idx} className="flex items-center leading-none">
-                                        <span
-                                            className={`text-sm font-bold font-serif`}
-                                            style={{ color: p.isAsc ? '#b91c1c' : '#1a1a1a' }}
-                                        >
-                                            {planetShortTamilMap[p.name] || p.name.substring(0, 2)}
-                                        </span>
+                                    <div key={idx} className="flex flex-col items-center leading-none mb-0.5">
+                                        <div className="flex items-center gap-1">
+                                            <span
+                                                className={`text-xs font-bold font-serif`}
+                                                style={{ color: p.isAsc ? '#b91c1c' : '#1a1a1a' }}
+                                            >
+                                                {planetShortTamilMap[p.name] || p.name.substring(0, 2)}
+                                            </span>
+                                            {p.deg && <span className="text-[9px] text-gray-600">{p.deg}°</span>}
+                                        </div>
+                                        {p.starLord && (
+                                            <span className="text-[7px] text-gray-500 -mt-0.5">
+                                                {p.starLord.substring(0, 2)}
+                                            </span>
+                                        )}
                                     </div>
                                 ))}
                             </div>
