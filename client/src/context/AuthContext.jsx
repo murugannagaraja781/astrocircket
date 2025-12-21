@@ -159,6 +159,23 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         if(localStorage.token) setAuthToken(localStorage.token);
         loadUser();
+
+        // Setup Axios Interceptor for 401s
+        const interceptor = axios.interceptors.response.use(
+            response => response,
+            error => {
+                if (error.response && error.response.status === 401) {
+                    // Token expired or invalid
+                    localStorage.removeItem('user');
+                    dispatch({ type: 'LOGOUT' });
+                }
+                return Promise.reject(error);
+            }
+        );
+
+        return () => {
+            axios.interceptors.response.eject(interceptor);
+        };
     }, []);
 
     return (

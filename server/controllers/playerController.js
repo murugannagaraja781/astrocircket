@@ -1,5 +1,6 @@
 const Player = require('../models/Player');
 const axios = require('axios');
+const { formatPlanetaryData } = require('../utils/chartUtils');
 const path = require('path');
 const fs = require('fs');
 
@@ -147,19 +148,62 @@ function convertTimezone(tzString) {
 
 const getPlayers = async (req, res) => {
     try {
-        const players = await Player.find({});
-        res.json(players);
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 11;
+        const skip = (page - 1) * limit;
+
+        const totalPlayers = await Player.countDocuments({});
+        const totalPages = Math.ceil(totalPlayers / limit);
+
+        const players = await Player.find({})
+            .skip(skip)
+            .limit(limit)
+            .lean();
+
+        const formatChartHelper = (chart) => {
+            if (!chart) return chart;
+            // Check nesting
+            const root = chart.data || chart;
+            if (!root.formattedPlanets) {
+                root.formattedPlanets = formatPlanetaryData(root.planets || root.houses);
+            }
+            return chart;
+        };
+
+        const updatedPlayers = players.map(p => {
+            if (p.birthChart) {
+                p.birthChart = formatChartHelper(p.birthChart);
+            }
+            return p;
+        });
+
+        res.json({
+            players: updatedPlayers,
+            currentPage: page,
+            totalPages,
+            totalPlayers
+        });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: 'Server Error' });
     }
 };
 
 const getPlayerById = async (req, res) => {
     try {
-        const player = await Player.findOne({ id: req.params.id });
+        const player = await Player.findOne({ id: req.params.id }).lean();
         if (!player) return res.status(404).json({ message: 'Player not found' });
+
+        if (player.birthChart) {
+            const root = player.birthChart.data || player.birthChart;
+            if (!root.formattedPlanets) {
+                root.formattedPlanets = formatPlanetaryData(root.planets || root.houses);
+            }
+        }
+
         res.json(player);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: 'Server Error' });
     }
 };

@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { formatPlanetaryData } = require('../utils/chartUtils');
 
 exports.getBirthChart = async (req, res) => {
     try {
@@ -17,7 +18,19 @@ exports.getBirthChart = async (req, res) => {
         };
 
         const response = await axios.post('https://newapi-production-ea98.up.railway.app/api/charts/birth-chart', payload);
-        res.json(response.data);
+
+        // --- DATA TRANSFORMATION START ---
+        const rawData = response.data;
+        const formattedPlanets = formatPlanetaryData(rawData.planets || rawData.houses);
+
+        // Merge formatted formattedPlanets into response
+        const finalResponse = {
+            ...rawData,
+            formattedPlanets
+        };
+        // --- DATA TRANSFORMATION END ---
+
+        res.json(finalResponse);
 
     } catch (err) {
         console.error(err.message);

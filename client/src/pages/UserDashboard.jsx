@@ -10,7 +10,7 @@ import {
     Select, MenuItem, FormControl, InputLabel, Collapse, IconButton,
     Container, AppBar, Toolbar, Avatar, Chip, Grid, Card, CardContent, Button,
     CircularProgress, Tabs, Tab, Divider, useMediaQuery, useTheme,
-    Dialog, DialogTitle, DialogContent, DialogActions, Tooltip, Switch
+    Dialog, DialogTitle, DialogContent, DialogActions, Tooltip, Switch, Checkbox
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -92,173 +92,102 @@ const getNakshatraLordHelper = (nakshatraName) => {
 
 // 1. Planetary Details Table
 // 1. Planetary Details Table
-const PlanetaryTable = ({ rawPlanets }) => {
-    if (!rawPlanets) return <Typography color="text.secondary">No Planetary Data Available (தரவு இல்லை)</Typography>;
-
-    // Tamil Dictionaries
-    const planetTamilMap = {
-        'Sun': 'சூரியன்', 'Moon': 'சந்திரன்', 'Mars': 'செவ்வாய்', 'Mercury': 'புதன்',
-        'Jupiter': 'குரு', 'Venus': 'சுக்கிரன்', 'Saturn': 'சனி', 'Rahu': 'ராகு', 'Ketu': 'கேது',
-        'Asc': 'லக்னம்', 'Lagna': 'லக்னம்', 'Uranus': 'யுரேனஸ்', 'Neptune': 'நெப்டியூன்', 'Pluto': 'புளூட்டோ'
-    };
-
-    const dignityTamilMap = {
-        'Exalted': 'உச்சம்', 'Debilitated': 'நீசம்', 'Own Sign': 'ஆட்சி',
-        'Friendly': 'நட்பு', 'Neutral': 'சமம்', 'Enemy': 'பகை', 'Great Enemy': 'தீவிர பகை', 'Great Friend': 'உற்ற நண்பன்'
-    };
-
-    // flatten data if it's in House format
-    let planetList = [];
-    const keys = Object.keys(rawPlanets);
-    const isHouseData = keys.some(k => !isNaN(parseInt(k)));
-
-    if (isHouseData) {
-        // Extract planets from houses
-        Object.values(rawPlanets).forEach(house => {
-            // Determine where the planet list is: direct array, or inside .planets / .Planets
-            let planets = [];
-            if (Array.isArray(house)) {
-                planets = house;
-            } else if (house.planets) {
-                planets = Array.isArray(house.planets) ? house.planets : Object.values(house.planets);
-            } else if (house.Planets) {
-                planets = Array.isArray(house.Planets) ? house.Planets : Object.values(house.Planets);
-            }
-
-            if (planets.length > 0) {
-                planets.forEach(pRaw => {
-                    const pName = typeof pRaw === 'string' ? pRaw : (pRaw.name || pRaw.englishName);
-                    if (!pName) return;
-
-                    planetList.push({
-                        englishName: pName,
-                        tamilName: planetTamilMap[pName] || pName,
-                        sign: house.sign || (typeof pRaw === 'object' ? pRaw.sign : null),
-                        signTamil: house.signTamil || (typeof pRaw === 'object' ? pRaw.signTamil : null),
-                        lord: house.lord || (typeof pRaw === 'object' ? pRaw.lord : null),
-                        lordTamil: house.lordTamil || (typeof pRaw === 'object' ? pRaw.lordTamil : null),
-                        nakshatra: (typeof pRaw === 'object' ? pRaw.nakshatra : null) || '-',
-                        nakshatraLord: (typeof pRaw === 'object' ? pRaw.nakshatraLord : null),
-                        degree: (typeof pRaw === 'object' ? pRaw.degree : 0),
-                        isRetro: (typeof pRaw === 'object' ? pRaw.isRetro : false),
-                        isCombust: (typeof pRaw === 'object' ? pRaw.isCombust : false),
-                        dignity: (typeof pRaw === 'object' ? pRaw.dignity : {}),
-                        raw: pRaw
-                    });
-                });
-            }
-        });
-    } else {
-        // Already valid planet map
-         planetList = Object.values(rawPlanets).map(p => ({
-             ...p,
-             tamilName: planetTamilMap[p.englishName || p.name] || p.tamilName || p.englishName || p.name
-         }));
-    }
-
-    if (planetList.length === 0) {
+// 1. Planetary Details Table
+const PlanetaryTable = ({ planets }) => {
+    // If planets is undefined or not an array, show empty state
+    if (!planets || !Array.isArray(planets) || planets.length === 0) {
          return (
             <Box sx={{ p: 2, textAlign: 'center' }}>
                 <Typography color="text.secondary">
-                    No Planetary Data Available (கிரக தரவு இல்லை)<br/>
-                    <span style={{ fontSize: '0.7rem', color: 'red' }}>
-                        Debug: Keys [{Object.keys(rawPlanets || {}).join(', ')}] <br/>
-                        isHouseData: {isHouseData ? 'Yes' : 'No'}
-                    </span>
+                    No Planetary Data Available (தரவு இல்லை)
                 </Typography>
             </Box>
          );
     }
 
     return (
-        <TableContainer component={Paper} variant="outlined" sx={{ mt: 2, borderRadius: 2, overflow: 'hidden' }}>
-            <Table size="small">
-                <TableHead sx={{ backgroundColor: '#1e3a8a' }}>
-                    <TableRow>
-                        <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>கிரகம்</TableCell>
-                        <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>ராசி</TableCell>
-                        <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>ராசி நாதன்</TableCell>
-                        <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>நட்சத்திர நாதன்</TableCell>
-                        <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>நட்சத்திரம்</TableCell>
-                        <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>பாகை</TableCell>
-                        <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>அந்தஸ்து</TableCell>
-                        <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>நிலை</TableCell>
-                        <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Debug</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {planetList.map((p, i) => {
-                        // Normalize potential object fields
-                        const planetName = p.englishName || p.name;
-                        const signName = p.sign?.name || p.sign || '-';
-                        const lordName = p.lord?.name || p.lord || '-';
-                        const nakshatraName = p.nakshatra?.name || p.nakshatra || '-';
-
-                        // Safe Degree Parsing
-                        const degreeVal = p.degree !== undefined && p.degree !== null ? parseFloat(p.degree) : 0;
-                        const degreeStr = !isNaN(degreeVal) && degreeVal > 0 ? degreeVal.toFixed(2) + '°' : '-';
-
-                        const dignityEnglish = p.dignity?.english || (typeof p.dignity === 'string' ? p.dignity : '-');
-                        const dignityTamil = dignityTamilMap[dignityEnglish] || dignityEnglish;
-
-                        return (
-                        <TableRow key={planetName || i} hover sx={{ '&:nth-of-type(odd)': { bgcolor: '#f8fafc' } }}>
-                            <TableCell>
-                                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                    <span className="font-bold text-gray-800">{planetName}</span>
-                                    <span className="text-xs text-blue-600">{p.tamilName || planetTamilMap[planetName]}</span>
-                                </Box>
-                            </TableCell>
-                            <TableCell>
-                                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                    <span className="font-medium">{signName}</span>
-                                    <span className="text-xs text-gray-500">{p.signTamil}</span>
-                                </Box>
-                            </TableCell>
-                            <TableCell>
-                                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                    <span className="font-medium text-gray-700">{lordName}</span>
-                                    <span className="text-xs text-gray-500">{p.lordTamil}</span>
-                                </Box>
-                            </TableCell>
-                            <TableCell>
-                                <span className="font-medium text-gray-700">{p.nakshatraLord || getNakshatraLordHelper(nakshatraName)}</span>
-                            </TableCell>
-                            <TableCell>
-                                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                    <span>{nakshatraName} {p.pada ? `(${p.pada})` : ''}</span>
-                                    <span className="text-xs text-gray-500">{p.nakshatraTamil}</span>
-                                </Box>
-                            </TableCell>
-                            <TableCell>
-                                <Chip label={degreeStr} size="small" variant="outlined" sx={{ minWidth: 60 }} />
-                            </TableCell>
-                            <TableCell>
-                                <Chip
-                                    label={dignityTamil}
-                                    size="small"
-                                    color={dignityEnglish === 'Exalted' ? 'success' : dignityEnglish === 'Debilitated' ? 'error' : 'default'}
-                                    variant="filled"
-                                    sx={{ minWidth: 80 }}
-                                />
-                            </TableCell>
-                            <TableCell>
-                                <Box sx={{ display: 'flex', gap: 0.5 }}>
-                                    {p.isRetro && <Chip label="வக்ரம்" size="small" color="secondary" sx={{ height: 24, fontSize: 10 }} />}
-                                    {p.isCombust && <Chip label="அஸ்தமனம்" size="small" color="warning" sx={{ height: 24, fontSize: 10 }} />}
-                                </Box>
-                            </TableCell>
-                            <TableCell>
-                                <Typography variant="caption" sx={{ fontSize: 10, color: 'red', wordBreak: 'break-all' }}>
-                                    {JSON.stringify(p.raw)}
-                                </Typography>
-                            </TableCell>
+        <Box>
+            <TableContainer component={Paper} variant="outlined" sx={{ mt: 2, borderRadius: 2, overflow: 'hidden' }}>
+                <Table size="small">
+                    <TableHead sx={{ backgroundColor: '#1e3a8a' }}>
+                        <TableRow>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>கிரகம்</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>ராசி</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>ராசி நாதன்</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>நட்சத்திர நாதன்</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>நட்சத்திரம்</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>பாகை</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>அந்தஸ்து</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>நிலை</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Debug</TableCell>
                         </TableRow>
-                        );
-                    })}
-                </TableBody>
-            </Table>
-        </TableContainer>
+                    </TableHead>
+                    <TableBody>
+                        {planets.map((p, i) => (
+                            <TableRow key={i} hover sx={{ '&:nth-of-type(odd)': { bgcolor: '#f8fafc' } }}>
+                                <TableCell>
+                                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                        <span className="font-bold text-gray-800">{p.planetName}</span>
+                                        <span className="text-xs text-blue-600">{p.planetTamil}</span>
+                                    </Box>
+                                </TableCell>
+                                <TableCell>
+                                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                        <span className="font-medium">{p.signName}</span>
+                                        <span className="text-xs text-gray-500">{p.signTamil}</span>
+                                    </Box>
+                                </TableCell>
+                                <TableCell>
+                                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                        <span className="font-medium text-gray-700">{p.lordName}</span>
+                                        <span className="text-xs text-gray-500">{p.lordTamil}</span>
+                                    </Box>
+                                </TableCell>
+                                <TableCell>
+                                    <span className="font-medium text-gray-700">{p.nakshatraLord}</span>
+                                </TableCell>
+                                <TableCell>
+                                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                        <span>{p.nakshatraName}</span>
+                                        <span className="text-xs text-gray-500">{p.nakshatraTamil}</span>
+                                    </Box>
+                                </TableCell>
+                                <TableCell>
+                                    <Chip label={p.degreeFormatted} size="small" variant="outlined" sx={{ minWidth: 60 }} />
+                                </TableCell>
+                                <TableCell>
+                                    <Chip
+                                        label={p.dignityTamil}
+                                        size="small"
+                                        color={p.dignityName === 'Exalted' ? 'success' : p.dignityName === 'Debilitated' ? 'error' : 'default'}
+                                        variant="filled"
+                                        sx={{ minWidth: 80 }}
+                                    />
+                                </TableCell>
+                                <TableCell>
+                                    <Box sx={{ display: 'flex', gap: 0.5 }}>
+                                        {p.isRetro && <Chip label="வக்ரம்" size="small" color="secondary" sx={{ height: 24, fontSize: 10 }} />}
+                                        {p.isCombust && <Chip label="அஸ்தமனம்" size="small" color="warning" sx={{ height: 24, fontSize: 10 }} />}
+                                    </Box>
+                                </TableCell>
+                                <TableCell>
+                                    <Typography variant="caption" sx={{ fontSize: 10, color: 'red', wordBreak: 'break-all' }}>
+                                        {JSON.stringify(p.raw)}
+                                    </Typography>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+
+            <Box sx={{ mt: 3, p: 2, bgcolor: '#1e1e1e', color: '#00ff00', borderRadius: 2, overflowX: 'auto' }}>
+                <Typography variant="subtitle2" sx={{ color: '#fff', mb: 1 }}>Backend Formatted JSON Data:</Typography>
+                <pre style={{ margin: 0, fontSize: '0.75rem' }}>
+                    {JSON.stringify(planets, null, 2)}
+                </pre>
+            </Box>
+        </Box>
     );
 };
 
@@ -396,13 +325,13 @@ const PlayerDetailPanel = ({ player, matchChart }) => {
                 </Grid>
             )}
 
-            {tabIndex === 1 && <PlanetaryTable rawPlanets={chartData?.planets || chartData?.houses} />}
+            {tabIndex === 1 && <PlanetaryTable planets={chartData?.formattedPlanets} />}
             {tabIndex === 2 && <PanchangamGrid panchangam={chartData?.panchangam} birthData={player.birthData} />}
         </Box>
     );
 };
 
-const PlayerRow = ({ player, matchChart }) => {
+const PlayerRow = ({ player, matchChart, isSelected, onSelect }) => {
     const [open, setOpen] = useState(false);
 
     // Summary info for the row
@@ -411,19 +340,32 @@ const PlayerRow = ({ player, matchChart }) => {
     // Use first letter of name for Avatar
     const avatarLetter = player.name ? player.name.charAt(0).toUpperCase() : '?';
 
-    // Calculate Permissions if Match Chart is available
+    // Calculate Permissions if Match Chart is available AND player is selected
     let batResult = null;
     let bowlResult = null;
 
-    if (matchChart && chart) {
-        // matchChart is the chart object from the API
+    if (matchChart && chart && isSelected) {
         batResult = runPrediction(chart, matchChart.data || matchChart, "BAT");
         bowlResult = runPrediction(chart, matchChart.data || matchChart, "BOWL");
     }
 
     return (
         <>
-            <TableRow sx={{ '& > *': { borderBottom: 'unset' }, cursor: 'pointer' }} hover onClick={() => setOpen(!open)}>
+            <TableRow
+                sx={{ '& > *': { borderBottom: 'unset' }, cursor: 'pointer', bgcolor: isSelected ? 'rgba(30, 64, 175, 0.04)' : 'inherit' }}
+                hover
+                onClick={() => setOpen(!open)}
+            >
+                <TableCell padding="checkbox">
+                    <Checkbox
+                        color="primary"
+                        checked={isSelected}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onSelect(player.id);
+                        }}
+                    />
+                </TableCell>
                 <TableCell width="50">
                     <IconButton aria-label="expand row" size="small" onClick={(e) => { e.stopPropagation(); setOpen(!open); }}>
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -505,12 +447,47 @@ const UserDashboard = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(25);
     const [searchTerm, setSearchTerm] = useState('');
+    const [totalPlayers, setTotalPlayers] = useState(0);
+    const [selectedPlayerIds, setSelectedPlayerIds] = useState([]);
 
     // Prediction State
     const [showPrediction, setShowPrediction] = useState(false);
     const [matchChart, setMatchChart] = useState(null);
 
+    // Selection Handlers
+    const handleSelectAllClick = (event) => {
+        if (event.target.checked) {
+            const newSelecteds = players.map((n) => n.id);
+            setSelectedPlayerIds(newSelecteds);
+            return;
+        }
+        setSelectedPlayerIds([]);
+    };
+
+    const handleSelectClick = (id) => {
+        const selectedIndex = selectedPlayerIds.indexOf(id);
+        let newSelected = [];
+
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selectedPlayerIds, id);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selectedPlayerIds.slice(1));
+        } else if (selectedIndex === selectedPlayerIds.length - 1) {
+            newSelected = newSelected.concat(selectedPlayerIds.slice(0, -1));
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                selectedPlayerIds.slice(0, selectedIndex),
+                selectedPlayerIds.slice(selectedIndex + 1),
+            );
+        }
+        setSelectedPlayerIds(newSelected);
+    };
+
+    const isSelected = (id) => selectedPlayerIds.indexOf(id) !== -1;
+
     const baseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
+
+
 
     // Fetch Players
     useEffect(() => {
@@ -520,19 +497,43 @@ const UserDashboard = () => {
                 const authToken = token || localStorage.getItem('x-auth-token');
                 if(!authToken) return;
 
-                const res = await axios.get(`${baseUrl}/api/players`, {
+                const res = await axios.get(`${baseUrl}/api/players?page=${page + 1}&limit=${rowsPerPage}`, {
                     headers: { 'x-auth-token': authToken }
                 });
-                setPlayers(res.data);
+
+                // Handle new paginated response structure
+                if (res.data.players) {
+                    setPlayers(res.data.players);
+                    // We need a total count state, currently standardizing on filteredPlayers.length logic for client side
+                    // But for server side we need to store total.
+                    // Let's assume we store it in a ref or new state if we want accurate pagination count
+                    // For now, let's just use the players.length if we don't have total state,
+                    // BUT actually I should add a state for totalPlayers.
+                    // Since I can't easily add a new state var in this Replace block without changing the top of the file,
+                    // I will check if I can just assume the pagination count is handled or filtered.
+                    // Wait, I strictly need 'totalPlayers' for the TablePagination count.
+                    // I'll try to use a temp property on the array or just force it for now.
+                    // BETTER: I will assume I can edit the state definition in a separate block or this block if accessible.
+                    // Looking at file content, state defs are lines ~70. This block is ~450.
+                    // I will add a setTotalPlayers prop to the response handling and then add the state def in another step.
+                } else {
+                     // Fallback for old response type if any
+                     setPlayers(res.data);
+                }
+
+                // Update total count for pagination
+                if (res.data.totalPlayers) {
+                     setTotalPlayers(res.data.totalPlayers);
+                }
+
             } catch (err) {
                 console.error("Load Error", err);
-                // if(err.response?.status === 401) logout();
             } finally {
                 setLoading(false);
             }
         };
         fetchPlayers();
-    }, [token, baseUrl]);
+    }, [token, baseUrl, page, rowsPerPage]);
 
     // Handle Match Prediction Result
     const handlePredictionReady = (chartData) => {
@@ -569,7 +570,16 @@ const UserDashboard = () => {
         });
     }, [searchTerm, players]);
 
-    const paginatedPlayers = filteredPlayers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+    const paginatedPlayers = filteredPlayers; // Server handles pagination now
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
 
     return (
         <Box sx={{ minHeight: '100vh', bgcolor: '#f1f5f9' }}>
@@ -589,6 +599,10 @@ const UserDashboard = () => {
                 {/* Search Bar */}
                 <Paper sx={{ p: 2, mb: 3, borderRadius: 2 }} elevation={0}>
                     <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                         {/* Selection Info */}
+                        {selectedPlayerIds.length > 0 && (
+                            <Chip label={`${selectedPlayerIds.length} Selected`} color="primary" onDelete={() => setSelectedPlayerIds([])} />
+                        )}
                         <TextField
                             fullWidth
                             variant="outlined"
@@ -607,6 +621,7 @@ const UserDashboard = () => {
                         <Button
                             variant={showPrediction ? "contained" : "outlined"}
                             color="secondary"
+                            disabled={!showPrediction && selectedPlayerIds.length === 0}
                             startIcon={<SportsCricketIcon />}
                             onClick={() => {
                                 setShowPrediction(!showPrediction);
@@ -636,6 +651,18 @@ const UserDashboard = () => {
                                 <Table stickyHeader>
                                     <TableHead>
                                         <TableRow>
+                                            <TableCell padding="checkbox" sx={{ bgcolor: '#1e40af' }}>
+                                                <Checkbox
+                                                    color="default"
+                                                    indeterminate={selectedPlayerIds.length > 0 && selectedPlayerIds.length < players.length}
+                                                    checked={players.length > 0 && selectedPlayerIds.length === players.length}
+                                                    onChange={handleSelectAllClick}
+                                                    inputProps={{
+                                                        'aria-label': 'select all players',
+                                                    }}
+                                                    sx={{ color: 'white!important' }}
+                                                />
+                                            </TableCell>
                                             <TableCell width="50" sx={{ bgcolor: '#1e40af', color: 'white' }} />
                                             <TableCell sx={{ bgcolor: '#1e40af', color: 'white', fontWeight: 'bold' }}>PLAYER PROFILE</TableCell>
                                             <TableCell sx={{ bgcolor: '#1e40af', color: 'white', fontWeight: 'bold' }}>BIRTH PLACE</TableCell>
@@ -647,16 +674,21 @@ const UserDashboard = () => {
                                     </TableHead>
                                     <TableBody>
                                         {paginatedPlayers.length > 0 ? (
-                                            paginatedPlayers.map((player) => (
-                                                <PlayerRow
-                                                    key={player._id || player.id}
-                                                    player={player}
-                                                    matchChart={matchChart}
-                                                />
-                                            ))
+                                            paginatedPlayers.map((player) => {
+                                                const isItemSelected = isSelected(player.id);
+                                                return (
+                                                    <PlayerRow
+                                                        key={player._id || player.id}
+                                                        player={player}
+                                                        matchChart={matchChart}
+                                                        isSelected={isItemSelected}
+                                                        onSelect={handleSelectClick}
+                                                    />
+                                                );
+                                            })
                                         ) : (
                                             <TableRow>
-                                                <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
+                                                <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
                                                     <Typography color="text.secondary">No players found matching "{searchTerm}"</Typography>
                                                 </TableCell>
                                             </TableRow>
@@ -665,16 +697,13 @@ const UserDashboard = () => {
                                 </Table>
                             </TableContainer>
                             <TablePagination
-                                rowsPerPageOptions={[10, 25, 50, 100]}
+                                rowsPerPageOptions={[11, 25, 50, 100]}
                                 component="div"
-                                count={filteredPlayers.length}
+                                count={totalPlayers}
                                 rowsPerPage={rowsPerPage}
                                 page={page}
-                                onPageChange={(e, newPage) => setPage(newPage)}
-                                onRowsPerPageChange={(e) => {
-                                    setRowsPerPage(parseInt(e.target.value, 10));
-                                    setPage(0);
-                                }}
+                                onPageChange={handleChangePage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
                             />
                         </>
                     )}
