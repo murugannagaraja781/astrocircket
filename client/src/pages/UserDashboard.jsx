@@ -471,6 +471,10 @@ const UserDashboard = () => {
     const [totalPlayers, setTotalPlayers] = useState(0);
     const [selectedPlayerIds, setSelectedPlayerIds] = useState([]);
 
+    // Groups State
+    const [groups, setGroups] = useState([]);
+    const [showTeams, setShowTeams] = useState(false);
+
     // Prediction State
     const [showPrediction, setShowPrediction] = useState(false);
     const [matchChart, setMatchChart] = useState(null);
@@ -556,14 +560,15 @@ const UserDashboard = () => {
 
 
 
-    // Fetch Players
+    // Fetch Data (Players & Groups)
     useEffect(() => {
-        const fetchPlayers = async () => {
+        const fetchData = async () => {
              try {
                 // Use token from Context first, then localStorage
                 const authToken = token || localStorage.getItem('x-auth-token');
                 if(!authToken) return;
 
+                // 1. Fetch Players
                 const res = await axios.get(`${baseUrl}/api/players?page=${page + 1}&limit=${rowsPerPage}`, {
                     headers: { 'x-auth-token': authToken }
                 });
@@ -571,27 +576,19 @@ const UserDashboard = () => {
                 // Handle new paginated response structure
                 if (res.data.players) {
                     setPlayers(res.data.players);
-                    // We need a total count state, currently standardizing on filteredPlayers.length logic for client side
-                    // But for server side we need to store total.
-                    // Let's assume we store it in a ref or new state if we want accurate pagination count
-                    // For now, let's just use the players.length if we don't have total state,
-                    // BUT actually I should add a state for totalPlayers.
-                    // Since I can't easily add a new state var in this Replace block without changing the top of the file,
-                    // I will check if I can just assume the pagination count is handled or filtered.
-                    // Wait, I strictly need 'totalPlayers' for the TablePagination count.
-                    // I'll try to use a temp property on the array or just force it for now.
-                    // BETTER: I will assume I can edit the state definition in a separate block or this block if accessible.
-                    // Looking at file content, state defs are lines ~70. This block is ~450.
-                    // I will add a setTotalPlayers prop to the response handling and then add the state def in another step.
                 } else {
-                     // Fallback for old response type if any
                      setPlayers(res.data);
                 }
 
-                // Update total count for pagination
                 if (res.data.totalPlayers) {
                      setTotalPlayers(res.data.totalPlayers);
                 }
+
+                // 2. Fetch Groups (Teams)
+                const groupRes = await axios.get(`${baseUrl}/api/groups`, {
+                    headers: { 'x-auth-token': authToken }
+                });
+                setGroups(groupRes.data);
 
             } catch (err) {
                 console.error("Load Error", err);
@@ -599,8 +596,51 @@ const UserDashboard = () => {
                 setLoading(false);
             }
         };
-        fetchPlayers();
+        fetchData();
     }, [token, baseUrl, page, rowsPerPage]);
+
+    // Render Teams Section
+    const renderTeams = () => (
+        <Paper sx={{ p: 2, mb: 3, borderRadius: 2 }} elevation={1}>
+             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                <Typography variant="h6" color="primary" fontWeight="bold">
+                    <span className="mr-2">🏏</span>
+                   Active Teams ({groups.length})
+                </Typography>
+                <Button size="small" onClick={() => setShowTeams(!showTeams)}>
+                    {showTeams ? "Hide" : "Show All"}
+                </Button>
+            </Box>
+
+            <Collapse in={showTeams}>
+                <Grid container spacing={2}>
+                    {groups.map(group => (
+                        <Grid item xs={12} sm={6} md={4} key={group._id}>
+                            <Card variant="outlined" sx={{ bgcolor: '#f8fafc' }}>
+                                <CardContent>
+                                    <Typography variant="subtitle1" fontWeight="bold">{group.name}</Typography>
+                                    <Typography variant="caption" color="text.secondary">
+                                        {group.players.length} Players
+                                    </Typography>
+                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 1 }}>
+                                        {group.players.slice(0, 5).map(p => (
+                                            <Chip key={p._id} label={p.name} size="small" sx={{ fontSize: '0.7rem' }} />
+                                        ))}
+                                        {group.players.length > 5 && <Chip label={`+${group.players.length - 5}`} size="small" variant="outlined" />}
+                                    </Box>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    ))}
+                    {groups.length === 0 && (
+                        <Grid item xs={12}>
+                             <Typography color="text.secondary" align="center">No teams created yet.</Typography>
+                        </Grid>
+                    )}
+                </Grid>
+            </Collapse>
+        </Paper>
+    );
 
     // Handle Match Prediction Result
     const handlePredictionReady = (chartData) => {
@@ -706,6 +746,7 @@ const UserDashboard = () => {
                 </Collapse>
 
                 {/* Content Area */}
+                {renderTeams()}
                 <Paper sx={{ borderRadius: 2, overflow: 'hidden', boxShadow: 2 }}>
                     {loading ? (
                         <Box sx={{ p: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>

@@ -71,26 +71,71 @@ const calculateAvastha = (signName, degree) => {
     };
 };
 
+const { calculateSign, calculateNakshatra, calculateDignity, formatDegree } = require('./astroCalculator');
+
 const processSinglePlanet = (pRaw, houseContext) => {
     const pName = typeof pRaw === 'string' ? pRaw : (pRaw.name || pRaw.englishName);
     if (!pName) return null;
 
-    // Use house context if available, otherwise direct properties
-    const signName = (houseContext && houseContext.sign) || (typeof pRaw === 'object' ? (pRaw.sign?.name || pRaw.sign) : null) || '-';
-    const signTamil = (houseContext && houseContext.signTamil) || (typeof pRaw === 'object' ? pRaw.signTamil : null) || '-';
-    const lordName = (houseContext && houseContext.lord) || (typeof pRaw === 'object' ? (pRaw.lord?.name || pRaw.lord) : null) || '-';
-    const lordTamil = (houseContext && houseContext.lordTamil) || (typeof pRaw === 'object' ? pRaw.lordTamil : null) || '-';
+    // Direct Props from API or House Context
+    let signName = (houseContext && houseContext.sign) || (typeof pRaw === 'object' ? (pRaw.sign?.name || pRaw.sign) : null);
+    let signTamil = (houseContext && houseContext.signTamil) || (typeof pRaw === 'object' ? pRaw.signTamil : null);
+    let lordName = (houseContext && houseContext.lord) || (typeof pRaw === 'object' ? (pRaw.lord?.name || pRaw.lord) : null);
+    let lordTamil = (houseContext && houseContext.lordTamil) || (typeof pRaw === 'object' ? pRaw.lordTamil : null);
 
-    const nakshatraName = (typeof pRaw === 'object' ? (pRaw.nakshatra?.name || pRaw.nakshatra) : null) || '-';
-    const nakshatraTamil = (typeof pRaw === 'object' ? pRaw.nakshatraTamil : null) || '-';
-    const nakLord = (typeof pRaw === 'object' ? pRaw.nakshatraLord : null) || getNakshatraLordHelper(nakshatraName);
-    const pada = (typeof pRaw === 'object' ? pRaw.pada : null) || '';
+    let nakshatraName = (typeof pRaw === 'object' ? (pRaw.nakshatra?.name || pRaw.nakshatra) : null);
+    let nakshatraTamil = (typeof pRaw === 'object' ? pRaw.nakshatraTamil : null);
+    let nakLord = (typeof pRaw === 'object' ? pRaw.nakshatraLord : null);
+    let pada = (typeof pRaw === 'object' ? pRaw.pada : null);
 
-    const degreeVal = (typeof pRaw === 'object' && pRaw.degree !== undefined) ? parseFloat(pRaw.degree) : 0;
-    const degreeStr = !isNaN(degreeVal) && degreeVal > 0 ? degreeVal.toFixed(2) + '°' : '-';
+    let degreeVal = (typeof pRaw === 'object' && pRaw.degree !== undefined) ? parseFloat(pRaw.degree) : 0;
 
-    const dignityEnglish = (typeof pRaw === 'object' ? (pRaw.dignity?.english || pRaw.dignity) : null) || '-';
-    const dignityTamil = dignityTamilMap[dignityEnglish] || dignityEnglish;
+    // --- NATIVE CALCULATION FALLBACK ---
+    // If degree is present but other details are missing, calculate them
+    if (degreeVal > 0 && (!signName || !nakshatraName)) {
+        // Calculate Sign Details
+        const signCalc = calculateSign(degreeVal);
+        if (!signName) {
+            signName = signCalc.name;
+            signTamil = signCalc.tamil;
+            lordName = signCalc.lord;
+            lordTamil = signCalc.lordTamil;
+        }
+
+        // Calculate Nakshatra Details
+        const nakCalc = calculateNakshatra(degreeVal);
+        if (!nakshatraName) {
+            nakshatraName = nakCalc.name;
+            nakshatraTamil = nakCalc.tamil;
+            nakLord = nakCalc.lord;
+            pada = nakCalc.pada;
+        }
+    }
+
+    // Ensure Nakshatra Lord is populated
+    if (!nakLord && nakshatraName) {
+        nakLord = getNakshatraLordHelper(nakshatraName);
+    }
+
+    const degreeStr = !isNaN(degreeVal) && degreeVal > 0 ? formatDegree(degreeVal) : '-';
+
+    let dignityEnglish = (typeof pRaw === 'object' ? (pRaw.dignity?.english || pRaw.dignity) : null);
+    let dignityTamil = dignityEnglish ? (dignityTamilMap[dignityEnglish] || dignityEnglish) : null;
+
+    // Calculate Dignity if missing
+    if (!dignityEnglish && degreeVal > 0) {
+        const digCalc = calculateDignity(pName, degreeVal);
+        dignityEnglish = digCalc.english;
+        dignityTamil = digCalc.tamil;
+    }
+
+    // Determine values with defaults for display
+    signName = signName || '-';
+    signTamil = signTamil || '-';
+    lordName = lordName || '-';
+    lordTamil = lordTamil || '-';
+    nakshatraName = nakshatraName || '-';
+    nakshatraTamil = nakshatraTamil || '-';
 
     // Calculate Avastha
     const avastha = calculateAvastha(signName, degreeVal);
@@ -104,10 +149,10 @@ const processSinglePlanet = (pRaw, houseContext) => {
         lordTamil,
         nakshatraName: `${nakshatraName} ${pada ? '(' + pada + ')' : ''}`,
         nakshatraTamil,
-        nakshatraLord: nakLord,
+        nakshatraLord: nakLord || '-',
         degreeFormatted: degreeStr,
-        dignityName: dignityEnglish,
-        dignityTamil,
+        dignityName: dignityEnglish || '-',
+        dignityTamil: dignityTamil || '-',
         avasthaName: avastha.english,
         avasthaTamil: avastha.tamil,
         isRetro: (typeof pRaw === 'object' ? pRaw.isRetro : false),

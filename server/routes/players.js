@@ -7,7 +7,7 @@ const apiRouter = express.Router();
 
 apiRouter.post('/sync', syncPlayers);
 apiRouter.post('/upload', upload.single('file'), uploadPlayers);
-apiRouter.post('/add', addPlayer);
+apiRouter.post('/add', upload.single('image'), addPlayer);
 apiRouter.get('/', getPlayers);
 apiRouter.get('/:id', getPlayerById);
 apiRouter.put('/:id', updatePlayer);

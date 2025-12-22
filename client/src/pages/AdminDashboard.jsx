@@ -5,7 +5,8 @@ import {
     Box, CssBaseline, Drawer, AppBar, Toolbar, List, Typography, Divider, IconButton,
     ListItem, ListItemButton, ListItemIcon, ListItemText, Container, Grid, Paper, Button,
     Dialog, DialogTitle, DialogContent, DialogActions, TextField, Autocomplete, CircularProgress,
-    useTheme, useMediaQuery, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination
+    useTheme, useMediaQuery, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination,
+    Snackbar, Alert, Checkbox, FormControlLabel, Chip
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -208,12 +209,18 @@ const PlayersManager = () => {
     // Upload State
     const [selectedFile, setSelectedFile] = useState(null);
     const [uploadStatus, setUploadStatus] = useState('');
+    const [profilePicFile, setProfilePicFile] = useState(null); // For single player add
 
     // Async Place Search
     const [placeInputValue, setPlaceInputValue] = useState('');
     const [placeOptions, setPlaceOptions] = useState([]);
     const [placeLoading, setPlaceLoading] = useState(false);
     const searchTimeout = React.useRef(null);
+
+    // Snackbar (Designed Alert)
+    const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+    const handleCloseSnackbar = () => setSnackbar({ ...snackbar, open: false });
+    const showSnackbar = (message, severity = 'success') => setSnackbar({ open: true, message, severity });
 
     const fetchPlayers = async () => {
         setLoading(true);
@@ -247,6 +254,7 @@ const PlayersManager = () => {
     const handleAddClick = () => {
         setSelectedPlayer(null);
         setPlayerForm({});
+        setProfilePicFile(null);
         setOpenEdit(true);
     };
 
@@ -266,10 +274,10 @@ const PlayersManager = () => {
             await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/players/${id}`, {
                  headers: { 'x-auth-token': token }
             });
-            alert('Player deleted');
+            showSnackbar('Player deleted successfully', 'success');
             fetchPlayers();
         } catch (err) {
-            console.error(err); alert('Failed to delete');
+            console.error(err); showSnackbar('Failed to delete player', 'error');
         }
     };
 
@@ -280,14 +288,36 @@ const PlayersManager = () => {
 
     const handleSavePlayer = async () => {
         try {
-             const url = selectedPlayer ? `${import.meta.env.VITE_BACKEND_URL}/api/players/${selectedPlayer.id}` : `${import.meta.env.VITE_BACKEND_URL}/api/players/add`;
-             const method = selectedPlayer ? 'put' : 'post';
-             await axios[method](url, playerForm, { headers: { 'x-auth-token': token } });
+             // For Add (POST), we might use FormData if there's a file.
+             // For Edit (PUT), currently backend only supports JSON updates without file for now (based on analysis).
+             // We will handle FormData for Add.
+
+             if (!selectedPlayer) {
+                 // ADD PLAYER
+                 const formData = new FormData();
+                 Object.keys(playerForm).forEach(key => {
+                     formData.append(key, playerForm[key]);
+                 });
+                 if (profilePicFile) {
+                     formData.append('image', profilePicFile);
+                 }
+
+                 await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/players/add`, formData, {
+                     headers: { 'x-auth-token': token, 'Content-Type': 'multipart/form-data' }
+                 });
+                 showSnackbar('Player Added Successfully', 'success');
+             } else {
+                 // EDIT PLAYER
+                 await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/players/${selectedPlayer.id}`, playerForm, {
+                     headers: { 'x-auth-token': token }
+                 });
+                 showSnackbar('Player Updated Successfully', 'success');
+             }
+
              setOpenEdit(false);
-             alert(selectedPlayer ? 'Player Updated' : 'Player Added Successfully');
              fetchPlayers();
         } catch (err) {
-            console.error(err); alert("Operation failed.");
+            console.error(err); showSnackbar(err.response?.data?.message || "Operation failed", 'error');
         }
     };
 
@@ -316,9 +346,14 @@ const PlayersManager = () => {
 
     const fetchTimezone = async (lat, long) => {
         try {
+            console.log(`Fetching timezone for lat: ${lat}, long: ${long}`);
             const res = await axios.get(`https://api.open-meteo.com/v1/forecast`, { params: { latitude: lat, longitude: long, current_weather: true, timezone: 'auto' } });
+            console.log('Timezone Fetch Result:', res.data.utc_offset_seconds / 3600);
             return res.data.utc_offset_seconds / 3600;
-        } catch { return null; }
+        } catch (err) {
+            console.error('Timezone Fetch Error:', err);
+            return null;
+        }
     };
 
     const handlePlaceInputChange = (e, val) => {
@@ -328,10 +363,57 @@ const PlayersManager = () => {
     };
 
     const handlePlaceChange = async (e, val) => {
-        if (val) {
+        console.log('Place Selected:', val);
+        if (val && typeof val === 'object') {
+            // Selected from list
             setPlayerForm({ ...playerForm, birthPlace: val.label, latitude: val.lat, longitude: val.long });
             const tz = await fetchTimezone(val.lat, val.long);
-            if (tz !== null) setPlayerForm(prev => ({ ...prev, timezone: tz }));
+            if (tz !== null) {
+                console.log('Setting Timezone:', tz);
+                setPlayerForm(prev => ({ ...prev, timezone: tz }));
+            }
+        } else if (typeof val === 'string' && val.trim().length > 0) {
+            // Free typed string - Auto-resolve best match
+            console.log('Manual text entry, attempting auto-resolve for:', val);
+            setPlaceLoading(true);
+            try {
+                // 1. Find place coordinates
+                const searchRes = await axios.get(`https://nominatim.openstreetmap.org/search`, {
+                    params: { q: val, format: 'json', limit: 1, addressdetails: 1 }
+                });
+
+                if (searchRes.data && searchRes.data.length > 0) {
+                    const bestMatch = searchRes.data[0];
+                    const lat = parseFloat(bestMatch.lat);
+                    const long = parseFloat(bestMatch.lon);
+
+                    console.log('Auto-resolved to:', bestMatch.display_name);
+
+                    // 2. Update form with resolved place
+                    // We preserve the user's typed name or use the formal one?
+                    // Usually safer to use the formal one so they know it was detected,
+                    // BUT user might prefer their short name. Let's keep formal for clarity
+                    // or just update lat/long hiddenly. Let's update birthPlace to formal to confirm detection.
+
+                    const tz = await fetchTimezone(lat, long);
+
+                    setPlayerForm(prev => ({
+                        ...prev,
+                        birthPlace: bestMatch.display_name, // Update to full name to show we found it
+                        latitude: lat,
+                        longitude: long,
+                        timezone: tz !== null ? tz : prev.timezone
+                    }));
+
+                } else {
+                    console.warn('No match found for manual entry');
+                    // Optional: Warning toast
+                }
+            } catch (err) {
+                console.error('Auto-resolve error:', err);
+            } finally {
+                setPlaceLoading(false);
+            }
         }
     };
 
@@ -426,8 +508,97 @@ const PlayersManager = () => {
                                 />
                             )}
                         />
-                         <TextField label="Timezone" value={playerForm.timezone || ''} onChange={(e) => setPlayerForm({...playerForm, timezone: e.target.value})} fullWidth size="small" type="number" />
-                         <TextField label="DOB" value={playerForm.dob || ''} onChange={(e) => setPlayerForm({...playerForm, dob: e.target.value})} fullWidth size="small" />
+
+                        {/* Cricket Nations Timezone Helper */}
+                        <Box sx={{ mb: 1 }}>
+                            <Typography variant="caption" color="textSecondary">Quick Select (Cricket Nations)</Typography>
+                            <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', mt: 0.5 }}>
+                                {[
+                                    { l: '🇮🇳 India', v: 5.5 },
+                                    { l: '🇵🇰 Pak', v: 5 },
+                                    { l: '🇱🇰 SL', v: 5.5 },
+                                    { l: '🇧🇩 Ban', v: 6 },
+                                    { l: '🇬🇧 UK', v: 0 },
+                                    { l: '🇦🇺 Aus (Syd)', v: 10 },
+                                    { l: '🇦🇺 Aus (Per)', v: 8 },
+                                    { l: '🇿🇦 SA', v: 2 },
+                                    { l: '🇳🇿 NZ', v: 12 },
+                                    { l: '🏝️ WI (East)', v: -4 }
+                                ].map((tz) => (
+                                    <Chip
+                                        key={tz.l}
+                                        label={tz.l}
+                                        size="small"
+                                        onClick={() => setPlayerForm(prev => ({ ...prev, timezone: tz.v, manualTimezone: true }))}
+                                        clickable
+                                        variant="outlined"
+                                        color={playerForm.timezone == tz.v ? "primary" : "default"}
+                                    />
+                                ))}
+                            </Box>
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <TextField
+                                label="Timezone (Auto)"
+                                value={playerForm.timezone || ''}
+                                onChange={(e) => setPlayerForm({...playerForm, timezone: e.target.value})}
+                                InputProps={{ readOnly: !playerForm.manualTimezone }}
+                                fullWidth
+                                size="small"
+                                variant={playerForm.manualTimezone ? "outlined" : "filled"}
+                                type="number"
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={!!playerForm.manualTimezone}
+                                        onChange={(e) => setPlayerForm({...playerForm, manualTimezone: e.target.checked})}
+                                        size="small"
+                                    />
+                                }
+                                label={<Typography variant="caption">Manual</Typography>}
+                            />
+                        </Box>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                            <TextField
+                                label="Lat"
+                                value={playerForm.latitude || ''}
+                                InputProps={{ readOnly: true }}
+                                fullWidth
+                                size="small"
+                                variant="filled"
+                            />
+                            <TextField
+                                label="Long"
+                                value={playerForm.longitude || ''}
+                                InputProps={{ readOnly: true }}
+                                fullWidth
+                                size="small"
+                                variant="filled"
+                            />
+                        </Box>
+                        <TextField
+                            label="Date of Birth"
+                            type="date"
+                            value={playerForm.dob || ''}
+                            onChange={(e) => setPlayerForm({...playerForm, dob: e.target.value})}
+                            fullWidth
+                            size="small"
+                            InputLabelProps={{ shrink: true }}
+                        />
+
+                         {/* Profile Pic Input */}
+                         {!selectedPlayer && (
+                             <Box>
+                                 <Typography variant="caption">Profile Picture</Typography>
+                                 <input
+                                     type="file"
+                                     accept="image/*"
+                                     onChange={(e) => setProfilePicFile(e.target.files[0])}
+                                     style={{ display: 'block', marginTop: 8 }}
+                                 />
+                             </Box>
+                         )}
                     </Box>
                 </DialogContent>
                 <DialogActions>
@@ -453,6 +624,13 @@ const PlayersManager = () => {
                     <Button onClick={handleUpload} variant="contained" disabled={!selectedFile}>Upload</Button>
                 </DialogActions>
             </Dialog>
+
+            {/* Snackbar Alert */}
+            <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+                <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }} variant="filled">
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
 
              {/* Group Dialog (Minimal for now) */}
             <Dialog open={openGroupDialog} onClose={() => setOpenGroupDialog(false)} fullWidth maxWidth="xs">
@@ -499,12 +677,22 @@ const GroupsManager = () => {
     const [openCreate, setOpenCreate] = useState(false);
     const [newGroupName, setNewGroupName] = useState('');
 
+    // State for managing players in a group
+    const [openManage, setOpenManage] = useState(false);
+    const [selectedGroup, setSelectedGroup] = useState(null);
+
     const fetchGroups = async () => {
         try {
             const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/groups`, {
                 headers: { 'x-auth-token': token }
             });
             setGroups(res.data);
+
+            // Update selected group if open (to reflect removals)
+            if (selectedGroup) {
+                const updated = res.data.find(g => g._id === selectedGroup._id);
+                if (updated) setSelectedGroup(updated);
+            }
         } catch (err) {
             console.error(err);
         }
@@ -554,6 +742,27 @@ const GroupsManager = () => {
         }
     };
 
+    const handleRemovePlayer = async (groupName, playerId) => {
+         if (!confirm('Remove this player from the group?')) return;
+         try {
+             await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/remove`, {
+                 groupName,
+                 playerId
+             }, { headers: { 'x-auth-token': token } });
+             fetchGroups();
+             // selectedGroup will update via fetchGroups logic or we can locally update for speed,
+             // but fetchGroups is safer for sync.
+         } catch (err) {
+             console.error(err);
+             alert('Failed to remove player');
+         }
+    };
+
+    const openManageDialog = (group) => {
+        setSelectedGroup(group);
+        setOpenManage(true);
+    };
+
     return (
         <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
@@ -570,7 +779,10 @@ const GroupsManager = () => {
                                 <Typography variant="caption" color="text.secondary">{g.players.length} Players</Typography>
                             </Box>
                             <Divider sx={{ mb: 2 }} />
-                            <Box sx={{ display: 'flex', gap: 1, justifyContent: 'space-between' }}>
+                            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                                <Button variant="contained" size="small" onClick={() => openManageDialog(g)}>
+                                    Manage Players
+                                </Button>
                                 <Button variant="outlined" color="warning" size="small" onClick={() => handleClearGroup(g.name)}>
                                     Clear
                                 </Button>
@@ -604,6 +816,39 @@ const GroupsManager = () => {
                 <DialogActions>
                     <Button onClick={() => setOpenCreate(false)}>Cancel</Button>
                     <Button onClick={handleCreateGroup} variant="contained">Create</Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Manage Players Dialog */}
+            <Dialog open={openManage} onClose={() => setOpenManage(false)} fullWidth maxWidth="sm">
+                <DialogTitle>Manage Group: {selectedGroup?.name}</DialogTitle>
+                <DialogContent dividers>
+                    {selectedGroup && selectedGroup.players.length > 0 ? (
+                        <List>
+                            {selectedGroup.players.map((player) => (
+                                <React.Fragment key={player._id}>
+                                    <ListItem
+                                        secondaryAction={
+                                            <IconButton edge="end" aria-label="delete" onClick={() => handleRemovePlayer(selectedGroup.name, player._id)}>
+                                                <DeleteIcon color="error" />
+                                            </IconButton>
+                                        }
+                                    >
+                                        <ListItemText
+                                            primary={player.name}
+                                            secondary={player.role || 'Player'}
+                                        />
+                                    </ListItem>
+                                    <Divider />
+                                </React.Fragment>
+                            ))}
+                        </List>
+                    ) : (
+                        <Typography sx={{ p: 2, textAlign: 'center' }}>No players in this group.</Typography>
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenManage(false)}>Close</Button>
                 </DialogActions>
             </Dialog>
         </Box>

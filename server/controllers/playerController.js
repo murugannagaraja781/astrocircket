@@ -271,12 +271,29 @@ const updatePlayer = async (req, res) => {
 // Add Single Player
 const addPlayer = async (req, res) => {
     try {
+        // Handle multipart/form-data: req.body will have text fields, req.file will have image
         const playerData = req.body;
-        // Basic validation or ID generation could go here
-        // Assuming user provides an ID or we generate one? simple: use name + random or let mongoose ID be enough?
-        // Schema suggests 'id' is string.
+
+        // Validation / ID Gen
         if (!playerData.id) {
-            playerData.id = playerData.name?.toLowerCase().replace(/\s/g, '_') + '_' + Date.now();
+            playerData.id = (playerData.name?.toLowerCase().replace(/\s/g, '_') || 'player') + '_' + Date.now();
+        }
+
+        // Handle Profile Pic
+        if (req.file) {
+            // Define target path (e.g., uploads/profile_pics/) or keep in uploads/
+            // Ideally we want it accessible properly. For now, we'll keep it simple or move it?
+            // The bulk upload deletes the file. Here we want to KEEP it.
+            // Let's assume we serve 'uploads' statically or similar.
+            // But 'dest: uploads/' just saves a hash. We should give it an extension.
+            const ext = path.extname(req.file.originalname);
+            const newFilename = `${playerData.id}_profile${ext}`;
+            const targetPath = path.join('uploads', newFilename);
+
+            // Move/Rename key file
+            fs.renameSync(req.file.path, targetPath);
+
+            playerData.profile = newFilename; // Store filename
         }
 
         // Auto-fetch birth chart
@@ -290,6 +307,7 @@ const addPlayer = async (req, res) => {
         res.json(newPlayer);
     } catch (err) {
         console.error(err);
+        if (req.file && fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path); // Cleanup on error
         res.status(500).send('Server Error');
     }
 };
