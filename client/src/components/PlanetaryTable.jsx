@@ -14,23 +14,23 @@ const PlanetaryTable = ({ planets, style = {} }) => {
     };
 
     const thStyle = {
-        backgroundColor: '#2e3b55', // Dark Blue-Grey
-        color: '#ffffff',
+        backgroundColor: '#D1FAE5', // Light Milk Green
+        color: '#064E3B', // Deep Green
         padding: '8px',
-        border: '1px solid #4b5563',
+        border: '1px solid #A7F3D0',
         textAlign: 'left',
         fontWeight: 'bold'
     };
 
     const tdStyle = {
         padding: '6px 8px',
-        border: '1px solid #4b5563', // Gray border
-        color: '#ffffff', // White text for dark mode
+        border: '1px solid #A7F3D0',
+        color: '#064E3B', // Deep Green
         textAlign: 'left'
     };
 
     const trOddStyle = {
-        backgroundColor: 'rgba(255, 255, 255, 0.05)'
+        backgroundColor: 'rgba(16, 185, 129, 0.05)'
     };
 
     const trEvenStyle = {
@@ -50,6 +50,7 @@ const PlanetaryTable = ({ planets, style = {} }) => {
                         <th style={thStyle}>பாகை</th>
                         <th style={thStyle}>அந்தஸ்து</th>
                         <th style={thStyle}>நிலை</th>
+                        <th style={thStyle}>தன்மை</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -58,10 +59,11 @@ const PlanetaryTable = ({ planets, style = {} }) => {
                             <td style={tdStyle}>{p.planetTamil || p.planetName}</td>
                             <td style={tdStyle}>{p.signTamil || p.signName}</td>
                             <td style={tdStyle}>{p.lordTamil || p.lordName}</td>
-                            <td style={tdStyle}>{p.nakshatraLord}</td>
+                            <td style={tdStyle}>{p.nakshatraLordTamil || p.nakshatraLord}</td>
                             <td style={tdStyle}>{p.nakshatraTamil || p.nakshatraName}</td>
                             <td style={tdStyle}>{p.degreeFormatted}</td>
                             <td style={tdStyle}>{p.dignityTamil || p.dignityName}</td>
+                            <td style={tdStyle}>{p.avasthaTamil || p.avasthaName}</td>
                             <td style={tdStyle}>{p.stateTamil || p.stateName}</td>
                         </tr>
                     ))}

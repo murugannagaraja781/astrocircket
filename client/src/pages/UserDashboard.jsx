@@ -21,6 +21,19 @@ import PublicIcon from '@mui/icons-material/Public';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import CloseIcon from '@mui/icons-material/Close';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+
+// --- COLOR PALETTE (VISION PRO) ---
+const visionPro = {
+    background: '#F0FDF4', // Light Milk Green
+    paper: '#FFFFFF', // Clean White
+    primary: '#059669', // Emerald Green
+    secondary: '#10B981', // Mint Green
+    accent: '#D1FAE5', // Soft Mint
+    text: '#064E3B', // Deep Green (Contrast)
+    textSecondary: '#374151', // Dark Gray
+    border: '#A7F3D0' // Milk Green Border
+};
 
 // --- HELPERS ---
 const getFlag = (player) => {
@@ -113,11 +126,11 @@ const PlanetaryTable = ({ planets, hideHeader = false }) => {
                 mt: 2,
                 borderRadius: 2,
                 overflow: 'hidden',
-                bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
-                borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'divider'
+                bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : visionPro.paper,
+                borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : visionPro.border
             }}>
                 <Table size="small">
-                    <TableHead sx={{ backgroundColor: hideHeader ? '#111C44' : '#1e3a8a' }}>
+                    <TableHead sx={{ backgroundColor: hideHeader ? '#D1FAE5' : '#D1FAE5' }}>
                         <TableRow>
                             <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>கிரகம்</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>ராசி</TableCell>
@@ -127,16 +140,17 @@ const PlanetaryTable = ({ planets, hideHeader = false }) => {
                             <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>பாகை</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>அந்தஸ்து</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>நிலை</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>தன்மை</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Debug</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {planets.map((p, i) => (
-                            <TableRow key={i} hover sx={{ '&:nth-of-type(odd)': { bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.02)' : '#f8fafc' } }}>
+                            <TableRow key={i} hover sx={{ '&:nth-of-type(odd)': { bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.02)' : 'rgba(110, 231, 183, 0.03)' } }}>
                                 <TableCell>
                                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                        <span className={`font-bold ${hideHeader ? 'text-blue-300' : 'text-gray-800'}`}>{p.planetName}</span>
-                                        <span className={`text-xs ${hideHeader ? 'text-cyan-400' : 'text-blue-600'}`}>{p.planetTamil}</span>
+                                        <span className={`font-bold ${hideHeader ? 'text-green-600' : 'text-gray-800'}`}>{p.planetName}</span>
+                                        <span className={`text-xs ${hideHeader ? 'text-green-500' : 'text-green-700'}`}>{p.planetTamil}</span>
                                     </Box>
                                 </TableCell>
                                 <TableCell>
@@ -147,12 +161,15 @@ const PlanetaryTable = ({ planets, hideHeader = false }) => {
                                 </TableCell>
                                 <TableCell>
                                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                        <span className={`font-medium ${hideHeader ? 'text-blue-200' : 'text-gray-700'}`}>{p.lordName}</span>
+                                        <span className={`font-medium ${hideHeader ? 'text-green-600' : 'text-gray-700'}`}>{p.lordName}</span>
                                         <span className={`text-xs ${hideHeader ? 'text-gray-400' : 'text-gray-500'}`}>{p.lordTamil}</span>
                                     </Box>
                                 </TableCell>
                                 <TableCell>
-                                    <span className="font-medium text-gray-700">{p.nakshatraLord}</span>
+                                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                        <span className={`font-medium ${hideHeader ? 'text-green-600' : 'text-gray-700'}`}>{p.nakshatraLord}</span>
+                                        <span className={`text-xs ${hideHeader ? 'text-gray-400' : 'text-gray-500'}`}>{p.nakshatraLordTamil}</span>
+                                    </Box>
                                 </TableCell>
                                 <TableCell>
                                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -185,7 +202,24 @@ const PlanetaryTable = ({ planets, hideHeader = false }) => {
                                     <Box sx={{ display: 'flex', gap: 0.5 }}>
                                         {p.isRetro && <Chip label="வக்ரம்" size="small" color="secondary" sx={{ height: 24, fontSize: 10 }} />}
                                         {p.isCombust && <Chip label="அஸ்தமனம்" size="small" color="warning" sx={{ height: 24, fontSize: 10 }} />}
+                                        {!p.isRetro && !p.isCombust && <Chip label="நேர்கதி" size="small" variant="outlined" sx={{ height: 24, fontSize: 10, opacity: 0.6 }} />}
                                     </Box>
+                                </TableCell>
+                                <TableCell>
+                                    <Tooltip title={<pre style={{ fontSize: '10px', color: hideHeader ? '#fff' : '#000', maxHeight: '300px', overflow: 'auto' }}>{JSON.stringify(p.raw || {}, null, 2)}</pre>} arrow>
+                                        <Chip
+                                            label="JSON"
+                                            size="small"
+                                            variant="outlined"
+                                            sx={{
+                                                cursor: 'help',
+                                                height: 20,
+                                                fontSize: '9px',
+                                                borderColor: hideHeader ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)',
+                                                color: hideHeader ? '#A7F3D0' : '#059669'
+                                            }}
+                                        />
+                                    </Tooltip>
                                 </TableCell>
 
                             </TableRow>
@@ -196,6 +230,131 @@ const PlanetaryTable = ({ planets, hideHeader = false }) => {
 
 
         </Box>
+    );
+};
+
+const planetTamilMap = {
+    'sun': 'சூரியன்', 'moon': 'சந்திரன்', 'mars': 'செவ்வாய்', 'mercury': 'புதன்',
+    'jupiter': 'குரு', 'venus': 'சுக்கிரன்', 'saturn': 'சனி', 'rahu': 'ராகு', 'ketu': 'கேது',
+    'asc': 'லக்னம்', 'lagna': 'லக்னம்', 'uranus': 'யுரேனஸ்', 'neptune': 'நெப்டியூன்', 'pluto': 'புளூட்டோ',
+    'Sun': 'சூரியன்', 'Moon': 'சந்திரன்', 'Mars': 'செவ்வாய்', 'Mercury': 'புதன்',
+    'Jupiter': 'குரு', 'Venus': 'சுக்கிரன்', 'Saturn': 'சனி', 'Rahu': 'ராகு', 'Ketu': 'கேது',
+    'Asc': 'லக்னம்', 'Lagna': 'லக்னம்'
+};
+
+const signTamilMap = {
+    'aries': 'மேஷம்', 'taurus': 'ரிஷபம்', 'gemini': 'மிதுனம்', 'cancer': 'கடகம்',
+    'leo': 'சிம்மம்', 'virgo': 'கன்னி', 'libra': 'துலாம்', 'scorpio': 'விருச்சிகம்',
+    'sagittarius': 'தனுசு', 'capricorn': 'மகரம்', 'aquarius': 'கும்பம்', 'pisces': 'மீனம்',
+    'Aries': 'மேஷம்', 'Taurus': 'ரிஷபம்', 'Gemini': 'மிதுனம்', 'Cancer': 'கடகம்',
+    'Leo': 'சிம்மம்', 'Virgo': 'கன்னி', 'Libra': 'துலாம்', 'Scorpio': 'விருச்சிகம்',
+    'Sagittarius': 'தனுசு', 'Capricorn': 'மகரம்', 'Aquarius': 'கும்பம்', 'Pisces': 'மீனம்'
+};
+
+// 1.1 Quick Summary Table (Deep Loop Implementation)
+const QuickSummaryTable = ({ data, hideHeader = false }) => {
+    // Deep Extraction Loop: Search for planets across various structures (formatted, planets map, houses array)
+    const extractItems = (input) => {
+        if (!input) return [];
+
+        // Potential pools for planetary data
+        const searchPool = [input, input.data, input.planets, input.birthChart].filter(Boolean);
+
+        for (const pool of searchPool) {
+            const raw = pool.rawplanet || pool.rawplanets || pool.rawPlanets || pool.raw_planets || pool['raw planet'] || pool['raw planets'];
+
+            if (raw) {
+                if (Array.isArray(raw)) return raw;
+                if (typeof raw === 'object') {
+                    // Map keys to 'name' if missing in values
+                    return Object.entries(raw).map(([key, val]) => {
+                        if (typeof val !== 'object') return { name: key, value: val };
+                        return {
+                            name: key,
+                            ...val,
+                            planet: val.planet || val.Planet || val.name || key
+                        };
+                    });
+                }
+            }
+
+            // Check direct arrays
+            if (pool.Planets && Array.isArray(pool.Planets)) return pool.Planets;
+            if (pool.planets && Array.isArray(pool.planets)) return pool.planets;
+        }
+
+        // Fallbacks for standard structures
+        const chart = input.data || input;
+        if (chart.formattedPlanets && chart.formattedPlanets.length > 0) return chart.formattedPlanets;
+        if (chart.planets && typeof chart.planets === 'object') {
+             return Object.entries(chart.planets).map(([k, v]) => ({ name: k, ...v }));
+        }
+
+        return [];
+    };
+
+    const planets = extractItems(data);
+
+    if (planets.length === 0) {
+        return (
+            <Box sx={{ p: 4, textAlign: 'center', bgcolor: visionPro.paper, borderRadius: 2, mt: 2, border: `1px solid ${visionPro.border}` }}>
+                <Typography sx={{ color: visionPro.text, fontWeight: 'bold' }}>
+                    Fetching planetary details... (தகவல் தேடப்படுகிறது)
+                </Typography>
+            </Box>
+        );
+    }
+
+    return (
+        <TableContainer component={Paper} elevation={0} sx={{
+            mt: 2,
+            borderRadius: 2,
+            overflow: 'hidden',
+            bgcolor: visionPro.paper,
+            border: `1px solid ${visionPro.border}`
+        }}>
+            <Table size="small">
+                <TableHead sx={{ bgcolor: visionPro.accent }}>
+                    <TableRow>
+                        <TableCell sx={{ color: visionPro.text, fontWeight: '900' }}>கிரகம்</TableCell>
+                        <TableCell sx={{ color: visionPro.text, fontWeight: 'bold' }}>ராசி</TableCell>
+                        <TableCell sx={{ color: visionPro.text, fontWeight: 'bold' }}>நட்சத்திரம்</TableCell>
+                        <TableCell sx={{ color: visionPro.primary, fontWeight: 'bold' }}>பாதம்</TableCell>
+                        <TableCell sx={{ color: visionPro.primary, fontWeight: 'bold' }}>பாகை</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {planets.map((pRaw, i) => {
+                        const p = typeof pRaw === 'string' ? { name: pRaw } : pRaw;
+                        const nameKey = p.planetTamil || p.planetName || p.name || p.Planet || p.Graha || p.graha || p.planet;
+                        const signKey = p.signTamil || p.signName || p.sign || p.Sign || p.Rasi || p.rasi;
+
+                        return (
+                            <TableRow key={i} hover sx={{ '&:nth-of-type(odd)': { bgcolor: 'rgba(5, 150, 105, 0.03)' } }}>
+                                <TableCell sx={{ fontWeight: 'bold', color: visionPro.text }}>
+                                    {planetTamilMap[nameKey] || nameKey || '-'}
+                                </TableCell>
+                                <TableCell sx={{ color: visionPro.text }}>
+                                    {signTamilMap[signKey] || signKey || '-'}
+                                </TableCell>
+                            <TableCell sx={{ color: visionPro.textSecondary }}>
+                                {p.nakshatraTamil || p.nakshatraName || p.nakshatra || p.Nakshatra || p.star || '-'}
+                            </TableCell>
+                            <TableCell>
+                                <Chip
+                                    label={p.pada || p.Pada || p.Charan || p.charan || '-'}
+                                    size="small"
+                                    sx={{ bgcolor: visionPro.primary, color: '#fff', fontWeight: '900' }}
+                                />
+                            </TableCell>
+                            <TableCell sx={{ color: visionPro.primary, fontWeight: '800' }}>
+                                {p.degreeFormatted || p.degree || p.Ansh || p.ansh || (p.Degree ? Number(p.Degree).toFixed(2) + '°' : '-')}
+                            </TableCell>
+                        </TableRow>
+                    )})}
+                </TableBody>
+            </Table>
+        </TableContainer>
     );
 };
 
@@ -215,20 +374,21 @@ const PanchangamGrid = ({ panchangam, birthData, hideHeader = false }) => {
     return (
         <Card variant="outlined" sx={{
             mt: 2,
-            bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
+            bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : visionPro.paper,
             borderRadius: 2,
-            boxShadow: hideHeader ? 'none' : 1,
-            borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'divider'
+            boxShadow: hideHeader ? 'none' : '0 10px 30px rgba(0,0,0,0.3)',
+            borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : visionPro.border,
+            color: hideHeader ? 'white' : visionPro.text
         }}>
              <CardContent>
                 <Box sx={{
                     display: 'flex',
                     alignItems: 'center',
                     mb: 2,
-                    borderBottom: hideHeader ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #eee',
+                    borderBottom: `1px solid ${hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(16, 185, 129, 0.2)'}`,
                     pb: 1
                 }}>
-                    <Typography variant="h6" color={hideHeader ? 'secondary' : 'primary'} fontWeight="bold">
+                    <Typography variant="h6" color={hideHeader ? 'secondary' : visionPro.primary} fontWeight="bold">
                         Panchangam Details
                     </Typography>
                     <Typography variant="caption" sx={{ ml: 'auto', color: hideHeader ? '#A0AEC0' : 'gray' }}>
@@ -241,11 +401,12 @@ const PanchangamGrid = ({ panchangam, birthData, hideHeader = false }) => {
                         <Grid item xs={6} sm={4} md={2} key={i}>
                             <Paper elevation={0} sx={{
                                 p: 2,
-                                bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : '#f8fafc',
+                                bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.3)',
                                 borderRadius: 2,
                                 textAlign: 'center',
                                 height: '100%',
-                                border: hideHeader ? '1px solid rgba(255, 255, 255, 0.1)' : 'none'
+                                border: hideHeader ? '1px solid rgba(255, 255, 255, 0.1)' : `1px solid ${visionPro.border}`,
+                                color: hideHeader ? 'white' : '#fff'
                             }}>
                                 <Typography variant="h5" sx={{ mb: 1 }}>{item.icon}</Typography>
                                 <Typography variant="caption" color={hideHeader ? 'textSecondary' : 'textSecondary'} display="block" textTransform="uppercase" fontWeight="bold" fontSize={10}>
@@ -277,9 +438,10 @@ const PlayerDetailPanel = ({ player, matchChart, hideHeader = false }) => {
 
     return (
         <Box sx={{
-            p: 2,
-            backgroundColor: hideHeader ? 'rgba(255, 255, 255, 0.02)' : '#fafafa',
-            borderTop: hideHeader ? '1px solid rgba(255, 255, 255, 0.05)' : 'none'
+            p: 3,
+            bgcolor: hideHeader ? 'rgba(0, 0, 0, 0.2)' : 'rgba(10, 10, 26, 0.6)',
+            borderTop: hideHeader ? '1px solid rgba(255, 255, 255, 0.05)' : `1px solid ${visionPro.border}`,
+            borderRadius: hideHeader ? 0 : '0 0 16px 16px'
         }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                 <Box>
@@ -345,11 +507,16 @@ const PlayerDetailPanel = ({ player, matchChart, hideHeader = false }) => {
 
             <Divider sx={{ mb: 2 }} />
 
-            <Tabs value={tabIndex} onChange={(e, v) => setTabIndex(v)} textColor="primary" indicatorColor="primary"
-                variant="scrollable" scrollButtons="auto"
-                sx={{ mb: 2, borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs value={tabIndex} onChange={(e, v) => setTabIndex(v)}
+                sx={{
+                    mb: 2,
+                    borderBottom: `1px solid ${hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(16, 185, 129, 0.2)'}`,
+                    "& .MuiTab-root": { color: hideHeader ? '#A0AEC0' : '#A0AEC0', fontWeight: 'bold' },
+                    "& .Mui-selected": { color: `${hideHeader ? '#fff' : visionPro.primary} !important` },
+                    "& .MuiTabs-indicator": { bgcolor: hideHeader ? visionPro.primary : visionPro.primary }
+                }}>
                 <Tab label="Rasi Chart" />
-                <Tab label="Planetary Positions" />
+                <Tab label="கிரக நிலைகள்" />
                 <Tab label="Panchangam" />
             </Tabs>
 
@@ -368,7 +535,7 @@ const PlayerDetailPanel = ({ player, matchChart, hideHeader = false }) => {
                 </Grid>
             )}
 
-            {tabIndex === 1 && <PlanetaryTable planets={chartData?.formattedPlanets} hideHeader={hideHeader} />}
+            {tabIndex === 1 && <QuickSummaryTable data={player.birthChart} hideHeader={hideHeader} />}
             {tabIndex === 2 && <PanchangamGrid panchangam={chartData?.panchangam} birthData={player.birthData} hideHeader={hideHeader} />}
         </Box>
     );
@@ -396,13 +563,13 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewCha
         <>
             <TableRow
                 sx={{
-                    '& > *': { borderBottom: hideHeader ? '1px solid rgba(255, 255, 255, 0.05)' : 'unset' },
+                    '& > *': { borderBottom: hideHeader ? '1px solid rgba(255, 255, 255, 0.05)' : '1px solid rgba(16, 185, 129, 0.05)' },
                     cursor: 'pointer',
                     bgcolor: isSelected
-                        ? (hideHeader ? 'rgba(0, 117, 255, 0.1)' : 'rgba(30, 64, 175, 0.04)')
+                        ? (hideHeader ? 'rgba(16, 185, 129, 0.1)' : 'rgba(16, 185, 129, 0.1)')
                         : 'inherit',
                     '&:hover': {
-                        bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05) !important' : 'inherit'
+                        bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05) !important' : 'rgba(110, 231, 183, 0.05) !important'
                     }
                 }}
                 hover
@@ -428,7 +595,13 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewCha
                         <Avatar
                             src={player.profile}
                             alt={player.name}
-                            sx={{ width: 44, height: 44, bgcolor: hideHeader ? '#0075FF' : '#1e40af', fontSize: '1.2rem' }}
+                            sx={{
+                                width: 44,
+                                height: 44,
+                                bgcolor: hideHeader ? visionPro.primary : '#10B981',
+                                border: hideHeader ? 'none' : '2px solid rgba(110, 231, 183, 0.2)',
+                                fontSize: '1.2rem'
+                            }}
                         >
                             {avatarLetter}
                         </Avatar>
@@ -519,30 +692,24 @@ const ChartPopup = ({ open, onClose, player, hideHeader = false }) => {
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
-            <DialogTitle sx={{ bgcolor: hideHeader ? '#111C44' : '#1e3a8a', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <DialogTitle sx={{
+                bgcolor: visionPro.accent,
+                color: visionPro.text,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                borderBottom: `1px solid ${visionPro.border}`
+            }}>
                 <Box>
-                    <Typography variant="h6">{player.name}</Typography>
-                    <Typography variant="caption">{player.birthPlace} | {player.dob} {player.birthTime ? `| ${player.birthTime}` : ''}</Typography>
+                    <Typography variant="h6" fontWeight="900" sx={{ letterSpacing: 0.5 }}>{player.name}</Typography>
+                    <Typography variant="caption" sx={{ color: visionPro.textSecondary }}>
+                        {player.birthPlace} | {player.dob} {player.birthTime ? `| ${player.birthTime}` : ''}
+                    </Typography>
                 </Box>
-                <IconButton onClick={onClose} sx={{ color: 'white' }}><CloseIcon /></IconButton>
+                <IconButton onClick={onClose} sx={{ color: visionPro.text }}><CloseIcon /></IconButton>
             </DialogTitle>
-            <DialogContent sx={{ p: 0, bgcolor: hideHeader ? '#0F1535' : 'inherit' }}>
-                <Box sx={{ borderBottom: 1, borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'divider', bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : '#f0f0f0' }}>
-                    <Tabs value={tabIndex} onChange={(e, v) => setTabIndex(v)} centered textColor="primary" indicatorColor="primary">
-                        <Tab label="Rasi Chart" />
-                        <Tab label="Planetary Positions" />
-                        <Tab label="Panchangam" />
-                    </Tabs>
-                </Box>
-                <Box sx={{ p: 2, minHeight: 400 }}>
-                    {tabIndex === 0 && (
-                        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <RasiChart data={chartData} />
-                        </Box>
-                    )}
-                    {tabIndex === 1 && <PlanetaryTable planets={chartData?.formattedPlanets} />}
-                    {tabIndex === 2 && <PanchangamGrid panchangam={chartData?.panchangam} birthData={{ date: player.dob, time: player.birthTime, place: player.birthPlace }} />}
-                </Box>
+            <DialogContent sx={{ p: 0, bgcolor: visionPro.background }}>
+                <PlayerDetailPanel player={player} hideHeader={hideHeader} />
             </DialogContent>
         </Dialog>
     );
@@ -639,20 +806,26 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
             <Paper variant="outlined" sx={{
                 p: 2,
                 height: '100%',
-                bgcolor: isWinner ? (hideHeader ? 'rgba(76, 175, 80, 0.1)' : '#effdf5') : (hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white'),
-                borderColor: isWinner ? 'success.main' : (hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'divider'),
+                bgcolor: isWinner
+                    ? (hideHeader ? 'rgba(76, 175, 80, 0.1)' : 'rgba(16, 185, 129, 0.1)')
+                    : (hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.2)'),
+                borderColor: isWinner
+                    ? (hideHeader ? 'success.main' : '#10B981')
+                    : (hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(167, 243, 208, 0.1)'),
                 borderWidth: isWinner ? 2 : 1,
-                color: hideHeader ? 'white' : 'inherit'
+                borderRadius: '16px',
+                color: hideHeader ? 'white' : '#ECFDF5'
             }}>
                 <Box sx={{
                     mb: 2,
                     borderBottom: 1,
-                    borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'divider',
+                    borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(167, 243, 208, 0.1)',
                     pb: 1,
                     display: 'flex',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
                 }}>
-                    <Typography variant="subtitle1" fontWeight="bold">{teamName}</Typography>
+                    <Typography variant="subtitle1" fontWeight="bold" sx={{ color: hideHeader ? 'white' : '#10B981' }}>{teamName}</Typography>
                     {results && (
                         <Chip label={`Score: ${myScore}`} color={isWinner ? "success" : "default"} variant={isWinner ? "filled" : "outlined"} />
                     )}
@@ -691,21 +864,29 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="xl" fullWidth>
-            <DialogTitle sx={{ bgcolor: hideHeader ? '#111C44' : '#1e3a8a', color: 'white', display: 'flex', justifyContent: 'space-between' }}>
-                MATCH PREDICTION WIZARD
-                <IconButton onClick={onClose} sx={{ color: 'white' }}><CloseIcon /></IconButton>
+            <DialogTitle sx={{
+                bgcolor: visionPro.accent,
+                color: visionPro.text,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                borderBottom: `1px solid ${visionPro.border}`
+            }}>
+                <Typography variant="h6" fontWeight="900" sx={{ letterSpacing: 1 }}>MATCH PREDICTION WIZARD</Typography>
+                <IconButton onClick={onClose} sx={{ color: visionPro.text }}><CloseIcon /></IconButton>
             </DialogTitle>
-            <DialogContent sx={{ bgcolor: hideHeader ? '#0F1535' : '#f8fafc', p: 3 }}>
+            <DialogContent sx={{ bgcolor: visionPro.background, p: 3 }}>
                 <Grid container spacing={3}>
                     {/* TOP: SETUP */}
                     <Grid item xs={12}>
                         <Paper sx={{
                             p: 2,
-                            bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
-                            color: hideHeader ? 'white' : 'inherit',
-                            border: hideHeader ? '1px solid rgba(255, 255, 255, 0.1)' : 'none'
+                            bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : visionPro.paper,
+                            color: hideHeader ? 'white' : visionPro.text,
+                            border: `1px solid ${hideHeader ? 'rgba(255, 255, 255, 0.1)' : visionPro.border}`,
+                            borderRadius: '16px'
                         }}>
-                            <Typography variant="subtitle2" gutterBottom fontWeight="bold" sx={{ color: hideHeader ? '#2CD9FF' : 'inherit' }}>1. Match Setup</Typography>
+                            <Typography variant="subtitle2" gutterBottom fontWeight="bold" sx={{ color: hideHeader ? visionPro.secondary : visionPro.primary }}>1. Match Setup</Typography>
                             <MatchPredictionControl onPredictionComplete={handleMatchReady} token={token} />
                         </Paper>
                     </Grid>
@@ -721,20 +902,20 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                             transition: 'all 0.3s ease',
                             '&:hover': {
                                 boxShadow: hideHeader ? '0 0 20px rgba(0, 117, 255, 0.2)' : 3,
-                                borderColor: '#0075FF'
+                                borderColor: visionPro.primary
                             }
                         }}>
                             <Typography variant="overline" sx={{ color: hideHeader ? '#A0AEC0' : 'text.secondary', fontWeight: 'bold', mb: 1, display: 'block' }}>
                                 TEAM A
                             </Typography>
                             <FormControl fullWidth size="medium" sx={{
-                                "& .MuiInputLabel-root": { color: hideHeader ? '#A0AEC0' : 'inherit' },
+                                "& .MuiInputLabel-root": { color: hideHeader ? '#A0AEC0' : visionPro.primary },
                                 "& .MuiOutlinedInput-root": {
-                                    "& fieldset": { borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'inherit' },
+                                    "& fieldset": { borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(16, 185, 129, 0.2)' },
                                     "& .MuiSelect-select": {
-                                        color: hideHeader ? 'white' : 'inherit',
+                                        color: hideHeader ? 'white' : '#fff',
                                         fontSize: '1.2rem',
-                                        fontWeight: 'bold'
+                                        fontWeight: '800'
                                     }
                                 }
                             }}>
@@ -758,15 +939,16 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : '#f1f5f9',
-                            border: hideHeader ? '2px solid #0075FF' : '2px solid #1e40af',
+                            bgcolor: visionPro.paper,
+                            border: `2px solid ${visionPro.primary}`,
+                            boxShadow: `0 0 15px rgba(16, 185, 129, 0.2)`,
                             position: 'relative',
                             '&::before, &::after': {
                                 content: '""',
                                 position: 'absolute',
                                 width: 40,
                                 height: '2px',
-                                bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : '#e2e8f0',
+                                bgcolor: visionPro.border,
                                 top: '50%',
                                 transform: 'translateY(-50%)'
                             },
@@ -774,8 +956,8 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                             '&::after': { left: '100%', ml: 1 }
                         }}>
                             <Typography variant="h5" sx={{
-                                fontWeight: 'bold',
-                                color: hideHeader ? '#2CD9FF' : '#1e3a8a',
+                                fontWeight: '900',
+                                color: hideHeader ? visionPro.secondary : visionPro.primary,
                                 fontStyle: 'italic'
                             }}>VS</Typography>
                         </Box>
@@ -784,27 +966,27 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                     <Grid item xs={12} md={5}>
                         <Paper sx={{
                             p: 3,
-                            bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
-                            border: hideHeader ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e2e8f0',
-                            borderRadius: 3,
+                            bgcolor: 'white',
+                            border: `1px solid ${visionPro.border}`,
+                            borderRadius: '24px',
                             textAlign: 'center',
                             transition: 'all 0.3s ease',
                             '&:hover': {
-                                boxShadow: hideHeader ? '0 0 20px rgba(0, 117, 255, 0.2)' : 3,
-                                borderColor: '#0075FF'
+                                boxShadow: `0 0 20px rgba(16, 185, 129, 0.1)`,
+                                borderColor: visionPro.primary
                             }
                         }}>
                             <Typography variant="overline" sx={{ color: hideHeader ? '#A0AEC0' : 'text.secondary', fontWeight: 'bold', mb: 1, display: 'block' }}>
                                 TEAM B
                             </Typography>
                             <FormControl fullWidth size="medium" sx={{
-                                "& .MuiInputLabel-root": { color: hideHeader ? '#A0AEC0' : 'inherit' },
+                                "& .MuiInputLabel-root": { color: hideHeader ? '#A0AEC0' : visionPro.primary },
                                 "& .MuiOutlinedInput-root": {
-                                    "& fieldset": { borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'inherit' },
+                                    "& fieldset": { borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(16, 185, 129, 0.2)' },
                                     "& .MuiSelect-select": {
-                                        color: hideHeader ? 'white' : 'inherit',
+                                        color: hideHeader ? 'white' : '#fff',
                                         fontSize: '1.2rem',
-                                        fontWeight: 'bold'
+                                        fontWeight: '800'
                                     }
                                 }
                             }}>
@@ -837,7 +1019,6 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
     );
 };
 
-// In UserDashboard component
 const UserDashboard = ({ hideHeader = false }) => {
     const { logout, token } = useContext(AuthContext); // Destructure token
 
@@ -993,30 +1174,51 @@ const UserDashboard = ({ hideHeader = false }) => {
     const renderTeams = () => (
         <Paper sx={{
             p: 2,
-            mb: 3,
-            borderRadius: 2,
-            bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
-            backdropFilter: hideHeader ? 'blur(10px)' : 'none',
-            border: hideHeader ? '1px solid rgba(255, 255, 255, 0.1)' : 'none'
-        }} elevation={hideHeader ? 0 : 1}>
+            mb: 4,
+            borderRadius: '24px',
+            bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : visionPro.paper,
+            backdropFilter: 'blur(20px)',
+            border: `1px solid ${hideHeader ? 'rgba(255, 255, 255, 0.1)' : visionPro.border}`,
+            boxShadow: hideHeader ? 'none' : '0 10px 30px rgba(0, 0, 0, 0.3)'
+        }} elevation={0}>
              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Typography variant="h6" color="primary" fontWeight="bold">
+                <Typography variant="h6" sx={{ color: hideHeader ? visionPro.secondary : visionPro.primary, fontWeight: 800, display: 'flex', alignItems: 'center' }}>
                     <span className="mr-2">🏏</span>
                    Active Teams ({groups.length})
                 </Typography>
                 <Box>
                     <Button
                         variant="contained"
-                        color="success"
                         size="small"
                         onClick={() => setMatchWizardOpen(true)}
-                        sx={{ mr: 2 }}
+                        sx={{
+                            mr: 2,
+                            bgcolor: visionPro.primary,
+                            color: '#fff',
+                            '&:hover': { bgcolor: '#047857' },
+                            borderRadius: '10px',
+                            fontWeight: 'bold',
+                            textTransform: 'none'
+                        }}
                         startIcon={<SportsCricketIcon />}
                     >
-                        Start Match Wizard
+                        Start Prediction Wizard
                     </Button>
-                    <Button size="small" onClick={() => setShowTeams(!showTeams)}>
-                        {showTeams ? "Hide" : "Show All"}
+                    <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={() => setShowTeams(!showTeams)}
+                        sx={{
+                            color: visionPro.primary,
+                            borderColor: visionPro.primary,
+                            fontWeight: 'bold',
+                            '&:hover': {
+                                borderColor: '#047857',
+                                bgcolor: 'rgba(5, 150, 105, 0.05)'
+                            }
+                        }}
+                    >
+                        {showTeams ? "Hide Teams" : "Expand All"}
                     </Button>
                 </Box>
             </Box>
@@ -1026,8 +1228,15 @@ const UserDashboard = ({ hideHeader = false }) => {
                     {groups.map(group => (
                         <Grid item xs={12} sm={6} md={4} key={group._id}>
                             <Card variant="outlined" sx={{
-                                bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : '#f8fafc',
-                                borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'divider'
+                                borderRadius: '16px',
+                                bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.3)',
+                                borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : visionPro.border,
+                                transition: 'all 0.3s ease',
+                                '&:hover': {
+                                    borderColor: hideHeader ? visionPro.primary : visionPro.primary,
+                                    transform: 'translateY(-4px)',
+                                    boxShadow: '0 4px 20px rgba(0,0,0,0.5)'
+                                }
                             }}>
                                 <CardContent>
                                     <Typography variant="subtitle1" fontWeight="bold">{group.name}</Typography>
@@ -1103,19 +1312,54 @@ const UserDashboard = ({ hideHeader = false }) => {
     return (
         <Box sx={{
             minHeight: '100vh',
-            bgcolor: hideHeader ? 'transparent' : '#f1f5f9',
-            color: hideHeader ? '#fff' : 'inherit'
+            bgcolor: hideHeader ? 'transparent' : visionPro.background,
+            color: hideHeader ? '#fff' : visionPro.text,
+            backgroundImage: hideHeader
+                ? 'none'
+                : `radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 50%), radial-gradient(circle at 10% 10%, rgba(110, 231, 183, 0.05) 0%, transparent 40%)`,
         }}>
              {/* Header */}
             {!hideHeader && (
-                <AppBar position="sticky" sx={{ bgcolor: 'white', color: '#1e3a8a', boxShadow: 1 }}>
-                    <Toolbar>
-                        <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 'bold', letterSpacing: -0.5, display: 'flex', alignItems: 'center' }}>
-                            <span className="text-royal-blue mr-2 text-2xl">⚛️</span>
-                            ASTRO CRICKET
-                            <Chip label="ADMIN DASHBOARD" size="small" sx={{ ml: 2, height: 20, fontSize: '0.65rem' }} />
-                        </Typography>
-                        <Button color="inherit" onClick={logout} sx={{ ml: 2, fontSize: '0.8rem' }}>Logout</Button>
+                <AppBar position="sticky" sx={{
+                    bgcolor: visionPro.primary,
+                    backgroundImage: `linear-gradient(135deg, ${visionPro.primary} 0%, ${visionPro.secondary} 100%)`,
+                    backdropFilter: 'blur(10px)',
+                    borderBottom: `1px solid ${visionPro.border}`,
+                    boxShadow: '0 4px 20px rgba(5, 150, 105, 0.2)'
+                }}>
+                    <Toolbar sx={{ justifyContent: 'space-between' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <SportsCricketIcon sx={{ color: '#fff', fontSize: 28 }} />
+                            <Typography variant="h5" sx={{
+                                fontWeight: 900,
+                                letterSpacing: '0.5px',
+                                color: '#fff',
+                                display: 'flex',
+                                alignItems: 'center'
+                            }}>
+                                CRICKET ASTRO VISION PRO
+                            </Typography>
+                        </Box>
+
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <Button
+                                variant="contained"
+                                startIcon={<ExitToAppIcon />}
+                                onClick={logout}
+                                sx={{
+                                    borderRadius: '12px',
+                                    bgcolor: 'rgba(255, 255, 255, 0.2)',
+                                    backgroundImage: 'linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0))',
+                                    color: '#fff',
+                                    fontWeight: 'bold',
+                                    '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.3)' },
+                                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                                    backdropFilter: 'blur(5px)'
+                                }}
+                            >
+                                Logout
+                            </Button>
+                        </Box>
                     </Toolbar>
                 </AppBar>
             )}
@@ -1124,12 +1368,13 @@ const UserDashboard = ({ hideHeader = false }) => {
                 {/* Search Bar */}
                 <Paper sx={{
                     p: 2,
-                    mb: 3,
-                    borderRadius: 2,
-                    bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
-                    backdropFilter: hideHeader ? 'blur(10px)' : 'none',
-                    border: hideHeader ? '1px solid rgba(255, 255, 255, 0.1)' : 'none'
-                }} elevation={hideHeader ? 0 : 1}>
+                    mb: 4,
+                    borderRadius: '24px',
+                    bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : visionPro.paper,
+                    backdropFilter: 'blur(20px)',
+                    border: `1px solid ${hideHeader ? 'rgba(255, 255, 255, 0.1)' : visionPro.border}`,
+                    boxShadow: hideHeader ? 'none' : '0 10px 30px rgba(0, 0, 0, 0.3)'
+                }} elevation={0}>
                     <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                          {/* Selection Info */}
                         {selectedPlayerIds.length > 0 && (
@@ -1144,25 +1389,41 @@ const UserDashboard = ({ hideHeader = false }) => {
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
-                                        <SearchIcon color="action" />
+                                        <SearchIcon sx={{ color: hideHeader ? '#718096' : visionPro.primary }} />
                                     </InputAdornment>
                                 ),
-                            }}
-                            sx={{
-                                bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : '#f8fafc',
-                                '& .MuiOutlinedInput-root': {
-                                    '& fieldset': { borderColor: hideHeader ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.23)' },
+                                sx: {
+                                    borderRadius: '16px',
+                                    bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : visionPro.background,
+                                    color: visionPro.text,
+                                    '& fieldset': { borderColor: visionPro.border },
+                                    '&:hover fieldset': { borderColor: visionPro.primary },
+                                    '&.Mui-focused fieldset': { borderColor: visionPro.primary },
                                 }
                             }}
                         />
                         <Button
-                            variant={showPrediction ? "contained" : "outlined"}
-                            color="secondary"
+                            variant="contained"
                             disabled={!showPrediction && selectedPlayerIds.length === 0}
                             startIcon={<SportsCricketIcon />}
                             onClick={() => {
                                 setShowPrediction(!showPrediction);
                                 if(showPrediction) setMatchChart(null);
+                            }}
+                            sx={{
+                                borderRadius: '12px',
+                                textTransform: 'none',
+                                px: 3,
+                                fontWeight: '900',
+                                color: '#fff',
+                                bgcolor: visionPro.primary,
+                                '&:hover': {
+                                    bgcolor: '#047857',
+                                    transform: 'scale(1.02)'
+                                },
+                                '&:active': { transform: 'scale(0.98)' },
+                                transition: 'all 0.2s ease',
+                                boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)'
                             }}
                         >
                             {showPrediction ? "Close Prediction" : "Predict Match"}
@@ -1196,23 +1457,22 @@ const UserDashboard = ({ hideHeader = false }) => {
                                 <Table stickyHeader>
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell padding="checkbox" sx={{ bgcolor: hideHeader ? '#111C44' : '#1e40af' }}>
+                                            <TableCell padding="checkbox" sx={{ bgcolor: visionPro.accent, borderBottom: `1px solid ${visionPro.border}` }}>
                                                 <Checkbox
-                                                    color="default"
+                                                    color="primary"
                                                     indeterminate={selectedPlayerIds.length > 0 && selectedPlayerIds.length < players.length}
                                                     checked={players.length > 0 && selectedPlayerIds.length === players.length}
                                                     onChange={handleSelectAllClick}
                                                     inputProps={{
                                                         'aria-label': 'select all players',
                                                     }}
-                                                    sx={{ color: 'white!important' }}
                                                 />
                                             </TableCell>
-                                            <TableCell width="50" sx={{ bgcolor: hideHeader ? '#111C44' : '#1e40af', color: 'white' }} />
-                                            <TableCell sx={{ bgcolor: hideHeader ? '#111C44' : '#1e40af', color: 'white', fontWeight: 'bold' }}>PLAYER PROFILE</TableCell>
-                                            <TableCell sx={{ bgcolor: hideHeader ? '#111C44' : '#1e40af', color: 'white', fontWeight: 'bold' }}>BIRTH PLACE</TableCell>
-                                            <TableCell sx={{ bgcolor: hideHeader ? '#111C44' : '#1e40af', color: 'white', fontWeight: 'bold' }}>TIMEZONE</TableCell>
-                                            <TableCell sx={{ bgcolor: hideHeader ? '#111C44' : '#1e40af', color: 'white', fontWeight: 'bold' }}>
+                                            <TableCell width="50" sx={{ bgcolor: visionPro.accent, color: visionPro.text, borderBottom: `1px solid ${visionPro.border}` }} />
+                                            <TableCell sx={{ bgcolor: visionPro.accent, color: visionPro.text, fontWeight: 'bold', borderBottom: `1px solid ${visionPro.border}` }}>PLAYER PROFILE</TableCell>
+                                            <TableCell sx={{ bgcolor: visionPro.accent, color: visionPro.text, fontWeight: 'bold', borderBottom: `1px solid ${visionPro.border}` }}>BIRTH PLACE</TableCell>
+                                            <TableCell sx={{ bgcolor: visionPro.accent, color: visionPro.text, fontWeight: 'bold', borderBottom: `1px solid ${visionPro.border}` }}>TIMEZONE</TableCell>
+                                            <TableCell sx={{ bgcolor: visionPro.accent, color: visionPro.text, fontWeight: 'bold', borderBottom: `1px solid ${visionPro.border}` }}>
                                                 {matchChart ? "PREDICTION RESULT (BAT / BOWL)" : "CHART SUMMARY"}
                                             </TableCell>
                                         </TableRow>

@@ -89,9 +89,17 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
     return (
         <Paper elevation={3} sx={{ p: 0, mb: 3, overflow: 'hidden' }}>
              {/* AppBar inside Control */}
-             <Box sx={{ bgcolor: 'primary.main', color: 'white', p: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+             <Box sx={{
+                bgcolor: '#059669',
+                backgroundImage: 'linear-gradient(to right, #059669, #10B981)',
+                color: 'white',
+                p: 2,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1
+             }}>
                 <SportsCricketIcon />
-                <Typography variant="h6">Match Prediction Setup</Typography>
+                <Typography variant="h6" fontWeight="900">Match Prediction Setup</Typography>
                 <Box sx={{ flexGrow: 1 }} />
                 {matchDetails.time && (
                     <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
@@ -179,7 +187,15 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
                             fullWidth
                             onClick={handleRun}
                             disabled={loading}
-                            sx={{ mt: 1, py: 1.5, fontSize: '1.1rem' }}
+                            sx={{
+                                mt: 1,
+                                py: 1.5,
+                                fontSize: '1.1rem',
+                                bgcolor: '#059669',
+                                '&:hover': { bgcolor: '#047857' },
+                                borderRadius: '12px',
+                                fontWeight: 'bold'
+                            }}
                         >
                             {loading ? <CircularProgress size={24} color="inherit" /> : `Predict for ${matchDetails.date} @ ${matchDetails.time}`}
                         </Button>

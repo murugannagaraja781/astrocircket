@@ -145,6 +145,7 @@ const processSinglePlanet = (pRaw, houseContext) => {
     const stateEnglish = isRetro ? 'Retrograde' : 'Direct';
     const stateTamil = isRetro ? 'வக்ரம்' : 'நேர்கதி'; // Vakram : Nerkathi
 
+    const nakLordName = nakLord || '-';
     return {
         planetName: pName,
         planetTamil: planetTamilMap[pName] || pName,
@@ -152,9 +153,11 @@ const processSinglePlanet = (pRaw, houseContext) => {
         signTamil,
         lordName,
         lordTamil,
-        nakshatraName: `${nakshatraName} ${pada ? '(' + pada + ')' : ''}`,
+        nakshatraName: nakshatraName || '-',
         nakshatraTamil,
-        nakshatraLord: nakLord || '-',
+        pada: pada || '-',
+        nakshatraLord: nakLordName,
+        nakshatraLordTamil: planetTamilMap[nakLordName] || nakLordName,
         degreeFormatted: degreeStr,
         dignityName: dignityEnglish || '-',
         dignityTamil: dignityTamil || '-',
@@ -169,23 +172,40 @@ const processSinglePlanet = (pRaw, houseContext) => {
 };
 
 const formatPlanetaryData = (rawPlanets) => {
-    if (!rawPlanets) return [];
+    const planetList = [];
+    if (!rawPlanets) return planetList;
 
-    let planetList = [];
+    // 1. Explicitly Handle Array Input (e.g., list of planets or list of houses)
+    if (Array.isArray(rawPlanets)) {
+        rawPlanets.forEach(p => {
+            // Check if this item is a house containing planets array, or just a planet
+            const nested = p.planets || p.Planets || (Array.isArray(p) ? p : null);
+            if (nested && Array.isArray(nested)) {
+                nested.forEach(sp => {
+                    const obj = processSinglePlanet(sp, p);
+                    if (obj) planetList.push(obj);
+                });
+            } else if (p.name || p.planet) {
+                // It's a planet object
+                const obj = processSinglePlanet(p, null);
+                if (obj) planetList.push(obj);
+            }
+        });
+        return planetList;
+    }
 
-    // Check if data is in "House" format (keys are 1, 2, 3...) or "Planet" format (Sun, Moon...)
+    // 2. Handle Object structure (Map of planets or Map of houses)
     const keys = Object.keys(rawPlanets);
-    const isHouseData = keys.some(k => !isNaN(parseInt(k)));
+    const isHouseData = keys.some(k => !isNaN(parseInt(k)) && typeof rawPlanets[k] === 'object');
 
     if (isHouseData) {
-        // Extract planets from houses
         Object.values(rawPlanets).forEach(house => {
             let planets = [];
             if (Array.isArray(house)) {
                 planets = house;
             } else if (house.planets) {
                 planets = Array.isArray(house.planets) ? house.planets : Object.values(house.planets);
-            } else if (house.Planets) { // Handle case variation
+            } else if (house.Planets) {
                 planets = Array.isArray(house.Planets) ? house.Planets : Object.values(house.Planets);
             }
 
@@ -197,7 +217,6 @@ const formatPlanetaryData = (rawPlanets) => {
             }
         });
     } else {
-        // Already valid planet map
         Object.values(rawPlanets).forEach(pRaw => {
             const obj = processSinglePlanet(pRaw, null);
             if (obj) planetList.push(obj);
