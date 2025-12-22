@@ -6,8 +6,142 @@ import {
     ListItem, ListItemButton, ListItemIcon, ListItemText, Container, Grid, Paper, Button,
     Dialog, DialogTitle, DialogContent, DialogActions, TextField, Autocomplete, CircularProgress,
     useTheme, useMediaQuery, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination,
-    Snackbar, Alert, Checkbox, FormControlLabel, Chip
+    Snackbar, Alert, Checkbox, FormControlLabel, Chip, Avatar
 } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const visionTheme = createTheme({
+    palette: {
+        mode: 'dark',
+        background: {
+            default: '#0F1535',
+            paper: '#111C44', // Fallback for non-glass
+        },
+        primary: {
+            main: '#0075FF', // Electric Blue
+        },
+        secondary: {
+            main: '#2CD9FF', // Cyan
+        },
+        text: {
+            primary: '#FFFFFF',
+            secondary: '#A0AEC0',
+        },
+    },
+    components: {
+        MuiPaper: {
+            styleOverrides: {
+                root: {
+                    backgroundImage: 'none',
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)', // Glass
+                    backdropFilter: 'blur(10px)',
+                    borderRadius: '20px',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+                },
+            },
+        },
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    borderRadius: '12px',
+                    textTransform: 'none',
+                    fontWeight: 'bold',
+                },
+                contained: {
+                    boxShadow: '0 4px 7px -1px rgba(0,0,0,0.11), 0 2px 4px -1px rgba(0,0,0,0.07)',
+                },
+            },
+        },
+        MuiTableCell: {
+            styleOverrides: {
+                root: {
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                    color: '#fff',
+                },
+                head: {
+                    color: '#A0AEC0',
+                    backgroundColor: '#111C44', // Dark sticky header
+                    textTransform: 'uppercase',
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                },
+            },
+        },
+        MuiTextField: {
+            styleOverrides: {
+                root: {
+                    '& .MuiFilledInput-root': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                        borderRadius: '12px',
+                        '&:hover': {
+                            backgroundColor: 'rgba(255, 255, 255, 0.1)', // Slightly lighter on hover
+                        },
+                        '&.Mui-focused': {
+                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                            boxShadow: '0 0 0 2px #0075FF', // Focus ring
+                        },
+                    },
+                    '& .MuiInputLabel-root': {
+                        color: '#A0AEC0',
+                        '&.Mui-focused': { color: '#0075FF' }
+                    },
+                    '& .MuiInputBase-input': {
+                        color: '#fff',
+                    },
+                    '& .MuiOutlinedInput-root': {
+                        // For manual override case
+                        '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.2)' },
+                        '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.4)' },
+                        '&.Mui-focused fieldset': { borderColor: '#0075FF' },
+                    }
+                }
+            }
+        },
+        MuiDialog: {
+            styleOverrides: {
+                paper: {
+                    backgroundColor: '#111C44',
+                    backgroundImage: 'none',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '20px',
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
+                }
+            }
+        },
+        MuiDialogTitle: {
+            styleOverrides: {
+                root: {
+                    fontSize: '1.25rem',
+                    fontWeight: 700,
+                    color: '#fff',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                }
+            }
+        },
+        MuiDialogContent: {
+            styleOverrides: {
+                root: {
+                    padding: '24px !important',
+                }
+            }
+        },
+        MuiDialogActions: {
+            styleOverrides: {
+                root: {
+                    padding: '16px 24px',
+                    borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                }
+            }
+        }
+    },
+    typography: {
+        fontFamily: '"Plus Jakarta Sans", "Roboto", "Helvetica", "Arial", sans-serif',
+        h4: { fontWeight: 700 },
+        h5: { fontWeight: 700 },
+        h6: { fontWeight: 700 },
+    },
+});
 import MenuIcon from '@mui/icons-material/Menu';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
@@ -45,30 +179,29 @@ const DashboardHome = () => {
 
     return (
         <Grid container spacing={3}>
-            <Grid item xs={12} sm={6} md={3}>
-                <Paper sx={{ p: 3, display: 'flex', flexDirection: 'column', bgcolor: '#e3f2fd' }}>
-                    <Typography component="h2" variant="h6" color="primary" gutterBottom>Total Users</Typography>
-                    <Typography component="p" variant="h4">{stats.totalUsers}</Typography>
-                </Paper>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-                 <Paper sx={{ p: 3, display: 'flex', flexDirection: 'column', bgcolor: '#fff3e0' }}>
-                    <Typography component="h2" variant="h6" color="secondary" gutterBottom>Pending Approvals</Typography>
-                    <Typography component="p" variant="h4">{stats.pendingUsers}</Typography>
-                </Paper>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-                 <Paper sx={{ p: 3, display: 'flex', flexDirection: 'column', bgcolor: '#e8f5e9' }}>
-                    <Typography component="h2" variant="h6" color="success.main" gutterBottom>Total Players</Typography>
-                    <Typography component="p" variant="h4">{stats.totalPlayers}</Typography>
-                </Paper>
-            </Grid>
-             <Grid item xs={12} sm={6} md={3}>
-                 <Paper sx={{ p: 3, display: 'flex', flexDirection: 'column', bgcolor: '#f3e5f5' }}>
-                    <Typography component="h2" variant="h6" color="secondary" gutterBottom>Groups</Typography>
-                    <Typography component="p" variant="h4">{stats.totalGroups}</Typography>
-                </Paper>
-            </Grid>
+            {[
+                { label: 'Total Users', value: stats.totalUsers, icon: <PeopleIcon />, color: 'linear-gradient(135deg, #0075FF 0%, #2CD9FF 100%)' },
+                { label: 'Pending Users', value: stats.pendingUsers, icon: <GroupIcon />, color: 'linear-gradient(135deg, #FF0080 0%, #7928CA 100%)' },
+                { label: 'Total Players', value: stats.totalPlayers, icon: <SportsCricketIcon />, color: 'linear-gradient(135deg, #429321 0%, #B4EC51 100%)' },
+                { label: 'Total Groups', value: stats.totalGroups, icon: <DashboardIcon />, color: 'linear-gradient(135deg, #FF512F 0%, #DD2476 100%)' }
+            ].map((item, index) => (
+                <Grid item xs={12} sm={6} md={3} key={index}>
+                    <Paper sx={{ p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Box>
+                            <Typography variant="body2" color="text.secondary" fontWeight="bold">{item.label}</Typography>
+                            <Typography variant="h5" color="white" fontWeight="bold">{item.value}</Typography>
+                        </Box>
+                        <Box sx={{
+                            width: 45, height: 45, borderRadius: '12px',
+                            background: item.color,
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            color: 'white', boxShadow: '0 4px 6px rgba(0,0,0,0.3)'
+                        }}>
+                            {item.icon}
+                        </Box>
+                    </Paper>
+                </Grid>
+            ))}
         </Grid>
     );
 };
@@ -145,7 +278,7 @@ const UsersManager = () => {
             </Box>
             <Paper>
                 <List>
-                     <ListItem sx={{ bgcolor: '#eee', fontWeight: 'bold' }}>
+                     <ListItem sx={{ bgcolor: 'rgba(255, 255, 255, 0.05)', fontWeight: 'bold' }}>
                         <Grid container>
                             <Grid item xs={4}>Username</Grid>
                             <Grid item xs={4}>Role</Grid>
@@ -293,26 +426,56 @@ const PlayersManager = () => {
              // We will handle FormData for Add.
 
              if (!selectedPlayer) {
-                 // ADD PLAYER
-                 const formData = new FormData();
-                 Object.keys(playerForm).forEach(key => {
-                     formData.append(key, playerForm[key]);
-                 });
-                 if (profilePicFile) {
-                     formData.append('image', profilePicFile);
-                 }
+                // ADD PLAYER
+                const formData = new FormData();
+                Object.keys(playerForm).forEach(key => {
+                    // Exclude complex objects if any, though usually for Add it's fine
+                    formData.append(key, playerForm[key]);
+                });
+                if (profilePicFile) {
+                    formData.append('image', profilePicFile);
+                }
 
-                 await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/players/add`, formData, {
-                     headers: { 'x-auth-token': token, 'Content-Type': 'multipart/form-data' }
-                 });
-                 showSnackbar('Player Added Successfully', 'success');
-             } else {
-                 // EDIT PLAYER
-                 await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/players/${selectedPlayer.id}`, playerForm, {
-                     headers: { 'x-auth-token': token }
-                 });
-                 showSnackbar('Player Updated Successfully', 'success');
-             }
+                await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/players/add`, formData, {
+                    headers: { 'x-auth-token': token, 'Content-Type': 'multipart/form-data' }
+                });
+                showSnackbar('Player Added Successfully', 'success');
+            } else {
+                // EDIT PLAYER
+                if (profilePicFile) {
+                    // Use FormData if file exists
+                    const formData = new FormData();
+                    // Explicitly append only relevant fields to avoid object stringification issues
+                    ['name', 'birthPlace', 'dob', 'latitude', 'longitude', 'timezone', 'manualTimezone'].forEach(key => {
+                        if (playerForm[key] !== undefined && playerForm[key] !== null) {
+                            formData.append(key, playerForm[key]);
+                        }
+                    });
+
+                    formData.append('image', profilePicFile);
+
+                    await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/players/${selectedPlayer.id}`, formData, {
+                        headers: { 'x-auth-token': token, 'Content-Type': 'multipart/form-data' }
+                    });
+                } else {
+                    // Use JSON if no file (legacy/safe way)
+                    // We should remove birthChart from updates to be safe, though existing code sent it all.
+                    // If existing code worked, it means backend either handled it or it wasn't an issue.
+                    // But to be cleaner, let's just send everything as before to minimize regression risk for non-file edits.
+                    // Actually, let's be safer and strip birthChart if possible, but let's stick to existing behavior for consistency.
+                    // Wait, existing behavior sent `playerForm` which is `player`.
+                    // Backend `updatePlayer` uses `req.body` as `updates`.
+                    // If `playerForm` has `birthChart` (object), it is sent as JSON.
+                    // Backend `req.body` parses JSON. `updates.birthChart` is an object.
+                    // `findOneAndUpdate` with `$set: updates` SAVES IT AS IS.
+                    // So sending JSON is fine for objects. sending FormData is NOT.
+                    // So my bifurcation is correct.
+                    await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/players/${selectedPlayer.id}`, playerForm, {
+                        headers: { 'x-auth-token': token }
+                    });
+                }
+                showSnackbar('Player Updated Successfully', 'success');
+            }
 
              setOpenEdit(false);
              fetchPlayers();
@@ -461,9 +624,16 @@ const PlayersManager = () => {
                                 </TableCell>
                                 {!isMobile && <TableCell>{p.id}</TableCell>}
                                 <TableCell>
-                                    <Box>
-                                        <Typography variant="body2" fontWeight="500">{p.name}</Typography>
-                                        {isMobile && <Typography variant="caption" color="textSecondary">{p.birthPlace}</Typography>}
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                        <Avatar
+                                            src={p.profile ? `${import.meta.env.VITE_BACKEND_URL}${p.profile}` : ''}
+                                            alt={p.name}
+                                            sx={{ width: 40, height: 40, border: '2px solid rgba(255,255,255,0.2)' }}
+                                        />
+                                        <Box>
+                                            <Typography variant="body2" fontWeight="bold" color="white">{p.name}</Typography>
+                                            {isMobile && <Typography variant="caption" color="textSecondary">{p.birthPlace}</Typography>}
+                                        </Box>
                                     </Box>
                                 </TableCell>
                                 {!isMobile && <TableCell>{p.birthPlace}</TableCell>}
@@ -492,6 +662,38 @@ const PlayersManager = () => {
                 <DialogContent>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
                         {selectedPlayer && <TextField label="ID" value={playerForm.id} disabled fullWidth size="small" />}
+
+                        {/* Profile Picture Preview & Input */}
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+                            <Avatar
+                                src={
+                                    profilePicFile
+                                        ? URL.createObjectURL(profilePicFile)
+                                        : (playerForm.profile ? `${import.meta.env.VITE_BACKEND_URL}${playerForm.profile}` : '')
+                                }
+                                sx={{ width: 70, height: 70, border: '2px solid rgba(255,255,255,0.2)' }}
+                            />
+                            <Box>
+                                <Typography variant="caption" color="textSecondary" sx={{ mb: 0.5, display: 'block' }}>
+                                    Profile Photo
+                                </Typography>
+                                <Button variant="outlined" size="small" component="label" sx={{ textTransform: 'none' }}>
+                                    Choose File
+                                    <input
+                                        type="file"
+                                        hidden
+                                        accept="image/*"
+                                        onChange={(e) => {
+                                            if (e.target.files && e.target.files[0]) {
+                                                setProfilePicFile(e.target.files[0]);
+                                            }
+                                        }}
+                                    />
+                                </Button>
+                                {profilePicFile && <Typography variant="caption" sx={{ ml: 1, color: 'success.main' }}>Selected</Typography>}
+                            </Box>
+                        </Box>
+
                         <TextField label="Name" value={playerForm.name || ''} onChange={(e) => setPlayerForm({...playerForm, name: e.target.value})} fullWidth size="small" />
                         <Autocomplete
                             freeSolo
@@ -587,18 +789,7 @@ const PlayersManager = () => {
                             InputLabelProps={{ shrink: true }}
                         />
 
-                         {/* Profile Pic Input */}
-                         {!selectedPlayer && (
-                             <Box>
-                                 <Typography variant="caption">Profile Picture</Typography>
-                                 <input
-                                     type="file"
-                                     accept="image/*"
-                                     onChange={(e) => setProfilePicFile(e.target.files[0])}
-                                     style={{ display: 'block', marginTop: 8 }}
-                                 />
-                             </Box>
-                         )}
+
                     </Box>
                 </DialogContent>
                 <DialogActions>
@@ -874,43 +1065,74 @@ const AdminDashboard = () => {
     ];
 
     const drawer = (
-        <div>
-            <Toolbar sx={{ bgcolor: '#1e40af', color: 'white' }}>
-                <Typography variant="h6" noWrap component="div">
-                    AstroCricket Admin
+        <Box sx={{ p: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3, gap: 1 }}>
+                <DashboardIcon sx={{ color: 'white' }} />
+                <Typography variant="h6" fontWeight="bold" color="white" sx={{ letterSpacing: '2px' }}>
+                    ASTRO ADMIN
                 </Typography>
-            </Toolbar>
-            <Divider />
+            </Box>
+            <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)', mb: 2 }} />
             <List>
-                {menuItems.map((item) => (
-                    <ListItem key={item.id} disablePadding>
-                        <ListItemButton
-                            selected={currentView === item.id}
-                            onClick={() => {
-                                setCurrentView(item.id);
-                                setMobileOpen(false);
-                            }}
-                        >
-                            <ListItemIcon sx={{ color: currentView === item.id ? '#1e40af' : 'inherit' }}>
-                                {item.icon}
+                {menuItems.map((item) => {
+                    const active = currentView === item.id;
+                    return (
+                        <ListItem key={item.id} disablePadding sx={{ mb: 1 }}>
+                            <ListItemButton
+                                onClick={() => { setCurrentView(item.id); setMobileOpen(false); }}
+                                sx={{
+                                    borderRadius: '15px',
+                                    background: active ? 'linear-gradient(135deg, #0075FF 0%, #2CD9FF 100%)' : 'transparent',
+                                    boxShadow: active ? '0 4px 6px rgba(0,0,0,0.2)' : 'none',
+                                    transition: 'all 0.3s ease',
+                                    px: 2,
+                                    '&:hover': {
+                                        bgcolor: active ? 'rgba(0,117,255,0.8)' : 'rgba(255,255,255,0.05)',
+                                        transform: 'translateX(5px)'
+                                    }
+                                }}
+                            >
+                                <ListItemIcon sx={{
+                                    minWidth: 40,
+                                    color: active ? 'white' : '#2CD9FF', // Cyan Icon for inactive
+                                    bgcolor: active ? 'rgba(255,255,255,0.2)' : 'rgba(26,31,63,0.5)', // Darker box for inactive
+                                    borderRadius: '10px',
+                                    width: 32, height: 32,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    mr: 1.5
+                                }}>
+                                    {item.icon}
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary={item.label}
+                                    primaryTypographyProps={{
+                                        fontSize: '0.875rem',
+                                        fontWeight: active ? 'bold' : '500',
+                                        color: active ? 'white' : '#A0AEC0'
+                                    }}
+                                />
+                            </ListItemButton>
+                        </ListItem>
+                    );
+                })}
+            </List>
+            <Box sx={{ mt: 'auto' }}>
+                 <List>
+                    <ListItem disablePadding>
+                        <ListItemButton onClick={logout} sx={{ borderRadius: '15px', '&:hover': { bgcolor: 'rgba(255,0,0,0.1)' } }}>
+                            <ListItemIcon sx={{
+                                     minWidth: 40, color: '#F56565',
+                                     bgcolor: 'rgba(245, 101, 101, 0.1)', borderRadius: '10px',
+                                     width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 1.5
+                                 }}>
+                                <LogoutIcon fontSize="small" />
                             </ListItemIcon>
-                            <ListItemText primary={item.label} />
+                            <ListItemText primary="Logout" primaryTypographyProps={{ color: '#F56565', fontWeight: 'bold', fontSize: '0.875rem' }} />
                         </ListItemButton>
                     </ListItem>
-                ))}
-            </List>
-            <Divider />
-            <List>
-                <ListItem disablePadding>
-                    <ListItemButton onClick={logout}>
-                        <ListItemIcon>
-                            <LogoutIcon color="error" />
-                        </ListItemIcon>
-                        <ListItemText primary="Logout" sx={{ color: 'error.main' }} />
-                    </ListItemButton>
-                </ListItem>
-            </List>
-        </div>
+                </List>
+            </Box>
+        </Box>
     );
 
     const renderContent = () => {
@@ -924,69 +1146,104 @@ const AdminDashboard = () => {
     };
 
     return (
-        <Box sx={{ display: 'flex' }}>
-            <CssBaseline />
-            <AppBar
-                position="fixed"
-                sx={{
-                    width: { sm: `calc(100% - ${drawerWidth}px)` },
-                    ml: { sm: `${drawerWidth}px` },
-                    bgcolor: '#1e40af'
-                }}
-            >
-                <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        edge="start"
-                        onClick={handleDrawerToggle}
-                        sx={{ mr: 2, display: { sm: 'none' } }}
+        <ThemeProvider theme={visionTheme}>
+            <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#0F1535', color: 'white', overflow: 'hidden' }}>
+                <CssBaseline />
+                {/* Background Decor */}
+                <Box sx={{
+                    position: 'absolute',
+                    top: 0, left: 0, width: '100%', height: '300px',
+                    background: 'linear-gradient(180deg, rgba(0, 117, 255, 0.2) 0%, rgba(15, 21, 53, 0) 100%)',
+                    zIndex: 0, pointerEvents: 'none'
+                }} />
+
+                <AppBar
+                    position="fixed"
+                    sx={{
+                        width: { sm: `calc(100% - ${drawerWidth}px)` },
+                        ml: { sm: `${drawerWidth}px` },
+                        bgcolor: 'transparent',
+                        boxShadow: 'none',
+                        backdropFilter: 'blur(10px)',
+                        borderBottom: '1px solid rgba(255,255,255,0.05)'
+                    }}
+                >
+                    <Toolbar>
+                        <IconButton
+                            color="inherit"
+                            aria-label="open drawer"
+                            edge="start"
+                            onClick={handleDrawerToggle}
+                            sx={{ mr: 2, display: { sm: 'none' } }}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography variant="h6" noWrap component="div" sx={{ color: 'white' }}>
+                            {menuItems.find(i => i.id === currentView)?.label}
+                        </Typography>
+                    </Toolbar>
+                </AppBar>
+
+                <Box
+                    component="nav"
+                    sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 }, zIndex: 1200 }}
+                    aria-label="mailbox folders"
+                >
+                    <Drawer
+                        variant="temporary"
+                        open={mobileOpen}
+                        onClose={handleDrawerToggle}
+                        ModalProps={{ keepMounted: true }}
+                        sx={{
+                            display: { xs: 'block', sm: 'none' },
+                            '& .MuiDrawer-paper': {
+                                boxSizing: 'border-box',
+                                width: drawerWidth,
+                                bgcolor: '#0F1535',
+                                color: 'white',
+                                borderRight: '1px solid rgba(255,255,255,0.1)'
+                            },
+                        }}
                     >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h6" noWrap component="div">
-                        {menuItems.find(i => i.id === currentView)?.label}
-                    </Typography>
-                </Toolbar>
-            </AppBar>
+                        {drawer}
+                    </Drawer>
+                    <Drawer
+                        variant="permanent"
+                        sx={{
+                            display: { xs: 'none', sm: 'block' },
+                            '& .MuiDrawer-paper': {
+                                boxSizing: 'border-box',
+                                width: drawerWidth,
+                                bgcolor: 'transparent', // Glass sidebar
+                                borderRight: 'none',
+                                p: 2
+                            },
+                        }}
+                        open
+                    >
+                        {/* Wrapper for Glass effect on sidebar */}
+                        <Box sx={{
+                            height: 'calc(100vh - 32px)',
+                            background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.05) 100%)',
+                            backdropFilter: 'blur(20px)',
+                            borderRadius: '20px',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            overflow: 'hidden'
+                         }}>
+                            {drawer}
+                        </Box>
+                    </Drawer>
+                </Box>
 
-            <Box
-                component="nav"
-                sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-                aria-label="mailbox folders"
-            >
-                <Drawer
-                    variant="temporary"
-                    open={mobileOpen}
-                    onClose={handleDrawerToggle}
-                    ModalProps={{ keepMounted: true }}
-                    sx={{
-                        display: { xs: 'block', sm: 'none' },
-                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-                    }}
+                <Box
+                    component="main"
+                    sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, position: 'relative', zIndex: 1 }}
                 >
-                    {drawer}
-                </Drawer>
-                <Drawer
-                    variant="permanent"
-                    sx={{
-                        display: { xs: 'none', sm: 'block' },
-                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-                    }}
-                    open
-                >
-                    {drawer}
-                </Drawer>
+                    <Toolbar />
+                    {renderContent()}
+                </Box>
             </Box>
-
-            <Box
-                component="main"
-                sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, minHeight: '100vh', bgcolor: '#f5f5f5' }}
-            >
-                <Toolbar />
-                {renderContent()}
-            </Box>
-        </Box>
+        </ThemeProvider>
     );
 };
 
