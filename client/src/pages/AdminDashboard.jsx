@@ -13,6 +13,9 @@ import PeopleIcon from '@mui/icons-material/People';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import GroupIcon from '@mui/icons-material/Group';
 import LogoutIcon from '@mui/icons-material/Logout';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
 import AuthContext from '../context/AuthContext';
 
 // Placeholder Components for Sections
@@ -198,6 +201,10 @@ const PlayersManager = () => {
     const [selectedPlayer, setSelectedPlayer] = useState(null);
     const [playerForm, setPlayerForm] = useState({});
 
+    // Group Selection State
+    const [availableGroups, setAvailableGroups] = useState([]);
+    const [selectedGroupToAdd, setSelectedGroupToAdd] = useState('');
+
     // Upload State
     const [selectedFile, setSelectedFile] = useState(null);
     const [uploadStatus, setUploadStatus] = useState('');
@@ -224,6 +231,15 @@ const PlayersManager = () => {
         }
     };
 
+    const fetchGroupsForDialog = async () => {
+        try {
+            const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/groups`, {
+                headers: { 'x-auth-token': token }
+            });
+            setAvailableGroups(res.data);
+        } catch (err) { console.error(err); }
+    };
+
     useEffect(() => { fetchPlayers(); }, [page, rowsPerPage, filterPlace]);
 
     const handleSearch = () => { setPage(0); fetchPlayers(); };
@@ -244,6 +260,19 @@ const PlayersManager = () => {
         setOpenEdit(true);
     };
 
+    const handleDeleteClick = async (id) => {
+        if (!confirm('Are you sure you want to delete this player?')) return;
+        try {
+            await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/players/${id}`, {
+                 headers: { 'x-auth-token': token }
+            });
+            alert('Player deleted');
+            fetchPlayers();
+        } catch (err) {
+            console.error(err); alert('Failed to delete');
+        }
+    };
+
     const handleSelect = (id) => {
         if (selectedIds.includes(id)) setSelectedIds(selectedIds.filter(sid => sid !== id));
         else setSelectedIds([...selectedIds, id]);
@@ -255,6 +284,7 @@ const PlayersManager = () => {
              const method = selectedPlayer ? 'put' : 'post';
              await axios[method](url, playerForm, { headers: { 'x-auth-token': token } });
              setOpenEdit(false);
+             alert(selectedPlayer ? 'Player Updated' : 'Player Added Successfully');
              fetchPlayers();
         } catch (err) {
             console.error(err); alert("Operation failed.");
@@ -305,7 +335,11 @@ const PlayersManager = () => {
         }
     };
 
-    // Mobile UI: Stack Actions, Hide Columns
+    const handleOpenGroupDialog = () => {
+        fetchGroupsForDialog();
+        setOpenGroupDialog(true);
+    };
+
     return (
         <Box>
             <Box sx={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', mb: 2, alignItems: 'center', gap: 2 }}>
@@ -319,47 +353,56 @@ const PlayersManager = () => {
                 </Box>
             </Box>
             <Box sx={{ display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap' }}>
-                 {selectedIds.length > 0 && <Button variant="contained" color="secondary" onClick={() => setOpenGroupDialog(true)} size="small">Add Group ({selectedIds.length})</Button>}
-                 <Button variant="contained" startIcon={<GroupIcon />} onClick={handleAddClick} size="small">Add</Button>
+                 {selectedIds.length > 0 && <Button variant="contained" color="secondary" onClick={handleOpenGroupDialog} size="small">Add to Team ({selectedIds.length})</Button>}
+                 <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddClick} size="small">Add</Button>
                  <Button variant="outlined" onClick={() => setOpenUpload(true)} size="small">Upload</Button>
             </Box>
 
-            <Paper sx={{ overflowX: 'auto' }}>
-                 <List dense={isMobile}>
-                    <ListItem sx={{ bgcolor: '#f5f5f5', fontWeight: 'bold' }}>
-                        <Grid container alignItems="center">
-                            <Grid item xs={1}>Chk</Grid>
-                            {!isMobile && <Grid item xs={2}>ID</Grid>}
-                            <Grid item xs={isMobile ? 5 : 3}>Name</Grid>
-                            {!isMobile && <Grid item xs={4}>Place</Grid>}
-                            <Grid item xs={isMobile ? 6 : 2}>Action</Grid>
-                        </Grid>
-                    </ListItem>
-                    {players.map(p => (
-                        <ListItem key={p._id} divider>
-                            <Grid container alignItems="center">
-                                <Grid item xs={1}>
-                                    <input type="checkbox" checked={selectedIds.includes(p.id)} onChange={() => handleSelect(p.id)} style={{ width: 18, height: 18 }} />
-                                </Grid>
-                                {!isMobile && <Grid item xs={2}>{p.id}</Grid>}
-                                <Grid item xs={isMobile ? 5 : 3}>
-                                    <Typography variant="body2">{p.name}</Typography>
-                                    {isMobile && <Typography variant="caption" color="textSecondary">{p.birthPlace}</Typography>}
-                                </Grid>
-                                {!isMobile && <Grid item xs={4}>{p.birthPlace}</Grid>}
-                                <Grid item xs={isMobile ? 6 : 2}>
-                                    <Button size="small" onClick={() => handleEditClick(p)}>Edit</Button>
-                                </Grid>
-                            </Grid>
-                        </ListItem>
-                    ))}
-                 </List>
-                 <Grid container sx={{ p: 2, justifyContent: "flex-end", gap: 2 }}>
-                     <Button disabled={page === 0} onClick={() => setPage(page - 1)}>Prev</Button>
-                     <Typography>Page {page + 1}</Typography>
-                     <Button disabled={(page + 1) * rowsPerPage >= totalPlayers} onClick={() => setPage(page + 1)}>Next</Button>
-                 </Grid>
-            </Paper>
+            <TableContainer component={Paper} sx={{ maxHeight: '60vh' }}>
+                <Table stickyHeader size={isMobile ? "small" : "medium"}>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell padding="checkbox">
+                                <Typography variant="subtitle2">Chk</Typography>
+                            </TableCell>
+                            {!isMobile && <TableCell>ID</TableCell>}
+                            <TableCell>Name</TableCell>
+                            {!isMobile && <TableCell>Place</TableCell>}
+                            <TableCell>Action</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {players.map((p) => (
+                            <TableRow key={p._id} hover>
+                                <TableCell padding="checkbox">
+                                    <input type="checkbox" checked={selectedIds.includes(p.id)} onChange={() => handleSelect(p.id)} style={{ width: 18, height: 18, cursor: 'pointer' }} />
+                                </TableCell>
+                                {!isMobile && <TableCell>{p.id}</TableCell>}
+                                <TableCell>
+                                    <Box>
+                                        <Typography variant="body2" fontWeight="500">{p.name}</Typography>
+                                        {isMobile && <Typography variant="caption" color="textSecondary">{p.birthPlace}</Typography>}
+                                    </Box>
+                                </TableCell>
+                                {!isMobile && <TableCell>{p.birthPlace}</TableCell>}
+                                <TableCell>
+                                    <IconButton size="small" onClick={() => handleEditClick(p)} color="primary"><EditIcon /></IconButton>
+                                    <IconButton size="small" onClick={() => handleDeleteClick(p.id)} color="error"><DeleteIcon /></IconButton>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <TablePagination
+                rowsPerPageOptions={[10, 25, 50]}
+                component="div"
+                count={totalPlayers}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={(e, newPage) => setPage(newPage)}
+                onRowsPerPageChange={(e) => { setRowsPerPage(parseInt(e.target.value, 10)); setPage(0); }}
+            />
 
             {/* Dialogs Responsive */}
             <Dialog open={openEdit} onClose={() => setOpenEdit(false)} fullWidth maxWidth="sm" fullScreen={isMobile}>
@@ -412,28 +455,33 @@ const PlayersManager = () => {
             </Dialog>
 
              {/* Group Dialog (Minimal for now) */}
-            <Dialog open={openGroupDialog} onClose={() => setOpenGroupDialog(false)}>
-                <DialogTitle>Add to Group</DialogTitle>
+            <Dialog open={openGroupDialog} onClose={() => setOpenGroupDialog(false)} fullWidth maxWidth="xs">
+                <DialogTitle>Add to Team</DialogTitle>
                 <DialogContent>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            size="large"
-                            onClick={async () => {
-                                try {
-                                    await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/add`, {
-                                        groupName: 'Team B',
-                                        playerIds: selectedIds
-                                    }, { headers: { 'x-auth-token': token } });
-                                    alert('Added to Team B');
-                                    setOpenGroupDialog(false);
-                                    setSelectedIds([]);
-                                } catch (e) { console.error(e); }
-                            }}
-                        >
-                            Team B
-                        </Button>
+                        {availableGroups.length > 0 ? (
+                            availableGroups.map(g => (
+                                <Button
+                                    key={g._id}
+                                    variant="outlined"
+                                    onClick={async () => {
+                                        try {
+                                            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/add`, {
+                                                groupName: g.name,
+                                                playerIds: selectedIds
+                                            }, { headers: { 'x-auth-token': token } });
+                                            alert(`Added to ${g.name}`);
+                                            setOpenGroupDialog(false);
+                                            setSelectedIds([]);
+                                        } catch (e) { console.error(e); }
+                                    }}
+                                >
+                                    {g.name}
+                                </Button>
+                            ))
+                        ) : (
+                            <Typography>No teams found. Create one in Groups tab.</Typography>
+                        )}
                     </Box>
                 </DialogContent>
                 <DialogActions>
@@ -447,9 +495,9 @@ const GroupsManager = () => {
     const { token } = useContext(AuthContext);
     const [groups, setGroups] = useState([]);
 
-    // Rename/Edit State
-    const [editGroup, setEditGroup] = useState(null);
-    const [newName, setNewName] = useState('');
+    // Create State
+    const [openCreate, setOpenCreate] = useState(false);
+    const [newGroupName, setNewGroupName] = useState('');
 
     const fetchGroups = async () => {
         try {
@@ -466,6 +514,33 @@ const GroupsManager = () => {
         fetchGroups();
     }, []);
 
+    const handleCreateGroup = async () => {
+        if (!newGroupName) return;
+        try {
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/create`,
+                { name: newGroupName },
+                { headers: { 'x-auth-token': token } }
+            );
+            setNewGroupName('');
+            setOpenCreate(false);
+            fetchGroups();
+        } catch (err) {
+            alert(err.response?.data?.msg || 'Failed to create group');
+        }
+    };
+
+    const handleDeleteGroup = async (id) => {
+        if (!confirm('Are you sure you want to delete this group?')) return;
+        try {
+            await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/groups/${id}`, {
+                 headers: { 'x-auth-token': token }
+            });
+            fetchGroups();
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     const handleClearGroup = async (groupName) => {
         if (!confirm(`Are you sure you want to clear all players from ${groupName}?`)) return;
         try {
@@ -479,16 +554,13 @@ const GroupsManager = () => {
         }
     };
 
-    // Placeholder for rename (Not fully supported in backend yet, need 'update' endpoint)
-    // For now, I'll allow Creating New Groups maybe? Or just keep static A/B?
-    // User asked "Team A, b user chage the la" (label?).
-    // I will stick to displaying them for now. If rename is critical, I'll add endpoint.
-    // Let's assume just viewing and clearing is enough for Step 1 of Groups.
-    // Actually, I can allow "Edit" which just updates the name in DB.
-
     return (
         <Box>
-            <Typography variant="h5" gutterBottom>Group Management</Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                <Typography variant="h5" gutterBottom>Group Management</Typography>
+                <Button variant="contained" startIcon={<AddIcon />} onClick={() => setOpenCreate(true)}>Create Group</Button>
+            </Box>
+
             <Grid container spacing={3}>
                 {groups.map(g => (
                     <Grid item xs={12} sm={6} md={4} key={g._id}>
@@ -498,25 +570,42 @@ const GroupsManager = () => {
                                 <Typography variant="caption" color="text.secondary">{g.players.length} Players</Typography>
                             </Box>
                             <Divider sx={{ mb: 2 }} />
-                            <Box sx={{ display: 'flex', gap: 1 }}>
-                                <Button variant="outlined" color="error" size="small" onClick={() => handleClearGroup(g.name)}>
-                                    Clear Players
+                            <Box sx={{ display: 'flex', gap: 1, justifyContent: 'space-between' }}>
+                                <Button variant="outlined" color="warning" size="small" onClick={() => handleClearGroup(g.name)}>
+                                    Clear
                                 </Button>
-                                {/*
-                                <Button variant="outlined" size="small">
-                                    Rename
+                                <Button variant="outlined" color="error" size="small" onClick={() => handleDeleteGroup(g._id)}>
+                                    Delete
                                 </Button>
-                                */}
                             </Box>
                         </Paper>
                     </Grid>
                 ))}
                 {groups.length === 0 && (
                     <Grid item xs={12}>
-                        <Typography>No active groups found. Add players to "Team A" or "Team B" from Players tab.</Typography>
+                        <Typography>No active groups found. Create a new group.</Typography>
                     </Grid>
                 )}
             </Grid>
+
+            {/* Create Group Dialog */}
+            <Dialog open={openCreate} onClose={() => setOpenCreate(false)}>
+                <DialogTitle>Create New Group</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        label="Group Name"
+                        fullWidth
+                        value={newGroupName}
+                        onChange={(e) => setNewGroupName(e.target.value)}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenCreate(false)}>Cancel</Button>
+                    <Button onClick={handleCreateGroup} variant="contained">Create</Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };

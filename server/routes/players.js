@@ -1,5 +1,5 @@
 const express = require('express');
-const { syncPlayers, getPlayers, getPlayerById, uploadPlayers, updatePlayer, addPlayer } = require('../controllers/playerController');
+const { syncPlayers, getPlayers, getPlayerById, uploadPlayers, updatePlayer, addPlayer, deletePlayer } = require('../controllers/playerController');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
@@ -11,5 +11,6 @@ apiRouter.post('/add', addPlayer);
 apiRouter.get('/', getPlayers);
 apiRouter.get('/:id', getPlayerById);
 apiRouter.put('/:id', updatePlayer);
+apiRouter.delete('/:id', deletePlayer);
 
 module.exports = apiRouter;

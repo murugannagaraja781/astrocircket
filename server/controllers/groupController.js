@@ -62,4 +62,34 @@ const clearGroup = async (req, res) => {
     }
 };
 
-module.exports = { getGroups, addPlayersToGroup, removePlayerFromGroup, clearGroup };
+// Create New Group
+const createGroup = async (req, res) => {
+    try {
+        const { name, description } = req.body;
+        if (!name) return res.status(400).json({ msg: 'Name is required' });
+
+        const existing = await Group.findOne({ name });
+        if (existing) return res.status(400).json({ msg: 'Group already exists' });
+
+        const group = new Group({ name, description, players: [] });
+        await group.save();
+        res.json(group);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+};
+
+// Delete Group
+const deleteGroup = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await Group.findByIdAndDelete(id);
+        res.json({ msg: 'Group deleted' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+};
+
+module.exports = { getGroups, addPlayersToGroup, removePlayerFromGroup, clearGroup, createGroup, deleteGroup };

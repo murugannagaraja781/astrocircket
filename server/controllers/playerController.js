@@ -180,6 +180,7 @@ const getPlayers = async (req, res) => {
         const totalPages = Math.ceil(totalPlayers / limit);
 
         const players = await Player.find(query)
+            .sort({ _id: -1 }) // Recent first
             .skip(skip)
             .limit(limit)
             .lean();
@@ -278,6 +279,12 @@ const addPlayer = async (req, res) => {
             playerData.id = playerData.name?.toLowerCase().replace(/\s/g, '_') + '_' + Date.now();
         }
 
+        // Auto-fetch birth chart
+        const chartData = await fetchCharData(playerData);
+        if (chartData) {
+            playerData.birthChart = chartData;
+        }
+
         const newPlayer = new Player(playerData);
         await newPlayer.save();
         res.json(newPlayer);
@@ -287,4 +294,29 @@ const addPlayer = async (req, res) => {
     }
 };
 
-module.exports = { syncPlayers, getPlayers, getPlayerById, uploadPlayers, updatePlayer, addPlayer };
+const deletePlayer = async (req, res) => {
+    try {
+        const { id } = req.params;
+        // Try finding by custom id first, then _id
+        let result = await Player.findOneAndDelete({ id: id });
+        if (!result) {
+            result = await Player.findByIdAndDelete(id);
+        }
+
+        if (!result) return res.status(404).json({ msg: 'Player not found' });
+
+        // Also remove player from any groups
+        const Group = require('../models/Group');
+        await Group.updateMany(
+            { players: id }, // Assuming players array stores custom ID
+            { $pull: { players: id } }
+        );
+
+        res.json({ msg: 'Player deleted' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+};
+
+module.exports = { syncPlayers, getPlayers, getPlayerById, uploadPlayers, updatePlayer, addPlayer, deletePlayer };
