@@ -695,30 +695,53 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                 MATCH PREDICTION WIZARD
                 <IconButton onClick={onClose} sx={{ color: 'white' }}><CloseIcon /></IconButton>
             </DialogTitle>
-            <DialogContent sx={{ bgcolor: '#f8fafc', p: 3 }}>
+            <DialogContent sx={{ bgcolor: hideHeader ? '#0F1535' : '#f8fafc', p: 3 }}>
                 <Grid container spacing={3}>
                     {/* TOP: SETUP */}
                     <Grid item xs={12}>
-                        <Paper sx={{ p: 2 }}>
-                            <Typography variant="subtitle2" gutterBottom fontWeight="bold">1. Match Setup</Typography>
+                        <Paper sx={{
+                            p: 2,
+                            bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
+                            color: hideHeader ? 'white' : 'inherit',
+                            border: hideHeader ? '1px solid rgba(255, 255, 255, 0.1)' : 'none'
+                        }}>
+                            <Typography variant="subtitle2" gutterBottom fontWeight="bold" sx={{ color: hideHeader ? '#2CD9FF' : 'inherit' }}>1. Match Setup</Typography>
                             <MatchPredictionControl onPredictionComplete={handleMatchReady} token={token} />
                         </Paper>
                     </Grid>
 
                     {/* TEAMS SELECTION */}
-                    <Grid item xs={12} md={4}>
-                        <FormControl fullWidth size="small" sx={{ bgcolor: 'white' }}>
+                        <FormControl fullWidth size="small" sx={{
+                            bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
+                            borderRadius: 1,
+                            "& .MuiInputLabel-root": { color: hideHeader ? '#A0AEC0' : 'inherit' },
+                            "& .MuiOutlinedInput-root": {
+                                "& fieldset": { borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'inherit' },
+                                "&:hover fieldset": { borderColor: hideHeader ? '#0075FF' : 'inherit' },
+                                "&.Mui-focused fieldset": { borderColor: hideHeader ? '#0075FF' : 'inherit' },
+                                "& .MuiSelect-select": { color: hideHeader ? 'white' : 'inherit' }
+                            }
+                        }}>
                             <InputLabel>Select Team A</InputLabel>
                             <Select value={teamA} label="Select Team A" onChange={(e) => setTeamA(e.target.value)}>
                                 {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
                             </Select>
                         </FormControl>
-                    </Grid>
                      <Grid item xs={12} md={4} sx={{ textAlign: 'center' }}>
                         <Typography variant="h5" sx={{ mt: 1, color: '#94a3b8' }}>VS</Typography>
                     </Grid>
                     <Grid item xs={12} md={4}>
-                        <FormControl fullWidth size="small" sx={{ bgcolor: 'white' }}>
+                        <FormControl fullWidth size="small" sx={{
+                            bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
+                            borderRadius: 1,
+                            "& .MuiInputLabel-root": { color: hideHeader ? '#A0AEC0' : 'inherit' },
+                            "& .MuiOutlinedInput-root": {
+                                "& fieldset": { borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'inherit' },
+                                "&:hover fieldset": { borderColor: hideHeader ? '#0075FF' : 'inherit' },
+                                "&.Mui-focused fieldset": { borderColor: hideHeader ? '#0075FF' : 'inherit' },
+                                "& .MuiSelect-select": { color: hideHeader ? 'white' : 'inherit' }
+                            }
+                        }}>
                             <InputLabel>Select Team B</InputLabel>
                             <Select value={teamB} label="Select Team B" onChange={(e) => setTeamB(e.target.value)}>
                                 {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
