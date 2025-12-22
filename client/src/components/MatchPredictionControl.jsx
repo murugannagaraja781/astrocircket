@@ -86,78 +86,106 @@ const MatchPredictionControl = ({ onPredictionComplete, token }) => {
     };
 
     return (
-        <Paper sx={{ p: 2, mb: 3, backgroundColor: '#fff8e7', border: '1px solid #ddd' }}>
-            <Typography variant="h6" color="primary" display="flex" alignItems="center" gap={1} gutterBottom>
-                <SportsCricketIcon /> Match Prediction Setup (போட்டி கணிப்பு அமைப்பு)
-            </Typography>
+        <Paper elevation={3} sx={{ p: 0, mb: 3, overflow: 'hidden' }}>
+             {/* AppBar inside Control */}
+             <Box sx={{ bgcolor: 'primary.main', color: 'white', p: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <SportsCricketIcon />
+                <Typography variant="h6">Match Prediction Setup</Typography>
+                <Box sx={{ flexGrow: 1 }} />
+                {matchDetails.time && (
+                    <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                        Prediction Time: {matchDetails.time}
+                    </Typography>
+                )}
+             </Box>
 
-            <Grid container spacing={2} alignItems="center">
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        label="தேதி (Date)"
-                        type="date"
-                        fullWidth
-                        size="small"
-                        value={matchDetails.date}
-                        onChange={(e) => handleChange('date', e.target.value)}
-                        InputLabelProps={{ shrink: true }}
-                    />
+             <Box sx={{ p: 3 }}>
+                <Grid container spacing={3}>
+                    <Grid item xs={12} sm={3}>
+                        <TextField
+                            label="Date"
+                            type="date"
+                            value={matchDetails.date}
+                            onChange={(e) => handleChange('date', e.target.value)}
+                            fullWidth
+                            InputLabelProps={{ shrink: true }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                        <TextField
+                            label="Time"
+                            type="time"
+                            value={matchDetails.time}
+                            onChange={(e) => handleChange('time', e.target.value)}
+                            fullWidth
+                            InputLabelProps={{ shrink: true }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                       <Autocomplete
+                            freeSolo
+                            options={cityOptions}
+                            getOptionLabel={(option) => typeof option === 'string' ? option : option.label}
+                            value={matchDetails.location}
+                            onChange={handleCityChange}
+                            onInputChange={(event, newInputValue) => {
+                                handleChange('location', newInputValue);
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Location (City)"
+                                    fullWidth
+                                    helperText="Select from list for auto-coords"
+                                />
+                            )}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            label="Latitude"
+                            type="number"
+                            fullWidth
+                            value={matchDetails.lat}
+                            onChange={(e) => handleChange('lat', parseFloat(e.target.value))}
+                            InputLabelProps={{ shrink: true }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            label="Longitude"
+                            type="number"
+                            fullWidth
+                            value={matchDetails.long}
+                            onChange={(e) => handleChange('long', parseFloat(e.target.value))}
+                            InputLabelProps={{ shrink: true }}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            label="Timezone (e.g., 5.5 for IST)"
+                            type="number"
+                            fullWidth
+                            value={matchDetails.timezone}
+                            onChange={(e) => handleChange('timezone', parseFloat(e.target.value))}
+                            InputLabelProps={{ shrink: true }}
+                        />
+                    </Grid>
+                     <Grid item xs={12}>
+                        <Button
+                            variant="contained"
+                            size="large"
+                            fullWidth
+                            onClick={handleRun}
+                            disabled={loading}
+                            sx={{ mt: 1, py: 1.5, fontSize: '1.1rem' }}
+                        >
+                            {loading ? <CircularProgress size={24} color="inherit" /> : `Predict for ${matchDetails.date} @ ${matchDetails.time}`}
+                        </Button>
+                    </Grid>
                 </Grid>
-                <Grid item xs={12} sm={2}>
-                    <TextField
-                        label="நேரம் (Time)"
-                        type="time"
-                        fullWidth
-                        size="small"
-                        value={matchDetails.time}
-                        onChange={(e) => handleChange('time', e.target.value)}
-                        InputLabelProps={{ shrink: true }}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={3}>
-                    <Autocomplete
-                        freeSolo
-                        options={cityOptions}
-                        getOptionLabel={(option) => typeof option === 'string' ? option : option.label}
-                        value={matchDetails.location}
-                        onChange={handleCityChange}
-                        onInputChange={(event, newInputValue) => {
-                            handleChange('location', newInputValue);
-                        }}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="இடம் (City)"
-                                size="small"
-                                fullWidth
-                                helperText={`Lat: ${matchDetails.lat}, Long: ${matchDetails.long}`}
-                            />
-                        )}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={2}>
-                    <TextField
-                        label="நேர மண்டலம் (Timezone)"
-                        type="number"
-                        fullWidth
-                        size="small"
-                        value={matchDetails.timezone}
-                        onChange={(e) => handleChange('timezone', parseFloat(e.target.value))}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={2}>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        fullWidth
-                        onClick={handleRun}
-                        disabled={loading}
-                    >
-                        {loading ? <CircularProgress size={24} /> : "Predict"}
-                    </Button>
-                </Grid>
-            </Grid>
-            {error && <Alert severity="error" sx={{ mt: 1 }}>{error}</Alert>}
+                {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+            </Box>
         </Paper>
     );
 };

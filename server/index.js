@@ -4,6 +4,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
 const chartRoutes = require('./routes/charts');
+const groupRoutes = require('./routes/groups'); // Import it!
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/charts', chartRoutes);
 app.use('/api/players', require('./routes/players'));
+app.use('/api/groups', groupRoutes);
 
 // Database Connection
 mongoose.connect(process.env.MONGO_URI)

@@ -1,4 +1,6 @@
 const User = require('../models/User');
+const Player = require('../models/Player');
+const Group = require('../models/Group'); // Import Group model
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -8,7 +10,51 @@ const jwt = require('jsonwebtoken');
 // Let's rely on standard registration but allow the specific email to be auto-approved or pre-seeded.
 // Actually, I'll create a seed function that runs on server start, but for now let's build the controller.
 
-exports.register = async (req, res) => {
+// Get Admin Stats
+const getAdminStats = async (req, res) => {
+    let totalUsers = "Err";
+    let pendingUsers = "Err";
+    let totalPlayers = "Err";
+    let totalGroups = "Err";
+
+    try {
+        console.log('Fetching Admin Stats...');
+        try { totalUsers = await User.countDocuments(); } catch (e) { console.error("User Count Failed", e); totalUsers = -1; }
+        try { pendingUsers = await User.countDocuments({ isApproved: false }); } catch (e) { console.error("Pending Count Failed", e); pendingUsers = -1; }
+
+        try {
+            // Debug Player Model
+            console.log('Player Model Details:', Player ? 'Loaded' : 'Undefined');
+            totalPlayers = await Player.countDocuments();
+        } catch (e) {
+            console.error("Player Count Failed", e);
+            totalPlayers = -2; // -2 Indicate Player Error
+        }
+
+        try { totalGroups = await Group.countDocuments(); } catch (e) { console.error("Group Count Failed", e); totalGroups = -1; }
+
+        console.log('Stats:', { totalUsers, pendingUsers, totalPlayers, totalGroups });
+
+        res.json({
+            totalUsers,
+            pendingUsers,
+            totalPlayers,
+            totalGroups
+        });
+    } catch (err) {
+        console.error('Error in getAdminStats (Global):', err);
+        // Even if global fail, send what we have?
+        // If we are here, something major failed (like definitions).
+        res.status(500).json({
+            message: 'Server Error',
+            details: err.message,
+            stack: err.stack
+        });
+    }
+};
+
+// Register
+const register = async (req, res) => {
     try {
         const { username, password } = req.body;
         let user = await User.findOne({ username });
@@ -36,7 +82,8 @@ exports.register = async (req, res) => {
     }
 };
 
-exports.login = async (req, res) => {
+// Login
+const login = async (req, res) => {
     try {
         const { username, password } = req.body;
         const user = await User.findOne({ username });
@@ -64,7 +111,8 @@ exports.login = async (req, res) => {
     }
 };
 
-exports.getPendingUsers = async (req, res) => {
+// Get Pending Users
+const getPendingUsers = async (req, res) => {
     try {
         const users = await User.find({ isApproved: false, role: 'user' });
         res.json(users);
@@ -74,7 +122,8 @@ exports.getPendingUsers = async (req, res) => {
     }
 };
 
-exports.approveUser = async (req, res) => {
+// Approve User
+const approveUser = async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
         if (!user) return res.status(404).json({ msg: 'User not found' });
@@ -86,4 +135,12 @@ exports.approveUser = async (req, res) => {
         console.error(err.message);
         res.status(500).send('Server error');
     }
+};
+
+module.exports = {
+    getAdminStats,
+    register,
+    login,
+    getPendingUsers,
+    approveUser
 };

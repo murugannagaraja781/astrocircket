@@ -3,6 +3,7 @@ const axios = require('axios');
 const { formatPlanetaryData } = require('../utils/chartUtils');
 const path = require('path');
 const fs = require('fs');
+const xlsx = require('xlsx');
 
 // Helper to calculate or fetch chart
 const fetchCharData = async (p) => {
@@ -86,23 +87,33 @@ const uploadPlayers = async (req, res) => {
             return res.status(400).json({ message: 'No file uploaded' });
         }
 
-        const fileContent = fs.readFileSync(req.file.path, 'utf-8');
-        let playersData;
-        try {
+        let playersData = [];
+
+        // Check file type
+        if (req.file.mimetype === 'application/json' || req.file.originalname.endsWith('.json')) {
+            const fileContent = fs.readFileSync(req.file.path, 'utf-8');
             playersData = JSON.parse(fileContent);
-        } catch (e) {
-            return res.status(400).json({ message: 'Invalid JSON format' });
+        } else if (
+            req.file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+            req.file.originalname.endsWith('.xlsx') ||
+            req.file.originalname.endsWith('.xls')
+        ) {
+            // Parse Excel
+            const workbook = xlsx.readFile(req.file.path);
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+            playersData = xlsx.utils.sheet_to_json(worksheet);
+        } else {
+            fs.unlinkSync(req.file.path);
+            return res.status(400).json({ message: 'Invalid file format. Use .json or .xlsx' });
         }
 
+        // Validate structure (basic check)
         if (!Array.isArray(playersData)) {
-            return res.status(400).json({ message: 'JSON must be an array of players' });
+            fs.unlinkSync(req.file.path);
+            return res.status(400).json({ message: 'Invalid data format. Expected an array of players.' });
         }
 
-        // Process in background or await?
-        // User said "backed procee strat" (backend process start).
-        // I will await it to give feedback, or I could fire and forget.
-        // Given it might take time, I'll await but maybe chunks?
-        // For simplicity and robustness now: await.
         const count = await processPlayersData(playersData);
 
         // Cleanup file
@@ -112,6 +123,9 @@ const uploadPlayers = async (req, res) => {
 
     } catch (error) {
         console.error(error);
+        if (req.file && fs.existsSync(req.file.path)) {
+            fs.unlinkSync(req.file.path);
+        }
         res.status(500).json({ message: 'Server Error during upload' });
     }
 };
@@ -152,10 +166,20 @@ const getPlayers = async (req, res) => {
         const limit = parseInt(req.query.limit) || 11;
         const skip = (page - 1) * limit;
 
-        const totalPlayers = await Player.countDocuments({});
+        // Build Filter
+        const query = {};
+        if (req.query.search) {
+            query.name = { $regex: req.query.search, $options: 'i' };
+        }
+        if (req.query.place) {
+            // Basic text match for place
+            query.birthPlace = { $regex: req.query.place, $options: 'i' };
+        }
+
+        const totalPlayers = await Player.countDocuments(query);
         const totalPages = Math.ceil(totalPlayers / limit);
 
-        const players = await Player.find({})
+        const players = await Player.find(query)
             .skip(skip)
             .limit(limit)
             .lean();
@@ -243,4 +267,24 @@ const updatePlayer = async (req, res) => {
     }
 };
 
-module.exports = { syncPlayers, getPlayers, getPlayerById, uploadPlayers, updatePlayer };
+// Add Single Player
+const addPlayer = async (req, res) => {
+    try {
+        const playerData = req.body;
+        // Basic validation or ID generation could go here
+        // Assuming user provides an ID or we generate one? simple: use name + random or let mongoose ID be enough?
+        // Schema suggests 'id' is string.
+        if (!playerData.id) {
+            playerData.id = playerData.name?.toLowerCase().replace(/\s/g, '_') + '_' + Date.now();
+        }
+
+        const newPlayer = new Player(playerData);
+        await newPlayer.save();
+        res.json(newPlayer);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+};
+
+module.exports = { syncPlayers, getPlayers, getPlayerById, uploadPlayers, updatePlayer, addPlayer };
