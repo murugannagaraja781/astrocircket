@@ -10,7 +10,7 @@ apiRouter.post('/upload', upload.single('file'), uploadPlayers);
 apiRouter.post('/add', upload.single('image'), addPlayer);
 apiRouter.get('/', getPlayers);
 apiRouter.get('/:id', getPlayerById);
-apiRouter.put('/:id', updatePlayer);
+apiRouter.put('/:id', upload.single('image'), updatePlayer);
 apiRouter.delete('/:id', deletePlayer);
 
 module.exports = apiRouter;

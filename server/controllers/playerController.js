@@ -243,6 +243,19 @@ const updatePlayer = async (req, res) => {
         delete updates._id;
         delete updates.id;
 
+        // Handle Profile Pic Update
+        if (req.file) {
+            const ext = path.extname(req.file.originalname);
+            // Use existing ID for filename if possible, or we need to look it up.
+            // But 'id' from params is the custom ID (string).
+            const newFilename = `${id}_profile_${Date.now()}${ext}`; // Timestamp to avoid caching issues
+            const targetPath = path.join('uploads', newFilename);
+
+            // Move/Rename key file
+            fs.renameSync(req.file.path, targetPath);
+            updates.profile = newFilename;
+        }
+
         // Find by custom 'id' field
         const player = await Player.findOneAndUpdate(
             { id: id },

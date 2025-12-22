@@ -6,6 +6,8 @@ const authRoutes = require('./routes/auth');
 const chartRoutes = require('./routes/charts');
 const groupRoutes = require('./routes/groups'); // Import it!
 
+const path = require('path');
+
 dotenv.config();
 
 const app = express();
@@ -20,6 +22,8 @@ app.use(cors({
     exposedHeaders: ['x-auth-token']
 }));
 app.use(express.json());
+// Serve static uploads
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
 app.use('/api/auth', authRoutes);
