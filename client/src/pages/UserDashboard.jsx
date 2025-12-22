@@ -411,7 +411,7 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewCha
                             <Typography variant="body2">{player.birthPlace || 'Unknown'}</Typography>
                         </Box>
                          <Typography variant="caption" color="text.secondary" sx={{ ml: 2.3 }}>
-                            {player.dob}
+                            {player.dob} {player.birthTime ? `| ${player.birthTime}` : ''}
                         </Typography>
                     </Box>
                 </TableCell>
@@ -472,7 +472,7 @@ const ChartPopup = ({ open, onClose, player }) => {
             <DialogTitle sx={{ bgcolor: '#1e3a8a', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Box>
                     <Typography variant="h6">{player.name}</Typography>
-                    <Typography variant="caption">{player.birthPlace} | {player.dob}</Typography>
+                    <Typography variant="caption">{player.birthPlace} | {player.dob} {player.birthTime ? `| ${player.birthTime}` : ''}</Typography>
                 </Box>
                 <IconButton onClick={onClose} sx={{ color: 'white' }}><CloseIcon /></IconButton>
             </DialogTitle>
@@ -738,6 +738,7 @@ const UserDashboard = () => {
             name: player.name || '',
             profile: player.profile || '',
             dob: player.dob || '',
+            birthTime: player.birthTime || '',
             birthPlace: player.birthPlace || '',
             timezone: player.timezone || '',
             // Flatten birthChart helper fields if needed, but usually we just allow editing raw text if complex,

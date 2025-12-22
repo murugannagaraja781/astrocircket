@@ -18,12 +18,22 @@ const fetchCharData = async (p) => {
             return null;
         }
 
+        let hour = 12;
+        let minute = 0;
+        if (p.birthTime && p.birthTime.includes(':')) {
+            const timeParts = p.birthTime.split(':').map(Number);
+            if (timeParts.length >= 2) {
+                hour = isNaN(timeParts[0]) ? 12 : timeParts[0];
+                minute = isNaN(timeParts[1]) ? 0 : timeParts[1];
+            }
+        }
+
         const apiPayload = {
             year,
             month,
             day,
-            hour: 12, // Default to noon as per previous logic
-            minute: 0,
+            hour,
+            minute,
             latitude: parseFloat(p.latitude),
             longitude: parseFloat(p.longitude),
             timezone: p.timezone
@@ -255,6 +265,22 @@ const updatePlayer = async (req, res) => {
             // Move/Rename key file
             fs.renameSync(req.file.path, targetPath);
             updates.profile = newFilename;
+        }
+
+        // Check if chart-affecting fields changed to re-fetch chart
+        const chartAffecting = ['dob', 'birthPlace', 'latitude', 'longitude', 'timezone', 'birthTime'];
+        const needsChartUpdate = chartAffecting.some(field => field in updates);
+
+        if (needsChartUpdate) {
+            // We need the full data to fetch chart (merging old and new)
+            const existingPlayer = await Player.findOne({ id: id });
+            if (existingPlayer) {
+                const mergedData = { ...existingPlayer.toObject(), ...updates };
+                const newChart = await fetchCharData(mergedData);
+                if (newChart) {
+                    updates.birthChart = newChart;
+                }
+            }
         }
 
         // Find by custom 'id' field

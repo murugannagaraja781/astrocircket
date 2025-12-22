@@ -635,6 +635,7 @@ const PlayersManager = () => {
         setSelectedPlayer(player);
         setPlayerForm({
             name: player.name || '', profile: player.profile || '', dob: player.dob || '',
+            birthTime: player.birthTime || '',
             birthPlace: player.birthPlace || '', timezone: player.timezone || '', id: player.id,
             latitude: player.latitude, longitude: player.longitude
         });
@@ -686,7 +687,7 @@ const PlayersManager = () => {
                     // Use FormData if file exists
                     const formData = new FormData();
                     // Explicitly append only relevant fields to avoid object stringification issues
-                    ['name', 'birthPlace', 'dob', 'latitude', 'longitude', 'timezone', 'manualTimezone'].forEach(key => {
+                    ['name', 'birthPlace', 'dob', 'birthTime', 'latitude', 'longitude', 'timezone', 'manualTimezone'].forEach(key => {
                         if (playerForm[key] !== undefined && playerForm[key] !== null) {
                             formData.append(key, playerForm[key]);
                         }
@@ -738,8 +739,8 @@ const PlayersManager = () => {
     };
 
     const downloadSampleTemplate = () => {
-        const headers = ["id", "name", "dob", "birthPlace", "latitude", "longitude", "timezone"];
-        const row1 = ["P001", "Sample Player", "1990-01-01", "Mumbai", "19.0760", "72.8777", "5.5"];
+        const headers = ["id", "name", "dob", "birthTime", "birthPlace", "latitude", "longitude", "timezone"];
+        const row1 = ["P001", "Sample Player", "1990-01-01", "14:30", "Mumbai", "19.0760", "72.8777", "5.5"];
         const csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n" + row1.join(",");
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
@@ -1048,6 +1049,15 @@ const PlayersManager = () => {
                             size="small"
                             InputLabelProps={{ shrink: true }}
                         />
+                        <TextField
+                            label="Birth Time"
+                            type="time"
+                            value={playerForm.birthTime || ''}
+                            onChange={(e) => setPlayerForm({...playerForm, birthTime: e.target.value})}
+                            fullWidth
+                            size="small"
+                            InputLabelProps={{ shrink: true }}
+                        />
 
 
                     </Box>
@@ -1130,7 +1140,7 @@ const PlayersManager = () => {
                 fullScreen={isMobile}
             >
                 <DialogTitle sx={{ backgroundColor: '#0F1535', color: '#fff' }}>
-                    {selectedPlayerForChart?.name}'s Horoscope
+                    {selectedPlayerForChart?.name}'s Horoscope ({selectedPlayerForChart?.dob} {selectedPlayerForChart?.birthTime ? `| ${selectedPlayerForChart.birthTime}` : ''})
                 </DialogTitle>
                 <DialogContent sx={{ backgroundColor: '#0F1535', color: '#fff' }}>
                     {selectedPlayerForChart && (
@@ -1424,10 +1434,10 @@ const GroupsManager = () => {
                                 InputLabelProps={{ shrink: true }}
                             />
                              <TextField
-                                label="Time of Birth"
+                                label="Birth Time"
                                 type="time"
-                                value={editingPlayer.tob || ''}
-                                onChange={(e) => setEditingPlayer({ ...editingPlayer, tob: e.target.value })}
+                                value={editingPlayer.birthTime || ''}
+                                onChange={(e) => setEditingPlayer({ ...editingPlayer, birthTime: e.target.value })}
                                 fullWidth
                                 InputLabelProps={{ shrink: true }}
                             />

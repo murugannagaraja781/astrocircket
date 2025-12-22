@@ -5,6 +5,7 @@ const PlayerSchema = new mongoose.Schema({
     name: { type: String, required: true },
     profile: { type: String },
     dob: { type: String },
+    birthTime: { type: String }, // New field for HH:mm
     birthPlace: { type: String },
     latitude: { type: Number },
     longitude: { type: Number },
