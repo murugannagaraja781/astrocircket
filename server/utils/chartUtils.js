@@ -140,6 +140,11 @@ const processSinglePlanet = (pRaw, houseContext) => {
     // Calculate Avastha
     const avastha = calculateAvastha(signName, degreeVal);
 
+    // Calculate State (Retrograde/Direct)
+    const isRetro = (typeof pRaw === 'object' ? pRaw.isRetro : false);
+    const stateEnglish = isRetro ? 'Retrograde' : 'Direct';
+    const stateTamil = isRetro ? 'வக்ரம்' : 'நேர்கதி'; // Vakram : Nerkathi
+
     return {
         planetName: pName,
         planetTamil: planetTamilMap[pName] || pName,
@@ -155,7 +160,9 @@ const processSinglePlanet = (pRaw, houseContext) => {
         dignityTamil: dignityTamil || '-',
         avasthaName: avastha.english,
         avasthaTamil: avastha.tamil,
-        isRetro: (typeof pRaw === 'object' ? pRaw.isRetro : false),
+        isRetro: isRetro,
+        stateName: stateEnglish,
+        stateTamil: stateTamil,
         isCombust: (typeof pRaw === 'object' ? pRaw.isCombust : false),
         raw: pRaw // Keep raw for debug if needed
     };

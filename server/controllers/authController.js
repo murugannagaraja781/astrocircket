@@ -93,6 +93,7 @@ const login = async (req, res) => {
         if (!isMatch) return res.status(400).json({ msg: 'Invalid Credentials' });
 
         if (!user.isApproved) return res.status(403).json({ msg: 'Account not approved yet' });
+        if (user.isBlocked) return res.status(403).json({ msg: 'Account is blocked' });
 
         const payload = {
             user: {
@@ -137,10 +138,50 @@ const approveUser = async (req, res) => {
     }
 };
 
+// Get All Users
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find().select('-password');
+        res.json(users);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+};
+
+// Delete User
+const deleteUser = async (req, res) => {
+    try {
+        await User.findByIdAndDelete(req.params.id);
+        res.json({ msg: 'User deleted' });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+};
+
+// Block/Unblock User
+const blockUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ msg: 'User not found' });
+
+        user.isBlocked = !user.isBlocked; // Toggle
+        await user.save();
+        res.json({ msg: `User ${user.isBlocked ? 'blocked' : 'unblocked'}` });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+};
+
 module.exports = {
     getAdminStats,
     register,
     login,
     getPendingUsers,
-    approveUser
+    approveUser,
+    getAllUsers,
+    deleteUser,
+    blockUser
 };

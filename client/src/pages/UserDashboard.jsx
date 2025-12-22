@@ -179,23 +179,14 @@ const PlanetaryTable = ({ planets }) => {
                                         {p.isCombust && <Chip label="அஸ்தமனம்" size="small" color="warning" sx={{ height: 24, fontSize: 10 }} />}
                                     </Box>
                                 </TableCell>
-                                <TableCell>
-                                    <Typography variant="caption" sx={{ fontSize: 10, color: 'red', wordBreak: 'break-all' }}>
-                                        {JSON.stringify(p.raw)}
-                                    </Typography>
-                                </TableCell>
+
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
 
-            <Box sx={{ mt: 3, p: 2, bgcolor: '#1e1e1e', color: '#00ff00', borderRadius: 2, overflowX: 'auto' }}>
-                <Typography variant="subtitle2" sx={{ color: '#fff', mb: 1 }}>Backend Formatted JSON Data:</Typography>
-                <pre style={{ margin: 0, fontSize: '0.75rem' }}>
-                    {JSON.stringify(planets, null, 2)}
-                </pre>
-            </Box>
+
         </Box>
     );
 };

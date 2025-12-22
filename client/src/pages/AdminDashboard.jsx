@@ -151,7 +151,165 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+import DescriptionIcon from '@mui/icons-material/Description'; // New Icon for View Chart
+import GavelIcon from '@mui/icons-material/Gavel'; // Rules Icon
+import RasiChart from '../components/RasiChart';
+import PlanetaryTable from '../components/PlanetaryTable';
 import AuthContext from '../context/AuthContext';
+
+// Rules View Component (Tamil)
+const RulesView = () => {
+    return (
+        <Box sx={{ p: 2 }}>
+            <Typography variant="h4" gutterBottom sx={{ mb: 4, color: '#fff' }}>
+                Astrological Prediction Rules (கணிப்பு விதிமுறைகள்)
+            </Typography>
+
+            <Grid container spacing={4}>
+                {/* BATSMAN RULES */}
+                <Grid item xs={12} lg={6}>
+                    <Paper sx={{ p: 4, height: '100%', bgcolor: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                            <SportsCricketIcon sx={{ mr: 1, color: '#4caf50' }} />
+                            <Typography variant="h5" color="primary" fontWeight="bold">
+                                Rules for Batsman
+                            </Typography>
+                        </Box>
+                        <Divider sx={{ mb: 3, borderColor: 'rgba(255,255,255,0.2)' }} />
+
+                        <List sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                            <ListItem alignItems="flex-start" disablePadding>
+                                <ListItemText
+                                    primary="Pre-requisites:"
+                                    secondary={<span style={{ color: '#ccc' }}>1) Need to take match location date time place.<br/>2) Need to find Moon Rasi and Star Lord.</span>}
+                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#ff9800' }}
+                                />
+                            </ListItem>
+
+                            <ListItem alignItems="flex-start" disablePadding>
+                                <ListItemText
+                                    primary="First Rule:"
+                                    secondary={<span style={{ color: '#fff' }}>பிளேயர் உடைய ராசி நட்சத்திரம் மேட்ச் ராசி நட்சத்திரத்துடன் இணைந்து இருந்தால் <b>Good</b> அல்லது பரிவர்த்தனை பெற்றிருந்தால் <b>Excellent (நன்று)</b>.</span>}
+                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#4caf50' }}
+                                />
+                            </ListItem>
+
+                            <ListItem alignItems="flex-start" disablePadding>
+                                <ListItemText
+                                    primary="3rd Rule:"
+                                    secondary={<span style={{ color: '#fff' }}>சந்திரனின் நட்சத்திர அதிபதி யாருக்கெல்லாம் ராசி அதிபதியாகவோ வருகிறது என்று பார்க்க வேண்டும். இது <b>Good</b>.</span>}
+                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#4caf50' }}
+                                />
+                            </ListItem>
+
+                            <ListItem alignItems="flex-start" disablePadding>
+                                <ListItemText
+                                    primary="4th Rule:"
+                                    secondary={<span style={{ color: '#fff' }}>ராசி அதிபதி மற்றும் நட்சத்திராதிபதி இரண்டும் இணைந்து இன்று நடக்கும் மேச்சின் நட்சத்திராதிபதி வீட்டில் இருந்தால் <b>Good</b>.<br/>இரண்டு வேறு வேறு வீட்டில் இருந்தாலும் <b>Good</b> (உதாரணத்திற்கு இன்று சுக்கிரனின் நட்சத்திரம் என்றால் செவ்வாய் துலாத்திலும் சனி ரிஷபத்திலும் இருந்தால் ஓகே அல்லது இரண்டு கிரகங்களும் துலாம் ரிஷபத்தில் இருந்தால் ஓகே குட்).</span>}
+                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#4caf50' }}
+                                />
+                            </ListItem>
+
+                            <ListItem alignItems="flex-start" disablePadding>
+                                <ListItemText
+                                    primary="5th Rule:"
+                                    secondary={<span style={{ color: '#fff' }}>நான்கு ரூல்ஸ்ளையும் அடைபடவில்லை என்றால் பிளேயரின் ராசி நட்சத்திர அதிபதி வீட்டில் மேட்ச்சின் ராசி நட்சத்திர அதிபதிகள் இணைந்து இருந்தால் <b>நன்று</b>.</span>}
+                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#4caf50' }}
+                                />
+                            </ListItem>
+
+                             <ListItem alignItems="flex-start" disablePadding>
+                                <ListItemText
+                                    primary="Result:"
+                                    secondary={<span style={{ color: '#f44336' }}>இதில் எந்த ரூல்சிலும் வரவில்லை என்றால் <b>Flop</b>.</span>}
+                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#f44336' }}
+                                />
+                            </ListItem>
+
+                             <ListItem alignItems="flex-start" disablePadding>
+                                <ListItemText
+                                    primary="6th Rule:"
+                                    secondary={<span style={{ color: '#fff' }}>ராசி அதிபதியுடன் இன்றைய மேட்சிங் நட்சத்திர அதிபதி இணைந்திருந்தால் <b>நன்று</b>.</span>}
+                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#4caf50' }}
+                                />
+                            </ListItem>
+
+                            <ListItem alignItems="flex-start" disablePadding>
+                                <ListItemText
+                                    primary="7th Rule:"
+                                    secondary={<span style={{ color: '#fff' }}>ஒரு பிளேயருடைய நட்சத்திராதிபதி ராகு கேதுவாக வந்தால் அந்த ராசியாதிபதி அன்றைய மேட்சிங் நட்சத்திர அதிபதி வீட்டில் இருந்தால் <b>நலம்</b>, மற்றபடி <b>பிளாப்</b>.</span>}
+                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#4caf50' }}
+                                />
+                            </ListItem>
+                        </List>
+                    </Paper>
+                </Grid>
+
+                {/* BOWLER RULES */}
+                <Grid item xs={12} lg={6}>
+                     <Paper sx={{ p: 4, height: '100%', bgcolor: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                            <GavelIcon sx={{ mr: 1, color: '#f44336' }} />
+                            <Typography variant="h5" color="secondary" fontWeight="bold">
+                                Bowler Rule
+                            </Typography>
+                        </Box>
+                        <Divider sx={{ mb: 3, borderColor: 'rgba(255,255,255,0.2)' }} />
+
+                        <List sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                            <ListItem alignItems="flex-start" disablePadding>
+                                <ListItemText
+                                    primary="First Rule:"
+                                    secondary={<span style={{ color: '#fff' }}>பிளேயர் உடைய ராசி நட்சத்திரம் மேட்ச் ராசி நட்சத்திரத்துடன் இணைந்து இருந்தால் <b>Good</b> அல்லது பரிவர்த்தனை பெற்றிருந்தால் <b>Excellent (நன்று)</b>.</span>}
+                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#f44336' }}
+                                />
+                            </ListItem>
+
+                            <ListItem alignItems="flex-start" disablePadding>
+                                <ListItemText
+                                    primary="Second:"
+                                    secondary={<span style={{ color: '#fff' }}>சந்திரனின் நட்சத்திர அதிபதி யாருக்கெல்லாம் ராசி அதிபதியாகவோ வருகிறது என்று பார்க்க வேண்டும். இது <b>Good</b>.</span>}
+                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#f44336' }}
+                                />
+                            </ListItem>
+
+                            <ListItem alignItems="flex-start" disablePadding>
+                                <ListItemText
+                                    primary="Lagna Rule:"
+                                    secondary={<span style={{ color: '#fff' }}>மேட்சிங் ராசி அதிபதி லக்னாதிபதியாக பிளேருடைய ராசி அதிபதி அல்லது நட்சத்திராதிபதி இருந்தால் <b>சிறப்பு</b>.</span>}
+                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#ff9800' }}
+                                />
+                            </ListItem>
+
+                            <ListItem alignItems="flex-start" disablePadding>
+                                <ListItemText
+                                    primary="3rd Rule:"
+                                    secondary={<span style={{ color: '#fff' }}>பிளேருடைய ராசி நட்சத்திரம் மேட்சிங் ராசி அதிபதி நட்சத்திராதிபதி வீட்டில் இருந்தால் <b>ஓகே</b> இல்லையென்றால் <b>பிளாப்</b>.</span>}
+                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#f44336' }}
+                                />
+                            </ListItem>
+
+                            <ListItem alignItems="flex-start" disablePadding>
+                                <ListItemText
+                                    primary="4th Rule:"
+                                    secondary={<span style={{ color: '#fff' }}>பிளேருடைய ராசி அதிபதி மேட்ச் நடக்கும் லக்னத்தில் இருந்தால் <b>சிறப்பு</b>.</span>}
+                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#f44336' }}
+                                />
+                            </ListItem>
+                             <ListItem alignItems="flex-start" disablePadding>
+                                <ListItemText
+                                    primary="5th Rule:"
+                                    secondary={<span style={{ color: '#fff' }}>ராசி அதிபதியுடன் மேட்ச் நடக்கும் லக்னாதிபதி இணைந்திருந்தாள் <b>சிறப்பு</b>.</span>}
+                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#f44336' }}
+                                />
+                            </ListItem>
+                        </List>
+                    </Paper>
+                </Grid>
+            </Grid>
+        </Box>
+    );
+};
 
 // Placeholder Components for Sections
 const DashboardHome = () => {
@@ -229,15 +387,28 @@ const UsersManager = () => {
     const [users, setUsers] = useState([]);
     const [filter, setFilter] = useState('pending'); // 'pending' or 'all'
 
+    // Feedback State
+    const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+    const showSnackbar = (message, severity = 'success') => { setSnackbar({ open: true, message, severity }); };
+    const handleCloseSnackbar = () => setSnackbar({ ...snackbar, open: false });
+
+    // Confirm Dialog State
+    const [confirmDialog, setConfirmDialog] = useState({ open: false, title: '', message: '', action: null });
+    const convertConfirmAction = (title, message, action) => {
+         setConfirmDialog({ open: true, title, message, action: () => action() });
+    };
+    const handleConfirmClose = () => setConfirmDialog({ ...confirmDialog, open: false });
+    const handleConfirmExecute = async () => {
+        if (confirmDialog.action) await confirmDialog.action();
+        handleConfirmClose();
+    };
+
+
     const fetchUsers = async () => {
         try {
-            // Reusing existing 'pending' endpoint for now.
-            // Ideally we need 'all' endpoint. I will assume '/api/auth/users' might work or just use pending for now as requested "pending also show".
-            // The prompt said "total user list aprved and pending also show".
-            // I'll try to fetch pending first.
             const url = filter === 'pending'
                 ? `${import.meta.env.VITE_BACKEND_URL}/api/auth/pending`
-                : `${import.meta.env.VITE_BACKEND_URL}/api/auth/users`; // Assuming this exists or returns all
+                : `${import.meta.env.VITE_BACKEND_URL}/api/auth/users`;
 
             const res = await axios.get(url, {
                 headers: { 'x-auth-token': token }
@@ -245,6 +416,7 @@ const UsersManager = () => {
             setUsers(res.data);
         } catch (err) {
             console.error(err);
+            showSnackbar('Failed to fetch users', 'error');
         }
     };
 
@@ -258,8 +430,36 @@ const UsersManager = () => {
                 headers: { 'x-auth-token': token }
             });
             fetchUsers();
+            showSnackbar('User Approved', 'success');
         } catch (err) {
             console.error(err);
+            showSnackbar('Failed to approve user', 'error');
+        }
+    };
+
+    const deleteUser = async (id) => {
+        try {
+             await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/auth/users/${id}`, {
+                headers: { 'x-auth-token': token }
+            });
+            fetchUsers();
+            showSnackbar('User Deleted', 'success');
+        } catch (err) {
+            console.error(err);
+            showSnackbar('Failed to delete user', 'error');
+        }
+    };
+
+    const blockUser = async (id) => {
+        try {
+            await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/auth/block/${id}`, {}, {
+                headers: { 'x-auth-token': token }
+            });
+            fetchUsers();
+            showSnackbar('User Status Updated', 'success');
+        } catch (err) {
+             console.error(err);
+             showSnackbar('Failed to update user status', 'error');
         }
     };
 
@@ -270,19 +470,18 @@ const UsersManager = () => {
                 <Button variant={filter === 'pending' ? "contained" : "outlined"} onClick={() => setFilter('pending')} sx={{ mr: 1 }}>
                     Pending Approvals
                 </Button>
-                {/*
                 <Button variant={filter === 'all' ? "contained" : "outlined"} onClick={() => setFilter('all')}>
                     All Users
                 </Button>
-                */}
             </Box>
             <Paper>
                 <List>
                      <ListItem sx={{ bgcolor: 'rgba(255, 255, 255, 0.05)', fontWeight: 'bold' }}>
                         <Grid container>
-                            <Grid item xs={4}>Username</Grid>
-                            <Grid item xs={4}>Role</Grid>
-                            <Grid item xs={4}>Action</Grid>
+                            <Grid item xs={3}>Username</Grid>
+                            <Grid item xs={2}>Role</Grid>
+                            <Grid item xs={2}>Status</Grid>
+                            <Grid item xs={5}>Action</Grid>
                         </Grid>
                     </ListItem>
                     {users.length === 0 ? (
@@ -291,13 +490,27 @@ const UsersManager = () => {
                         users.map(u => (
                             <ListItem key={u._id} divider>
                                 <Grid container alignItems="center">
-                                    <Grid item xs={4}>{u.username}</Grid>
-                                    <Grid item xs={4}>{u.role}</Grid>
-                                    <Grid item xs={4}>
-                                        {filter === 'pending' && (
+                                    <Grid item xs={3}>{u.username}</Grid>
+                                    <Grid item xs={2}>{u.role}</Grid>
+                                    <Grid item xs={2}>
+                                        {u.isBlocked ? <Chip label="Blocked" color="error" size="small" /> : <Chip label="Active" color="success" size="small" />}
+                                        {!u.isApproved && <Chip label="Pending" color="warning" size="small" sx={{ ml: 1 }} />}
+                                    </Grid>
+                                    <Grid item xs={5} sx={{ display: 'flex', gap: 1 }}>
+                                        {filter === 'pending' && !u.isApproved && (
                                             <Button variant="contained" color="success" size="small" onClick={() => approveUser(u._id)}>
                                                 Approve
                                             </Button>
+                                        )}
+                                        {u.role !== 'superadmin' && (
+                                            <>
+                                                <Button variant="outlined" color={u.isBlocked ? "success" : "warning"} size="small" onClick={() => blockUser(u._id)}>
+                                                    {u.isBlocked ? "Unblock" : "Block"}
+                                                </Button>
+                                                <Button variant="outlined" color="error" size="small" onClick={() => convertConfirmAction('Delete User', `Delete user ${u.username}?`, () => deleteUser(u._id))}>
+                                                    Delete
+                                                </Button>
+                                            </>
                                         )}
                                     </Grid>
                                 </Grid>
@@ -306,6 +519,24 @@ const UsersManager = () => {
                     )}
                 </List>
             </Paper>
+
+             <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+                <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }} variant="filled">
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
+
+            {/* Confirmation Dialog */}
+            <Dialog open={confirmDialog.open} onClose={handleConfirmClose}>
+                <DialogTitle>{confirmDialog.title}</DialogTitle>
+                <DialogContent>
+                    <Typography>{confirmDialog.message}</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleConfirmClose}>Cancel</Button>
+                    <Button onClick={handleConfirmExecute} color="error" variant="contained">Confirm</Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };
@@ -349,6 +580,15 @@ const PlayersManager = () => {
     const [placeOptions, setPlaceOptions] = useState([]);
     const [placeLoading, setPlaceLoading] = useState(false);
     const searchTimeout = React.useRef(null);
+
+    // State for Viewing Chart & Table
+    const [openChartDialog, setOpenChartDialog] = useState(false);
+    const [selectedPlayerForChart, setSelectedPlayerForChart] = useState(null);
+
+    const handleViewChart = (player) => {
+        setSelectedPlayerForChart(player);
+        setOpenChartDialog(true);
+    };
 
     // Snackbar (Designed Alert)
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
@@ -638,6 +878,9 @@ const PlayersManager = () => {
                                 </TableCell>
                                 {!isMobile && <TableCell>{p.birthPlace}</TableCell>}
                                 <TableCell>
+                                    <IconButton size="small" onClick={() => handleViewChart(p)} color="info" title="View Chart">
+                                        <DescriptionIcon />
+                                    </IconButton>
                                     <IconButton size="small" onClick={() => handleEditClick(p)} color="primary"><EditIcon /></IconButton>
                                     <IconButton size="small" onClick={() => handleDeleteClick(p.id)} color="error"><DeleteIcon /></IconButton>
                                 </TableCell>
@@ -839,7 +1082,7 @@ const PlayersManager = () => {
                                                 groupName: g.name,
                                                 playerIds: selectedIds
                                             }, { headers: { 'x-auth-token': token } });
-                                            alert(`Added to ${g.name}`);
+                                            showSnackbar(`Added to ${g.name}`, 'success');
                                             setOpenGroupDialog(false);
                                             setSelectedIds([]);
                                         } catch (e) { console.error(e); }
@@ -857,6 +1100,42 @@ const PlayersManager = () => {
                      <Button onClick={() => setOpenGroupDialog(false)}>Cancel</Button>
                 </DialogActions>
             </Dialog>
+
+            {/* View Chart & Planetary Details Dialog */}
+            <Dialog
+                open={openChartDialog}
+                onClose={() => setOpenChartDialog(false)}
+                fullWidth
+                maxWidth="md"
+                fullScreen={isMobile}
+            >
+                <DialogTitle sx={{ backgroundColor: '#0F1535', color: '#fff' }}>
+                    {selectedPlayerForChart?.name}'s Horoscope
+                </DialogTitle>
+                <DialogContent sx={{ backgroundColor: '#0F1535', color: '#fff' }}>
+                    {selectedPlayerForChart && (
+                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, mt: 2 }}>
+                            {/* Rasi Chart */}
+                            <Box sx={{ p: 1, backgroundColor: '#fff', borderRadius: 2 }}>
+                                {selectedPlayerForChart.birthChart ? (
+                                     <RasiChart data={selectedPlayerForChart.birthChart} style={{ width: '100%' }} />
+                                ) : (
+                                    <Typography color="error">Birth Chart Data Not Available</Typography>
+                                )}
+                            </Box>
+
+                            {/* Planetary Table */}
+                            <Box sx={{ width: '100%', mt: 2 }}>
+                                <Typography variant="h6" gutterBottom sx={{ color: '#fff' }}>Planetary Positions</Typography>
+                                <PlanetaryTable planets={selectedPlayerForChart.birthChart?.formattedPlanets || []} />
+                            </Box>
+                        </Box>
+                    )}
+                </DialogContent>
+                <DialogActions sx={{ backgroundColor: '#0F1535' }}>
+                    <Button onClick={() => setOpenChartDialog(false)} sx={{ color: '#fff' }}>Close</Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };
@@ -871,6 +1150,22 @@ const GroupsManager = () => {
     // State for managing players in a group
     const [openManage, setOpenManage] = useState(false);
     const [selectedGroup, setSelectedGroup] = useState(null);
+
+    // Snackbar State
+    const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+    const showSnackbar = (message, severity = 'success') => { setSnackbar({ open: true, message, severity }); };
+    const handleCloseSnackbar = () => setSnackbar({ ...snackbar, open: false });
+
+    // Confirmation Dialog State
+    const [confirmDialog, setConfirmDialog] = useState({ open: false, title: '', message: '', action: null });
+    const convertConfirmAction = (title, message, action) => {
+         setConfirmDialog({ open: true, title, message, action: () => action() });
+    };
+    const handleConfirmClose = () => setConfirmDialog({ ...confirmDialog, open: false });
+    const handleConfirmExecute = async () => {
+        if (confirmDialog.action) await confirmDialog.action();
+        handleConfirmClose();
+    };
 
     const fetchGroups = async () => {
         try {
@@ -903,13 +1198,14 @@ const GroupsManager = () => {
             setNewGroupName('');
             setOpenCreate(false);
             fetchGroups();
+            showSnackbar('Group created successfully', 'success');
         } catch (err) {
-            alert(err.response?.data?.msg || 'Failed to create group');
+            showSnackbar(err.response?.data?.msg || 'Failed to create group', 'error');
         }
     };
 
     const handleDeleteGroup = async (id) => {
-        if (!confirm('Are you sure you want to delete this group?')) return;
+        // Confirm handled by UI Dialog
         try {
             await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/groups/${id}`, {
                  headers: { 'x-auth-token': token }
@@ -921,20 +1217,21 @@ const GroupsManager = () => {
     };
 
     const handleClearGroup = async (groupName) => {
-        if (!confirm(`Are you sure you want to clear all players from ${groupName}?`)) return;
+        // Confirm handled by UI Dialog
         try {
             await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/clear`, { groupName }, {
                  headers: { 'x-auth-token': token }
             });
             fetchGroups();
-            alert('Group cleared');
+            showSnackbar('Group cleared', 'success');
         } catch (err) {
             console.error(err);
+            showSnackbar('Failed to clear group', 'error');
         }
     };
 
     const handleRemovePlayer = async (groupName, playerId) => {
-         if (!confirm('Remove this player from the group?')) return;
+         // Confirm handled by UI Dialog
          try {
              await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/remove`, {
                  groupName,
@@ -945,13 +1242,39 @@ const GroupsManager = () => {
              // but fetchGroups is safer for sync.
          } catch (err) {
              console.error(err);
-             alert('Failed to remove player');
+             showSnackbar('Failed to remove player', 'error');
          }
     };
 
     const openManageDialog = (group) => {
         setSelectedGroup(group);
         setOpenManage(true);
+    };
+
+    // Edit Player State (Duplicated from PlayersManager for isolation)
+    const [openEdit, setOpenEdit] = useState(false);
+    const [editingPlayer, setEditingPlayer] = useState(null);
+    const [playerConfig, setPlayerConfig] = useState(null); // Reuse if possible or mock
+
+    const handleEditClick = (player) => {
+        setEditingPlayer(player);
+        setOpenEdit(true);
+    };
+
+    const handleSaveEdit = async () => {
+        if (!editingPlayer) return;
+        try {
+            // Basic update - for full update we need the full form logic or a shared component
+             await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/players/${editingPlayer._id}`, editingPlayer, {
+                headers: { 'x-auth-token': token }
+            });
+            setOpenEdit(false);
+            fetchGroups(); // Refresh groups to show updated details
+            showSnackbar('Player updated successfully', 'success');
+        } catch (err) {
+            console.error(err);
+            showSnackbar('Failed to update player', 'error');
+        }
     };
 
     return (
@@ -974,10 +1297,10 @@ const GroupsManager = () => {
                                 <Button variant="contained" size="small" onClick={() => openManageDialog(g)}>
                                     Manage Players
                                 </Button>
-                                <Button variant="outlined" color="warning" size="small" onClick={() => handleClearGroup(g.name)}>
+                                <Button variant="outlined" color="warning" size="small" onClick={() => convertConfirmAction('Clear Group', `Clear all players from ${g.name}?`, () => handleClearGroup(g.name))}>
                                     Clear
                                 </Button>
-                                <Button variant="outlined" color="error" size="small" onClick={() => handleDeleteGroup(g._id)}>
+                                <Button variant="outlined" color="error" size="small" onClick={() => convertConfirmAction('Delete Group', 'Are you sure you want to delete this group?', () => handleDeleteGroup(g._id))}>
                                     Delete
                                 </Button>
                             </Box>
@@ -1011,35 +1334,107 @@ const GroupsManager = () => {
             </Dialog>
 
             {/* Manage Players Dialog */}
-            <Dialog open={openManage} onClose={() => setOpenManage(false)} fullWidth maxWidth="sm">
+            <Dialog open={openManage} onClose={() => setOpenManage(false)} fullWidth maxWidth="md">
                 <DialogTitle>Manage Group: {selectedGroup?.name}</DialogTitle>
                 <DialogContent dividers>
                     {selectedGroup && selectedGroup.players.length > 0 ? (
-                        <List>
-                            {selectedGroup.players.map((player) => (
-                                <React.Fragment key={player._id}>
-                                    <ListItem
-                                        secondaryAction={
-                                            <IconButton edge="end" aria-label="delete" onClick={() => handleRemovePlayer(selectedGroup.name, player._id)}>
-                                                <DeleteIcon color="error" />
-                                            </IconButton>
-                                        }
-                                    >
-                                        <ListItemText
-                                            primary={player.name}
-                                            secondary={player.role || 'Player'}
-                                        />
-                                    </ListItem>
-                                    <Divider />
-                                </React.Fragment>
-                            ))}
-                        </List>
+                        <TableContainer component={Paper} elevation={0} variant="outlined">
+                            <Table size="small">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Name</TableCell>
+                                        <TableCell>Place</TableCell>
+                                        <TableCell>Actions</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {selectedGroup.players.map((player) => (
+                                        <TableRow key={player._id}>
+                                            <TableCell>
+                                                <Typography variant="subtitle2">{player.name}</Typography>
+                                            </TableCell>
+                                            <TableCell>{player.birthPlace || '-'}</TableCell>
+                                            <TableCell>
+                                                <IconButton size="small" color="primary" onClick={() => handleEditClick(player)}>
+                                                    <EditIcon />
+                                                </IconButton>
+                                                <IconButton size="small" color="error" onClick={() => convertConfirmAction('Remove Player', 'Remove this player from the group?', () => handleRemovePlayer(selectedGroup.name, player.id))}>
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                     ) : (
                         <Typography sx={{ p: 2, textAlign: 'center' }}>No players in this group.</Typography>
                     )}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpenManage(false)}>Close</Button>
+                </DialogActions>
+            </Dialog>
+
+             {/* Edit Player Dialog (Simplified for Group Actions) */}
+            <Dialog open={openEdit} onClose={() => setOpenEdit(false)} fullWidth maxWidth="sm">
+                <DialogTitle>Edit Player Details</DialogTitle>
+                <DialogContent>
+                    {editingPlayer && (
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
+                            <TextField
+                                label="Name"
+                                value={editingPlayer.name}
+                                onChange={(e) => setEditingPlayer({ ...editingPlayer, name: e.target.value })}
+                                fullWidth
+                            />
+                            <TextField
+                                label="Birth Place"
+                                value={editingPlayer.birthPlace}
+                                onChange={(e) => setEditingPlayer({ ...editingPlayer, birthPlace: e.target.value })}
+                                fullWidth
+                            />
+                            {/* Add Date/Time fields if needed, kept simple for now as requested */}
+                             <TextField
+                                label="Date of Birth"
+                                type="date"
+                                value={editingPlayer.dob ? editingPlayer.dob.split('T')[0] : ''}
+                                onChange={(e) => setEditingPlayer({ ...editingPlayer, dob: e.target.value })}
+                                fullWidth
+                                InputLabelProps={{ shrink: true }}
+                            />
+                             <TextField
+                                label="Time of Birth"
+                                type="time"
+                                value={editingPlayer.tob || ''}
+                                onChange={(e) => setEditingPlayer({ ...editingPlayer, tob: e.target.value })}
+                                fullWidth
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        </Box>
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenEdit(false)}>Cancel</Button>
+                    <Button onClick={handleSaveEdit} variant="contained" color="primary">Save Changes</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+                <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }} variant="filled">
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
+
+            {/* Confirmation Dialog */}
+            <Dialog open={confirmDialog.open} onClose={handleConfirmClose}>
+                <DialogTitle>{confirmDialog.title}</DialogTitle>
+                <DialogContent>
+                    <Typography>{confirmDialog.message}</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleConfirmClose}>Cancel</Button>
+                    <Button onClick={handleConfirmExecute} color="error" variant="contained">Confirm</Button>
                 </DialogActions>
             </Dialog>
         </Box>
@@ -1062,6 +1457,7 @@ const AdminDashboard = () => {
         { id: 'users', label: 'Users', icon: <PeopleIcon /> },
         { id: 'players', label: 'Players', icon: <SportsCricketIcon /> },
         { id: 'groups', label: 'Groups', icon: <GroupIcon /> },
+        { id: 'rules', label: 'Rules', icon: <GavelIcon /> },
     ];
 
     const drawer = (
@@ -1141,6 +1537,7 @@ const AdminDashboard = () => {
             case 'users': return <UsersManager />;
             case 'players': return <PlayersManager />;
             case 'groups': return <GroupsManager />;
+            case 'rules': return <RulesView />;
             default: return <DashboardHome />;
         }
     };

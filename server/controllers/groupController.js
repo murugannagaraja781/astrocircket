@@ -1,11 +1,32 @@
 const Group = require('../models/Group');
 
-// Get All Groups
+// Get All Groups with Populated Players
 const getGroups = async (req, res) => {
     try {
-        const groups = await Group.find();
+        // Use aggregation to join with players collection based on custom 'id'
+        const groups = await Group.aggregate([
+            {
+                $lookup: {
+                    from: 'players', // Ensure this matches your actual collection name (lowercase plural usually)
+                    localField: 'players',
+                    foreignField: 'id',
+                    as: 'playerDetails'
+                }
+            },
+            {
+                $addFields: {
+                    players: '$playerDetails' // Overwrite string array with object array
+                }
+            },
+            {
+                $project: {
+                    playerDetails: 0 // Remove the temp field
+                }
+            }
+        ]);
         res.json(groups);
     } catch (err) {
+        console.error(err);
         res.status(500).send('Server Error');
     }
 };

@@ -1,7 +1,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { register, login, getPendingUsers, approveUser, getAdminStats } = require('../controllers/authController');
+const { register, login, getPendingUsers, approveUser, getAdminStats, getAllUsers, deleteUser, blockUser } = require('../controllers/authController');
 const auth = require('../middleware/auth');
 const role = require('../middleware/role');
 
@@ -29,6 +29,21 @@ router.put('/approve/:id', auth, role(['superadmin']), approveUser);
 // @desc    Get dashboard stats
 // @access  Private (Admin)
 router.get('/stats', getAdminStats);
+
+// @route   GET api/auth/users
+// @desc    Get all users
+// @access  Private (Admin)
+router.get('/users', auth, role(['superadmin']), getAllUsers);
+
+// @route   DELETE api/auth/users/:id
+// @desc    Delete user
+// @access  Private (Admin)
+router.delete('/users/:id', auth, role(['superadmin']), deleteUser);
+
+// @route   PUT api/auth/block/:id
+// @desc    Block/Unblock user
+// @access  Private (Admin)
+router.put('/block/:id', auth, role(['superadmin']), blockUser);
 
 module.exports = router;
 
