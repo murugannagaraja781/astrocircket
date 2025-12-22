@@ -96,7 +96,8 @@ const uploadPlayers = async (req, res) => {
         } else if (
             req.file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
             req.file.originalname.endsWith('.xlsx') ||
-            req.file.originalname.endsWith('.xls')
+            req.file.originalname.endsWith('.xls') ||
+            req.file.originalname.endsWith('.csv')
         ) {
             // Parse Excel
             const workbook = xlsx.readFile(req.file.path);

@@ -19,6 +19,8 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PublicIcon from '@mui/icons-material/Public';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
+import GridOnIcon from '@mui/icons-material/GridOn';
+import CloseIcon from '@mui/icons-material/Close';
 
 // --- HELPERS ---
 const getFlag = (player) => {
@@ -331,7 +333,7 @@ const PlayerDetailPanel = ({ player, matchChart }) => {
     );
 };
 
-const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit }) => {
+const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewChart }) => {
     const [open, setOpen] = useState(false);
 
     // Summary info for the row
@@ -422,19 +424,29 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit }) => {
 
                 {(matchChart && isSelected) ? (
                      <TableCell>
-                        <Box sx={{ display: 'flex', gap: 1 }}>
-                            <PredictionChip type="Bat" score={batResult?.score} report={batResult?.report} />
-                            <PredictionChip type="Bowl" score={bowlResult?.score} report={bowlResult?.report} />
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <IconButton size="small" onClick={(e) => { e.stopPropagation(); onViewChart(player); }} color="primary">
+                                <GridOnIcon />
+                            </IconButton>
+                            <Box sx={{ display: 'flex', gap: 1 }}>
+                                <PredictionChip type="Bat" score={batResult?.score} report={batResult?.report} />
+                                <PredictionChip type="Bowl" score={bowlResult?.score} report={bowlResult?.report} />
+                            </Box>
                         </Box>
                      </TableCell>
                 ) : (
                      <TableCell>
-                        <Chip
-                            label={rasi !== '-' ? `Moon: ${rasi}` : 'No Data'}
-                            size="small"
-                            color={rasi !== '-' ? "primary" : "default"}
-                            variant={rasi !== '-' ? "outlined" : "filled"}
-                        />
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <IconButton size="small" onClick={(e) => { e.stopPropagation(); onViewChart(player); }} color="primary">
+                                <GridOnIcon />
+                            </IconButton>
+                            <Chip
+                                label={rasi !== '-' ? `Moon: ${rasi}` : 'No Data'}
+                                size="small"
+                                color={rasi !== '-' ? "primary" : "default"}
+                                variant={rasi !== '-' ? "outlined" : "filled"}
+                            />
+                        </Box>
                     </TableCell>
                 )}
             </TableRow>
@@ -446,6 +458,217 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit }) => {
                 </TableCell>
             </TableRow>
         </>
+    );
+};
+
+const ChartPopup = ({ open, onClose, player }) => {
+    const [tabIndex, setTabIndex] = useState(0);
+    if (!player) return null;
+
+    const chartData = player.birthChart?.data || player.birthChart;
+
+    return (
+        <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
+            <DialogTitle sx={{ bgcolor: '#1e3a8a', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box>
+                    <Typography variant="h6">{player.name}</Typography>
+                    <Typography variant="caption">{player.birthPlace} | {player.dob}</Typography>
+                </Box>
+                <IconButton onClick={onClose} sx={{ color: 'white' }}><CloseIcon /></IconButton>
+            </DialogTitle>
+            <DialogContent sx={{ p: 0 }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider', bgcolor: '#f0f0f0' }}>
+                    <Tabs value={tabIndex} onChange={(e, v) => setTabIndex(v)} centered textColor="primary" indicatorColor="primary">
+                        <Tab label="Rasi Chart" />
+                        <Tab label="Planetary Positions" />
+                        <Tab label="Panchangam" />
+                    </Tabs>
+                </Box>
+                <Box sx={{ p: 2, minHeight: 400 }}>
+                    {tabIndex === 0 && (
+                        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <RasiChart data={chartData} />
+                        </Box>
+                    )}
+                    {tabIndex === 1 && <PlanetaryTable planets={chartData?.formattedPlanets} />}
+                    {tabIndex === 2 && <PanchangamGrid panchangam={chartData?.panchangam} birthData={{ date: player.dob, time: player.birthTime, place: player.birthPlace }} />}
+                </Box>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
+const MatchWizardDialog = ({ open, onClose, groups, token }) => {
+    const [teamA, setTeamA] = useState('');
+    const [teamB, setTeamB] = useState('');
+    const [selectedPlayers, setSelectedPlayers] = useState([]);
+    const [matchChart, setMatchChart] = useState(null);
+    const [results, setResults] = useState(null);
+
+    // Reset when opening or teams change
+    useEffect(() => {
+        if (!open) {
+            setTeamA('');
+            setTeamB('');
+            setMatchChart(null);
+            setResults(null);
+        }
+    }, [open]);
+
+    // Update selected players when teams change
+    useEffect(() => {
+        const newSelected = [];
+        if (teamA) {
+            const grp = groups.find(g => g._id === teamA);
+            if (grp) newSelected.push(...grp.players.map(p => p.id));
+        }
+        if (teamB) {
+            const grp = groups.find(g => g._id === teamB);
+            if (grp) newSelected.push(...grp.players.map(p => p.id));
+        }
+        // Unique IDs
+        setSelectedPlayers([...new Set(newSelected)]);
+        setMatchChart(null);
+        setResults(null);
+    }, [teamA, teamB, groups]);
+
+    const handleMatchReady = (chart) => {
+        setMatchChart(chart);
+        const resDetails = {};
+        let scoreA = 0;
+        let scoreB = 0;
+        let countA = 0;
+        let countB = 0;
+
+        const allPlayers = groups.flatMap(g => g.players);
+
+        selectedPlayers.forEach(pid => {
+            const p = allPlayers.find(ap => ap.id === pid);
+            if (p && (p.birthChart?.data || p.birthChart)) {
+                const pChart = p.birthChart.data || p.birthChart;
+                const mChart = chart.data || chart;
+
+                const bat = runPrediction(pChart, mChart, "BAT");
+                const bowl = runPrediction(pChart, mChart, "BOWL");
+
+                // Save Result
+                resDetails[pid] = { bat, bowl };
+
+                // Add to team totals (Using MAX of Bat/Bowl as contribution)
+                const contribution = Math.max(bat.score, bowl.score);
+
+                const isTeamA = groups.find(g => g._id === teamA)?.players.some(tp => tp.id === pid);
+                const isTeamB = groups.find(g => g._id === teamB)?.players.some(tp => tp.id === pid);
+
+                if (isTeamA) { scoreA += contribution; countA++; }
+                else if (isTeamB) { scoreB += contribution; countB++; }
+            }
+        });
+
+        // Calculate Average Score (to normalize if team sizes differ)
+        const avgA = countA > 0 ? (scoreA / countA).toFixed(1) : 0;
+        const avgB = countB > 0 ? (scoreB / countB).toFixed(1) : 0;
+
+        setResults({ details: resDetails, scoreA: avgA, scoreB: avgB, totalA: scoreA, totalB: scoreB });
+    };
+
+    const togglePlayer = (pid) => {
+        if (selectedPlayers.includes(pid)) setSelectedPlayers(prev => prev.filter(id => id !== pid));
+        else setSelectedPlayers(prev => [...prev, pid]);
+    };
+
+    const renderPlayerList = (teamId, teamName) => {
+        const grp = groups.find(g => g._id === teamId);
+        if (!grp) return null;
+
+        const myScore = teamId === teamA ? results?.totalA : results?.totalB;
+        const opponentScore = teamId === teamA ? results?.totalB : results?.totalA;
+        const isWinner = results && Number(myScore) > Number(opponentScore);
+
+        return (
+            <Paper variant="outlined" sx={{ p: 2, height: '100%', bgcolor: isWinner ? '#effdf5' : 'white', borderColor: isWinner ? 'success.main' : 'divider', borderWidth: isWinner ? 2 : 1 }}>
+                <Box sx={{ mb: 2, borderBottom: 1, borderColor: 'divider', pb: 1, display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography variant="subtitle1" fontWeight="bold">{teamName}</Typography>
+                    {results && (
+                        <Chip label={`Score: ${myScore}`} color={isWinner ? "success" : "default"} variant={isWinner ? "filled" : "outlined"} />
+                    )}
+                </Box>
+                <Box sx={{ maxHeight: 400, overflowY: 'auto' }}>
+                    {grp.players.map(p => {
+                        const isSel = selectedPlayers.includes(p.id);
+                        const res = results?.details?.[p.id];
+                        return (
+                            <Box key={p.id} sx={{ display: 'flex', alignItems: 'center', mb: 1, p: 1, borderRadius: 1, bgcolor: isSel ? 'rgba(0,0,0,0.02)' : 'transparent' }}>
+                                <Checkbox checked={isSel} onChange={() => togglePlayer(p.id)} size="small" />
+                                <Avatar src={p.profile} sx={{ width: 30, height: 30, mr: 1, fontSize: 12 }}>{p.name[0]}</Avatar>
+                                <Box sx={{ flexGrow: 1 }}>
+                                    <Typography variant="body2" fontWeight={isSel ? 'bold' : 'normal'}>{p.name}</Typography>
+                                    {res && (
+                                        <Box sx={{ display: 'flex', gap: 0.5, mt: 0.5 }}>
+                                            <Chip label={`Bat: ${res.bat.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bat.score >= 1 ? 'success' : 'default'} />
+                                            <Chip label={`Bowl: ${res.bowl.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bowl.score >= 1 ? 'success' : 'default'} />
+                                        </Box>
+                                    )}
+                                </Box>
+                            </Box>
+                        );
+                    })}
+                </Box>
+            </Paper>
+        );
+    };
+
+    return (
+        <Dialog open={open} onClose={onClose} maxWidth="xl" fullWidth>
+            <DialogTitle sx={{ bgcolor: '#1e3a8a', color: 'white', display: 'flex', justifyContent: 'space-between' }}>
+                MATCH PREDICTION WIZARD
+                <IconButton onClick={onClose} sx={{ color: 'white' }}><CloseIcon /></IconButton>
+            </DialogTitle>
+            <DialogContent sx={{ bgcolor: '#f8fafc', p: 3 }}>
+                <Grid container spacing={3}>
+                    {/* TOP: SETUP */}
+                    <Grid item xs={12}>
+                        <Paper sx={{ p: 2 }}>
+                            <Typography variant="subtitle2" gutterBottom fontWeight="bold">1. Match Setup</Typography>
+                            <MatchPredictionControl onPredictionComplete={handleMatchReady} token={token} />
+                        </Paper>
+                    </Grid>
+
+                    {/* TEAMS SELECTION */}
+                    <Grid item xs={12} md={4}>
+                        <FormControl fullWidth size="small" sx={{ bgcolor: 'white' }}>
+                            <InputLabel>Select Team A</InputLabel>
+                            <Select value={teamA} label="Select Team A" onChange={(e) => setTeamA(e.target.value)}>
+                                {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                     <Grid item xs={12} md={4} sx={{ textAlign: 'center' }}>
+                        <Typography variant="h5" sx={{ mt: 1, color: '#94a3b8' }}>VS</Typography>
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                        <FormControl fullWidth size="small" sx={{ bgcolor: 'white' }}>
+                            <InputLabel>Select Team B</InputLabel>
+                            <Select value={teamB} label="Select Team B" onChange={(e) => setTeamB(e.target.value)}>
+                                {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+
+                    {/* PLAYERS LISTS */}
+                    {teamA && teamB && (
+                        <>
+                            <Grid item xs={12} md={6}>
+                                {renderPlayerList(teamA, groups.find(g => g._id === teamA)?.name)}
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                {renderPlayerList(teamB, groups.find(g => g._id === teamB)?.name)}
+                            </Grid>
+                        </>
+                    )}
+                </Grid>
+            </DialogContent>
+        </Dialog>
     );
 };
 
@@ -469,6 +692,9 @@ const UserDashboard = () => {
     // Prediction State
     const [showPrediction, setShowPrediction] = useState(false);
     const [matchChart, setMatchChart] = useState(null);
+    const [chartPopupOpen, setChartPopupOpen] = useState(false);
+    const [chartPopupPlayer, setChartPopupPlayer] = useState(null);
+    const [matchWizardOpen, setMatchWizardOpen] = useState(false);
 
     // Selection Handlers
     const handleSelectAllClick = (event) => {
@@ -598,9 +824,21 @@ const UserDashboard = () => {
                     <span className="mr-2">🏏</span>
                    Active Teams ({groups.length})
                 </Typography>
-                <Button size="small" onClick={() => setShowTeams(!showTeams)}>
-                    {showTeams ? "Hide" : "Show All"}
-                </Button>
+                <Box>
+                    <Button
+                        variant="contained"
+                        color="success"
+                        size="small"
+                        onClick={() => setMatchWizardOpen(true)}
+                        sx={{ mr: 2 }}
+                        startIcon={<SportsCricketIcon />}
+                    >
+                        Start Match Wizard
+                    </Button>
+                    <Button size="small" onClick={() => setShowTeams(!showTeams)}>
+                        {showTeams ? "Hide" : "Show All"}
+                    </Button>
+                </Box>
             </Box>
 
             <Collapse in={showTeams}>
@@ -782,6 +1020,11 @@ const UserDashboard = () => {
                                                         matchChart={matchChart}
                                                         isSelected={isItemSelected}
                                                         onSelect={handleSelectClick}
+                                                        onEdit={handleEditClick}
+                                                        onViewChart={(p) => {
+                                                            setChartPopupPlayer(p);
+                                                            setChartPopupOpen(true);
+                                                        }}
                                                     />
                                                 );
                                             })
@@ -807,6 +1050,12 @@ const UserDashboard = () => {
                         </>
                     )}
                 </Paper>
+
+                {/* POPUPS */}
+                <ChartPopup open={chartPopupOpen} onClose={() => setChartPopupOpen(false)} player={chartPopupPlayer} />
+                <MatchWizardDialog open={matchWizardOpen} onClose={() => setMatchWizardOpen(false)} groups={groups} token={token} />
+
+
             </Container>
         </Box>
     );

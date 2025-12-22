@@ -3,7 +3,7 @@ import { Paper, Typography, Box, TextField, Button, Grid, CircularProgress, Aler
 import axios from 'axios';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 
-const MatchPredictionControl = ({ onPredictionComplete, token }) => {
+const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token }) => {
     const [matchDetails, setMatchDetails] = useState({
         date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
         time: '19:30',
@@ -52,6 +52,7 @@ const MatchPredictionControl = ({ onPredictionComplete, token }) => {
 
     const handleRun = async () => {
         setLoading(true);
+        if (onPredictionStart) onPredictionStart();
         setError('');
         try {
             const [year, month, day] = matchDetails.date.split('-');

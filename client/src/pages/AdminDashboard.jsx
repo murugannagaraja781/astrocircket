@@ -737,6 +737,19 @@ const PlayersManager = () => {
         } catch (err) { setUploadStatus('Error uploading.'); }
     };
 
+    const downloadSampleTemplate = () => {
+        const headers = ["id", "name", "dob", "birthPlace", "latitude", "longitude", "timezone"];
+        const row1 = ["P001", "Sample Player", "1990-01-01", "Mumbai", "19.0760", "72.8777", "5.5"];
+        const csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n" + row1.join(",");
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "player_upload_template.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     // Async Places
     const fetchPlaces = async (query) => {
         if (!query || query.length < 3) return;
@@ -866,7 +879,11 @@ const PlayersManager = () => {
                                 <TableCell>
                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                                         <Avatar
-                                            src={p.profile ? `${import.meta.env.VITE_BACKEND_URL}${p.profile}` : ''}
+                                            src={(() => {
+                                                if (!p.profile) return '';
+                                                if (p.profile.startsWith('http')) return p.profile;
+                                                return `${import.meta.env.VITE_BACKEND_URL}/uploads/${p.profile}`;
+                                            })()}
                                             alt={p.name}
                                             sx={{ width: 40, height: 40, border: '2px solid rgba(255,255,255,0.2)' }}
                                         />
@@ -1047,7 +1064,10 @@ const PlayersManager = () => {
                     <Grid container direction="column" alignItems="center" spacing={2} sx={{ mt: 1 }}>
                         <Button variant="contained" component="label">
                             Select File (JSON/Excel)
-                            <input type="file" hidden accept=".json,.xlsx,.xls" onChange={(e) => setSelectedFile(e.target.files[0])} />
+                            <input type="file" hidden accept=".json,.xlsx,.xls,.csv" onChange={(e) => setSelectedFile(e.target.files[0])} />
+                        </Button>
+                        <Button variant="text" onClick={downloadSampleTemplate} sx={{ mt: 1 }} startIcon={<span style={{fontSize: '1.2rem'}}>📥</span>}>
+                            Download Sample (CSV/Excel)
                         </Button>
                         {selectedFile && <Typography>{selectedFile.name}</Typography>}
                         {uploadStatus && <Typography color="primary">{uploadStatus}</Typography>}
