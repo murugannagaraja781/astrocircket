@@ -1,7 +1,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { register, login, getPendingUsers, approveUser, getAdminStats, getAllUsers, deleteUser, blockUser } = require('../controllers/authController');
+const { register, login, getPendingUsers, approveUser, getAdminStats, getAllUsers, deleteUser, blockUser, incrementView } = require('../controllers/authController');
 const auth = require('../middleware/auth');
 const role = require('../middleware/role');
 
@@ -44,6 +44,11 @@ router.delete('/users/:id', auth, role(['superadmin']), deleteUser);
 // @desc    Block/Unblock user
 // @access  Private (Admin)
 router.put('/block/:id', auth, role(['superadmin']), blockUser);
+
+// @route   POST api/auth/increment-view
+// @desc    Increment dashboard views
+// @access  Public
+router.post('/increment-view', incrementView);
 
 module.exports = router;
 

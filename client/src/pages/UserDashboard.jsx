@@ -95,7 +95,7 @@ const getNakshatraLordHelper = (nakshatraName) => {
 // 1. Planetary Details Table
 // 1. Planetary Details Table
 // 1. Planetary Details Table
-const PlanetaryTable = ({ planets }) => {
+const PlanetaryTable = ({ planets, hideHeader = false }) => {
     // If planets is undefined or not an array, show empty state
     if (!planets || !Array.isArray(planets) || planets.length === 0) {
          return (
@@ -109,9 +109,15 @@ const PlanetaryTable = ({ planets }) => {
 
     return (
         <Box>
-            <TableContainer component={Paper} variant="outlined" sx={{ mt: 2, borderRadius: 2, overflow: 'hidden' }}>
+            <TableContainer component={Paper} variant="outlined" sx={{
+                mt: 2,
+                borderRadius: 2,
+                overflow: 'hidden',
+                bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
+                borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'divider'
+            }}>
                 <Table size="small">
-                    <TableHead sx={{ backgroundColor: '#1e3a8a' }}>
+                    <TableHead sx={{ backgroundColor: hideHeader ? '#111C44' : '#1e3a8a' }}>
                         <TableRow>
                             <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>கிரகம்</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>ராசி</TableCell>
@@ -126,23 +132,23 @@ const PlanetaryTable = ({ planets }) => {
                     </TableHead>
                     <TableBody>
                         {planets.map((p, i) => (
-                            <TableRow key={i} hover sx={{ '&:nth-of-type(odd)': { bgcolor: '#f8fafc' } }}>
+                            <TableRow key={i} hover sx={{ '&:nth-of-type(odd)': { bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.02)' : '#f8fafc' } }}>
                                 <TableCell>
                                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                        <span className="font-bold text-gray-800">{p.planetName}</span>
-                                        <span className="text-xs text-blue-600">{p.planetTamil}</span>
+                                        <span className={`font-bold ${hideHeader ? 'text-blue-300' : 'text-gray-800'}`}>{p.planetName}</span>
+                                        <span className={`text-xs ${hideHeader ? 'text-cyan-400' : 'text-blue-600'}`}>{p.planetTamil}</span>
                                     </Box>
                                 </TableCell>
                                 <TableCell>
                                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                         <span className="font-medium">{p.signName}</span>
-                                        <span className="text-xs text-gray-500">{p.signTamil}</span>
+                                        <span className={`text-xs ${hideHeader ? 'text-gray-400' : 'text-gray-500'}`}>{p.signTamil}</span>
                                     </Box>
                                 </TableCell>
                                 <TableCell>
                                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                        <span className="font-medium text-gray-700">{p.lordName}</span>
-                                        <span className="text-xs text-gray-500">{p.lordTamil}</span>
+                                        <span className={`font-medium ${hideHeader ? 'text-blue-200' : 'text-gray-700'}`}>{p.lordName}</span>
+                                        <span className={`text-xs ${hideHeader ? 'text-gray-400' : 'text-gray-500'}`}>{p.lordTamil}</span>
                                     </Box>
                                 </TableCell>
                                 <TableCell>
@@ -151,7 +157,7 @@ const PlanetaryTable = ({ planets }) => {
                                 <TableCell>
                                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                         <span>{p.nakshatraName}</span>
-                                        <span className="text-xs text-gray-500">{p.nakshatraTamil}</span>
+                                        <span className={`text-xs ${hideHeader ? 'text-gray-400' : 'text-gray-500'}`}>{p.nakshatraTamil}</span>
                                     </Box>
                                 </TableCell>
                                 <TableCell>
@@ -194,7 +200,7 @@ const PlanetaryTable = ({ planets }) => {
 };
 
 // 2. Panchangam Grid
-const PanchangamGrid = ({ panchangam, birthData }) => {
+const PanchangamGrid = ({ panchangam, birthData, hideHeader = false }) => {
     if (!panchangam) return null;
 
     const items = [
@@ -207,13 +213,25 @@ const PanchangamGrid = ({ panchangam, birthData }) => {
     ];
 
     return (
-        <Card variant="outlined" sx={{ mt: 2, bgcolor: 'white', borderRadius: 2, boxShadow: 1 }}>
+        <Card variant="outlined" sx={{
+            mt: 2,
+            bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
+            borderRadius: 2,
+            boxShadow: hideHeader ? 'none' : 1,
+            borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'divider'
+        }}>
              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, borderBottom: '1px solid #eee', pb: 1 }}>
-                    <Typography variant="h6" color="primary" fontWeight="bold">
+                <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    mb: 2,
+                    borderBottom: hideHeader ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #eee',
+                    pb: 1
+                }}>
+                    <Typography variant="h6" color={hideHeader ? 'secondary' : 'primary'} fontWeight="bold">
                         Panchangam Details
                     </Typography>
-                    <Typography variant="caption" sx={{ ml: 'auto', color: 'gray' }}>
+                    <Typography variant="caption" sx={{ ml: 'auto', color: hideHeader ? '#A0AEC0' : 'gray' }}>
                         {birthData?.date} {birthData?.time}
                     </Typography>
                 </Box>
@@ -221,12 +239,19 @@ const PanchangamGrid = ({ panchangam, birthData }) => {
                 <Grid container spacing={3}>
                     {items.map((item, i) => (
                         <Grid item xs={6} sm={4} md={2} key={i}>
-                            <Paper elevation={0} sx={{ p: 2, bgcolor: '#f8fafc', borderRadius: 2, textAlign: 'center', height: '100%' }}>
+                            <Paper elevation={0} sx={{
+                                p: 2,
+                                bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : '#f8fafc',
+                                borderRadius: 2,
+                                textAlign: 'center',
+                                height: '100%',
+                                border: hideHeader ? '1px solid rgba(255, 255, 255, 0.1)' : 'none'
+                            }}>
                                 <Typography variant="h5" sx={{ mb: 1 }}>{item.icon}</Typography>
-                                <Typography variant="caption" color="textSecondary" display="block" textTransform="uppercase" fontWeight="bold" fontSize={10}>
+                                <Typography variant="caption" color={hideHeader ? 'textSecondary' : 'textSecondary'} display="block" textTransform="uppercase" fontWeight="bold" fontSize={10}>
                                     {item.label}
                                 </Typography>
-                                <Typography variant="body2" fontWeight="medium" color="textPrimary">
+                                <Typography variant="body2" fontWeight="medium" color={hideHeader ? 'white' : 'textPrimary'}>
                                     {item.val || '-'}
                                 </Typography>
                             </Paper>
@@ -239,7 +264,7 @@ const PanchangamGrid = ({ panchangam, birthData }) => {
 };
 
 // 3. Player Detail Panel (Collapsible)
-const PlayerDetailPanel = ({ player, matchChart }) => {
+const PlayerDetailPanel = ({ player, matchChart, hideHeader = false }) => {
     const [tabIndex, setTabIndex] = useState(0);
 
     // Normalize Data (Handle wrappers)
@@ -251,7 +276,11 @@ const PlayerDetailPanel = ({ player, matchChart }) => {
     const bowlerPred = useMemo(() => matchData ? runPrediction(chartData, matchData, "BOWL") : null, [chartData, matchData]);
 
     return (
-        <Box sx={{ p: 2, backgroundColor: '#fafafa' }}>
+        <Box sx={{
+            p: 2,
+            backgroundColor: hideHeader ? 'rgba(255, 255, 255, 0.02)' : '#fafafa',
+            borderTop: hideHeader ? '1px solid rgba(255, 255, 255, 0.05)' : 'none'
+        }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                 <Box>
                      <Typography variant="h6" color="primary" fontWeight="bold">
@@ -274,7 +303,13 @@ const PlayerDetailPanel = ({ player, matchChart }) => {
             {matchData && (
                 <Grid container spacing={2} sx={{ mb: 2 }}>
                     <Grid item xs={12} md={6}>
-                       <Paper sx={{ p: 2, borderLeft: 5, borderColor: batsmanPred?.verdict === 'EXCELLENT' ? 'success.main' : 'warning.main' }}>
+                       <Paper sx={{
+                           p: 2,
+                           borderLeft: 5,
+                           borderColor: batsmanPred?.verdict === 'EXCELLENT' ? 'success.main' : 'warning.main',
+                           bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
+                           color: hideHeader ? 'white' : 'inherit'
+                       }}>
                             <Typography variant="subtitle1" fontWeight="bold">Batting Analysis</Typography>
                              <Typography variant="h5" color={batsmanPred?.verdict === 'EXCELLENT' ? 'success.main' : 'text.primary'}>
                                 {batsmanPred?.verdict} ({batsmanPred?.score})
@@ -287,7 +322,13 @@ const PlayerDetailPanel = ({ player, matchChart }) => {
                        </Paper>
                     </Grid>
                     <Grid item xs={12} md={6}>
-                       <Paper sx={{ p: 2, borderLeft: 5, borderColor: bowlerPred?.verdict === 'EXCELLENT' ? 'success.main' : 'warning.main' }}>
+                       <Paper sx={{
+                           p: 2,
+                           borderLeft: 5,
+                           borderColor: bowlerPred?.verdict === 'EXCELLENT' ? 'success.main' : 'warning.main',
+                           bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
+                           color: hideHeader ? 'white' : 'inherit'
+                       }}>
                             <Typography variant="subtitle1" fontWeight="bold">Bowling Analysis</Typography>
                              <Typography variant="h5" color={bowlerPred?.verdict === 'EXCELLENT' ? 'success.main' : 'text.primary'}>
                                 {bowlerPred?.verdict} ({bowlerPred?.score})
@@ -327,13 +368,13 @@ const PlayerDetailPanel = ({ player, matchChart }) => {
                 </Grid>
             )}
 
-            {tabIndex === 1 && <PlanetaryTable planets={chartData?.formattedPlanets} />}
-            {tabIndex === 2 && <PanchangamGrid panchangam={chartData?.panchangam} birthData={player.birthData} />}
+            {tabIndex === 1 && <PlanetaryTable planets={chartData?.formattedPlanets} hideHeader={hideHeader} />}
+            {tabIndex === 2 && <PanchangamGrid panchangam={chartData?.panchangam} birthData={player.birthData} hideHeader={hideHeader} />}
         </Box>
     );
 };
 
-const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewChart }) => {
+const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewChart, hideHeader = false }) => {
     const [open, setOpen] = useState(false);
 
     // Summary info for the row
@@ -354,7 +395,16 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewCha
     return (
         <>
             <TableRow
-                sx={{ '& > *': { borderBottom: 'unset' }, cursor: 'pointer', bgcolor: isSelected ? 'rgba(30, 64, 175, 0.04)' : 'inherit' }}
+                sx={{
+                    '& > *': { borderBottom: hideHeader ? '1px solid rgba(255, 255, 255, 0.05)' : 'unset' },
+                    cursor: 'pointer',
+                    bgcolor: isSelected
+                        ? (hideHeader ? 'rgba(0, 117, 255, 0.1)' : 'rgba(30, 64, 175, 0.04)')
+                        : 'inherit',
+                    '&:hover': {
+                        bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05) !important' : 'inherit'
+                    }
+                }}
                 hover
                 onClick={() => setOpen(!open)}
             >
@@ -378,7 +428,7 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewCha
                         <Avatar
                             src={player.profile}
                             alt={player.name}
-                            sx={{ width: 44, height: 44, bgcolor: '#1e40af', fontSize: '1.2rem' }}
+                            sx={{ width: 44, height: 44, bgcolor: hideHeader ? '#0075FF' : '#1e40af', fontSize: '1.2rem' }}
                         >
                             {avatarLetter}
                         </Avatar>
@@ -451,9 +501,9 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewCha
                 )}
             </TableRow>
             <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0, borderBottom: hideHeader ? '1px solid rgba(255, 255, 255, 0.05)' : 'inherit' }} colSpan={7}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
-                        <PlayerDetailPanel player={player} matchChart={matchChart} />
+                        <PlayerDetailPanel player={player} matchChart={matchChart} hideHeader={hideHeader} />
                     </Collapse>
                 </TableCell>
             </TableRow>
@@ -461,7 +511,7 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewCha
     );
 };
 
-const ChartPopup = ({ open, onClose, player }) => {
+const ChartPopup = ({ open, onClose, player, hideHeader = false }) => {
     const [tabIndex, setTabIndex] = useState(0);
     if (!player) return null;
 
@@ -469,15 +519,15 @@ const ChartPopup = ({ open, onClose, player }) => {
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
-            <DialogTitle sx={{ bgcolor: '#1e3a8a', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <DialogTitle sx={{ bgcolor: hideHeader ? '#111C44' : '#1e3a8a', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Box>
                     <Typography variant="h6">{player.name}</Typography>
                     <Typography variant="caption">{player.birthPlace} | {player.dob} {player.birthTime ? `| ${player.birthTime}` : ''}</Typography>
                 </Box>
                 <IconButton onClick={onClose} sx={{ color: 'white' }}><CloseIcon /></IconButton>
             </DialogTitle>
-            <DialogContent sx={{ p: 0 }}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider', bgcolor: '#f0f0f0' }}>
+            <DialogContent sx={{ p: 0, bgcolor: hideHeader ? '#0F1535' : 'inherit' }}>
+                <Box sx={{ borderBottom: 1, borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'divider', bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : '#f0f0f0' }}>
                     <Tabs value={tabIndex} onChange={(e, v) => setTabIndex(v)} centered textColor="primary" indicatorColor="primary">
                         <Tab label="Rasi Chart" />
                         <Tab label="Planetary Positions" />
@@ -498,7 +548,7 @@ const ChartPopup = ({ open, onClose, player }) => {
     );
 };
 
-const MatchWizardDialog = ({ open, onClose, groups, token }) => {
+const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false }) => {
     const [teamA, setTeamA] = useState('');
     const [teamB, setTeamB] = useState('');
     const [selectedPlayers, setSelectedPlayers] = useState([]);
@@ -586,8 +636,22 @@ const MatchWizardDialog = ({ open, onClose, groups, token }) => {
         const isWinner = results && Number(myScore) > Number(opponentScore);
 
         return (
-            <Paper variant="outlined" sx={{ p: 2, height: '100%', bgcolor: isWinner ? '#effdf5' : 'white', borderColor: isWinner ? 'success.main' : 'divider', borderWidth: isWinner ? 2 : 1 }}>
-                <Box sx={{ mb: 2, borderBottom: 1, borderColor: 'divider', pb: 1, display: 'flex', justifyContent: 'space-between' }}>
+            <Paper variant="outlined" sx={{
+                p: 2,
+                height: '100%',
+                bgcolor: isWinner ? (hideHeader ? 'rgba(76, 175, 80, 0.1)' : '#effdf5') : (hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white'),
+                borderColor: isWinner ? 'success.main' : (hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'divider'),
+                borderWidth: isWinner ? 2 : 1,
+                color: hideHeader ? 'white' : 'inherit'
+            }}>
+                <Box sx={{
+                    mb: 2,
+                    borderBottom: 1,
+                    borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'divider',
+                    pb: 1,
+                    display: 'flex',
+                    justifyContent: 'space-between'
+                }}>
                     <Typography variant="subtitle1" fontWeight="bold">{teamName}</Typography>
                     {results && (
                         <Chip label={`Score: ${myScore}`} color={isWinner ? "success" : "default"} variant={isWinner ? "filled" : "outlined"} />
@@ -598,7 +662,14 @@ const MatchWizardDialog = ({ open, onClose, groups, token }) => {
                         const isSel = selectedPlayers.includes(p.id);
                         const res = results?.details?.[p.id];
                         return (
-                            <Box key={p.id} sx={{ display: 'flex', alignItems: 'center', mb: 1, p: 1, borderRadius: 1, bgcolor: isSel ? 'rgba(0,0,0,0.02)' : 'transparent' }}>
+                            <Box key={p.id} sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                mb: 1,
+                                p: 1,
+                                borderRadius: 1,
+                                bgcolor: isSel ? (hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0,0,0,0.02)') : 'transparent'
+                            }}>
                                 <Checkbox checked={isSel} onChange={() => togglePlayer(p.id)} size="small" />
                                 <Avatar src={p.profile} sx={{ width: 30, height: 30, mr: 1, fontSize: 12 }}>{p.name[0]}</Avatar>
                                 <Box sx={{ flexGrow: 1 }}>
@@ -620,7 +691,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token }) => {
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="xl" fullWidth>
-            <DialogTitle sx={{ bgcolor: '#1e3a8a', color: 'white', display: 'flex', justifyContent: 'space-between' }}>
+            <DialogTitle sx={{ bgcolor: hideHeader ? '#111C44' : '#1e3a8a', color: 'white', display: 'flex', justifyContent: 'space-between' }}>
                 MATCH PREDICTION WIZARD
                 <IconButton onClick={onClose} sx={{ color: 'white' }}><CloseIcon /></IconButton>
             </DialogTitle>
@@ -673,7 +744,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token }) => {
 };
 
 // In UserDashboard component
-const UserDashboard = () => {
+const UserDashboard = ({ hideHeader = false }) => {
     const { logout, token } = useContext(AuthContext); // Destructure token
 
 
@@ -780,6 +851,13 @@ const UserDashboard = () => {
 
     // Fetch Data (Players & Groups)
     useEffect(() => {
+        const incrementView = async () => {
+            try {
+                await axios.post(`${baseUrl}/api/auth/increment-view`);
+            } catch (e) { console.error("Could not increment view", e); }
+        };
+        incrementView();
+
         const fetchData = async () => {
              try {
                 // Use token from Context first, then localStorage
@@ -819,7 +897,14 @@ const UserDashboard = () => {
 
     // Render Teams Section
     const renderTeams = () => (
-        <Paper sx={{ p: 2, mb: 3, borderRadius: 2 }} elevation={1}>
+        <Paper sx={{
+            p: 2,
+            mb: 3,
+            borderRadius: 2,
+            bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
+            backdropFilter: hideHeader ? 'blur(10px)' : 'none',
+            border: hideHeader ? '1px solid rgba(255, 255, 255, 0.1)' : 'none'
+        }} elevation={hideHeader ? 0 : 1}>
              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                 <Typography variant="h6" color="primary" fontWeight="bold">
                     <span className="mr-2">🏏</span>
@@ -846,7 +931,10 @@ const UserDashboard = () => {
                 <Grid container spacing={2}>
                     {groups.map(group => (
                         <Grid item xs={12} sm={6} md={4} key={group._id}>
-                            <Card variant="outlined" sx={{ bgcolor: '#f8fafc' }}>
+                            <Card variant="outlined" sx={{
+                                bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : '#f8fafc',
+                                borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'divider'
+                            }}>
                                 <CardContent>
                                     <Typography variant="subtitle1" fontWeight="bold">{group.name}</Typography>
                                     <Typography variant="caption" color="text.secondary">
@@ -919,22 +1007,35 @@ const UserDashboard = () => {
     };
 
     return (
-        <Box sx={{ minHeight: '100vh', bgcolor: '#f1f5f9' }}>
+        <Box sx={{
+            minHeight: '100vh',
+            bgcolor: hideHeader ? 'transparent' : '#f1f5f9',
+            color: hideHeader ? '#fff' : 'inherit'
+        }}>
              {/* Header */}
-            <AppBar position="sticky" sx={{ bgcolor: 'white', color: '#1e3a8a', boxShadow: 1 }}>
-                <Toolbar>
-                    <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 'bold', letterSpacing: -0.5, display: 'flex', alignItems: 'center' }}>
-                         <span className="text-royal-blue mr-2 text-2xl">⚛️</span>
-                         ASTRO CRICKET
-                         <Chip label="ADMIN DASHBOARD" size="small" sx={{ ml: 2, height: 20, fontSize: '0.65rem' }} />
-                    </Typography>
-                     <Button color="inherit" onClick={logout} sx={{ ml: 2, fontSize: '0.8rem' }}>Logout</Button>
-                </Toolbar>
-            </AppBar>
+            {!hideHeader && (
+                <AppBar position="sticky" sx={{ bgcolor: 'white', color: '#1e3a8a', boxShadow: 1 }}>
+                    <Toolbar>
+                        <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 'bold', letterSpacing: -0.5, display: 'flex', alignItems: 'center' }}>
+                            <span className="text-royal-blue mr-2 text-2xl">⚛️</span>
+                            ASTRO CRICKET
+                            <Chip label="ADMIN DASHBOARD" size="small" sx={{ ml: 2, height: 20, fontSize: '0.65rem' }} />
+                        </Typography>
+                        <Button color="inherit" onClick={logout} sx={{ ml: 2, fontSize: '0.8rem' }}>Logout</Button>
+                    </Toolbar>
+                </AppBar>
+            )}
 
             <Container maxWidth="xl" sx={{ mt: 4, pb: 8 }}>
                 {/* Search Bar */}
-                <Paper sx={{ p: 2, mb: 3, borderRadius: 2 }} elevation={0}>
+                <Paper sx={{
+                    p: 2,
+                    mb: 3,
+                    borderRadius: 2,
+                    bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
+                    backdropFilter: hideHeader ? 'blur(10px)' : 'none',
+                    border: hideHeader ? '1px solid rgba(255, 255, 255, 0.1)' : 'none'
+                }} elevation={hideHeader ? 0 : 1}>
                     <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                          {/* Selection Info */}
                         {selectedPlayerIds.length > 0 && (
@@ -953,7 +1054,12 @@ const UserDashboard = () => {
                                     </InputAdornment>
                                 ),
                             }}
-                            sx={{ bgcolor: '#f8fafc' }}
+                            sx={{
+                                bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : '#f8fafc',
+                                '& .MuiOutlinedInput-root': {
+                                    '& fieldset': { borderColor: hideHeader ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.23)' },
+                                }
+                            }}
                         />
                         <Button
                             variant={showPrediction ? "contained" : "outlined"}
@@ -977,7 +1083,14 @@ const UserDashboard = () => {
 
                 {/* Content Area */}
                 {renderTeams()}
-                <Paper sx={{ borderRadius: 2, overflow: 'hidden', boxShadow: 2 }}>
+                <Paper sx={{
+                    borderRadius: 2,
+                    overflow: 'hidden',
+                    boxShadow: hideHeader ? 'none' : 2,
+                    bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
+                    backdropFilter: hideHeader ? 'blur(10px)' : 'none',
+                    border: hideHeader ? '1px solid rgba(255, 255, 255, 0.1)' : 'none'
+                }}>
                     {loading ? (
                         <Box sx={{ p: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
                             <CircularProgress size={40} thickness={4} />
@@ -989,7 +1102,7 @@ const UserDashboard = () => {
                                 <Table stickyHeader>
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell padding="checkbox" sx={{ bgcolor: '#1e40af' }}>
+                                            <TableCell padding="checkbox" sx={{ bgcolor: hideHeader ? '#111C44' : '#1e40af' }}>
                                                 <Checkbox
                                                     color="default"
                                                     indeterminate={selectedPlayerIds.length > 0 && selectedPlayerIds.length < players.length}
@@ -1001,11 +1114,11 @@ const UserDashboard = () => {
                                                     sx={{ color: 'white!important' }}
                                                 />
                                             </TableCell>
-                                            <TableCell width="50" sx={{ bgcolor: '#1e40af', color: 'white' }} />
-                                            <TableCell sx={{ bgcolor: '#1e40af', color: 'white', fontWeight: 'bold' }}>PLAYER PROFILE</TableCell>
-                                            <TableCell sx={{ bgcolor: '#1e40af', color: 'white', fontWeight: 'bold' }}>BIRTH PLACE</TableCell>
-                                            <TableCell sx={{ bgcolor: '#1e40af', color: 'white', fontWeight: 'bold' }}>TIMEZONE</TableCell>
-                                            <TableCell sx={{ bgcolor: '#1e40af', color: 'white', fontWeight: 'bold' }}>
+                                            <TableCell width="50" sx={{ bgcolor: hideHeader ? '#111C44' : '#1e40af', color: 'white' }} />
+                                            <TableCell sx={{ bgcolor: hideHeader ? '#111C44' : '#1e40af', color: 'white', fontWeight: 'bold' }}>PLAYER PROFILE</TableCell>
+                                            <TableCell sx={{ bgcolor: hideHeader ? '#111C44' : '#1e40af', color: 'white', fontWeight: 'bold' }}>BIRTH PLACE</TableCell>
+                                            <TableCell sx={{ bgcolor: hideHeader ? '#111C44' : '#1e40af', color: 'white', fontWeight: 'bold' }}>TIMEZONE</TableCell>
+                                            <TableCell sx={{ bgcolor: hideHeader ? '#111C44' : '#1e40af', color: 'white', fontWeight: 'bold' }}>
                                                 {matchChart ? "PREDICTION RESULT (BAT / BOWL)" : "CHART SUMMARY"}
                                             </TableCell>
                                         </TableRow>
@@ -1026,6 +1139,7 @@ const UserDashboard = () => {
                                                             setChartPopupPlayer(p);
                                                             setChartPopupOpen(true);
                                                         }}
+                                                        hideHeader={hideHeader}
                                                     />
                                                 );
                                             })
@@ -1053,8 +1167,8 @@ const UserDashboard = () => {
                 </Paper>
 
                 {/* POPUPS */}
-                <ChartPopup open={chartPopupOpen} onClose={() => setChartPopupOpen(false)} player={chartPopupPlayer} />
-                <MatchWizardDialog open={matchWizardOpen} onClose={() => setMatchWizardOpen(false)} groups={groups} token={token} />
+                <ChartPopup open={chartPopupOpen} onClose={() => setChartPopupOpen(false)} player={chartPopupPlayer} hideHeader={hideHeader} />
+                <MatchWizardDialog open={matchWizardOpen} onClose={() => setMatchWizardOpen(false)} groups={groups} token={token} hideHeader={hideHeader} />
 
 
             </Container>

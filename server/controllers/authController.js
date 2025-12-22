@@ -3,6 +3,8 @@ const Player = require('../models/Player');
 const Group = require('../models/Group'); // Import Group model
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const GlobalStat = require('../models/GlobalStat');
+
 
 // Seed Super Admin (Optional, or handled via registration if not exists, but better to ensure)
 // For simplicity, we'll suggest a seed script or just handle it here if manual registration is expected or just "magic" login.
@@ -33,13 +35,20 @@ const getAdminStats = async (req, res) => {
 
         try { totalGroups = await Group.countDocuments(); } catch (e) { console.error("Group Count Failed", e); totalGroups = -1; }
 
-        console.log('Stats:', { totalUsers, pendingUsers, totalPlayers, totalGroups });
+        let totalViews = 0;
+        try {
+            const viewStat = await GlobalStat.findOne({ key: 'dashboard_views' });
+            totalViews = viewStat ? viewStat.value : 0;
+        } catch (e) { console.error("View Count Failed", e); }
+
+        console.log('Stats:', { totalUsers, pendingUsers, totalPlayers, totalGroups, totalViews });
 
         res.json({
             totalUsers,
             pendingUsers,
             totalPlayers,
-            totalGroups
+            totalGroups,
+            totalViews
         });
     } catch (err) {
         console.error('Error in getAdminStats (Global):', err);
@@ -175,6 +184,21 @@ const blockUser = async (req, res) => {
     }
 };
 
+// Increment Dashboard Views
+const incrementView = async (req, res) => {
+    try {
+        await GlobalStat.findOneAndUpdate(
+            { key: 'dashboard_views' },
+            { $inc: { value: 1 } },
+            { upsert: true, new: true }
+        );
+        res.status(200).send('Incremented');
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+};
+
 module.exports = {
     getAdminStats,
     register,
@@ -183,5 +207,6 @@ module.exports = {
     approveUser,
     getAllUsers,
     deleteUser,
-    blockUser
+    blockUser,
+    incrementView
 };

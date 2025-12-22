@@ -156,6 +156,8 @@ import GavelIcon from '@mui/icons-material/Gavel'; // Rules Icon
 import RasiChart from '../components/RasiChart';
 import PlanetaryTable from '../components/PlanetaryTable';
 import AuthContext from '../context/AuthContext';
+import UserDashboard from './UserDashboard';
+
 
 // Rules View Component (Tamil)
 const RulesView = () => {
@@ -318,7 +320,8 @@ const DashboardHome = () => {
         totalUsers: 0,
         pendingUsers: 0,
         totalPlayers: 0,
-        totalGroups: 0
+        totalGroups: 0,
+        totalViews: 0
     });
 
     useEffect(() => {
@@ -341,7 +344,8 @@ const DashboardHome = () => {
                 { label: 'Total Users', value: stats.totalUsers, icon: <PeopleIcon />, color: 'linear-gradient(135deg, #0075FF 0%, #2CD9FF 100%)' },
                 { label: 'Pending Users', value: stats.pendingUsers, icon: <GroupIcon />, color: 'linear-gradient(135deg, #FF0080 0%, #7928CA 100%)' },
                 { label: 'Total Players', value: stats.totalPlayers, icon: <SportsCricketIcon />, color: 'linear-gradient(135deg, #429321 0%, #B4EC51 100%)' },
-                { label: 'Total Groups', value: stats.totalGroups, icon: <DashboardIcon />, color: 'linear-gradient(135deg, #FF512F 0%, #DD2476 100%)' }
+                { label: 'Total Groups', value: stats.totalGroups, icon: <DashboardIcon />, color: 'linear-gradient(135deg, #FF512F 0%, #DD2476 100%)' },
+                { label: 'Total Views', value: stats.totalViews, icon: <DashboardIcon />, color: 'linear-gradient(135deg, #00B4D8 0%, #0077B6 100%)' }
             ].map((item, index) => (
                 <Grid item xs={12} sm={6} md={3} key={index}>
                     <Paper sx={{ p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -1478,6 +1482,13 @@ const AdminDashboard = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [currentView, setCurrentView] = useState('dashboard');
 
+    const [currentTime, setCurrentTime] = useState(new Date());
+
+    useEffect(() => {
+        const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+        return () => clearInterval(timer);
+    }, []);
+
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
@@ -1487,6 +1498,7 @@ const AdminDashboard = () => {
         { id: 'users', label: 'Users', icon: <PeopleIcon /> },
         { id: 'players', label: 'Players', icon: <SportsCricketIcon /> },
         { id: 'groups', label: 'Groups', icon: <GroupIcon /> },
+        { id: 'clientDashboard', label: 'Client Dashboard', icon: <DashboardIcon /> },
         { id: 'rules', label: 'Rules', icon: <GavelIcon /> },
     ];
 
@@ -1567,6 +1579,7 @@ const AdminDashboard = () => {
             case 'users': return <UsersManager />;
             case 'players': return <PlayersManager />;
             case 'groups': return <GroupsManager />;
+            case 'clientDashboard': return <UserDashboard hideHeader={true} />;
             case 'rules': return <RulesView />;
             default: return <DashboardHome />;
         }
@@ -1605,9 +1618,14 @@ const AdminDashboard = () => {
                         >
                             <MenuIcon />
                         </IconButton>
-                        <Typography variant="h6" noWrap component="div" sx={{ color: 'white' }}>
+                        <Typography variant="h6" noWrap component="div" sx={{ color: 'white', flexGrow: 1 }}>
                             {menuItems.find(i => i.id === currentView)?.label}
                         </Typography>
+                        {currentView === 'clientDashboard' && (
+                            <Typography variant="h6" sx={{ color: '#2CD9FF', fontWeight: 'bold' }}>
+                                {currentTime.toLocaleTimeString()}
+                            </Typography>
+                        )}
                     </Toolbar>
                 </AppBar>
 
