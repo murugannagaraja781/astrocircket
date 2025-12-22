@@ -710,43 +710,114 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                         </Paper>
                     </Grid>
 
-                    {/* TEAMS SELECTION */}
-                        <FormControl fullWidth size="small" sx={{
+                    {/* TEAMS SELECTION BOXES */}
+                    <Grid item xs={12} md={5}>
+                        <Paper sx={{
+                            p: 3,
                             bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
-                            borderRadius: 1,
-                            "& .MuiInputLabel-root": { color: hideHeader ? '#A0AEC0' : 'inherit' },
-                            "& .MuiOutlinedInput-root": {
-                                "& fieldset": { borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'inherit' },
-                                "&:hover fieldset": { borderColor: hideHeader ? '#0075FF' : 'inherit' },
-                                "&.Mui-focused fieldset": { borderColor: hideHeader ? '#0075FF' : 'inherit' },
-                                "& .MuiSelect-select": { color: hideHeader ? 'white' : 'inherit' }
+                            border: hideHeader ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e2e8f0',
+                            borderRadius: 3,
+                            textAlign: 'center',
+                            transition: 'all 0.3s ease',
+                            '&:hover': {
+                                boxShadow: hideHeader ? '0 0 20px rgba(0, 117, 255, 0.2)' : 3,
+                                borderColor: '#0075FF'
                             }
                         }}>
-                            <InputLabel>Select Team A</InputLabel>
-                            <Select value={teamA} label="Select Team A" onChange={(e) => setTeamA(e.target.value)}>
-                                {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
-                            </Select>
-                        </FormControl>
-                     <Grid item xs={12} md={4} sx={{ textAlign: 'center' }}>
-                        <Typography variant="h5" sx={{ mt: 1, color: '#94a3b8' }}>VS</Typography>
+                            <Typography variant="overline" sx={{ color: hideHeader ? '#A0AEC0' : 'text.secondary', fontWeight: 'bold', mb: 1, display: 'block' }}>
+                                TEAM A
+                            </Typography>
+                            <FormControl fullWidth size="medium" sx={{
+                                "& .MuiInputLabel-root": { color: hideHeader ? '#A0AEC0' : 'inherit' },
+                                "& .MuiOutlinedInput-root": {
+                                    "& fieldset": { borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'inherit' },
+                                    "& .MuiSelect-select": {
+                                        color: hideHeader ? 'white' : 'inherit',
+                                        fontSize: '1.2rem',
+                                        fontWeight: 'bold'
+                                    }
+                                }
+                            }}>
+                                <InputLabel>Select Team A</InputLabel>
+                                <Select
+                                    value={teamA}
+                                    label="Select Team A"
+                                    onChange={(e) => setTeamA(e.target.value)}
+                                >
+                                    {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
+                                </Select>
+                            </FormControl>
+                        </Paper>
                     </Grid>
-                    <Grid item xs={12} md={4}>
-                        <FormControl fullWidth size="small" sx={{
+
+                    <Grid item xs={12} md={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Box sx={{
+                            width: 60,
+                            height: 60,
+                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : '#f1f5f9',
+                            border: hideHeader ? '2px solid #0075FF' : '2px solid #1e40af',
+                            position: 'relative',
+                            '&::before, &::after': {
+                                content: '""',
+                                position: 'absolute',
+                                width: 40,
+                                height: '2px',
+                                bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : '#e2e8f0',
+                                top: '50%',
+                                transform: 'translateY(-50%)'
+                            },
+                            '&::before': { right: '100%', mr: 1 },
+                            '&::after': { left: '100%', ml: 1 }
+                        }}>
+                            <Typography variant="h5" sx={{
+                                fontWeight: 'bold',
+                                color: hideHeader ? '#2CD9FF' : '#1e3a8a',
+                                fontStyle: 'italic'
+                            }}>VS</Typography>
+                        </Box>
+                    </Grid>
+
+                    <Grid item xs={12} md={5}>
+                        <Paper sx={{
+                            p: 3,
                             bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
-                            borderRadius: 1,
-                            "& .MuiInputLabel-root": { color: hideHeader ? '#A0AEC0' : 'inherit' },
-                            "& .MuiOutlinedInput-root": {
-                                "& fieldset": { borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'inherit' },
-                                "&:hover fieldset": { borderColor: hideHeader ? '#0075FF' : 'inherit' },
-                                "&.Mui-focused fieldset": { borderColor: hideHeader ? '#0075FF' : 'inherit' },
-                                "& .MuiSelect-select": { color: hideHeader ? 'white' : 'inherit' }
+                            border: hideHeader ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e2e8f0',
+                            borderRadius: 3,
+                            textAlign: 'center',
+                            transition: 'all 0.3s ease',
+                            '&:hover': {
+                                boxShadow: hideHeader ? '0 0 20px rgba(0, 117, 255, 0.2)' : 3,
+                                borderColor: '#0075FF'
                             }
                         }}>
-                            <InputLabel>Select Team B</InputLabel>
-                            <Select value={teamB} label="Select Team B" onChange={(e) => setTeamB(e.target.value)}>
-                                {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
-                            </Select>
-                        </FormControl>
+                            <Typography variant="overline" sx={{ color: hideHeader ? '#A0AEC0' : 'text.secondary', fontWeight: 'bold', mb: 1, display: 'block' }}>
+                                TEAM B
+                            </Typography>
+                            <FormControl fullWidth size="medium" sx={{
+                                "& .MuiInputLabel-root": { color: hideHeader ? '#A0AEC0' : 'inherit' },
+                                "& .MuiOutlinedInput-root": {
+                                    "& fieldset": { borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'inherit' },
+                                    "& .MuiSelect-select": {
+                                        color: hideHeader ? 'white' : 'inherit',
+                                        fontSize: '1.2rem',
+                                        fontWeight: 'bold'
+                                    }
+                                }
+                            }}>
+                                <InputLabel>Select Team B</InputLabel>
+                                <Select
+                                    value={teamB}
+                                    label="Select Team B"
+                                    onChange={(e) => setTeamB(e.target.value)}
+                                >
+                                    {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
+                                </Select>
+                            </FormControl>
+                        </Paper>
                     </Grid>
 
                     {/* PLAYERS LISTS */}
