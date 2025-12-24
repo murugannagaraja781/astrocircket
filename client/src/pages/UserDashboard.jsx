@@ -10,7 +10,7 @@ import {
     Select, MenuItem, FormControl, InputLabel, Collapse, IconButton,
     Container, AppBar, Toolbar, Avatar, Chip, Grid, Card, CardContent, Button,
     CircularProgress, Tabs, Tab, Divider, useMediaQuery, useTheme,
-    Dialog, DialogTitle, DialogContent, DialogActions, Tooltip, Switch, Checkbox
+    Dialog, DialogTitle, DialogContent, DialogActions, Tooltip, Switch, Checkbox, Slide
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -789,6 +789,10 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
         setResults({ details: resDetails, scoreA: avgA, scoreB: avgB, totalA: scoreA, totalB: scoreB });
     };
 
+    // --- MOBILE RESPONSIVE HOOK ---
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
     const togglePlayer = (pid) => {
         if (selectedPlayers.includes(pid)) setSelectedPlayers(prev => prev.filter(id => id !== pid));
         else setSelectedPlayers(prev => [...prev, pid]);
@@ -804,7 +808,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
 
         return (
             <Paper variant="outlined" sx={{
-                p: 2,
+                p: isMobile ? 1 : 2,
                 height: '100%',
                 bgcolor: isWinner
                     ? (hideHeader ? 'rgba(76, 175, 80, 0.1)' : 'rgba(16, 185, 129, 0.1)')
@@ -825,12 +829,69 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                     justifyContent: 'space-between',
                     alignItems: 'center'
                 }}>
-                    <Typography variant="subtitle1" fontWeight="bold" sx={{ color: '#059669' }}>{teamName}</Typography>
+                    <Typography variant="subtitle1" fontWeight="bold" sx={{ color: '#059669', fontSize: isMobile ? '0.9rem' : '1rem' }}>{teamName}</Typography>
                     {results && (
-                        <Chip label={`Score: ${myScore}`} color={isWinner ? "success" : "default"} variant={isWinner ? "filled" : "outlined"} />
+                        <Chip label={`Score: ${myScore}`} color={isWinner ? "success" : "default"} variant={isWinner ? "filled" : "outlined"} size="small" />
                     )}
                 </Box>
 
+                {/* --- MOBILE VIEW (CARDS) --- */}
+                {isMobile ? (
+                    <Box sx={{ maxHeight: '60vh', overflowY: 'auto' }}>
+                        {/* Select All for Mobile */}
+                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, pl: 1 }}>
+                             <Checkbox
+                                size="small"
+                                indeterminate={
+                                    grp.players.some(p => selectedPlayers.includes(p.id)) &&
+                                    !grp.players.every(p => selectedPlayers.includes(p.id))
+                                }
+                                checked={grp.players.every(p => selectedPlayers.includes(p.id))}
+                                onChange={() => {
+                                    const allIds = grp.players.map(p => p.id);
+                                    if (allIds.every(id => selectedPlayers.includes(id))) {
+                                        setSelectedPlayers(prev => prev.filter(id => !allIds.includes(id)));
+                                    } else {
+                                        setSelectedPlayers(prev => [...new Set([...prev, ...allIds])]);
+                                    }
+                                }}
+                            />
+                            <Typography variant="caption" fontWeight="bold">Select All</Typography>
+                        </Box>
+
+                        {grp.players.map(p => {
+                            const isSel = selectedPlayers.includes(p.id);
+                            const res = results?.details?.[p.id];
+                            return (
+                                <Paper key={p.id} elevation={0} sx={{
+                                    p: 1.5, mb: 1,
+                                    border: '1px solid',
+                                    borderColor: isSel ? '#10B981' : 'rgba(0,0,0,0.1)',
+                                    bgcolor: isSel ? 'rgba(16, 185, 129, 0.05)' : 'white',
+                                    borderRadius: 2,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 1.5
+                                }} onClick={() => togglePlayer(p.id)}>
+                                    <Checkbox checked={isSel} size="small" sx={{ p:0 }} />
+                                    <Avatar src={p.profile} sx={{ width: 40, height: 40, fontSize: 14 }}>{p.name[0]}</Avatar>
+                                    <Box sx={{ flexGrow: 1 }}>
+                                        <Typography variant="subtitle2" fontWeight="bold" lineHeight={1.1} fontSize="0.85rem">{p.name}</Typography>
+                                        <Typography variant="caption" color="text.secondary" display="block" fontSize="0.7rem">{p.birthPlace || '-'}</Typography>
+                                        <Typography variant="caption" color="text.secondary" fontSize="0.7rem">{p.dob} | {p.birthTime}</Typography>
+                                    </Box>
+                                    {res && (
+                                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, alignItems: 'flex-end' }}>
+                                            <Chip label={`Bat:${res.bat.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bat.score >= 1 ? 'success' : 'default'} />
+                                            <Chip label={`Bowl:${res.bowl.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bowl.score >= 1 ? 'success' : 'default'} />
+                                        </Box>
+                                    )}
+                                </Paper>
+                            );
+                        })}
+                    </Box>
+                ) : (
+                /* --- DESKTOP VIEW (TABLE) --- */
                 <TableContainer sx={{ maxHeight: 400 }}>
                     <Table size="small" stickyHeader>
                         <TableHead>
@@ -913,25 +974,36 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                         </TableBody>
                     </Table>
                 </TableContainer>
+                )}
             </Paper>
         );
     };
 
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="xl" fullWidth>
+        <Dialog
+            open={open}
+            onClose={onClose}
+            maxWidth="xl"
+            fullWidth
+            fullScreen={isMobile} // Native full screen on mobile
+            TransitionComponent={isMobile ? Slide : undefined}
+        >
             <DialogTitle sx={{
                 bgcolor: visionPro.accent,
                 color: visionPro.text,
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                borderBottom: `1px solid ${visionPro.border}`
+                borderBottom: `1px solid ${visionPro.border}`,
+                p: isMobile ? 1.5 : 2
             }}>
-                <Typography variant="h6" fontWeight="900" sx={{ letterSpacing: 1 }}>MATCH PREDICTION WIZARD</Typography>
-                <IconButton onClick={onClose} sx={{ color: visionPro.text }}><CloseIcon /></IconButton>
+                <Typography variant={isMobile ? "subtitle1" : "h6"} fontWeight="900" sx={{ letterSpacing: 1 }}>
+                    {isMobile ? "MATCH WIZARD" : "MATCH PREDICTION WIZARD"}
+                </Typography>
+                <IconButton onClick={onClose} sx={{ color: visionPro.text, p: isMobile ? 0.5 : 1 }}><CloseIcon /></IconButton>
             </DialogTitle>
-            <DialogContent sx={{ bgcolor: visionPro.background, p: 3 }}>
-                <Grid container spacing={3}>
+            <DialogContent sx={{ bgcolor: visionPro.background, p: isMobile ? 1.5 : 3 }}>
+                <Grid container spacing={isMobile ? 1.5 : 3}>
                     {/* TOP: SETUP */}
                     <Grid item xs={12}>
                         <Paper sx={{
