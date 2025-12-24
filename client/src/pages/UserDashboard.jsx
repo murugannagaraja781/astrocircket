@@ -808,56 +808,111 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                 height: '100%',
                 bgcolor: isWinner
                     ? (hideHeader ? 'rgba(76, 175, 80, 0.1)' : 'rgba(16, 185, 129, 0.1)')
-                    : (hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.2)'),
+                    : (hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.02)'), // Slightly darker bg for visibility
                 borderColor: isWinner
                     ? (hideHeader ? 'success.main' : '#10B981')
-                    : (hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(167, 243, 208, 0.1)'),
+                    : (hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(167, 243, 208, 0.5)'),
                 borderWidth: isWinner ? 2 : 1,
                 borderRadius: '16px',
-                color: hideHeader ? 'white' : '#ECFDF5'
+                color: hideHeader ? 'white' : '#1F2937' // Darker text for table readability
             }}>
                 <Box sx={{
                     mb: 2,
                     borderBottom: 1,
-                    borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(167, 243, 208, 0.1)',
+                    borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(167, 243, 208, 1)',
                     pb: 1,
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center'
                 }}>
-                    <Typography variant="subtitle1" fontWeight="bold" sx={{ color: hideHeader ? 'white' : '#10B981' }}>{teamName}</Typography>
+                    <Typography variant="subtitle1" fontWeight="bold" sx={{ color: '#059669' }}>{teamName}</Typography>
                     {results && (
                         <Chip label={`Score: ${myScore}`} color={isWinner ? "success" : "default"} variant={isWinner ? "filled" : "outlined"} />
                     )}
                 </Box>
-                <Box sx={{ maxHeight: 400, overflowY: 'auto' }}>
-                    {grp.players.map(p => {
-                        const isSel = selectedPlayers.includes(p.id);
-                        const res = results?.details?.[p.id];
-                        return (
-                            <Box key={p.id} sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                mb: 1,
-                                p: 1,
-                                borderRadius: 1,
-                                bgcolor: isSel ? (hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0,0,0,0.02)') : 'transparent'
-                            }}>
-                                <Checkbox checked={isSel} onChange={() => togglePlayer(p.id)} size="small" />
-                                <Avatar src={p.profile} sx={{ width: 30, height: 30, mr: 1, fontSize: 12 }}>{p.name[0]}</Avatar>
-                                <Box sx={{ flexGrow: 1 }}>
-                                    <Typography variant="body2" fontWeight={isSel ? 'bold' : 'normal'}>{p.name}</Typography>
-                                    {res && (
-                                        <Box sx={{ display: 'flex', gap: 0.5, mt: 0.5 }}>
-                                            <Chip label={`Bat: ${res.bat.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bat.score >= 1 ? 'success' : 'default'} />
-                                            <Chip label={`Bowl: ${res.bowl.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bowl.score >= 1 ? 'success' : 'default'} />
-                                        </Box>
-                                    )}
-                                </Box>
-                            </Box>
-                        );
-                    })}
-                </Box>
+
+                <TableContainer sx={{ maxHeight: 400 }}>
+                    <Table size="small" stickyHeader>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell padding="checkbox" sx={{ bgcolor: 'transparent' }}>
+                                    <Checkbox
+                                        size="small"
+                                        indeterminate={
+                                            grp.players.some(p => selectedPlayers.includes(p.id)) &&
+                                            !grp.players.every(p => selectedPlayers.includes(p.id))
+                                        }
+                                        checked={grp.players.every(p => selectedPlayers.includes(p.id))}
+                                        onChange={() => {
+                                            const allIds = grp.players.map(p => p.id);
+                                            const allSelected = allIds.every(id => selectedPlayers.includes(id));
+                                            if (allSelected) {
+                                                setSelectedPlayers(prev => prev.filter(id => !allIds.includes(id)));
+                                            } else {
+                                                setSelectedPlayers(prev => [...new Set([...prev, ...allIds])]);
+                                            }
+                                        }}
+                                    />
+                                </TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>Name</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>ID</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>DOB / Time</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>Place</TableCell>
+                                {results && <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>Pred.</TableCell>}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {grp.players.map(p => {
+                                const isSel = selectedPlayers.includes(p.id);
+                                const res = results?.details?.[p.id];
+                                return (
+                                    <TableRow
+                                        key={p.id}
+                                        hover
+                                        onClick={() => togglePlayer(p.id)}
+                                        sx={{ cursor: 'pointer', bgcolor: isSel ? 'rgba(16, 185, 129, 0.08)' : 'inherit' }}
+                                    >
+                                        <TableCell padding="checkbox">
+                                            <Checkbox checked={isSel} size="small" />
+                                        </TableCell>
+                                        <TableCell>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                <Avatar src={p.profile} sx={{ width: 24, height: 24, fontSize: 10 }}>{p.name[0]}</Avatar>
+                                                <Typography variant="body2" fontWeight={isSel ? 'bold' : 'normal'}>
+                                                    {p.name}
+                                                </Typography>
+                                            </Box>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography variant="caption" color="text.secondary">{p.id}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                                <Typography variant="caption" sx={{ fontWeight: 'bold' }}>{p.dob}</Typography>
+                                                <Typography variant="caption" color="text.secondary">{p.birthTime}</Typography>
+                                             </Box>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography variant="caption" color="text.secondary" sx={{ maxWidth: 80, display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                                {p.birthPlace}
+                                            </Typography>
+                                        </TableCell>
+                                        {results && (
+                                            <TableCell>
+                                                {res ? (
+                                                     <Box sx={{ display: 'flex', gap: 0.5 }}>
+                                                        <Chip label={`B:${res.bat.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bat.score >= 1 ? 'success' : 'default'} />
+                                                        <Chip label={`Bo:${res.bowl.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bowl.score >= 1 ? 'success' : 'default'} />
+                                                    </Box>
+                                                ) : <Typography variant="caption">-</Typography>}
+                                            </TableCell>
+                                        )}
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </Paper>
         );
     };
@@ -913,9 +968,10 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                 "& .MuiOutlinedInput-root": {
                                     "& fieldset": { borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(16, 185, 129, 0.2)' },
                                     "& .MuiSelect-select": {
-                                        color: hideHeader ? 'white' : '#fff',
+                                        color: '#0b8f39',
                                         fontSize: '1.2rem',
-                                        fontWeight: '800'
+                                        fontWeight: '800',
+                                        textAlign: 'center'
                                     }
                                 }
                             }}>
@@ -984,9 +1040,10 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                 "& .MuiOutlinedInput-root": {
                                     "& fieldset": { borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(16, 185, 129, 0.2)' },
                                     "& .MuiSelect-select": {
-                                        color: hideHeader ? 'white' : '#fff',
+                                        color: '#0b8f39',
                                         fontSize: '1.2rem',
-                                        fontWeight: '800'
+                                        fontWeight: '800',
+                                        textAlign: 'center'
                                     }
                                 }
                             }}>
@@ -1005,6 +1062,9 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                     {/* PLAYERS LISTS */}
                     {teamA && teamB && (
                         <>
+                            <Grid item xs={12}>
+                                <Divider sx={{ my: 2, borderColor: visionPro.border, borderBottomWidth: 2 }} />
+                            </Grid>
                             <Grid item xs={12} md={6}>
                                 {renderPlayerList(teamA, groups.find(g => g._id === teamA)?.name)}
                             </Grid>

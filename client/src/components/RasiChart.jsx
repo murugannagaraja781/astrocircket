@@ -46,6 +46,52 @@ const planetShortTamilMap = {
     'Asc': 'ல', 'Lagna': 'ல'
 };
 
+
+
+export const planetFullTamilMap = {
+    'Sun': 'சூரியன்', 'Moon': 'சந்திரன்', 'Mars': 'செவ்வாய்', 'Mercury': 'புதன்',
+    'Jupiter': 'குரு', 'Venus': 'சுக்ரன்', 'Saturn': 'சனி', 'Rahu': 'ராகு', 'Ketu': 'கேது',
+    'Asc': 'லக்னம்', 'Lagna': 'லக்னம்'
+};
+
+export const tamilSigns = {
+    1: "மேஷம்", 2: "ரிஷபம்", 3: "மிதுனம்", 4: "கடகம்",
+    5: "சிம்மம்", 6: "கன்னி", 7: "துலாம்", 8: "விருச்சிகம்",
+    9: "தனுசு", 10: "மகரம்", 11: "கும்பம்", 12: "மீனம்"
+};
+
+export const signLords = {
+    1: "Mars", 2: "Venus", 3: "Mercury", 4: "Moon",
+    5: "Sun", 6: "Mercury", 7: "Venus", 8: "Mars",
+    9: "Jupiter", 10: "Saturn", 11: "Saturn", 12: "Jupiter"
+};
+
+export const signLordsTamil = {
+    "Mars": "செவ்வாய்", "Venus": "சுக்ரன்", "Mercury": "புதன்", "Moon": "சந்திரன்",
+    "Sun": "சூரியன்", "Jupiter": "குரு", "Saturn": "சனி"
+};
+
+export const nakshatraTamilMap = {
+    "Ashwini": "அசுவினி", "Bharani": "பரணி", "Krittika": "கார்த்திகை",
+    "Rohini": "ரோகிணி", "Mrigashirsha": "மிருகசீரிடம்", "Ardra": "திருவாதிரை",
+    "Punarvasu": "புனர்பூசம்", "Pushya": "பூசம்", "Ashlesha": "ஆயில்யம்",
+    "Magha": "மகம்", "Purva Phalguni": "பூரம்", "Uttara Phalguni": "உத்திரம்",
+    "Hasta": "அஸ்தம்", "Chitra": "சித்திரை", "Swati": "சுவாதி",
+    "Vishakha": "விசாகம்", "Anuradha": "அனுஷம்", "Jyeshtha": "கேட்டை",
+    "Mula": "மூலம்", "Purva Ashadha": "பூராடம்", "Uttara Ashadha": "உத்திராடம்",
+    "Shravana": "திருவோணம்", "Dhanishta": "அவிட்டம்", "Shatabhisha": "சதயம்",
+    "Purva Bhadrapada": "பூரட்டாதி", "Uttara Bhadrapada": "உத்திரட்டாதி", "Revati": "ரேவதி",
+    // Common alternative spellings
+    "Aswini": "அசுவினி", "Karthigai": "கார்த்திகை", "Mirugasirish": "மிருகசீரிடம்",
+    "Thiruvadhirai": "திருவாதிரை", "Punarpusam": "புனர்பூசம்", "Poosam": "பூசம்",
+    "Ayilyam": "ஆயில்யம்", "Makam": "மகம்", "Pooram": "பூரம்", "Uthiram": "உத்திரம்",
+    "Hastham": "அஸ்தம்", "Chithirai": "சித்திரை", "Swathi": "சுவாதி",
+    "Visakam": "விசாகம்", "Anusham": "அனுஷம்", "Kettai": "கேட்டை",
+    "Moolam": "மூலம்", "Pooradam": "பூராடம்", "Uthiradam": "உத்திராடம்",
+    "Thiruvonam": "திருவோணம்", "Avittam": "அவிட்டம்", "Sadhayam": "சதயம்",
+    "Poorattathi": "பூரட்டாதி", "Uthirattathi": "உத்திரட்டாதி"
+};
+
 const RasiChart = ({ data, style = {} }) => {
 
 
@@ -65,9 +111,17 @@ const RasiChart = ({ data, style = {} }) => {
     const timeStr = birthData.time || "";
 
     const getSignData = (signId) => {
-        if (!housesData) return null;
+        const signTamil = tamilSigns[signId];
+        // Use provided lord if available, else lookup
+        let lord = signLords[signId];
+
+        if (!housesData) {
+             return { planets: [], signNumber: signId, isAscendantSign: false, signTamil, lord };
+        }
+
         const houses = Object.values(housesData);
         const houseData = houses.find(h => h.signNumber === signId);
+
         if (houseData) {
             const rawPlanets = houseData.planets || [];
             const mappedPlanets = rawPlanets.map(pName => {
@@ -80,10 +134,12 @@ const RasiChart = ({ data, style = {} }) => {
             return {
                 planets: mappedPlanets,
                 signNumber: signId,
-                isAscendantSign: mappedPlanets.some(p => p.isAsc)
+                isAscendantSign: mappedPlanets.some(p => p.isAsc),
+                signTamil: houseData.signTamil || signTamil, // Prefer data if exists
+                lord: houseData.lord || lord
             };
         }
-        return { planets: [], signNumber: signId, isAscendantSign: false };
+        return { planets: [], signNumber: signId, isAscendantSign: false, signTamil, lord };
     };
 
     // Styles
@@ -185,7 +241,8 @@ const RasiChart = ({ data, style = {} }) => {
         fontSize: '9px',
         fontStyle: 'italic',
         fontWeight: 'bold',
-        color: '#4b5563' // lighter gray for less distraction
+        color: '#4b5563', // lighter gray for less distraction
+        zIndex: 5
     };
 
     const ascBorderBoxStyle = {
@@ -228,13 +285,12 @@ const RasiChart = ({ data, style = {} }) => {
                                 if (index === 5) {
                                     return (
                                         <div key="center" style={centerBoxStyle}>
-                                            <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', color: '#000' }}>
-                                                {formattedDate && <span style={{ fontSize: '10px', fontStyle: 'italic' }}>{formattedDate}</span>}
-                                                {timeStr && <span style={{ fontSize: '10px', fontStyle: 'italic', marginBottom: '4px' }}>{timeStr}</span>}
-                                                <span style={{ fontSize: '16px', fontStyle: 'italic', fontWeight: 'bold' }}>Rasi</span>
-                                                {nakshatraData.name && (
-                                                    <span style={{ fontSize: '11px', fontStyle: 'italic' }}>{nakshatraData.name}</span>
-                                                )}
+                                            <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px', color: '#000', fontSize: '10px', fontWeight: 'bold' }}>
+                                                    return (
+                                                        <div style={{textAlign: 'center'}}>
+                                                            <span style={{ fontSize: '16px', fontStyle: 'italic', fontWeight: 'bold' }}>இராசி கட்டம்</span>
+                                                        </div>
+                                                    );
                                             </div>
                                         </div>
                                     );
@@ -242,16 +298,40 @@ const RasiChart = ({ data, style = {} }) => {
                                 return null;
                             }
 
-                            const { planets, signNumber, isAscendantSign } = getSignData(signId) || { planets: [], signNumber: signId };
+                            const { planets, signNumber, isAscendantSign, signTamil, lord } = getSignData(signId);
 
                             return (
                                 <div key={signId} style={cellStyle}>
-                                    <span style={signNumStyle}>{signNumber}</span>
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: '2px',
+                                        left: '2px',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'flex-start',
+                                        pointerEvents: 'none'
+                                    }}>
+                                        <span style={signNumStyle}>{signNumber}</span>
+                                        <span style={{ fontSize: '8px', color: '#6b7280', marginTop: '10px' }}>{signTamil}</span>
+                                    </div>
+
                                     {isAscendantSign && <div style={ascBorderBoxStyle}></div>}
+
                                     <div style={planetsContainerStyle}>
                                         {planets.map((p, idx) => (
                                             <span key={idx} style={planetTextStyle}>{p.name}</span>
                                         ))}
+                                    </div>
+
+                                     <div style={{
+                                        position: 'absolute',
+                                        bottom: '2px',
+                                        right: '2px',
+                                        fontSize: '8px',
+                                        color: '#9ca3af',
+                                        pointerEvents: 'none'
+                                    }}>
+                                        {lord && lord.substring(0, 3)}
                                     </div>
                                 </div>
                             );
