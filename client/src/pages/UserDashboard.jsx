@@ -1151,8 +1151,134 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
     );
 };
 
+const PlayerMobileCard = ({ player, matchChart, isSelected, onSelect, onEdit, onViewChart, hideHeader = false }) => {
+    const [expanded, setExpanded] = useState(false);
+
+    // Summary info
+    const chart = player.birthChart?.data || player.birthChart;
+    const rasi = chart?.moonSign?.english || chart?.planets?.Moon?.sign || '-';
+
+    // Prediction Logic
+    let batResult = null;
+    let bowlResult = null;
+    if (matchChart && chart && isSelected) {
+        batResult = runPrediction(chart, matchChart.data || matchChart, "BAT");
+        bowlResult = runPrediction(chart, matchChart.data || matchChart, "BOWL");
+    }
+
+    return (
+        <Card sx={{
+            mb: 2,
+            borderRadius: 2,
+            bgcolor: isSelected ? 'rgba(16, 185, 129, 0.05)' : (hideHeader ? 'rgba(255,255,255,0.05)' : 'white'),
+            border: isSelected ? '1px solid #10B981' : (hideHeader ? '1px solid rgba(255,255,255,0.1)' : 'none'),
+            boxShadow: hideHeader ? 'none' : 1
+        }}>
+            <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
+                <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    {/* Checkbox */}
+                    <Checkbox
+                        checked={isSelected}
+                        onClick={(e) => { e.stopPropagation(); onSelect(player.id); }}
+                        size="small"
+                        sx={{ p: 0 }}
+                    />
+
+                    {/* Avatar */}
+                     <Avatar
+                        src={player.profile}
+                        sx={{
+                            width: 48, height: 48,
+                            bgcolor: hideHeader ? visionPro.primary : '#10B981',
+                            fontSize: '1.2rem',
+                            border: '2px solid rgba(16, 185, 129, 0.2)'
+                        }}
+                    >
+                        {player.name ? player.name[0] : '?'}
+                    </Avatar>
+
+                    {/* Info */}
+                    <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                            <Box>
+                                <Typography variant="subtitle1" fontWeight="bold" noWrap>
+                                    {player.name} {getFlag(player)}
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary" display="block" noWrap>
+                                    {player.birthPlace || 'Unknown'}
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary">
+                                    {player.dob} | {player.birthTime}
+                                </Typography>
+                            </Box>
+                            <IconButton
+                                size="small"
+                                onClick={() => setExpanded(!expanded)}
+                                sx={{
+                                    transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                                    transition: 'transform 0.2s',
+                                    color: visionPro.primary
+                                }}
+                            >
+                                <KeyboardArrowDownIcon />
+                            </IconButton>
+                        </Box>
+                    </Box>
+                </Box>
+
+                {/* Actions Row */}
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2, pt: 2, borderTop: '1px solid', borderColor: 'divider' }}>
+                     <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Button
+                            size="small"
+                            startIcon={<span style={{ fontSize: 14 }}>✏️</span>}
+                            onClick={() => onEdit(player)}
+                            sx={{ color: 'text.secondary', fontSize: '0.75rem', minWidth: 0 }}
+                        >
+                            Edit
+                        </Button>
+                        <Button
+                            size="small"
+                            startIcon={<GridOnIcon sx={{ fontSize: 16 }} />}
+                            onClick={() => onViewChart(player)}
+                            sx={{ color: visionPro.primary, fontSize: '0.75rem', minWidth: 0 }}
+                        >
+                            Chart
+                        </Button>
+                     </Box>
+
+                     {/* Prediction / Rasi Chip */}
+                    {matchChart && isSelected ? (
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                            <Chip label={`Bat:${batResult?.score || 0}`} size="small" color={batResult?.score > 0 ? "success" : "default"} variant="outlined" sx={{ height: 20, fontSize: '0.65rem' }} />
+                            <Chip label={`Bowl:${bowlResult?.score || 0}`} size="small" color={bowlResult?.score > 0 ? "success" : "default"} variant="outlined" sx={{ height: 20, fontSize: '0.65rem' }} />
+                        </Box>
+                    ) : (
+                         <Chip
+                            label={`Rasi: ${rasi}`}
+                            size="small"
+                            color={rasi !== '-' ? "primary" : "default"}
+                            variant={rasi !== '-' ? "outlined" : "filled"}
+                            sx={{ height: 24, fontSize: '0.7rem' }}
+                        />
+                    )}
+                </Box>
+
+                {/* Expanded Details */}
+                <Collapse in={expanded} timeout="auto" unmountOnExit>
+                    <Box sx={{ mt: 2 }}>
+                        <PlayerDetailPanel player={player} matchChart={matchChart} hideHeader={hideHeader} />
+                    </Box>
+                </Collapse>
+            </CardContent>
+        </Card>
+    );
+};
+
 const UserDashboard = ({ hideHeader = false }) => {
-    const { logout, token } = useContext(AuthContext); // Destructure token
+    const { logout, token } = useContext(AuthContext);
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
 
     const [players, setPlayers] = useState([]);
@@ -1585,6 +1711,46 @@ const UserDashboard = ({ hideHeader = false }) => {
                         </Box>
                     ) : (
                         <>
+                            {isMobile ? (
+                                <Box sx={{ p: 2, bgcolor: hideHeader ? 'transparent' : '#f8fafc' }}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, justifyContent: 'space-between' }}>
+                                         <Typography variant="subtitle2" color="text.secondary">
+                                            {paginatedPlayers.length} Players Found
+                                         </Typography>
+                                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                            <Checkbox
+                                                checked={players.length > 0 && selectedPlayerIds.length === players.length}
+                                                indeterminate={selectedPlayerIds.length > 0 && selectedPlayerIds.length < players.length}
+                                                onChange={handleSelectAllClick}
+                                                size="small"
+                                            />
+                                            <Typography variant="caption" fontWeight="bold">Select All</Typography>
+                                         </Box>
+                                    </Box>
+
+                                    {paginatedPlayers.length > 0 ? (
+                                        paginatedPlayers.map(player => (
+                                            <PlayerMobileCard
+                                                key={player._id || player.id}
+                                                player={player}
+                                                matchChart={matchChart}
+                                                isSelected={isSelected(player.id)}
+                                                onSelect={handleSelectClick}
+                                                onEdit={handleEditClick}
+                                                onViewChart={(p) => {
+                                                    setChartPopupPlayer(p);
+                                                    setChartPopupOpen(true);
+                                                }}
+                                                hideHeader={hideHeader}
+                                            />
+                                        ))
+                                    ) : (
+                                        <Typography align="center" color="text.secondary" sx={{ py: 4 }}>
+                                            No players found
+                                        </Typography>
+                                    )}
+                                </Box>
+                            ) : (
                             <TableContainer sx={{ maxHeight: '70vh' }}>
                                 <Table stickyHeader>
                                     <TableHead>
@@ -1639,6 +1805,7 @@ const UserDashboard = ({ hideHeader = false }) => {
                                     </TableBody>
                                 </Table>
                             </TableContainer>
+                            )}
                             <TablePagination
                                 rowsPerPageOptions={[11, 25, 50, 100]}
                                 component="div"
