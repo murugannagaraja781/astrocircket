@@ -74,19 +74,25 @@ export const runPrediction = (playerChart, matchChart, role = "BAT") => {
     if (!player || !match) return null;
 
     let engineOutput;
-    if (role === "BOWL") {
+    const isBowling = role === "BOWL";
+
+    if (isBowling) {
         engineOutput = evaluateBowler(player, match, transit);
     } else {
         engineOutput = evaluateBatsman(player, match, transit);
     }
 
-    const finalResult = getFinalResult(engineOutput.score);
+    const finalResult = getFinalResult(engineOutput.score, isBowling);
 
     return {
         score: engineOutput.score,
         logs: engineOutput.logs,
         verdict: finalResult.verdict,
+        verdictTamil: finalResult.verdictTamil,
         message: finalResult.message,
-        confidence: finalResult.confidence
+        confidence: finalResult.confidence,
+        color: finalResult.color,
+        // Rule 2 flag for UI to show special split indicator
+        isRule2Split: engineOutput.rule2Applied || (isBowling && engineOutput.score <= -5)
     };
 };
