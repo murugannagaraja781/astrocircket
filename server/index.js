@@ -32,9 +32,20 @@ app.use('/api/players', require('./routes/players'));
 app.use('/api/groups', groupRoutes);
 
 // Database Connection
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('MongoDB connected'))
-    .catch(err => console.log(err));
+// Database Connection
+const connectDB = async () => {
+    if (mongoose.connection.readyState >= 1) {
+        return;
+    }
+    try {
+        await mongoose.connect(process.env.MONGO_URI);
+        console.log('MongoDB connected');
+    } catch (err) {
+        console.error('MongoDB connection error:', err);
+    }
+};
+
+connectDB();
 
 app.get('/', (req, res) => {
     res.send('API is running');
