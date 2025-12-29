@@ -167,6 +167,26 @@ export function evaluateBatsman(player, match, transit) {
     }
 
     // ═══════════════════════════════════════════════════════════════════
+    // RULE 4 – Batting Special (New) - அதிபதி வீட்டில் ராகு/கேது/கிரகங்கள்
+    // ═══════════════════════════════════════════════════════════════════
+    // "அதிபதி வீட்டில் player ராசி அதிபதி மற்றும் நட்சத்திராதிபதி இருந்தால் நன்று"
+    // Interpretation: If Player Rasi Lord AND Player Star Lord are in Match Star Lord's House.
+    if (match.nakshatraLord && playerRashiLordPos && playerStarLordPos) {
+        // Helper to check if a sign belongs to a lord
+        const isSignOwnedBy = (sign, lord) => {
+            return OWN_SIGNS[lord] && OWN_SIGNS[lord].includes(sign);
+        };
+
+        const rasiLordInHouse = isSignOwnedBy(playerRashiLordPos, match.nakshatraLord);
+        const starLordInHouse = isSignOwnedBy(playerStarLordPos, match.nakshatraLord);
+
+        if (rasiLordInHouse && starLordInHouse) {
+            score += 2;
+            logs.push(`Rule 4: மேட்ச் நட்சத்திர அதிபதி (${match.nakshatraLord}) வீட்டில் பிளேயர் ராசி அதிபதி & நட்சத்திர அதிபதி → GOOD`);
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
     // RULE 2 – Batting / Bowling Split Rule - ராசி + நட்சத்திரம் ஒன்றாக
     // ═══════════════════════════════════════════════════════════════════
     if (player.rashi === match.rashi && player.nakshatra === match.nakshatra) {
