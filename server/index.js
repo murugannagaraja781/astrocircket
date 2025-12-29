@@ -23,7 +23,18 @@ app.use(cors({
 }));
 app.use(express.json());
 // Serve static uploads
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Serve static uploads (Only if directory exists, to avoid Vercel crashes)
+const fs = require('fs');
+const uploadDir = path.join(__dirname, 'uploads');
+if (fs.existsSync(uploadDir)) {
+    app.use('/uploads', express.static(uploadDir));
+}
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+    console.error('Server Error:', err.stack);
+    res.status(500).json({ message: 'Internal Server Error', error: err.message });
+});
 
 // Routes
 app.use('/api/auth', authRoutes);
