@@ -721,6 +721,14 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
     const [selectedPlayers, setSelectedPlayers] = useState([]);
     const [matchChart, setMatchChart] = useState(null);
     const [results, setResults] = useState(null);
+    const [matchDetails, setMatchDetails] = useState({
+        date: new Date().toISOString().split('T')[0],
+        time: '19:30',
+        location: 'Mumbai',
+        lat: 19.076,
+        long: 72.877,
+        timezone: 5.5
+    });
 
     // Reset when opening or teams change
     useEffect(() => {
@@ -983,170 +991,250 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
         <Dialog
             open={open}
             onClose={onClose}
-            maxWidth="xl"
-            fullWidth
-            fullScreen={isMobile} // Native full screen on mobile
-            TransitionComponent={isMobile ? Slide : undefined}
+            fullScreen
+            TransitionComponent={Slide}
         >
-            <DialogTitle sx={{
-                bgcolor: visionPro.accent,
-                color: visionPro.text,
+            {/* APP BAR - MATCH PREDICTION SETUP */}
+            <AppBar position="static" sx={{ bgcolor: '#059669', backgroundImage: 'linear-gradient(to right, #059669, #10B981)' }}>
+                <Toolbar sx={{ gap: 1, py: 0.5 }}>
+                    <SportsCricketIcon />
+                    <Typography variant="subtitle1" fontWeight="900" sx={{ mr: 1 }}>
+                        MATCH PREDICTION
+                    </Typography>
+
+                    {/* Match Setup - Using MatchPredictionControl */}
+                    <Box sx={{ flexGrow: 1 }}>
+                        <MatchPredictionControl
+                            onPredictionComplete={handleMatchReady}
+                            token={token}
+                        />
+                    </Box>
+
+                    <IconButton onClick={onClose} sx={{ color: 'white' }}>
+                        <CloseIcon />
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
+
+            {/* CENTERED TEAM SELECTION */}
+            <Box sx={{
                 display: 'flex',
-                justifyContent: 'space-between',
                 alignItems: 'center',
-                borderBottom: `1px solid ${visionPro.border}`,
-                p: isMobile ? 1.5 : 2
+                justifyContent: 'center',
+                gap: 2,
+                py: 1.5,
+                px: 2,
+                bgcolor: visionPro.paper,
+                borderBottom: `1px solid ${visionPro.border}`
             }}>
-                <Typography variant={isMobile ? "subtitle1" : "h6"} fontWeight="900" sx={{ letterSpacing: 1 }}>
-                    {isMobile ? "MATCH WIZARD" : "MATCH PREDICTION WIZARD"}
-                </Typography>
-                <IconButton onClick={onClose} sx={{ color: visionPro.text, p: isMobile ? 0.5 : 1 }}><CloseIcon /></IconButton>
-            </DialogTitle>
-            <DialogContent sx={{ bgcolor: visionPro.background, p: isMobile ? 1.5 : 3 }}>
-                <Grid container spacing={isMobile ? 1.5 : 3}>
-                    {/* TOP: SETUP */}
-                    <Grid item xs={12}>
-                        <Paper sx={{
-                            p: 2,
-                            bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : visionPro.paper,
-                            color: hideHeader ? 'white' : visionPro.text,
-                            border: `1px solid ${hideHeader ? 'rgba(255, 255, 255, 0.1)' : visionPro.border}`,
-                            borderRadius: '16px'
-                        }}>
-                            <Typography variant="subtitle2" gutterBottom fontWeight="bold" sx={{ color: hideHeader ? visionPro.secondary : visionPro.primary }}>1. Match Setup</Typography>
-                            <MatchPredictionControl onPredictionComplete={handleMatchReady} token={token} />
-                        </Paper>
-                    </Grid>
+                <FormControl size="small" sx={{ minWidth: 180 }}>
+                    <InputLabel>TEAM A</InputLabel>
+                    <Select
+                        value={teamA}
+                        label="TEAM A"
+                        onChange={(e) => setTeamA(e.target.value)}
+                        sx={{ '& .MuiSelect-select': { fontWeight: 'bold', color: '#059669' } }}
+                    >
+                        {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
+                    </Select>
+                </FormControl>
 
-                    {/* TEAMS SELECTION BOXES */}
-                    <Grid item xs={12} md={5}>
-                        <Paper sx={{
-                            p: 3,
-                            bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
-                            border: hideHeader ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #e2e8f0',
-                            borderRadius: 3,
-                            textAlign: 'center',
-                            transition: 'all 0.3s ease',
-                            '&:hover': {
-                                boxShadow: hideHeader ? '0 0 20px rgba(0, 117, 255, 0.2)' : 3,
-                                borderColor: visionPro.primary
-                            }
-                        }}>
-                            <Typography variant="overline" sx={{ color: hideHeader ? '#A0AEC0' : 'text.secondary', fontWeight: 'bold', mb: 1, display: 'block' }}>
-                                TEAM A
-                            </Typography>
-                            <FormControl fullWidth size="medium" sx={{
-                                "& .MuiInputLabel-root": { color: hideHeader ? '#A0AEC0' : visionPro.primary },
-                                "& .MuiOutlinedInput-root": {
-                                    "& fieldset": { borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(16, 185, 129, 0.2)' },
-                                    "& .MuiSelect-select": {
-                                        color: '#0b8f39',
-                                        fontSize: '1.2rem',
-                                        fontWeight: '800',
-                                        textAlign: 'center'
-                                    }
-                                }
-                            }}>
-                                <InputLabel>Select Team A</InputLabel>
-                                <Select
-                                    value={teamA}
-                                    label="Select Team A"
-                                    onChange={(e) => setTeamA(e.target.value)}
-                                >
-                                    {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
-                                </Select>
-                            </FormControl>
-                        </Paper>
-                    </Grid>
+                <Box sx={{
+                    width: 45, height: 45, borderRadius: '50%',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    bgcolor: visionPro.primary, color: 'white',
+                    boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)'
+                }}>
+                    <Typography variant="subtitle1" fontWeight="900">VS</Typography>
+                </Box>
 
-                    <Grid item xs={12} md={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Box sx={{
-                            width: 60,
-                            height: 60,
-                            borderRadius: '50%',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            bgcolor: visionPro.paper,
-                            border: `2px solid ${visionPro.primary}`,
-                            boxShadow: `0 0 15px rgba(16, 185, 129, 0.2)`,
-                            position: 'relative',
-                            '&::before, &::after': {
-                                content: '""',
-                                position: 'absolute',
-                                width: 40,
-                                height: '2px',
-                                bgcolor: visionPro.border,
-                                top: '50%',
-                                transform: 'translateY(-50%)'
-                            },
-                            '&::before': { right: '100%', mr: 1 },
-                            '&::after': { left: '100%', ml: 1 }
-                        }}>
-                            <Typography variant="h5" sx={{
-                                fontWeight: '900',
-                                color: hideHeader ? visionPro.secondary : visionPro.primary,
-                                fontStyle: 'italic'
-                            }}>VS</Typography>
+                <FormControl size="small" sx={{ minWidth: 180 }}>
+                    <InputLabel>TEAM B</InputLabel>
+                    <Select
+                        value={teamB}
+                        label="TEAM B"
+                        onChange={(e) => setTeamB(e.target.value)}
+                        sx={{ '& .MuiSelect-select': { fontWeight: 'bold', color: '#059669' } }}
+                    >
+                        {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
+                    </Select>
+                </FormControl>
+            </Box>
+
+            {/* SIDE BY SIDE PLAYER TABLES */}
+            <Box sx={{
+                flexGrow: 1,
+                display: 'flex',
+                gap: 1,
+                p: 1,
+                overflow: 'hidden',
+                height: 'calc(100vh - 130px)'
+            }}>
+                {teamA && teamB ? (
+                    <>
+                        {/* TEAM A - LEFT */}
+                        <Box sx={{ flex: 1, overflow: 'auto' }}>
+                            {renderPlayerList(teamA, groups.find(g => g._id === teamA)?.name)}
                         </Box>
-                    </Grid>
+                        {/* TEAM B - RIGHT */}
+                        <Box sx={{ flex: 1, overflow: 'auto' }}>
+                            {renderPlayerList(teamB, groups.find(g => g._id === teamB)?.name)}
+                        </Box>
+                    </>
+                ) : (
+                    <Box sx={{
+                        flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        flexDirection: 'column', gap: 2, color: 'text.secondary'
+                    }}>
+                        <SportsCricketIcon sx={{ fontSize: 80, opacity: 0.3 }} />
+                        <Typography variant="h6" color="text.secondary">Select both teams to view players</Typography>
+                        <Typography variant="body2" color="text.secondary">இரண்டு அணிகளையும் தேர்வு செய்யவும்</Typography>
+                    </Box>
+                )}
+            </Box>
 
-                    <Grid item xs={12} md={5}>
-                        <Paper sx={{
-                            p: 3,
-                            bgcolor: 'white',
-                            border: `1px solid ${visionPro.border}`,
-                            borderRadius: '24px',
-                            textAlign: 'center',
-                            transition: 'all 0.3s ease',
-                            '&:hover': {
-                                boxShadow: `0 0 20px rgba(16, 185, 129, 0.1)`,
-                                borderColor: visionPro.primary
-                            }
-                        }}>
-                            <Typography variant="overline" sx={{ color: hideHeader ? '#A0AEC0' : 'text.secondary', fontWeight: 'bold', mb: 1, display: 'block' }}>
-                                TEAM B
-                            </Typography>
-                            <FormControl fullWidth size="medium" sx={{
-                                "& .MuiInputLabel-root": { color: hideHeader ? '#A0AEC0' : visionPro.primary },
-                                "& .MuiOutlinedInput-root": {
-                                    "& fieldset": { borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(16, 185, 129, 0.2)' },
-                                    "& .MuiSelect-select": {
-                                        color: '#0b8f39',
-                                        fontSize: '1.2rem',
-                                        fontWeight: '800',
-                                        textAlign: 'center'
-                                    }
-                                }
-                            }}>
-                                <InputLabel>Select Team B</InputLabel>
-                                <Select
-                                    value={teamB}
-                                    label="Select Team B"
-                                    onChange={(e) => setTeamB(e.target.value)}
-                                >
-                                    {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
-                                </Select>
-                            </FormControl>
+            {/* MATCH CHART POPUP */}
+            {matchChart && (
+                <Dialog
+                    open={!!matchChart}
+                    onClose={() => setMatchChart(null)}
+                    maxWidth="lg"
+                    fullWidth
+                    PaperProps={{ sx: { borderRadius: 2 } }}
+                >
+                    <DialogTitle sx={{
+                        bgcolor: '#059669',
+                        color: 'white',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        py: 1
+                    }}>
+                        <Typography variant="subtitle1" fontWeight="bold">
+                            📊 Match Chart - {matchDetails.date} {matchDetails.time} | {matchDetails.location}
+                        </Typography>
+                        <IconButton onClick={() => setMatchChart(null)} size="small" sx={{ color: 'white' }}>
+                            <CloseIcon fontSize="small" />
+                        </IconButton>
+                    </DialogTitle>
+                    <DialogContent sx={{ p: 2, bgcolor: '#f8fafc' }}>
+                        {/* Dignity Summary with Colors */}
+                        <Box sx={{ mb: 2 }}>
+                            <Typography variant="subtitle2" fontWeight="bold" gutterBottom>கிரக பலன் சுருக்கம்</Typography>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                                {Object.entries(matchChart.planets || {}).map(([planet, data]) => (
+                                    <Chip
+                                        key={planet}
+                                        label={`${planet}: ${data.dignityTamil}`}
+                                        size="small"
+                                        sx={{
+                                            bgcolor: data.dignityColor || '#708090',
+                                            color: 'white',
+                                            fontWeight: 'bold',
+                                            fontSize: '0.75rem'
+                                        }}
+                                    />
+                                ))}
+                            </Box>
+                        </Box>
+
+                        {/* Planet Details Table */}
+                        <Paper sx={{ overflow: 'auto' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem' }}>
+                                <thead>
+                                    <tr style={{ background: '#059669', color: 'white' }}>
+                                        <th style={{ padding: 8 }}>கிரகம்</th>
+                                        <th style={{ padding: 8 }}>ராசி</th>
+                                        <th style={{ padding: 8 }}>நட்சத்திரம்</th>
+                                        <th style={{ padding: 8 }}>பாதம்</th>
+                                        <th style={{ padding: 8 }}>நிலை</th>
+                                        <th style={{ padding: 8 }}>டிகிரி</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {Object.entries(matchChart.planets || {}).map(([planet, data]) => (
+                                        <tr key={planet} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                                            <td style={{ padding: 8, fontWeight: 'bold' }}>{planet}</td>
+                                            <td style={{ padding: 8 }}>{data.signTamil} ({data.sign})</td>
+                                            <td style={{ padding: 8 }}>{data.nakshatraTamil}</td>
+                                            <td style={{ padding: 8, textAlign: 'center' }}>{data.pada}</td>
+                                            <td style={{
+                                                padding: 8,
+                                                color: data.dignityColor,
+                                                fontWeight: 'bold',
+                                                backgroundColor: `${data.dignityColor}20`
+                                            }}>
+                                                {data.dignityTamil}
+                                            </td>
+                                            <td style={{ padding: 8 }}>{data.formattedDegree}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </Paper>
-                    </Grid>
 
-                    {/* PLAYERS LISTS */}
-                    {teamA && teamB && (
-                        <>
-                            <Grid item xs={12}>
-                                <Divider sx={{ my: 2, borderColor: visionPro.border, borderBottomWidth: 2 }} />
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                {renderPlayerList(teamA, groups.find(g => g._id === teamA)?.name)}
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                {renderPlayerList(teamB, groups.find(g => g._id === teamB)?.name)}
-                            </Grid>
-                        </>
-                    )}
-                </Grid>
-            </DialogContent>
+                        {/* RASI CHART WITH DIGNITY COLORS */}
+                        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
+                            <Box sx={{
+                                border: '2px solid #059669',
+                                borderRadius: 2,
+                                p: 1,
+                                bgcolor: '#fff',
+                                boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                            }}>
+                                <Typography variant="caption" fontWeight="bold" sx={{ display: 'block', textAlign: 'center', mb: 1 }}>
+                                    📊 இராசி கட்டம் (Dignity Colors)
+                                </Typography>
+                                <RasiChart
+                                    data={(() => {
+                                        // Transform planets data to houses format
+                                        if (!matchChart.planets) return {};
+
+                                        // Sign name to number mapping
+                                        const signToNum = {
+                                            'Aries': 1, 'Taurus': 2, 'Gemini': 3, 'Cancer': 4,
+                                            'Leo': 5, 'Virgo': 6, 'Libra': 7, 'Scorpio': 8,
+                                            'Sagittarius': 9, 'Capricorn': 10, 'Aquarius': 11, 'Pisces': 12
+                                        };
+
+                                        // Build houses with planets
+                                        const houses = {};
+                                        for (let i = 1; i <= 12; i++) {
+                                            houses[i] = { signNumber: i, planets: [], lord: '' };
+                                        }
+
+                                        // Add Lagna/Ascendant
+                                        if (matchChart.ascendant) {
+                                            const lagnaSign = signToNum[matchChart.ascendant.name] || 1;
+                                            houses[lagnaSign].planets.push('Lagna');
+                                        }
+
+                                        // Add planets to their signs
+                                        Object.entries(matchChart.planets).forEach(([planet, data]) => {
+                                            const signNum = signToNum[data.sign];
+                                            if (signNum && houses[signNum]) {
+                                                houses[signNum].planets.push(planet);
+                                            }
+                                        });
+
+                                        return { houses };
+                                    })()}
+                                    planetsData={matchChart.planets}
+                                    style={{ width: '280px' }}
+                                />
+                            </Box>
+                        </Box>
+
+                        {/* Lagna Info */}
+                        <Box sx={{ mt: 2, p: 1.5, bgcolor: '#ecfdf5', borderRadius: 1, border: '1px solid #059669' }}>
+                            <Typography variant="body2" fontWeight="bold">
+                                🏠 லக்னம்: {matchChart.ascendant?.tamil} ({matchChart.ascendant?.name}) |
+                                ⭐ நட்சத்திரம்: {matchChart.ascendant?.nakshatra?.tamil}
+                            </Typography>
+                        </Box>
+                    </DialogContent>
+                </Dialog>
+            )}
         </Dialog>
     );
 };

@@ -92,7 +92,7 @@ export const nakshatraTamilMap = {
     "Poorattathi": "பூரட்டாதி", "Uthirattathi": "உத்திரட்டாதி"
 };
 
-const RasiChart = ({ data, style = {} }) => {
+const RasiChart = ({ data, style = {}, planetsData = null }) => {
 
 
     const chartData = (data && Object.keys(data).length > 0) ? data : { houses: DEFAULT_DATA, birthData: {}, moonNakshatra: {} };
@@ -109,6 +109,16 @@ const RasiChart = ({ data, style = {} }) => {
 
     const formattedDate = formatDate(birthData.date);
     const timeStr = birthData.time || "";
+
+    // Get planet dignity color from planetsData
+    const getPlanetColor = (planetName) => {
+        if (!planetsData) return '#000';
+        const pData = planetsData[planetName];
+        if (pData && pData.dignityColor) {
+            return pData.dignityColor;
+        }
+        return '#000'; // default black
+    };
 
     const getSignData = (signId) => {
         const signTamil = tamilSigns[signId];
@@ -129,7 +139,9 @@ const RasiChart = ({ data, style = {} }) => {
                 const nameKey = isAsc ? 'Asc' : pName;
                 // Use Tamil Short Map
                 const displayName = planetShortTamilMap[nameKey] || nameKey.substring(0, 2);
-                return { name: displayName, isAsc: isAsc };
+                // Get dignity color
+                const color = isAsc ? '#dc2626' : getPlanetColor(pName);
+                return { name: displayName, isAsc: isAsc, color: color, fullName: pName };
             });
             return {
                 planets: mappedPlanets,
@@ -319,7 +331,17 @@ const RasiChart = ({ data, style = {} }) => {
 
                                     <div style={planetsContainerStyle}>
                                         {planets.map((p, idx) => (
-                                            <span key={idx} style={planetTextStyle}>{p.name}</span>
+                                            <span
+                                                key={idx}
+                                                style={{
+                                                    ...planetTextStyle,
+                                                    color: p.color || '#000',
+                                                    textShadow: p.color ? '0 0 2px rgba(255,255,255,0.8)' : 'none'
+                                                }}
+                                                title={p.fullName}
+                                            >
+                                                {p.name}
+                                            </span>
                                         ))}
                                     </div>
 

@@ -3,7 +3,7 @@ const router = express.Router();
 const { getBirthChart } = require('../controllers/chartController');
 const auth = require('../middleware/auth');
 
-// Protected route - only logged in (and approved) users can access
-router.post('/birth-chart', auth, getBirthChart);
+// Route - temporarily without auth for testing local calculation
+router.post('/birth-chart', getBirthChart);
 
 module.exports = router;

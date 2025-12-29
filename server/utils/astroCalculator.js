@@ -44,17 +44,28 @@ const NAKSHATRAS = [
 ];
 
 // Planet Info for Dignity Calculations
-// Exalted (Ucha), Debilitated (Neecha), Own (Aatchi)
+// Exalted (Ucha), Mooltrikona, Debilitated (Neecha), Own (Aatchi)
 const PLANET_INFO = {
-    'Sun': { exalted: 1, debilitated: 7, own: [5], friends: ['Moon', 'Mars', 'Jupiter'], enemies: ['Venus', 'Saturn'], neutral: ['Mercury'] },
-    'Moon': { exalted: 2, debilitated: 8, own: [4], friends: ['Sun', 'Mercury'], enemies: [], neutral: ['Mars', 'Jupiter', 'Venus', 'Saturn'] },
-    'Mars': { exalted: 10, debilitated: 4, own: [1, 8], friends: ['Sun', 'Moon', 'Jupiter'], enemies: ['Mercury'], neutral: ['Venus', 'Saturn'] },
-    'Mercury': { exalted: 6, debilitated: 12, own: [3, 6], friends: ['Sun', 'Venus'], enemies: ['Moon'], neutral: ['Mars', 'Jupiter', 'Saturn'] },
-    'Jupiter': { exalted: 4, debilitated: 10, own: [9, 12], friends: ['Sun', 'Moon', 'Mars'], enemies: ['Mercury', 'Venus'], neutral: ['Saturn'] },
-    'Venus': { exalted: 12, debilitated: 6, own: [2, 7], friends: ['Mercury', 'Saturn'], enemies: ['Sun', 'Moon'], neutral: ['Mars', 'Jupiter'] },
-    'Saturn': { exalted: 7, debilitated: 1, own: [10, 11], friends: ['Mercury', 'Venus'], enemies: ['Sun', 'Moon', 'Mars'], neutral: ['Jupiter'] },
-    'Rahu': { exalted: [2], debilitated: [8], own: [], friends: ['Venus', 'Saturn'], enemies: ['Sun', 'Moon', 'Mars'], neutral: ['Mercury', 'Jupiter'] },
-    'Ketu': { exalted: [8], debilitated: [2], own: [], friends: ['Mars', 'Venus'], enemies: ['Sun', 'Moon', 'Saturn'], neutral: ['Mercury', 'Jupiter'] }
+    'Sun': { exalted: 1, mool: 5, debilitated: 7, own: [5], friends: ['Moon', 'Mars', 'Jupiter'], enemies: ['Venus', 'Saturn'], neutral: ['Mercury'] },
+    'Moon': { exalted: 2, mool: 2, debilitated: 8, own: [4], friends: ['Sun', 'Mercury'], enemies: [], neutral: ['Mars', 'Jupiter', 'Venus', 'Saturn'] },
+    'Mars': { exalted: 10, mool: 1, debilitated: 4, own: [1, 8], friends: ['Sun', 'Moon', 'Jupiter'], enemies: ['Mercury'], neutral: ['Venus', 'Saturn'] },
+    'Mercury': { exalted: 6, mool: 6, debilitated: 12, own: [3, 6], friends: ['Sun', 'Venus'], enemies: ['Moon'], neutral: ['Mars', 'Jupiter', 'Saturn'] },
+    'Jupiter': { exalted: 4, mool: 9, debilitated: 10, own: [9, 12], friends: ['Sun', 'Moon', 'Mars'], enemies: ['Mercury', 'Venus'], neutral: ['Saturn'] },
+    'Venus': { exalted: 12, mool: 7, debilitated: 6, own: [2, 7], friends: ['Mercury', 'Saturn'], enemies: ['Sun', 'Moon'], neutral: ['Mars', 'Jupiter'] },
+    'Saturn': { exalted: 7, mool: 11, debilitated: 1, own: [10, 11], friends: ['Mercury', 'Venus'], enemies: ['Sun', 'Moon', 'Mars'], neutral: ['Jupiter'] },
+    'Rahu': { exalted: [2], mool: null, debilitated: [8], own: [], friends: ['Venus', 'Saturn'], enemies: ['Sun', 'Moon', 'Mars'], neutral: ['Mercury', 'Jupiter'] },
+    'Ketu': { exalted: [8], mool: null, debilitated: [2], own: [], friends: ['Mars', 'Venus'], enemies: ['Sun', 'Moon', 'Saturn'], neutral: ['Mercury', 'Jupiter'] }
+};
+
+// Dignity Colors for UI
+const DIGNITY_COLORS = {
+    'Exalted': { color: '#006400', colorName: 'Dark Green' },       // உச்சம்
+    'Mooltrikona': { color: '#228B22', colorName: '80% Green' },    // மூலதிரிகோணம்
+    'Own Sign': { color: '#32CD32', colorName: '70% Green' },       // ஆட்சி
+    'Debilitated': { color: '#DC143C', colorName: 'Red' },          // நீசம்
+    'Friendly': { color: '#4169E1', colorName: 'Blue' },            // நட்பு
+    'Enemy': { color: '#FF8C00', colorName: 'Orange' },             // பகை
+    'Neutral': { color: '#708090', colorName: 'Gray' }              // சமம்
 };
 
 /**
@@ -103,41 +114,64 @@ const calculateNakshatra = (longitude) => {
 };
 
 /**
- * Calculate Planet Dignity (Exalted, Own, etc.)
+ * Calculate Planet Dignity (Exalted, Mooltrikona, Own, etc.) with colors
  */
 const calculateDignity = (planetName, longitude) => {
-    if (!planetName || !PLANET_INFO[planetName]) return { english: 'Neutral', tamil: 'சமம்' };
+    const defaultResult = {
+        english: 'Neutral', tamil: 'சமம்',
+        color: DIGNITY_COLORS['Neutral'].color,
+        colorName: DIGNITY_COLORS['Neutral'].colorName
+    };
+
+    if (!planetName || !PLANET_INFO[planetName]) return defaultResult;
 
     const signData = calculateSign(longitude);
     const signId = signData.id;
+    const degreesInSign = signData.degreesInSign;
     const info = PLANET_INFO[planetName];
 
-    // Check Exalted
+    // Check Exalted (highest priority)
     if (Array.isArray(info.exalted)) {
-        if (info.exalted.includes(signId)) return { english: 'Exalted', tamil: 'உச்சம்' };
+        if (info.exalted.includes(signId)) {
+            return { english: 'Exalted', tamil: 'உச்சம்', ...DIGNITY_COLORS['Exalted'] };
+        }
     } else if (info.exalted === signId) {
-        return { english: 'Exalted', tamil: 'உச்சம்' };
+        return { english: 'Exalted', tamil: 'உச்சம்', ...DIGNITY_COLORS['Exalted'] };
     }
 
     // Check Debilitated
     if (Array.isArray(info.debilitated)) {
-        if (info.debilitated.includes(signId)) return { english: 'Debilitated', tamil: 'நீசம்' };
+        if (info.debilitated.includes(signId)) {
+            return { english: 'Debilitated', tamil: 'நீசம்', ...DIGNITY_COLORS['Debilitated'] };
+        }
     } else if (info.debilitated === signId) {
-        return { english: 'Debilitated', tamil: 'நீசம்' };
+        return { english: 'Debilitated', tamil: 'நீசம்', ...DIGNITY_COLORS['Debilitated'] };
+    }
+
+    // Check Mooltrikona (specific degree ranges in the sign)
+    // Mooltrikona applies in specific portions of the sign
+    if (info.mool && info.mool === signId) {
+        // Mooltrikona degree ranges (simplified - first 20 degrees usually)
+        if (degreesInSign <= 20) {
+            return { english: 'Mooltrikona', tamil: 'மூலதிரிகோணம்', ...DIGNITY_COLORS['Mooltrikona'] };
+        }
     }
 
     // Check Own Sign
     if (info.own.includes(signId)) {
-        return { english: 'Own Sign', tamil: 'ஆட்சி' };
+        return { english: 'Own Sign', tamil: 'ஆட்சி', ...DIGNITY_COLORS['Own Sign'] };
     }
 
     // Check Friend/Enemy based on Sign Lord
-    // (This works nicely if we assume simple lordship relationships)
     const signLord = signData.lord;
-    if (info.friends.includes(signLord)) return { english: 'Friendly', tamil: 'நட்பு' };
-    if (info.enemies.includes(signLord)) return { english: 'Enemy', tamil: 'பகை' };
+    if (info.friends.includes(signLord)) {
+        return { english: 'Friendly', tamil: 'நட்பு', ...DIGNITY_COLORS['Friendly'] };
+    }
+    if (info.enemies.includes(signLord)) {
+        return { english: 'Enemy', tamil: 'பகை', ...DIGNITY_COLORS['Enemy'] };
+    }
 
-    return { english: 'Neutral', tamil: 'சமம்' };
+    return defaultResult;
 };
 
 /**
