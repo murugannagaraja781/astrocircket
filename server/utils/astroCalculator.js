@@ -43,6 +43,8 @@ const NAKSHATRAS = [
     { name: 'Revati', tamil: 'ரேவதி', lord: 'Mercury' }
 ];
 
+
+
 // Planet Info for Dignity Calculations
 // Exalted (Ucha), Mooltrikona, Debilitated (Neecha), Own (Aatchi)
 const PLANET_INFO = {
@@ -186,9 +188,57 @@ const formatDegree = (vals) => {
     return `${deg}° ${mins}'`;
 };
 
+// Simplified planetary position calculation (approximation)
+const calculatePlanetaryPositions = (year, month, day, hour, minute, latitude, longitude, timezone) => {
+    // Julian Day calculation
+    const a = Math.floor((14 - month) / 12);
+    const y = year + 4800 - a;
+    const m = month + 12 * a - 3;
+    const jd = day + Math.floor((153 * m + 2) / 5) + 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) - 32045;
+    const jdTime = jd + (hour + minute / 60 - timezone) / 24;
+
+    // Days from J2000.0 epoch (Jan 1, 2000 12:00 TT)
+    const d = jdTime - 2451545.0;
+
+    // Simplified planetary longitude calculations (tropical)
+    // These are approximations suitable for astrological purposes
+    const sunMeanLong = (280.46 + 0.9856474 * d) % 360;
+    const sunAnomaly = (357.528 + 0.9856003 * d) % 360;
+    const sunLong = (sunMeanLong + 1.915 * Math.sin(sunAnomaly * Math.PI / 180) + 0.020 * Math.sin(2 * sunAnomaly * Math.PI / 180)) % 360;
+
+    // Moon (simplified - actual calculation is complex)
+    const moonMeanLong = (218.32 + 13.176396 * d) % 360;
+    const moonAnomaly = (134.9 + 13.064993 * d) % 360;
+    const moonLong = (moonMeanLong + 6.29 * Math.sin(moonAnomaly * Math.PI / 180)) % 360;
+
+    // Planets (mean longitude approximations)
+    const planets = {
+        Sun: (sunLong + 360) % 360,
+        Moon: (moonLong + 360) % 360,
+        Mars: (355.45 + 0.5240208 * d + 360) % 360,
+        Mercury: (48.33 + 4.0923344 * d + 360) % 360,
+        Jupiter: (34.40 + 0.0830853 * d + 360) % 360,
+        Venus: (181.98 + 1.6021302 * d + 360) % 360,
+        Saturn: (50.08 + 0.0334442 * d + 360) % 360,
+        Rahu: (125.04 - 0.0529539 * d + 360) % 360, // Mean node
+    };
+    planets.Ketu = (planets.Rahu + 180) % 360; // Opposite of Rahu
+
+    // Ascendant (Lagna) - simplified calculation
+    const lst = (100.46 + 0.985647 * d + longitude + (hour + minute / 60) * 15) % 360;
+    const ascendant = (lst + 360) % 360;
+
+    return { planets, ascendant };
+};
+
 module.exports = {
+    SIGNS,
+    NAKSHATRAS,
+    PLANET_INFO,
+    DIGNITY_COLORS,
     calculateSign,
     calculateNakshatra,
     calculateDignity,
+    calculatePlanetaryPositions,
     formatDegree
 };

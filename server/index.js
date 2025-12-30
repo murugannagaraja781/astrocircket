@@ -41,6 +41,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/charts', chartRoutes);
 app.use('/api/players', require('./routes/players'));
 app.use('/api/groups', groupRoutes);
+app.use('/api/prediction', require('./routes/prediction'));
 
 // Database Connection
 // Database Connection
