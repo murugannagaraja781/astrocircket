@@ -211,24 +211,38 @@ const calculatePlanetaryPositions = (year, month, day, hour, minute, latitude, l
     const moonAnomaly = (134.9 + 13.064993 * d) % 360;
     const moonLong = (moonMeanLong + 6.29 * Math.sin(moonAnomaly * Math.PI / 180)) % 360;
 
-    // Planets (mean longitude approximations)
-    const planets = {
-        Sun: (sunLong + 360) % 360,
-        Moon: (moonLong + 360) % 360,
-        Mars: (355.45 + 0.5240208 * d + 360) % 360,
-        Mercury: (48.33 + 4.0923344 * d + 360) % 360,
-        Jupiter: (34.40 + 0.0830853 * d + 360) % 360,
-        Venus: (181.98 + 1.6021302 * d + 360) % 360,
-        Saturn: (50.08 + 0.0334442 * d + 360) % 360,
-        Rahu: (125.04 - 0.0529539 * d + 360) % 360, // Mean node
+    // --- AYANAMSA CORRECTION (Tropical -> Sidereal/Nirayana) ---
+    // Lahiri Ayanamsa Calculation (Approximate)
+    const ayanamsaBase = 23.85;
+    const yearsSince2000 = (year + (month - 1) / 12 + day / 365) - 2000;
+    const ayanamsa = ayanamsaBase + (yearsSince2000 * 0.01397);
+
+    // Helper to normalize 0-360
+    const toSidereal = (tropicalVal) => {
+        let siderealVal = (tropicalVal - ayanamsa) % 360;
+        if (siderealVal < 0) siderealVal += 360;
+        return siderealVal;
     };
-    planets.Ketu = (planets.Rahu + 180) % 360; // Opposite of Rahu
 
-    // Ascendant (Lagna) - simplified calculation
+    // Planets (Sidereal)
+    const planets = {
+        Sun: toSidereal((sunLong + 360) % 360),
+        Moon: toSidereal((moonLong + 360) % 360),
+        Mars: toSidereal((355.45 + 0.5240208 * d + 360) % 360),
+        Mercury: toSidereal((48.33 + 4.0923344 * d + 360) % 360),
+        Jupiter: toSidereal((34.40 + 0.0830853 * d + 360) % 360),
+        Venus: toSidereal((181.98 + 1.6021302 * d + 360) % 360),
+        Saturn: toSidereal((50.08 + 0.0334442 * d + 360) % 360),
+        Rahu: toSidereal((125.04 - 0.0529539 * d + 360) % 360), // True Rahu approx
+    };
+    planets.Ketu = (planets.Rahu + 180) % 360;
+
+    // Ascendant (Lagna) - Tropical then Sidereal
     const lst = (100.46 + 0.985647 * d + longitude + (hour + minute / 60) * 15) % 360;
-    const ascendant = (lst + 360) % 360;
+    const ascendantTropical = (lst + 360) % 360;
+    const ascendant = toSidereal(ascendantTropical);
 
-    return { planets, ascendant };
+    return { planets, ascendant, ayanamsaVal: ayanamsa };
 };
 
 module.exports = {
