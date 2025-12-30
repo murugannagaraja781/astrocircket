@@ -22,6 +22,7 @@ const PlanetaryTable = ({ planets, style = {} }) => {
         fontWeight: 'bold'
     };
 
+    const tdStyle = {
         padding: '6px 8px',
         border: '1px solid #A7F3D0',
         color: '#000', // Black as requested
