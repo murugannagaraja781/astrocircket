@@ -641,7 +641,8 @@ const PlayersManager = () => {
             name: player.name || '', profile: player.profile || '', dob: player.dob || '',
             birthTime: player.birthTime || '',
             birthPlace: player.birthPlace || '', timezone: player.timezone || '', id: player.id,
-            latitude: player.latitude, longitude: player.longitude
+            latitude: player.latitude, longitude: player.longitude,
+            role: player.role || 'BAT', manualStatus: player.manualStatus || ''
         });
         setOpenEdit(true);
     };
@@ -666,15 +667,10 @@ const PlayersManager = () => {
 
     const handleSavePlayer = async () => {
         try {
-             // For Add (POST), we might use FormData if there's a file.
-             // For Edit (PUT), currently backend only supports JSON updates without file for now (based on analysis).
-             // We will handle FormData for Add.
-
              if (!selectedPlayer) {
                 // ADD PLAYER
                 const formData = new FormData();
                 Object.keys(playerForm).forEach(key => {
-                    // Exclude complex objects if any, though usually for Add it's fine
                     formData.append(key, playerForm[key]);
                 });
                 if (profilePicFile) {
@@ -690,8 +686,7 @@ const PlayersManager = () => {
                 if (profilePicFile) {
                     // Use FormData if file exists
                     const formData = new FormData();
-                    // Explicitly append only relevant fields to avoid object stringification issues
-                    ['name', 'birthPlace', 'dob', 'birthTime', 'latitude', 'longitude', 'timezone', 'manualTimezone'].forEach(key => {
+                    ['name', 'birthPlace', 'dob', 'birthTime', 'latitude', 'longitude', 'timezone', 'manualTimezone', 'role', 'manualStatus'].forEach(key => {
                         if (playerForm[key] !== undefined && playerForm[key] !== null) {
                             formData.append(key, playerForm[key]);
                         }
@@ -1063,6 +1058,60 @@ const PlayersManager = () => {
                             InputLabelProps={{ shrink: true }}
                         />
 
+                        {/* ROLE SELECTION */}
+                        <Box sx={{ mt: 1 }}>
+                            <Typography variant="caption" sx={{ mb: 0.5, display: 'block', color: '#A0AEC0' }}>Role</Typography>
+                            <Box sx={{ display: 'flex', gap: 1 }}>
+                                {['BAT', 'BOWL'].map((role) => (
+                                    <Button
+                                        key={role}
+                                        variant={playerForm.role === role ? 'contained' : 'outlined'}
+                                        color={playerForm.role === role ? 'primary' : 'inherit'}
+                                        onClick={() => setPlayerForm({ ...playerForm, role: role })}
+                                        fullWidth
+                                        size="small"
+                                        sx={{ borderRadius: '8px' }}
+                                    >
+                                        {role}
+                                    </Button>
+                                ))}
+                            </Box>
+                        </Box>
+
+                         {/* MANUAL STATUS ENTRY */}
+                        <Box sx={{ mt: 1 }}>
+                            <Typography variant="caption" sx={{ mb: 0.5, display: 'block', color: '#A0AEC0' }}>Manual Status (e.g. Good, Avg)</Typography>
+                            <TextField
+                                placeholder="Good, Avg, Flop..."
+                                value={playerForm.manualStatus || ''}
+                                onChange={(e) => setPlayerForm({ ...playerForm, manualStatus: e.target.value })}
+                                fullWidth
+                                size="small"
+                                sx={{
+                                    '& .MuiOutlinedInput-root': {
+                                        '& fieldset': {
+                                            borderColor: (() => {
+                                                const status = (playerForm.manualStatus || '').toLowerCase();
+                                                if (status.includes('good')) return '#4caf50'; // Green
+                                                if (status.includes('ok')) return '#8bc34a'; // Light Green
+                                                if (status.includes('avg')) return '#2196f3'; // Blue
+                                                if (status.includes('flop')) return '#f44336'; // Red
+                                                return 'rgba(255, 255, 255, 0.2)';
+                                            })(),
+                                            borderWidth: playerForm.manualStatus ? '2px' : '1px'
+                                        },
+                                        backgroundColor: (() => {
+                                             const status = (playerForm.manualStatus || '').toLowerCase();
+                                             // Slight bg tint
+                                             if (status.includes('good')) return 'rgba(76, 175, 80, 0.1)';
+                                             if (status.includes('flop')) return 'rgba(244, 67, 54, 0.1)';
+                                             return 'transparent';
+                                        })()
+                                    }
+                                }}
+                            />
+                        </Box>
+
 
                     </Box>
                 </DialogContent>
@@ -1143,14 +1192,14 @@ const PlayersManager = () => {
                 maxWidth="md"
                 fullScreen={isMobile}
             >
-                <DialogTitle sx={{ backgroundColor: '#0F1535', color: '#fff' }}>
+                <DialogTitle>
                     {selectedPlayerForChart?.name}'s Horoscope ({selectedPlayerForChart?.dob} {selectedPlayerForChart?.birthTime ? `| ${selectedPlayerForChart.birthTime}` : ''})
                 </DialogTitle>
-                <DialogContent sx={{ backgroundColor: '#0F1535', color: '#fff' }}>
+                <DialogContent>
                     {selectedPlayerForChart && (
                         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, mt: 2 }}>
                             {/* Rasi Chart */}
-                            <Box sx={{ p: 1, backgroundColor: '#fff', borderRadius: 2 }}>
+                            <Box sx={{ p: 1, backgroundColor: '#fff', borderRadius: 2, boxShadow: 1 }}>
                                 {selectedPlayerForChart.birthChart ? (
                                      <RasiChart data={selectedPlayerForChart.birthChart} style={{ width: '100%' }} />
                                 ) : (
@@ -1160,14 +1209,14 @@ const PlayersManager = () => {
 
                             {/* Planetary Table */}
                             <Box sx={{ width: '100%', mt: 2 }}>
-                                <Typography variant="h6" gutterBottom sx={{ color: '#fff' }}>Planetary Positions</Typography>
+                                <Typography variant="h6" gutterBottom color="text.primary">Planetary Positions</Typography>
                                 <PlanetaryTable planets={selectedPlayerForChart.birthChart?.formattedPlanets || []} />
                             </Box>
                         </Box>
                     )}
                 </DialogContent>
-                <DialogActions sx={{ backgroundColor: '#0F1535' }}>
-                    <Button onClick={() => setOpenChartDialog(false)} sx={{ color: '#fff' }}>Close</Button>
+                <DialogActions>
+                    <Button onClick={() => setOpenChartDialog(false)}>Close</Button>
                 </DialogActions>
             </Dialog>
         </Box>

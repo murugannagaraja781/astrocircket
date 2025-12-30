@@ -10,7 +10,9 @@ const PlayerSchema = new mongoose.Schema({
     latitude: { type: Number },
     longitude: { type: Number },
     timezone: { type: String },
-    birthChart: { type: Object } // Store the entire JSON response here
+    birthChart: { type: Object }, // Store the entire JSON response here
+    role: { type: String, enum: ['BAT', 'BOWL', 'ALL'], default: 'BAT' },
+    manualStatus: { type: String, default: '' }
 });
 
 module.exports = mongoose.model('Player', PlayerSchema);

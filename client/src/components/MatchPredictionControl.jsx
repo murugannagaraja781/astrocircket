@@ -127,90 +127,36 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
     };
 
     const getChartSummary = () => {
-        if (!chartData) {
-            console.log("No chartData");
-            return [];
-        }
-        console.log("ChartData in Summary:", chartData);
-
-        const housesData = chartData.houses || chartData;
-        // Filter to ensure we only have valid house objects (they should have signNumber)
-        const houses = Object.values(housesData).filter(h => h && typeof h === 'object' && h.signNumber);
-        console.log("Filtered Houses:", houses);
-
-        const nakshatraData = chartData.moonNakshatra || {};
-        console.log("Nakshatra Data:", nakshatraData);
-
+        if (!chartData) return [];
         const summary = [];
 
-        // Helper to get planets array
-        const getPlanets = (h) => {
-            const raw = h.planets || h.Planets;
-            return Array.isArray(raw) ? raw : [];
-        };
+        // 1. Lagna (Ascendant)
+        const asc = chartData.ascendant || {};
+        const ascSign = asc.tamil || "Not Found";
+        const ascLord = asc.lordTamil || asc.lord || "-";
+        summary.push({ label: "லக்னம்", sign: ascSign, lord: ascLord });
 
-        // Helper to check if planet exists in array (string or object)
-        const hasPlanet = (planets, names) => {
-            return planets.some(p => {
-                const pName = (typeof p === 'object' && p !== null) ? (p.name || p.englishName || p.id) : p;
-                return names.includes(pName);
-            });
-        };
-
-        // 1. Lagna
-        const lagnaHouse = houses.find(h => hasPlanet(getPlanets(h), ['Asc', 'Lagna', 'Ascendant']));
-        if (lagnaHouse) {
-            const signName = lagnaHouse.signTamil || tamilSigns[lagnaHouse.signNumber];
-            const lordName = lagnaHouse.lord || signLords[lagnaHouse.signNumber];
-            const lordTamil = signLordsTamil[lordName] || lordName;
-            summary.push({ label: "லக்னம்", sign: signName, lord: lordTamil });
-        } else {
-            summary.push({ label: "லக்னம்", sign: "Not Found", lord: "-" });
-        }
-
-        // 2. Moon
-        const moonHouse = houses.find(h => hasPlanet(getPlanets(h), ['Moon', 'Chandra']));
-        if (moonHouse) {
-            const signName = moonHouse.signTamil || tamilSigns[moonHouse.signNumber];
-            const lordName = moonHouse.lord || signLords[moonHouse.signNumber];
-            const lordTamil = signLordsTamil[lordName] || lordName;
-            summary.push({ label: "சந்திரன்", sign: signName, lord: lordTamil });
-        } else {
-             summary.push({ label: "சந்திரன்", sign: "Not Found", lord: "-" });
-        }
+        // 2. Moon (Rasi)
+        const moon = chartData.moonSign || {};
+        const moonSign = moon.tamil || "Not Found";
+        const moonLord = moon.lordTamil || moon.lord || "-";
+        summary.push({ label: "சந்திரன்", sign: moonSign, lord: moonLord });
 
         // 3. Nakshatra
-        let nakshatraName = nakshatraData.name;
-        let nakshatraLord = nakshatraData.lord;
+        // Check both root 'nakshatra' and 'moonNakshatra'
+        const nak = chartData.nakshatra || chartData.moonNakshatra || {};
+        const nakName = nak.tamil || nak.name || "Not Found";
 
-        // Fallback: Try to find Nakshatra from the Moon planet object itself
-        if (!nakshatraName && houses) {
-            for (const h of houses) {
-                const planets = getPlanets(h);
-                const moon = planets.find(p => (typeof p === 'object' && p !== null) &&
-                    (p.name === 'Moon' || p.englishName === 'Moon' || p.id === 'Moon' || p.name === 'Chandra'));
+        // Ensure Lord is in Tamil
+        let nakLord = nak.lordTamil || nak.lord || "-";
+        // Simple mapping if not already Tamil
+        const tamilLords = {
+            'Ketu': 'கேது', 'Venus': 'சுக்கிரன்', 'Sun': 'சூரியன்', 'Moon': 'சந்திரன்',
+            'Mars': 'செவ்வாய்', 'Rahu': 'ராகு', 'Jupiter': 'குரு', 'Saturn': 'சனி', 'Mercury': 'புதன்'
+        };
+        if (tamilLords[nakLord]) nakLord = tamilLords[nakLord];
 
-                if (moon) {
-                    if (moon.nakshatra) {
-                         // It could be an object { name: '...', ... } or string
-                         nakshatraName = (typeof moon.nakshatra === 'object') ? moon.nakshatra.name : moon.nakshatra;
-                         nakshatraLord = (typeof moon.nakshatra === 'object') ? moon.nakshatra.lord : moon.nakshatraLord;
-                    }
-                    if (nakshatraName) break;
-                }
-            }
-        }
-
-        if (nakshatraName) {
-             const lordName = nakshatraLord || "Unknown"; // default text if missing
-             const lordTamil = planetFullTamilMap[lordName] || lordName || "";
-             const nakshatraTamil = nakshatraTamilMap[nakshatraName] || nakshatraName;
-             summary.push({ label: "நட்சத்திரம்", sign: nakshatraTamil, lord: lordTamil });
-        } else {
-             // Debug why Nakshatra is missing
-             console.log("Nakshatra missing. Root Data:", nakshatraData);
-             summary.push({ label: "நட்சத்திரம்", sign: "Not Found", lord: "-" });
-        }
+        summary.push({ label: "நட்சத்திரம்", sign: nakName, lord: nakLord });
 
         return summary;
     };
@@ -254,145 +200,121 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
     return (
         <Paper elevation={3} sx={{ p: 0, mb: 3, overflow: 'hidden' }}>
              {/* AppBar inside Control */}
-             <Box sx={{
-                bgcolor: '#059669',
-                backgroundImage: 'linear-gradient(to right, #059669, #10B981)',
-                color: 'white',
-                p: 2,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1
-             }}>
-                <SportsCricketIcon />
-                <Typography variant="h6" fontWeight="900" component="div">Match Prediction Setup</Typography>
-                <Box sx={{ flexGrow: 1 }} />
-                {matchDetails.time && (
-                    <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                        Prediction Time: {matchDetails.time}
-                    </Typography>
-                )}
-             </Box>
 
-            <Box sx={{ p: 3 }}>
-                <Grid container spacing={3}>
-                    <Grid size={{ xs: 12, sm: 3 }}>
-                        <TextField
-                            label="Date"
-                            type="date"
-                            value={matchDetails.date}
-                            onChange={(e) => handleChange('date', e.target.value)}
-                            fullWidth
-                            InputLabelProps={{ shrink: true }}
-                        />
-                    </Grid>
-                    <Grid size={{ xs: 12, sm: 3 }}>
-                        <TextField
-                            label="Time"
-                            type="time"
-                            value={matchDetails.time}
-                            onChange={(e) => handleChange('time', e.target.value)}
-                            fullWidth
-                            InputLabelProps={{ shrink: true }}
-                        />
-                    </Grid>
-                    <Grid size={{ xs: 12, sm: 6 }}>
-                        <Autocomplete
-                            freeSolo
-                            options={cityOptions}
-                            getOptionLabel={(option) => typeof option === 'string' ? option : option.label}
-                            value={matchDetails.location}
-                            onChange={handleCityChange}
-                            onInputChange={(event, newInputValue) => {
-                                handleChange('location', newInputValue);
-                            }}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label="Location (City)"
-                                    fullWidth
-                                    helperText="Select from list for auto-coords"
-                                    sx={{
-                                        '& .MuiOutlinedInput-root': {
-                                            '&.Mui-focused fieldset': { borderColor: '#059669' },
-                                            color: '#0b8f39', // Input text color
-                                            fontWeight: 'bold'
-                                        },
-                                        '& .MuiInputLabel-root.Mui-focused': { color: '#059669' }
-                                    }}
-                                />
-                            )}
-                        />
-                    </Grid>
-                    <Grid size={{ xs: 12, sm: 6 }}>
-                        <TextField
-                            label="Latitude"
-                            type="number"
-                            fullWidth
-                            value={matchDetails.lat}
-                            onChange={(e) => handleChange('lat', parseFloat(e.target.value))}
-                            InputLabelProps={{ shrink: true }}
-                        />
-                    </Grid>
-                    <Grid size={{ xs: 12, sm: 6 }}>
-                        <TextField
-                            label="Longitude"
-                            type="number"
-                            fullWidth
-                            value={matchDetails.long}
-                            onChange={(e) => handleChange('long', parseFloat(e.target.value))}
-                            InputLabelProps={{ shrink: true }}
-                        />
-                    </Grid>
-                    <Grid size={{ xs: 12 }}>
-                        <TextField
-                            label="Timezone (e.g., 5.5 for IST)"
-                            type="number"
-                            fullWidth
-                            value={matchDetails.timezone}
-                            onChange={(e) => handleChange('timezone', parseFloat(e.target.value))}
-                            InputLabelProps={{ shrink: true }}
-                        />
-                    </Grid>
-                    <Grid size={{ xs: 12, sm: 6 }}>
-                         <Button
-                            variant="outlined"
-                            size="large"
-                            fullWidth
-                            onClick={handleViewChart}
-                            disabled={viewChartLoading || loading}
-                            sx={{
-                                py: 1.5,
-                                fontSize: '1.1rem',
-                                color: '#059669',
-                                borderColor: '#059669',
-                                '&:hover': { bgcolor: '#f0fdf4', borderColor: '#047857' },
-                                borderRadius: '12px',
-                                fontWeight: 'bold'
-                            }}
-                        >
-                            {viewChartLoading ? <CircularProgress size={24} color="inherit" /> : "View Rasi Chart"}
-                        </Button>
-                    </Grid>
-                    <Grid size={{ xs: 12, sm: 6 }}>
-                        <Button
-                            variant="contained"
-                            size="large"
-                            fullWidth
-                            onClick={handleRun}
-                            disabled={loading || viewChartLoading}
-                            sx={{
-                                py: 1.5,
-                                fontSize: '1.1rem',
-                                bgcolor: '#059669',
-                                '&:hover': { bgcolor: '#047857' },
-                                borderRadius: '12px',
-                                fontWeight: 'bold'
-                            }}
-                        >
-                            {loading ? <CircularProgress size={24} color="inherit" /> : "Predict Match"}
-                        </Button>
-                    </Grid>
-                </Grid>
+
+            <Box sx={{ p: 2 }}>
+                {/* Single Line Flex Layout for All Inputs & Buttons */}
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, alignItems: 'center' }}>
+
+                    {/* Date */}
+                    <TextField
+                        label="Date"
+                        type="date"
+                        size="small"
+                        value={matchDetails.date}
+                        onChange={(e) => handleChange('date', e.target.value)}
+                        InputLabelProps={{ shrink: true }}
+                        sx={{ width: '130px' }}
+                    />
+
+                    {/* Time */}
+                    <TextField
+                        label="Time"
+                        type="time"
+                        size="small"
+                        value={matchDetails.time}
+                        onChange={(e) => handleChange('time', e.target.value)}
+                        InputLabelProps={{ shrink: true }}
+                        sx={{ width: '100px' }}
+                    />
+
+                    {/* Location */}
+                    <Autocomplete
+                        freeSolo
+                        options={cityOptions}
+                        getOptionLabel={(option) => typeof option === 'string' ? option : option.label}
+                        value={matchDetails.location}
+                        onChange={handleCityChange}
+                        onInputChange={(event, newInputValue) => handleChange('location', newInputValue)}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Location"
+                                size="small"
+                                placeholder="City"
+                                sx={{ width: '180px' }}
+                            />
+                        )}
+                        sx={{ width: '180px' }}
+                    />
+
+                    {/* Lat */}
+                    <TextField
+                        label="Lat"
+                        type="number"
+                        size="small"
+                        value={matchDetails.lat}
+                        onChange={(e) => handleChange('lat', parseFloat(e.target.value))}
+                        InputLabelProps={{ shrink: true }}
+                        sx={{ width: '100px' }}
+                    />
+
+                    {/* Long */}
+                    <TextField
+                        label="Long"
+                        type="number"
+                        size="small"
+                        value={matchDetails.long}
+                        onChange={(e) => handleChange('long', parseFloat(e.target.value))}
+                        InputLabelProps={{ shrink: true }}
+                        sx={{ width: '100px' }}
+                    />
+
+                    {/* Timezone */}
+                    <TextField
+                        label="TZ"
+                        type="number"
+                        size="small"
+                        value={matchDetails.timezone}
+                        onChange={(e) => handleChange('timezone', parseFloat(e.target.value))}
+                        InputLabelProps={{ shrink: true }}
+                        sx={{ width: '70px' }}
+                    />
+
+                    {/* BUTTONS */}
+                    <Button
+                        variant="outlined"
+                        onClick={handleViewChart}
+                        disabled={viewChartLoading || loading}
+                        sx={{
+                            height: '40px',
+                            color: '#059669',
+                            borderColor: '#059669',
+                            whiteSpace: 'nowrap',
+                            minWidth: 'auto',
+                            px: 2
+                        }}
+                    >
+                        {viewChartLoading ? <CircularProgress size={20} /> : "Chart"}
+                    </Button>
+
+                    <Button
+                        variant="contained"
+                        onClick={handleRun}
+                        disabled={loading || viewChartLoading}
+                        sx={{
+                            height: '40px',
+                            bgcolor: '#059669',
+                            '&:hover': { bgcolor: '#047857' },
+                            whiteSpace: 'nowrap',
+                            minWidth: 'auto',
+                            px: 2
+                        }}
+                    >
+                        {loading ? <CircularProgress size={20} color="inherit" /> : "Predict"}
+                    </Button>
+
+                </Box>
                 {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
             </Box>
 
@@ -433,9 +355,9 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
                                         <TableBody>
                                             {getChartSummary().map((row, index) => (
                                                 <TableRow key={index}>
-                                                    <TableCell sx={{ fontWeight: 'bold' }}>{row.label}</TableCell>
-                                                    <TableCell>{row.sign}</TableCell>
-                                                    <TableCell>{row.lord}</TableCell>
+                                                    <TableCell sx={{ fontWeight: 'bold', color: '#000' }}>{row.label}</TableCell>
+                                                    <TableCell sx={{ color: '#000' }}>{row.sign}</TableCell>
+                                                    <TableCell sx={{ color: '#000' }}>{row.lord}</TableCell>
                                                 </TableRow>
                                             ))}
                                         </TableBody>
@@ -445,7 +367,7 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
 
                              {/* Raw Data Tables */}
                              {chartData.moonNakshatra && renderRawDataTable("Moon Nakshatra Details", chartData.moonNakshatra)}
-                             {(chartData.houses && chartData.houses["1"]) && renderRawDataTable("House 1 Details", chartData.houses["1"])}
+
 
 
                              <Box sx={{ mt: 2, textAlign: 'center' }}>

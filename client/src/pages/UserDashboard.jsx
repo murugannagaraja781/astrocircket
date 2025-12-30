@@ -997,10 +997,8 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
             {/* APP BAR - MATCH PREDICTION SETUP */}
             <AppBar position="static" sx={{ bgcolor: '#059669', backgroundImage: 'linear-gradient(to right, #059669, #10B981)' }}>
                 <Toolbar sx={{ gap: 1, py: 0.5 }}>
-                    <SportsCricketIcon />
-                    <Typography variant="subtitle1" fontWeight="900" sx={{ mr: 1 }}>
-                        MATCH PREDICTION
-                    </Typography>
+
+
 
                     {/* Match Setup - Using MatchPredictionControl */}
                     <Box sx={{ flexGrow: 1 }}>
@@ -1140,7 +1138,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
 
                         {/* Planet Details Table */}
                         <Paper sx={{ overflow: 'auto' }}>
-                            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem', color: '#000' }}>
                                 <thead>
                                     <tr style={{ background: '#059669', color: 'white' }}>
                                         <th style={{ padding: 8 }}>கிரகம்</th>
