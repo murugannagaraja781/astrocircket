@@ -200,19 +200,118 @@ const calculatePlanetaryPositions = (year, month, day, hour, minute, latitude, l
     // Days from J2000.0 epoch (Jan 1, 2000 12:00 TT)
     const d = jdTime - 2451545.0;
 
-    // Simplified planetary longitude calculations (tropical)
-    // These are approximations suitable for astrological purposes
-    const sunMeanLong = (280.46 + 0.9856474 * d) % 360;
-    const sunAnomaly = (357.528 + 0.9856003 * d) % 360;
-    const sunLong = (sunMeanLong + 1.915 * Math.sin(sunAnomaly * Math.PI / 180) + 0.020 * Math.sin(2 * sunAnomaly * Math.PI / 180)) % 360;
+    // --- KEPLERIAN ORBITAL ELEMENTS (J2000.0) ---
+    // Source: Paul Schlyter / JPL Approx
+    // N = Long Asc Node, i = Inclination, w = Arg Perihelion, a = Semi-major axis, e = Eccentricity, M = Mean Anomaly
 
-    // Moon (simplified - actual calculation is complex)
-    const moonMeanLong = (218.32 + 13.176396 * d) % 360;
-    const moonAnomaly = (134.9 + 13.064993 * d) % 360;
-    const moonLong = (moonMeanLong + 6.29 * Math.sin(moonAnomaly * Math.PI / 180)) % 360;
+    // Helper trig (degrees)
+    const sin = (deg) => Math.sin(deg * Math.PI / 180);
+    const cos = (deg) => Math.cos(deg * Math.PI / 180);
+    const tan = (deg) => Math.tan(deg * Math.PI / 180);
+    const atan2 = (y, x) => Math.atan2(y, x) * 180 / Math.PI;
+    const asin = (x) => Math.asin(x) * 180 / Math.PI;
+
+    const normalize = (ang) => {
+        let r = ang % 360;
+        return r < 0 ? r + 360 : r;
+    };
+
+    // 1. SUN (Base for Geocentric)
+    const M_sun = normalize(357.5291 + 0.98560028 * d);
+    const L_sun_mean = normalize(280.4665 + 0.98564736 * d);
+    // Sun Eq of Center
+    const C_sun = (1.9148 - 0.004817 * 0) * sin(M_sun) + 0.0200 * sin(2 * M_sun);
+    const L_sun_true = normalize(L_sun_mean + C_sun);
+    const R_sun = 1.00014 - 0.01671 * cos(M_sun) - 0.00014 * cos(2 * M_sun); // Earth-Sun Distance
+
+    // Earth's Helicoords (opposite to Sun)
+    const L_earth = normalize(L_sun_true + 180);
+    // Earth coords X,Y,Z
+    const Xe = R_sun * cos(L_earth);
+    const Ye = R_sun * sin(L_earth);
+    const Ze = 0; // Earth in ecliptic plane (approx)
+
+    // Helper to solve Kepler Eq: M = E - e*sin(E)
+    // Returns degrees
+    const solveKepler = (M, e) => {
+        let E = M; // Initial guess
+        const M_rad = M * Math.PI / 180;
+        // Iterate
+        for (let k = 0; k < 10; k++) {
+            let dE = (M_rad - (E * Math.PI / 180 - e * sin(E))) / (1 - e * cos(E));
+            E += dE * 180 / Math.PI;
+            if (Math.abs(dE) < 1e-6) break;
+        }
+        return E;
+    };
+
+    // CALCULATE PLANET (Heliocentric -> Geocentric)
+    const calcPlanet = (N0, Nd, i0, id, w0, wd, a, e0, ed, M0, Md, name) => {
+        const N = normalize(N0 + Nd * d);
+        const i = i0 + id * d;
+        const w = normalize(w0 + wd * d);
+        const e = e0 + ed * d;
+        const M = normalize(M0 + Md * d);
+
+        // Eccentric Anomaly
+        const E = solveKepler(M, e);
+
+        // Heliocentric coords in orbital plane
+        // x = a(cosE - e), y = a*sqrt(1-e^2)*sinE
+        const xv = a * (cos(E) - e);
+        const yv = a * Math.sqrt(1 - e * e) * sin(E);
+
+        const v = atan2(yv, xv); // True Anomaly
+        const r = Math.sqrt(xv * xv + yv * yv); // Distance to Sun
+
+        // Project to Ecliptic
+        // xh = r * (cos(N) cos(v+w) - sin(N) sin(v+w) cos(i))
+        // yh = r * (sin(N) cos(v+w) + cos(N) sin(v+w) cos(i))
+        // zh = r * (sin(v+w) sin(i))
+        const u = v + w; // Argument of Latitude
+        const xh = r * (cos(N) * cos(u) - sin(N) * sin(u) * cos(i));
+        const yh = r * (sin(N) * cos(u) + cos(N) * sin(u) * cos(i));
+        const zh = r * (sin(u) * sin(i));
+
+        // Geocentric Coords
+        const xg = xh + Xe;
+        const yg = yh + Ye;
+        const zg = zh + Ze;
+
+        // Geocentric Longitude & Latitude
+        const long = normalize(atan2(yg, xg));
+        return long;
+    };
+
+    // MERCURY
+    const mercuryLong = calcPlanet(48.3313, 3.24587E-5, 7.0047, 5.00E-8, 29.1241, 1.01444E-5, 0.387098, 0.205635, 5.59E-10, 168.6562, 4.0923344368, 'Mercury');
+    // VENUS
+    const venusLong = calcPlanet(76.6799, 2.46590E-5, 3.3946, 2.75E-8, 54.8910, 1.38374E-5, 0.723330, 0.006773, -1.30E-9, 48.0052, 1.6021302244, 'Venus');
+    // MARS
+    const marsLong = calcPlanet(49.5574, 2.11081E-5, 1.8497, -1.78E-8, 286.5016, 2.92961E-5, 1.523688, 0.093405, 2.51E-9, 18.6021, 0.5240207766, 'Mars');
+    // JUPITER
+    const jupiterLong = calcPlanet(100.4542, 2.76854E-5, 1.3030, -1.557E-7, 273.8777, 1.64505E-5, 5.20256, 0.048498, 4.469E-9, 19.8950, 0.0830853001, 'Jupiter');
+    // SATURN
+    const saturnLong = calcPlanet(113.6634, 2.38980E-5, 2.4854, -3.27E-8, 339.3923, 2.97661E-5, 9.55475, 0.055546, -9.499E-9, 316.9670, 0.0334442282, 'Saturn');
+
+    // MOON (Reusing previous sufficient approx with corrections)
+    const L_moon_mean = normalize(218.316 + 13.176396 * d);
+    const M_moon = normalize(134.963 + 13.064993 * d);
+    const F_moon = normalize(93.272 + 13.229350 * d);
+    const L_moon_raw = L_moon_mean + 6.289 * sin(M_moon);
+    const L_moon_corr = L_moon_raw
+        - 1.274 * sin(M_moon - 2 * (L_sun_mean - L_moon_mean)) // Evection
+        + 0.658 * sin(2 * (L_moon_mean - L_sun_mean)) // Variation
+        - 0.185 * sin(M_sun) // Annual Eq
+        - 0.114 * sin(2 * F_moon); // Reduction
+    const moonLong = normalize(L_moon_corr);
+
+    // RAHU (Mean Node)
+    // N = 125.04452 - 1934.136261 * T (T=d/36525) -> d * 0.05295
+    const rahuMean = normalize(125.0445 - 0.0529539 * d);
 
     // --- AYANAMSA CORRECTION (Tropical -> Sidereal/Nirayana) ---
-    // Lahiri Ayanamsa Calculation (Approximate)
+    // Lahiri Ayanamsa Calculation
     const ayanamsaBase = 23.85;
     const yearsSince2000 = (year + (month - 1) / 12 + day / 365) - 2000;
     const ayanamsa = ayanamsaBase + (yearsSince2000 * 0.01397);
@@ -226,18 +325,19 @@ const calculatePlanetaryPositions = (year, month, day, hour, minute, latitude, l
 
     // Planets (Sidereal)
     const planets = {
-        Sun: toSidereal((sunLong + 360) % 360),
-        Moon: toSidereal((moonLong + 360) % 360),
-        Mars: toSidereal((355.45 + 0.5240208 * d + 360) % 360),
-        Mercury: toSidereal((48.33 + 4.0923344 * d + 360) % 360),
-        Jupiter: toSidereal((34.40 + 0.0830853 * d + 360) % 360),
-        Venus: toSidereal((181.98 + 1.6021302 * d + 360) % 360),
-        Saturn: toSidereal((50.08 + 0.0334442 * d + 360) % 360),
-        Rahu: toSidereal((125.04 - 0.0529539 * d + 360) % 360), // True Rahu approx
+        Sun: toSidereal(L_sun_true),
+        Moon: toSidereal(moonLong),
+        Mars: toSidereal(marsLong),
+        Mercury: toSidereal(mercuryLong),
+        Jupiter: toSidereal(jupiterLong),
+        Venus: toSidereal(venusLong),
+        Saturn: toSidereal(saturnLong),
+        Rahu: toSidereal(rahuMean),
     };
     planets.Ketu = (planets.Rahu + 180) % 360;
 
-    // Ascendant (Lagna) - Tropical then Sidereal
+    // Ascendant (Lagna)
+    // Using simple LST logic (could be improved but acceptable for now)
     const lst = (100.46 + 0.985647 * d + longitude + (hour + minute / 60) * 15) % 360;
     const ascendantTropical = (lst + 360) % 360;
     const ascendant = toSidereal(ascendantTropical);
