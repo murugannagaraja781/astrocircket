@@ -25,9 +25,22 @@ router.post('/evaluate', async (req, res) => {
         }
 
         // 2. Prepare Match Params
+        console.log(`Evaluating Prediction for: Player=${playerId}, Date=${matchDate}, Time=${matchTime}`);
+
         // matchDate: "2025-12-30", matchTime: "14:30"
         const [year, month, day] = matchDate.split('-').map(Number);
         const [hour, minute] = matchTime.split(':').map(Number);
+
+        if (isNaN(year) || isNaN(month) || isNaN(day) || isNaN(hour) || isNaN(minute)) {
+            return res.status(400).json({ message: 'Invalid Date or Time format' });
+        }
+
+        const lat = parseFloat(location.lat);
+        const lng = parseFloat(location.lng);
+
+        if (isNaN(lat) || isNaN(lng)) {
+            return res.status(400).json({ message: 'Invalid Location (Latitude/Longitude)' });
+        }
 
         const matchParams = {
             year,
@@ -35,8 +48,8 @@ router.post('/evaluate', async (req, res) => {
             day,
             hour,
             minute,
-            latitude: parseFloat(location.lat),
-            longitude: parseFloat(location.lng),
+            latitude: lat,
+            longitude: lng,
             timezone: parseFloat(location.timezone || 5.5) // Default IST
         };
 
