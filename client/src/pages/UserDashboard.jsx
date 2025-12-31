@@ -621,9 +621,8 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewCha
                                     <span style={{ fontSize: '1rem' }}>✏️</span>
                                 </IconButton>
                             </Box>
-                             <Typography variant="caption" color="text.secondary">
-                                ID: {player.id}
-                            </Typography>
+{/* ID Removed */}
+
                         </Box>
                     </Box>
                 </TableCell>
@@ -924,7 +923,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                     />
                                 </TableCell>
                                 <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>Name</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>ID</TableCell>
+{/* ID Column Header Removed */}
                                 <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>DOB / Time</TableCell>
                                 <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>Place</TableCell>
                                 {results && <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>Pred.</TableCell>}
@@ -952,9 +951,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                                 </Typography>
                                             </Box>
                                         </TableCell>
-                                        <TableCell>
-                                            <Typography variant="caption" color="text.secondary">{p.id}</Typography>
-                                        </TableCell>
+{/* ID Cell Removed */}
                                         <TableCell>
                                              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                                 <Typography variant="caption" sx={{ fontWeight: 'bold' }}>{p.dob}</Typography>

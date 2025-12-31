@@ -863,7 +863,7 @@ const PlayersManager = () => {
                             <TableCell padding="checkbox">
                                 <Typography variant="subtitle2">Chk</Typography>
                             </TableCell>
-                            {!isMobile && <TableCell>ID</TableCell>}
+{/* ID Header Removed */}
                             <TableCell>Name</TableCell>
                             {!isMobile && <TableCell>Place</TableCell>}
                             <TableCell>Action</TableCell>
@@ -875,7 +875,7 @@ const PlayersManager = () => {
                                 <TableCell padding="checkbox">
                                     <input type="checkbox" checked={selectedIds.includes(p.id)} onChange={() => handleSelect(p.id)} style={{ width: 18, height: 18, cursor: 'pointer' }} />
                                 </TableCell>
-                                {!isMobile && <TableCell>{p.id}</TableCell>}
+{/* ID Cell Removed */}
                                 <TableCell>
                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                                         <Avatar
