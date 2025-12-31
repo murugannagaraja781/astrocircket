@@ -42,6 +42,10 @@ router.post('/evaluate', async (req, res) => {
             return res.status(400).json({ message: 'Invalid Location (Latitude/Longitude)' });
         }
 
+        const tz = (location.timezone !== undefined && location.timezone !== null)
+            ? parseFloat(location.timezone)
+            : 5.5; // Default IST only if missing
+
         const matchParams = {
             year,
             month,
@@ -50,8 +54,10 @@ router.post('/evaluate', async (req, res) => {
             minute,
             latitude: lat,
             longitude: lng,
-            timezone: parseFloat(location.timezone || 5.5) // Default IST
+            timezone: tz
         };
+
+        console.log('Using Strict Match Params:', JSON.stringify(matchParams));
 
         // 3. Prepare Chart Data
         const chartRoot = player.birthChart.data || player.birthChart;
