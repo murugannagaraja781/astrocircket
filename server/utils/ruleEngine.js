@@ -230,18 +230,17 @@ const evaluatePrediction = async (playerBirthChart, matchDateParams) => {
     }
 
     // Rule 6: Rahu/Ketu Special
+    // Rule 6: Rahu/Ketu Special
+    // Rule 6: Rahu/Ketu Special
     if (['Rahu', 'Ketu'].includes(playerStarLord)) {
         // Player Rasi Lord in Match Star Lord House -> GOOD
         // Else FLOP
         const r6_good = isInSigns(playerRasiLordPos, starLordOwnedSigns); // Reuse starLordOwnedSigns
         if (r6_good) {
-            battingScore += 1;
-            battingRules.push("Rule 6 (Good): Rahu/Ketu Special");
+            battingScore += 2;
+            battingRules.push("Rule 6 (Good +2): Rahu/Ketu Special");
         } else {
-            // Else FLOP. Does this mean override everything to FLOP?
-            // "Else -> FLOP". Usually specific rules override general.
-            // But if user has Good score from others?
-            // I'll treat as -1.
+            // Else FLOP.
             battingScore -= 1;
             battingRules.push("Rule 6 (Flop): Rahu/Ketu Special Failed");
         }
@@ -289,6 +288,12 @@ const evaluatePrediction = async (playerBirthChart, matchDateParams) => {
     if (r2_same) {
         bowlingScore = -1;
         bowlingRules.push("Batting Rule 2 Impact: SURE FLOP for Bowling");
+    }
+
+    // Rule 6 Impact (Rahu/Ketu): "Bowling Good +2"
+    if (['Rahu', 'Ketu'].includes(playerStarLord) && isInSigns(playerRasiLordPos, starLordOwnedSigns)) {
+        bowlingScore += 2;
+        bowlingRules.push("Rule 6 (Good +2): Rahu/Ketu Special Match");
     }
 
     // Rule 2
