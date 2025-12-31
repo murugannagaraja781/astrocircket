@@ -11,9 +11,16 @@ exports.getBirthChart = async (req, res) => {
             parseFloat(latitude), parseFloat(longitude), parseFloat(timezone)
         );
 
+        // Create timestamp from user input for response
+        const inputDate = new Date(year, month - 1, day, hour, minute);
+        // Ensure accurate ISO string from local components (ignoring server timezone offset for generic ISO generation, or constructing manually)
+        // Manual ISO construction to respect input numbers exactly:
+        const pad = (n) => n.toString().padStart(2, '0');
+        const userProvidedTimestamp = `${year}-${pad(month)}-${pad(day)}T${pad(hour)}:${pad(minute)}:00.000Z`;
+
         // Build chart response
         const chartData = {
-            timestamp: new Date().toISOString(),
+            timestamp: userProvidedTimestamp,
             input: { day, month, year, hour, minute, latitude, longitude, timezone },
             ascendant: {
                 longitude: ascendant,
