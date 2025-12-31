@@ -22,6 +22,7 @@
     "mongoose": "^9.0.1",
     "multer": "^2.0.2",
     "nodemon": "^3.1.11",
+    "vedic-astrology-api": "^1.0.9",
     "xlsx": "^0.18.5"
   }
 }
