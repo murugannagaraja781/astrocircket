@@ -756,8 +756,9 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
         setResults(null);
     }, [teamA, teamB, groups]);
 
-    const handleMatchReady = (chart) => {
+    const handleMatchReady = (chart, details) => {
         setMatchChart(chart);
+        if (details) setMatchDetails(details);
         const resDetails = {};
         let scoreA = 0;
         let scoreB = 0;

@@ -82,7 +82,7 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
             });
 
             // Pass the derived Match Chart parent
-            onPredictionComplete(res.data);
+            onPredictionComplete(res.data, matchDetails);
 
         } catch (err) {
             console.error("Match Chart Error", err);
