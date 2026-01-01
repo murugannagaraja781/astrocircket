@@ -72,3 +72,28 @@ h6 {
 .bg-india-gradient {
     background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%);
 }
+
+/* Header Logo - Responsive */
+.header-logo {
+    height: 45px;
+    width: auto;
+    transition: all 0.3s ease;
+}
+
+@media (min-width: 480px) {
+    .header-logo {
+        height: 50px;
+    }
+}
+
+@media (min-width: 768px) {
+    .header-logo {
+        height: 55px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .header-logo {
+        height: 60px;
+    }
+}

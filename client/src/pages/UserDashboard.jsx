@@ -1669,20 +1669,31 @@ const UserDashboard = ({ hideHeader = false }) => {
                     borderBottom: `1px solid ${visionPro.border}`,
                     boxShadow: '0 4px 20px rgba(5, 150, 105, 0.2)'
                 }}>
-                    <Toolbar sx={{ justifyContent: 'space-between' }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <SportsCricketIcon sx={{ color: '#fff', fontSize: 28 }} />
-                            <Typography variant="h5" sx={{
-                                fontWeight: 900,
-                                letterSpacing: '0.5px',
-                                color: '#fff',
-                                display: 'flex',
-                                alignItems: 'center'
-                            }}>
-                                CRICKET ASTRO VISION PRO
-                            </Typography>
+                    <Toolbar sx={{ justifyContent: 'space-between', position: 'relative' }}>
+                        {/* Empty spacer for left side balance */}
+                        <Box sx={{ width: { xs: 40, sm: 100 } }} />
+
+                        {/* Centered Logo */}
+                        <Box sx={{
+                            position: 'absolute',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}>
+                            <img
+                                src="/logo.png"
+                                alt="S&B Entertainment"
+                                style={{
+                                    objectFit: 'contain',
+                                    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
+                                }}
+                                className="header-logo"
+                            />
                         </Box>
 
+                        {/* Logout Button */}
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                             <Button
                                 variant="contained"
@@ -1696,10 +1707,14 @@ const UserDashboard = ({ hideHeader = false }) => {
                                     fontWeight: 'bold',
                                     '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.3)' },
                                     border: '1px solid rgba(255, 255, 255, 0.3)',
-                                    backdropFilter: 'blur(5px)'
+                                    backdropFilter: 'blur(5px)',
+                                    // Hide text on mobile, show icon only
+                                    '& .MuiButton-startIcon': { mr: { xs: 0, sm: 1 } },
+                                    minWidth: { xs: 40, sm: 'auto' },
+                                    px: { xs: 1, sm: 2 }
                                 }}
                             >
-                                Logout
+                                <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>Logout</Box>
                             </Button>
                         </Box>
                     </Toolbar>
