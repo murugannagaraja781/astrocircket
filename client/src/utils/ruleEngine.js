@@ -1,37 +1,24 @@
-// ruleEngine.js
-// விதி இயந்திரம் - Vedic Astrology Prediction Rules for Cricket
-
 /**
- * RULE 1 – Batting (Main Rule)
- * இன்றைய மேட்ச் நட்சத்திர அதிபதியுடன், பிளேயரின் ராசி அதிபதி அல்லது நட்சத்திர அதிபதி இணைந்து இருந்தால்
- * → Batting : GOOD
- * அதே இணைப்பு ஆட்சி உச்ச நிலையில் இருந்தால்
- * → Batting : EXCELLENT
+ * === RULE ENGINE FOR ASTRO CRICKET PREDICTION ===
+ * விதி இயந்திரம் - 6 Rules System
  *
- * RULE 2 – Batting / Bowling Split Rule
- * இன்றைய மேட்ச் ராசி + நட்சத்திரம், பிளேயரின் ராசி + நட்சத்திரத்துடன் ஒன்றாக இருந்தால்
- * → Batting : GOOD, Bowling : SURE FLOP
- *
- * RULE 3 – Rahu / Ketu Special Batting Rule
- * ஒரு பிளேயர் ராகு அல்லது கேது நட்சத்திரத்தில் பிறந்தவராக இருந்து, மற்ற ரூல்ஸ்களில் பொருந்தவில்லை என்றாலும்:
- * அந்த பிளேயரின் ராசி அதிபதி, அன்றைய மேட்ச் நடக்கும் ராசி அதிபதி அல்லது நட்சத்திர அதிபதியுடன் இணைந்து இருந்தால்
- * → Batting : GOOD
+ * RULES:
+ * 1. ZigZag Rule - Match (Rasi+Star) ↔ Player (Star+Rasi) = 5 points EXCELLENT
+ * 2. Star Rule - Match Star = Player Sign Lord = 2pts (4pts if Atchi/Utcham)
+ * 3. House Rule - Match Rasi+Star Lords same = 2pts
+ * 4. Same House Rule - Player lords in Match Star Lord's house = 3pts
+ * 5. Conjunction Rule - Match Star Lord conjunct Player lords = 2pts (4pts if Atchi/Utcham)
+ * 6. Lagna Rule - Match Lagna = Player Sign Lord's sign = 2pts (4pts if Atchi/Utcham)
  */
 
-// Exalted Signs for each planet (உச்ச ராசி)
+// Exalted Signs (உச்சம்)
 const EXALTED_SIGNS = {
-    'Sun': 'Aries',
-    'Moon': 'Taurus',
-    'Mars': 'Capricorn',
-    'Mercury': 'Virgo',
-    'Jupiter': 'Cancer',
-    'Venus': 'Pisces',
-    'Saturn': 'Libra',
-    'Rahu': 'Taurus',  // Traditional view
-    'Ketu': 'Scorpio'  // Traditional view
+    'Sun': 'Aries', 'Moon': 'Taurus', 'Mars': 'Capricorn',
+    'Mercury': 'Virgo', 'Jupiter': 'Cancer', 'Venus': 'Pisces',
+    'Saturn': 'Libra', 'Rahu': 'Taurus', 'Ketu': 'Scorpio'
 };
 
-// Own Signs for each planet (ஆட்சி ராசி)
+// Own Signs (ஆட்சி)
 const OWN_SIGNS = {
     'Sun': ['Leo'],
     'Moon': ['Cancer'],
@@ -40,29 +27,21 @@ const OWN_SIGNS = {
     'Jupiter': ['Sagittarius', 'Pisces'],
     'Venus': ['Taurus', 'Libra'],
     'Saturn': ['Capricorn', 'Aquarius'],
-    'Rahu': ['Aquarius'],  // Co-rule
-    'Ketu': ['Scorpio']    // Co-rule
+    'Rahu': ['Aquarius'],
+    'Ketu': ['Scorpio']
 };
 
-// Rahu nakshatras (ராகு நட்சத்திரங்கள்)
-const RAHU_NAKSHATRAS = ['Ardra', 'Swati', 'Shatabhisha'];
-
-// Ketu nakshatras (கேது நட்சத்திரங்கள்)
-const KETU_NAKSHATRAS = ['Ashwini', 'Magha', 'Mula', 'Moola'];
-
 /**
- * Check if a planet is in Exalted (உச்சம்) or Own Sign (ஆட்சி) state
+ * Check if planet is in Exalted or Own Sign
  */
 function isInExaltedOrOwnSign(planetName, signName) {
     if (!planetName || !signName) return false;
 
-    // Check Exalted
     if (EXALTED_SIGNS[planetName] === signName) {
         return { status: 'EXALTED', tamil: 'உச்சம்' };
     }
 
-    // Check Own Sign
-    if (OWN_SIGNS[planetName] && OWN_SIGNS[planetName].includes(signName)) {
+    if (OWN_SIGNS[planetName]?.includes(signName)) {
         return { status: 'OWN_SIGN', tamil: 'ஆட்சி' };
     }
 
@@ -70,221 +49,136 @@ function isInExaltedOrOwnSign(planetName, signName) {
 }
 
 /**
- * Check if player born under Rahu or Ketu nakshatra
+ * Helper to check if a sign belongs to a lord
  */
-function isRahuKetuNakshatra(nakshatraName) {
-    if (!nakshatraName) return false;
-    const n = nakshatraName.toLowerCase();
-
-    // Check Rahu nakshatras
-    for (const nak of RAHU_NAKSHATRAS) {
-        if (n.includes(nak.toLowerCase())) return 'Rahu';
-    }
-
-    // Check Ketu nakshatras
-    for (const nak of KETU_NAKSHATRAS) {
-        if (n.includes(nak.toLowerCase())) return 'Ketu';
-    }
-
-    return false;
-}
+const isSignOwnedBy = (sign, lord) => {
+    return OWN_SIGNS[lord]?.includes(sign) || false;
+};
 
 /**
- * Evaluate Batsman Performance
+ * Evaluate Batsman Performance - 6 Rules System
  * @param {Object} player - Player's normalized chart data
  * @param {Object} match - Match chart data
  * @param {Object} transit - Transit data (planetPositions map)
  */
-export function evaluateBatsman(player, match, transit) {
+export function evaluateBatsman(player, match, transit = {}) {
     let score = 0;
     let logs = [];
-    let rule1Applied = false;
-    let rule2Applied = false;
 
-    // Get planet positions for conjunction checks
-    const matchStarLordPos = transit.planetPositions?.[match.nakshatraLord];
-    const matchRashiLordPos = transit.planetPositions?.[match.rashiLord];
-    const playerRashiLordPos = transit.planetPositions?.[player.rashiLord];
-    const playerStarLordPos = transit.planetPositions?.[player.nakshatraLord];
-
-    // ═══════════════════════════════════════════════════════════════════
-    // RULE 1 – Batting (Main Rule) - நட்சத்திர அதிபதி இணைப்பு
-    // ═══════════════════════════════════════════════════════════════════
-    // Match Star Lord + Player Rasi Lord Conjunction
-    if (match.nakshatraLord && player.rashiLord) {
-        if (match.nakshatraLord === player.rashiLord) {
-            // Direct match - same planet
-            const dignityCheck = isInExaltedOrOwnSign(match.nakshatraLord, matchStarLordPos);
-            if (dignityCheck) {
-                score += 4;
-                logs.push(`Rule 1: மேட்ச் நட்சத்திர அதிபதி (${match.nakshatraLord}) = பிளேயர் ராசி அதிபதி, ${dignityCheck.tamil} நிலையில் → EXCELLENT`);
-                rule1Applied = true;
-            } else {
-                score += 2;
-                logs.push(`Rule 1: மேட்ச் நட்சத்திர அதிபதி (${match.nakshatraLord}) = பிளேயர் ராசி அதிபதி (${player.rashiLord}) → GOOD`);
-                rule1Applied = true;
-            }
-        } else if (matchStarLordPos && playerRashiLordPos && matchStarLordPos === playerRashiLordPos) {
-            // Same house conjunction
-            const dignityCheck = isInExaltedOrOwnSign(player.rashiLord, playerRashiLordPos);
-            if (dignityCheck) {
-                score += 4;
-                logs.push(`Rule 1: மேட்ச் நட்சத்திர அதிபதி + பிளேயர் ராசி அதிபதி ${matchStarLordPos} ல் இணைப்பு, ${dignityCheck.tamil} நிலை → EXCELLENT`);
-                rule1Applied = true;
-            } else {
-                score += 2;
-                logs.push(`Rule 1: மேட்ச் நட்சத்திர அதிபதி (${match.nakshatraLord}) + பிளேயர் ராசி அதிபதி (${player.rashiLord}) ${matchStarLordPos} ல் இணைப்பு → GOOD`);
-                rule1Applied = true;
-            }
-        }
+    if (!player || !match) {
+        return { score: 0, logs: ['Missing data'] };
     }
 
-    // Match Star Lord + Player Star Lord Conjunction
-    if (!rule1Applied && match.nakshatraLord && player.nakshatraLord) {
-        if (match.nakshatraLord === player.nakshatraLord) {
-            const dignityCheck = isInExaltedOrOwnSign(match.nakshatraLord, matchStarLordPos);
-            if (dignityCheck) {
-                score += 4;
-                logs.push(`Rule 1: மேட்ச் நட்சத்திர அதிபதி = பிளேயர் நட்சத்திர அதிபதி (${match.nakshatraLord}), ${dignityCheck.tamil} நிலை → EXCELLENT`);
-                rule1Applied = true;
-            } else {
-                score += 2;
-                logs.push(`Rule 1: மேட்ச் நட்சத்திர அதிபதி = பிளேயர் நட்சத்திர அதிபதி (${match.nakshatraLord}) → GOOD`);
-                rule1Applied = true;
-            }
-        } else if (matchStarLordPos && playerStarLordPos && matchStarLordPos === playerStarLordPos) {
-            const dignityCheck = isInExaltedOrOwnSign(player.nakshatraLord, playerStarLordPos);
-            if (dignityCheck) {
-                score += 4;
-                logs.push(`Rule 1: மேட்ச் & பிளேயர் நட்சத்திர அதிபதிகள் ${matchStarLordPos} ல் இணைப்பு, ${dignityCheck.tamil} நிலை → EXCELLENT`);
-                rule1Applied = true;
-            } else {
-                score += 2;
-                logs.push(`Rule 1: மேட்ச் நட்சத்திர அதிபதி (${match.nakshatraLord}) + பிளேயர் நட்சத்திர அதிபதி (${player.nakshatraLord}) ${matchStarLordPos} ல் இணைப்பு → GOOD`);
-                rule1Applied = true;
-            }
+    // Get positions from transit
+    const planetPositions = transit.planetPositions || {};
+    const playerRashiLordPos = planetPositions[player.rashiLord];
+    const playerStarLordPos = planetPositions[player.nakshatraLord];
+    const matchStarLordPos = planetPositions[match.nakshatraLord];
+
+    // ═══════════════════════════════════════════════════════════════════
+    // RULE 1: ZIG ZAG RULE (5 Points - EXCELLENT)
+    // Match (Rasi+Star) ↔ Player (Star+Rasi) Reverse Match
+    // Ex: Match = Guru + Pudhan, Player = Pudhan + Guru
+    // ═══════════════════════════════════════════════════════════════════
+    if (match.rashiLord && match.nakshatraLord && player.rashiLord && player.nakshatraLord) {
+        if (match.rashiLord === player.nakshatraLord && match.nakshatraLord === player.rashiLord) {
+            score += 5;
+            logs.push(`Rule 1 (ZigZag): மேட்ச் (${match.rashiLord}+${match.nakshatraLord}) ↔ பிளேயர் (${player.rashiLord}+${player.nakshatraLord}) → EXCELLENT (+5)`);
         }
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    // RULE 4 – Batting Special (New) - அதிபதி வீட்டில் ராகு/கேது/கிரகங்கள்
+    // RULE 2: STAR RULE (2-4 Points)
+    // Match Star Lord = Player Sign Lord
     // ═══════════════════════════════════════════════════════════════════
-    // "அதிபதி வீட்டில் player ராசி அதிபதி மற்றும் நட்சத்திராதிபதி இருந்தால் நன்று"
-    // Interpretation: If Player Rasi Lord AND Player Star Lord are in Match Star Lord's House.
-    if (match.nakshatraLord && playerRashiLordPos && playerStarLordPos) {
-        // Helper to check if a sign belongs to a lord
-        const isSignOwnedBy = (sign, lord) => {
-            return OWN_SIGNS[lord] && OWN_SIGNS[lord].includes(sign);
-        };
+    if (match.nakshatraLord && player.rashiLord && match.nakshatraLord === player.rashiLord) {
+        const dignityCheck = isInExaltedOrOwnSign(player.rashiLord, playerRashiLordPos);
+        if (dignityCheck) {
+            score += 4;
+            logs.push(`Rule 2 (Star): மேட்ச் நட்சத்திர அதிபதி (${match.nakshatraLord}) = பிளேயர் ராசி அதிபதி, ${dignityCheck.tamil} → GOOD (+4)`);
+        } else {
+            score += 2;
+            logs.push(`Rule 2 (Star): மேட்ச் நட்சத்திர அதிபதி (${match.nakshatraLord}) = பிளேயர் ராசி அதிபதி (${player.rashiLord}) → GOOD (+2)`);
+        }
+    }
 
+    // ═══════════════════════════════════════════════════════════════════
+    // RULE 3: PLAYER SIGN LORD HOUSE RULE (2 Points)
+    // Match Rasi Lord AND Star Lord are SAME
+    // ═══════════════════════════════════════════════════════════════════
+    if (match.rashiLord && match.nakshatraLord && match.rashiLord === match.nakshatraLord) {
+        score += 2;
+        logs.push(`Rule 3 (House): மேட்ச் ராசி அதிபதி + நட்சத்திர அதிபதி ஒன்று (${match.rashiLord}) → GOOD (+2)`);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // RULE 4: SAME HOUSE RULE (3 Points)
+    // Player Sign Lord OR Star Lord in Match Star Lord's house
+    // ═══════════════════════════════════════════════════════════════════
+    if (match.nakshatraLord && player.rashiLord && player.nakshatraLord) {
         const rasiLordInHouse = isSignOwnedBy(playerRashiLordPos, match.nakshatraLord);
         const starLordInHouse = isSignOwnedBy(playerStarLordPos, match.nakshatraLord);
 
-        if (rasiLordInHouse && starLordInHouse) {
-            score += 2;
-            logs.push(`Rule 4: மேட்ச் நட்சத்திர அதிபதி (${match.nakshatraLord}) வீட்டில் பிளேயர் ராசி அதிபதி & நட்சத்திர அதிபதி → GOOD`);
+        if (rasiLordInHouse || starLordInHouse) {
+            score += 3;
+            logs.push(`Rule 4 (SameHouse): பிளேயர் அதிபதி மேட்ச் நட்சத்திர அதிபதி (${match.nakshatraLord}) வீட்டில் → GOOD (+3)`);
         }
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    // RULE 2 – Batting / Bowling Split Rule - ராசி + நட்சத்திரம் ஒன்றாக
+    // RULE 5: CONJUNCTION RULE (2-4 Points)
+    // Match Star Lord conjunct with Player Rasi Lord OR Star Lord
     // ═══════════════════════════════════════════════════════════════════
-    if (player.rashi === match.rashi && player.nakshatra === match.nakshatra) {
-        score += 2;
-        logs.push(`Rule 2: மேட்ச் ராசி (${match.rashi}) + நட்சத்திரம் (${match.nakshatra}) = பிளேயர் ராசி + நட்சத்திரம் → Batting GOOD`);
-        rule2Applied = true;
-    }
+    if (matchStarLordPos && (playerRashiLordPos || playerStarLordPos)) {
+        let conjunctFound = false;
+        let conjunctPlanet = '';
 
-    // ═══════════════════════════════════════════════════════════════════
-    // RULE 3 – Rahu / Ketu Special Batting Rule (Fallback)
-    // ═══════════════════════════════════════════════════════════════════
-    if (!rule1Applied) {
-        const rahuKetuStatus = isRahuKetuNakshatra(player.nakshatra);
+        if (matchStarLordPos === playerRashiLordPos) {
+            conjunctFound = true;
+            conjunctPlanet = player.rashiLord;
+        } else if (matchStarLordPos === playerStarLordPos) {
+            conjunctFound = true;
+            conjunctPlanet = player.nakshatraLord;
+        }
 
-        if (rahuKetuStatus) {
-            // Player born in Rahu/Ketu nakshatra
-            // Check if player's rasi lord conjuncts with match rasi lord or match star lord
-
-            // Conjunction with Match Rasi Lord
-            if (player.rashiLord === match.rashiLord) {
+        if (conjunctFound) {
+            const dignityCheck = isInExaltedOrOwnSign(conjunctPlanet, matchStarLordPos);
+            if (dignityCheck) {
+                score += 4;
+                logs.push(`Rule 5 (Conjunction): மேட்ச் நட்சத்திர அதிபதி + பிளேயர் (${conjunctPlanet}) இணைப்பு, ${dignityCheck.tamil} → GOOD (+4)`);
+            } else {
                 score += 2;
-                logs.push(`Rule 3: ${rahuKetuStatus} நட்சத்திரம் - பிளேயர் ராசி அதிபதி (${player.rashiLord}) = மேட்ச் ராசி அதிபதி → GOOD`);
-            } else if (player.rashiLord === match.nakshatraLord) {
-                score += 2;
-                logs.push(`Rule 3: ${rahuKetuStatus} நட்சத்திரம் - பிளேயர் ராசி அதிபதி (${player.rashiLord}) = மேட்ச் நட்சத்திர அதிபதி → GOOD`);
-            } else if (playerRashiLordPos && matchRashiLordPos && playerRashiLordPos === matchRashiLordPos) {
-                score += 2;
-                logs.push(`Rule 3: ${rahuKetuStatus} நட்சத்திரம் - பிளேயர் ராசி அதிபதி + மேட்ச் ராசி அதிபதி ${playerRashiLordPos} ல் இணைப்பு → GOOD`);
-            } else if (playerRashiLordPos && matchStarLordPos && playerRashiLordPos === matchStarLordPos) {
-                score += 2;
-                logs.push(`Rule 3: ${rahuKetuStatus} நட்சத்திரம் - பிளேயர் ராசி அதிபதி + மேட்ச் நட்சத்திர அதிபதி ${playerRashiLordPos} ல் இணைப்பு → GOOD`);
+                logs.push(`Rule 5 (Conjunction): மேட்ச் நட்சத்திர அதிபதி + பிளேயர் (${conjunctPlanet}) இணைப்பு → GOOD (+2)`);
             }
         }
     }
 
-    return { score, logs, rule2Applied };
-}
-
-/**
- * Evaluate Bowler Performance
- * @param {Object} player - Player's normalized chart data
- * @param {Object} match - Match chart data
- * @param {Object} transit - Transit data (planetPositions map)
- */
-export function evaluateBowler(player, match, transit) {
-    let score = 0;
-    let logs = [];
-
-    // Get planet positions
-    const matchStarLordPos = transit.planetPositions?.[match.nakshatraLord];
-    const matchRashiLordPos = transit.planetPositions?.[match.rashiLord];
-    const playerRashiLordPos = transit.planetPositions?.[player.rashiLord];
-    const playerStarLordPos = transit.planetPositions?.[player.nakshatraLord];
-
     // ═══════════════════════════════════════════════════════════════════
-    // RULE 2 – Bowling Split Rule - SURE FLOP Condition
+    // RULE 6: LAGNA RULE (2-4 Points)
+    // Match Lagna Rasi = Player Sign Lord position
     // ═══════════════════════════════════════════════════════════════════
-    if (player.rashi === match.rashi && player.nakshatra === match.nakshatra) {
-        score = -5; // Strong negative for SURE FLOP
-        logs.push(`Rule 2: மேட்ச் ராசி + நட்சத்திரம் = பிளேயர் ராசி + நட்சத்திரம் → Bowling SURE FLOP`);
-        return { score, logs };
-    }
-
-    // ═══════════════════════════════════════════════════════════════════
-    // Standard Bowling Rules (When Rule 2 doesn't apply)
-    // ═══════════════════════════════════════════════════════════════════
-
-    // Match Rasi Lord matches Player Rasi Lord
-    if (match.rashiLord === player.rashiLord) {
-        score += 1;
-        logs.push(`மேட்ச் ராசி அதிபதி = பிளேயர் ராசி அதிபதி (${match.rashiLord}) → Bowling GOOD`);
-    }
-
-    // Match Star Lord matches Player Star Lord (in different signs - good for bowling)
-    if (match.nakshatraLord === player.nakshatraLord && matchStarLordPos !== playerStarLordPos) {
-        score += 1;
-        logs.push(`மேட்ச் நட்சத்திர அதிபதி = பிளேயர் நட்சத்திர அதிபதி (${match.nakshatraLord}) → Bowling GOOD`);
-    }
-
-    // Player Rasi Lord is strong (Exalted/Own Sign) - good for bowling
-    if (playerRashiLordPos) {
-        const dignityCheck = isInExaltedOrOwnSign(player.rashiLord, playerRashiLordPos);
-        if (dignityCheck) {
-            score += 2;
-            logs.push(`பிளேயர் ராசி அதிபதி (${player.rashiLord}) ${dignityCheck.tamil} நிலையில் → Bowling GOOD`);
-        }
-    }
-
-    // Opposite lords - tension creates wickets
-    if (matchStarLordPos && playerRashiLordPos && matchStarLordPos !== playerRashiLordPos) {
-        const opposition = getOppositeSign(matchStarLordPos);
-        if (opposition === playerRashiLordPos) {
-            score += 2;
-            logs.push(`மேட்ச் நட்சத்திர அதிபதி எதிர் நிலையில் → Bowling EXCELLENT`);
+    if (match.lagnaRashi && player.rashiLord && playerRashiLordPos) {
+        if (playerRashiLordPos === match.lagnaRashi) {
+            const dignityCheck = isInExaltedOrOwnSign(player.rashiLord, playerRashiLordPos);
+            if (dignityCheck) {
+                score += 4;
+                logs.push(`Rule 6 (Lagna): மேட்ச் லக்னம் (${match.lagnaRashi}) = பிளேயர் ராசி அதிபதி இடம், ${dignityCheck.tamil} → GOOD (+4)`);
+            } else {
+                score += 2;
+                logs.push(`Rule 6 (Lagna): மேட்ச் லக்னம் (${match.lagnaRashi}) ல் பிளேயர் ராசி அதிபதி → GOOD (+2)`);
+            }
         }
     }
 
     return { score, logs };
+}
+
+/**
+ * Evaluate Bowler Performance - Same 6 Rules
+ */
+export function evaluateBowler(player, match, transit = {}) {
+    // Same rules apply for bowling
+    return evaluateBatsman(player, match, transit);
 }
 
 /**
