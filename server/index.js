@@ -13,16 +13,29 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// Middleware
-app.use(cors({
-    origin: '*',
+// CORS Configuration - Fixed for production
+const corsOptions = {
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        // Allow all origins
+        return callback(null, true);
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-    allowedHeaders: '*',
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token', 'Accept', 'Origin', 'X-Requested-With'],
     credentials: true,
-    exposedHeaders: ['x-auth-token']
-}));
+    exposedHeaders: ['x-auth-token'],
+    optionsSuccessStatus: 200
+};
+
+// Apply CORS middleware
+app.use(cors(corsOptions));
+
+// Handle preflight requests explicitly
+app.options('*', cors(corsOptions));
+
 app.use(express.json());
-// Serve static uploads
+
 // Serve static uploads (Only if directory exists, to avoid Vercel crashes)
 const fs = require('fs');
 const uploadDir = path.join(__dirname, 'uploads');
@@ -30,10 +43,9 @@ if (fs.existsSync(uploadDir)) {
     app.use('/uploads', express.static(uploadDir));
 }
 
-// Global Error Handler
-app.use((err, req, res, next) => {
-    console.error('Server Error:', err.stack);
-    res.status(500).json({ message: 'Internal Server Error', error: err.message });
+// Health check route (before auth)
+app.get('/', (req, res) => {
+    res.send('API is running');
 });
 
 // Routes
@@ -43,7 +55,12 @@ app.use('/api/players', require('./routes/players'));
 app.use('/api/groups', groupRoutes);
 app.use('/api/prediction', require('./routes/prediction'));
 
-// Database Connection
+// Global Error Handler (MUST be after routes)
+app.use((err, req, res, next) => {
+    console.error('Server Error:', err.stack);
+    res.status(500).json({ message: 'Internal Server Error', error: err.message });
+});
+
 // Database Connection
 const connectDB = async () => {
     if (mongoose.connection.readyState >= 1) {
@@ -59,10 +76,6 @@ const connectDB = async () => {
 
 connectDB();
 
-app.get('/', (req, res) => {
-    res.send('API is running');
-});
-
 if (require.main === module) {
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
@@ -70,3 +83,4 @@ if (require.main === module) {
 }
 
 module.exports = app;
+
