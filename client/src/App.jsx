@@ -6,6 +6,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import UserDashboard from './pages/UserDashboard';
 import TestChart from './pages/TestChart';
 import { AuthProvider } from './context/AuthContext';
+import LoadingSpinner from './components/LoadingSpinner';
 import './index.css';
 
 // Private Route logic can be handled here or inside components,
@@ -16,7 +17,7 @@ import AuthContext from './context/AuthContext';
 const PrivateRoute = ({ children, roles }) => {
     const { isAuthenticated, loading, user } = useContext(AuthContext);
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <LoadingSpinner />;
 
     if (!isAuthenticated) {
         return <Navigate to="/login" />;
