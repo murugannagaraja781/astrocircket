@@ -23,21 +23,22 @@ import GridOnIcon from '@mui/icons-material/GridOn';
 import CloseIcon from '@mui/icons-material/Close';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
-// --- COLOR PALETTE (CSK THEME - YELLOW/GREEN/ORANGE) ---
+// --- COLOR PALETTE (MOBILE APP STYLE) ---
 const visionPro = {
-    background: '#F0FDF4', // Light Green
-    paper: '#FFFFFF', // Clean White
-    primary: '#F9CD05', // CSK Yellow
-    secondary: '#F97316', // Orange
-    accent: '#FFD600', // Yellow Warm
-    text: '#004D40', // Dark Green
-    textSecondary: '#00695C', // Dark Teal
-    border: 'rgba(0, 77, 64, 0.12)', // Subtle Dark Green Border
-    success: '#10B981', // Success Green
-    warning: '#F59E0B', // Amber
-    error: '#EF4444', // Error Red
-    gradientPrimary: 'linear-gradient(90deg, #F9CD05, #F97316)',
-    gradientWarm: 'linear-gradient(135deg, #F9CD05 0%, #F97316 100%)',
+    background: '#f8fafc', // Soft neutral (not pure white)
+    paper: '#ffffff', // Clean White
+    primary: '#4f46e5', // Deep Indigo
+    secondary: '#8b5cf6', // Purple
+    accent: '#667eea', // Indigo Light
+    text: '#1e293b', // Dark Slate
+    textSecondary: '#64748b', // Slate Gray
+    border: 'rgba(0, 0, 0, 0.06)', // Very subtle border
+    success: '#10b981', // Green
+    warning: '#f59e0b', // Amber
+    error: '#ef4444', // Red
+    gradientPrimary: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    gradientWarm: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+    gradientSuccess: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
 };
 
 // --- HELPERS ---
@@ -895,13 +896,13 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                 <Box sx={{
                     mb: 2,
                     borderBottom: 1,
-                    borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(167, 243, 208, 1)',
+                    borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(79, 70, 229, 0.2)',
                     pb: 1,
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center'
                 }}>
-                    <Typography variant="subtitle1" fontWeight="bold" sx={{ color: '#059669', fontSize: isMobile ? '0.9rem' : '1rem' }}>{teamName}</Typography>
+                    <Typography variant="subtitle1" fontWeight="bold" sx={{ color: visionPro.primary, fontSize: isMobile ? '0.9rem' : '1rem' }}>{teamName}</Typography>
                     {results && (
                         <Chip label={`Score: ${myScore}`} color={isWinner ? "success" : "default"} variant={isWinner ? "filled" : "outlined"} size="small" />
                     )}
@@ -952,17 +953,21 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                     alignItems: 'center',
                                     gap: 1,
                                     p: 1,
-                                    borderRadius: 2,
+                                    borderRadius: '12px',
                                     border: '1px solid',
-                                    borderColor: isSel ? '#10B981' : 'rgba(0,0,0,0.1)',
-                                    bgcolor: isSel ? 'rgba(16, 185, 129, 0.08)' : 'white',
+                                    borderColor: isSel ? visionPro.primary : 'rgba(0,0,0,0.08)',
+                                    bgcolor: isSel ? 'rgba(79, 70, 229, 0.08)' : 'white',
                                     cursor: 'pointer',
                                     minWidth: isMobile ? '100%' : 'calc(50% - 8px)',
                                     maxWidth: isMobile ? '100%' : 'calc(50% - 8px)',
-                                    transition: 'all 0.2s',
+                                    transition: 'all 0.2s ease',
+                                    boxShadow: isSel ? '0 2px 8px rgba(79, 70, 229, 0.15)' : '0 1px 4px rgba(0,0,0,0.04)',
                                     '&:hover': {
-                                        borderColor: '#10B981',
-                                        bgcolor: 'rgba(16, 185, 129, 0.05)'
+                                        borderColor: visionPro.primary,
+                                        bgcolor: 'rgba(79, 70, 229, 0.04)'
+                                    },
+                                    '&:active': {
+                                        transform: 'scale(0.98)'
                                     }
                                 }}
                             >
@@ -1011,7 +1016,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                         return (
                             <>
                                 <DialogTitle sx={{
-                                    bgcolor: '#059669',
+                                    background: visionPro.gradientPrimary,
                                     color: 'white',
                                     py: 1.5,
                                     display: 'flex',
@@ -1098,7 +1103,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
             TransitionComponent={Slide}
         >
             {/* APP BAR - MATCH PREDICTION SETUP */}
-            <AppBar position="static" sx={{ bgcolor: '#059669', backgroundImage: 'linear-gradient(to right, #059669, #10B981)' }}>
+            <AppBar position="static" sx={{ bgcolor: visionPro.primary, backgroundImage: visionPro.gradientPrimary }}>
                 <Toolbar sx={{ gap: 1, py: 0.5 }}>
 
 
@@ -1134,17 +1139,17 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                         value={teamA}
                         label="TEAM A"
                         onChange={(e) => setTeamA(e.target.value)}
-                        sx={{ '& .MuiSelect-select': { fontWeight: 'bold', color: '#059669' } }}
+                        sx={{ '& .MuiSelect-select': { fontWeight: 'bold', color: visionPro.primary } }}
                     >
                         {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
                     </Select>
                 </FormControl>
 
                 <Box sx={{
-                    width: 45, height: 45, borderRadius: '50%',
+                    width: 48, height: 48, borderRadius: '50%',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    bgcolor: visionPro.primary, color: 'white',
-                    boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)'
+                    background: visionPro.gradientPrimary, color: 'white',
+                    boxShadow: '0 4px 16px rgba(79, 70, 229, 0.35)'
                 }}>
                     <Typography variant="subtitle1" fontWeight="900">VS</Typography>
                 </Box>
@@ -1155,7 +1160,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                         value={teamB}
                         label="TEAM B"
                         onChange={(e) => setTeamB(e.target.value)}
-                        sx={{ '& .MuiSelect-select': { fontWeight: 'bold', color: '#059669' } }}
+                        sx={{ '& .MuiSelect-select': { fontWeight: 'bold', color: visionPro.secondary } }}
                     >
                         {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
                     </Select>

@@ -502,7 +502,7 @@ const RulesView = () => {
 };
 
 // Mobile App Style Dashboard Home
-const DashboardHome = () => {
+const DashboardHome = ({ onNavigate }) => {
     const { token, user } = useContext(AuthContext);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -694,13 +694,16 @@ const DashboardHome = () => {
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                 {[
-                    { title: 'Manage Players', desc: 'Add, edit or remove players', icon: <SportsCricketIcon />, color: '#10b981' },
-                    { title: 'Team Groups', desc: 'Create and manage teams', icon: <GroupIcon />, color: '#3b82f6' },
-                    { title: 'User Approvals', desc: `${stats.pendingUsers} pending requests`, icon: <PeopleIcon />, color: '#f59e0b' },
+                    { title: 'Manage Players', desc: 'Add, edit or remove players', icon: <SportsCricketIcon />, color: '#10b981', viewId: 'players' },
+                    { title: 'Team Groups', desc: 'Create and manage teams', icon: <GroupIcon />, color: '#3b82f6', viewId: 'groups' },
+                    { title: 'User Approvals', desc: `${stats.pendingUsers} pending requests`, icon: <PeopleIcon />, color: '#f59e0b', viewId: 'users' },
+                    { title: 'Match Prediction', desc: 'Client dashboard view', icon: <DashboardIcon />, color: '#8b5cf6', viewId: 'clientDashboard' },
+                    { title: 'Prediction Rules', desc: 'View Tamil astrology rules', icon: <GavelIcon />, color: '#ec4899', viewId: 'rules' },
                 ].map((action, index) => (
                     <Paper
                         key={index}
                         elevation={0}
+                        onClick={() => onNavigate && onNavigate(action.viewId)}
                         sx={{
                             p: 2,
                             borderRadius: '16px',
@@ -2048,13 +2051,13 @@ const AdminDashboard = () => {
 
     const renderContent = () => {
         switch (currentView) {
-            case 'dashboard': return <DashboardHome />;
+            case 'dashboard': return <DashboardHome onNavigate={setCurrentView} />;
             case 'users': return <UsersManager />;
             case 'players': return <PlayersManager />;
             case 'groups': return <GroupsManager />;
             case 'clientDashboard': return <UserDashboard hideHeader={true} />;
             case 'rules': return <RulesView />;
-            default: return <DashboardHome />;
+            default: return <DashboardHome onNavigate={setCurrentView} />;
         }
     };
 
