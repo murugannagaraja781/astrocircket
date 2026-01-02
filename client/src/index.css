@@ -1,18 +1,69 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Montserrat:wght@500;700;900&family=Teko:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;700;800;900&family=Teko:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-    background-color: #c2cadc;
-    /* Dark Blue */
-    color: #f3f4f6;
-    /* Light Text */
-    font-family: 'Inter', sans-serif;
-    overflow-x: hidden;
+/* ============================================
+   CRICKET THEME - CSK Yellow, Green & Orange
+   Requested: Light Green, CSK Yellow, Dark Green, Orange
+   ============================================ */
+:root {
+    /* CSK Yellow - Primary Brand */
+    --theme-csk-yellow: #F9CD05;
+    --theme-csk-yellow-warm: #FFD600;
+
+    /* Dark Green - Deep Contrast / Text / Headers */
+    --theme-dark-green: #004D40;
+    --theme-dark-green-light: #00695C;
+
+    /* Light Green - Backgrounds */
+    --theme-light-green: #F0FDF4;
+    --theme-mint: #DCFCE7;
+
+    /* Orange - Accents / CTAs */
+    --theme-orange: #F97316;
+    --theme-orange-vibrant: #FF5722;
+
+    /* Neutral */
+    --text-primary: #004D40;
+    /* Dark Green Text */
+    --text-secondary: #00695C;
+    --bg-white: #FFFFFF;
+
+    /* Gradients */
+    /* Primary: Yellow to Orange (Vibrant) */
+    --gradient-primary: linear-gradient(90deg, #F9CD05, #F97316);
+    /* Dark Header: Dark Green */
+    --gradient-dark: linear-gradient(90deg, #004D40, #00695C);
+    /* Background: Light Green fade */
+    --gradient-bg-light: linear-gradient(180deg, #F0FDF4 0%, #FFFFFF 100%);
+
+    /* Shadows */
+    --shadow-card: 0 4px 20px rgba(0, 77, 64, 0.08);
+    /* Green tinted shadow */
+    --shadow-card-hover: 0 8px 30px rgba(0, 77, 64, 0.12);
+    --shadow-button: 0 4px 14px rgba(249, 115, 22, 0.25);
+    /* Orange tinted shadow */
+    --shadow-button-hover: 0 6px 20px rgba(249, 115, 22, 0.35);
+
+    /* Transitions */
+    --transition-fast: 150ms ease-out;
+    --transition-normal: 200ms ease-out;
 }
 
+/* ============================================
+   BASE STYLES
+   ============================================ */
+body {
+    background: var(--gradient-bg-light);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* Typography */
 h1,
 h2,
 h3,
@@ -20,80 +71,210 @@ h4,
 h5,
 h6 {
     font-family: 'Montserrat', sans-serif;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-weight: 700;
+    color: var(--theme-dark-green);
 }
 
-/* Global scrollbar fallback */
+.font-score,
+.score-number {
+    font-family: 'Teko', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--theme-orange-vibrant);
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: transparent;
+    background: var(--theme-light-green);
+    border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #c0cee2;
-    border-radius: 3px;
+    background: linear-gradient(180deg, var(--theme-csk-yellow), var(--theme-orange));
+    border-radius: 4px;
 }
 
-/* Glassmorphic Scrollbar Utility */
+::-webkit-scrollbar-thumb:hover {
+    background: var(--theme-orange);
+}
+
+/* Custom Scrollbar Utility */
 .custom-scrollbar::-webkit-scrollbar {
     width: 6px;
     height: 6px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 77, 64, 0.05);
+    border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
+    background: rgba(249, 205, 5, 0.5);
+    border-radius: 3px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.4);
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+/* Text Colors */
+.text-theme-yellow {
+    color: var(--theme-csk-yellow);
 }
 
-/* Utilities */
+.text-theme-green {
+    color: var(--theme-dark-green);
+}
+
+.text-theme-orange {
+    color: var(--theme-orange);
+}
+
+/* Background Colors */
+.bg-theme-yellow {
+    background-color: var(--theme-csk-yellow);
+}
+
+.bg-theme-green {
+    background-color: var(--theme-dark-green);
+}
+
+.bg-theme-orange {
+    background-color: var(--theme-orange);
+}
+
+.bg-theme-light-green {
+    background-color: var(--theme-light-green);
+}
+
+/* Gradients */
+.bg-gradient-primary {
+    background: var(--gradient-primary);
+}
+
+.bg-gradient-dark {
+    background: var(--gradient-dark);
+}
+
+/* Cards */
+.cricket-card {
+    background: var(--bg-white);
+    border-radius: 16px;
+    box-shadow: var(--shadow-card);
+    border: 1px solid rgba(0, 77, 64, 0.08);
+    transition: box-shadow var(--transition-normal), transform var(--transition-normal);
+}
+
+.cricket-card:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-2px);
+}
+
+/* Buttons */
+.btn-cricket-primary {
+    background: var(--gradient-primary);
+    color: #004D40;
+    /* Dark Text on Yellow/Orange usually better, or White? Let's try Dark Green for CSK feel */
+    color: #FFFFFF;
+    /* Or White text on vibrant orange/yellow */
+    font-weight: 700;
+    border-radius: 50px;
+    padding: 12px 28px;
+    box-shadow: var(--shadow-button);
+    transition: all var(--transition-fast);
+}
+
+.btn-cricket-primary:hover {
+    box-shadow: var(--shadow-button-hover);
+    transform: translateY(-2px);
+}
+
+/* Chips / Badges */
+.cricket-chip {
+    background: rgba(249, 205, 5, 0.15);
+    color: var(--theme-dark-green);
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 4px 12px;
+    border: 1px solid rgba(249, 205, 5, 0.3);
+}
+
+/* Search Bar */
+.cricket-search {
+    background: var(--bg-white);
+    border-radius: 50px;
+    box-shadow: 0 2px 12px rgba(0, 77, 64, 0.05);
+    border: 1px solid rgba(0, 77, 64, 0.1);
+    transition: all var(--transition-normal);
+}
+
+.cricket-search:focus-within {
+    box-shadow: 0 4px 20px rgba(0, 77, 64, 0.1), 0 0 0 3px rgba(249, 205, 5, 0.2);
+    border-color: var(--theme-csk-yellow);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 300ms ease-out;
+}
+
+.animate-slide-up {
+    animation: slideUp 300ms ease-out;
+}
+
+/* ============================================
+   LEGACY COMPATIBILITY
+   ============================================ */
+/* Map legacy classes to new theme */
 .text-india-blue {
-    color: #60a5fa;
+    color: var(--theme-dark-green);
 }
 
-/* Lighter blue for dark mode */
 .text-india-orange {
-    color: #fb923c;
+    color: var(--theme-orange);
 }
 
-/* Lighter orange for dark mode */
 .bg-india-gradient {
-    background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%);
+    background: var(--gradient-primary);
 }
 
-/* Header Logo - Responsive */
-.header-logo {
-    height: 45px;
-    width: auto;
-    transition: all 0.3s ease;
+.bg-green-50 {
+    background-color: var(--theme-light-green);
 }
 
-@media (min-width: 480px) {
-    .header-logo {
-        height: 50px;
-    }
-}
-
-@media (min-width: 768px) {
-    .header-logo {
-        height: 55px;
-    }
-}
-
-@media (min-width: 1024px) {
-    .header-logo {
-        height: 60px;
-    }
+.bg-pitch-sky {
+    background: var(--gradient-bg-light);
 }

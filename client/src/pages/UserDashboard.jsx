@@ -23,16 +23,21 @@ import GridOnIcon from '@mui/icons-material/GridOn';
 import CloseIcon from '@mui/icons-material/Close';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
-// --- COLOR PALETTE (VISION PRO) ---
+// --- COLOR PALETTE (CSK THEME - YELLOW/GREEN/ORANGE) ---
 const visionPro = {
-    background: '#F0FDF4', // Light Milk Green
+    background: '#F0FDF4', // Light Green
     paper: '#FFFFFF', // Clean White
-    primary: '#059669', // Emerald Green
-    secondary: '#10B981', // Mint Green
-    accent: '#D1FAE5', // Soft Mint
-    text: '#064E3B', // Deep Green (Contrast)
-    textSecondary: '#374151', // Dark Gray
-    border: '#A7F3D0' // Milk Green Border
+    primary: '#F9CD05', // CSK Yellow
+    secondary: '#F97316', // Orange
+    accent: '#FFD600', // Yellow Warm
+    text: '#004D40', // Dark Green
+    textSecondary: '#00695C', // Dark Teal
+    border: 'rgba(0, 77, 64, 0.12)', // Subtle Dark Green Border
+    success: '#10B981', // Success Green
+    warning: '#F59E0B', // Amber
+    error: '#EF4444', // Error Red
+    gradientPrimary: 'linear-gradient(90deg, #F9CD05, #F97316)',
+    gradientWarm: 'linear-gradient(135deg, #F9CD05 0%, #F97316 100%)',
 };
 
 // --- HELPERS ---
@@ -1687,6 +1692,8 @@ const UserDashboard = ({ hideHeader = false }) => {
                                 alt="S&B Entertainment"
                                 style={{
                                     objectFit: 'contain',
+                                    height: '40px',
+                                    width: 'auto',
                                     filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
                                 }}
                                 className="header-logo"
