@@ -1097,9 +1097,9 @@ const PlayersManager = () => {
 
             {/* Dialogs Responsive */}
             <Dialog open={openEdit} onClose={() => setOpenEdit(false)} fullWidth maxWidth="sm" fullScreen={isMobile}>
-                <DialogTitle>{selectedPlayer ? 'Edit Player' : 'Add Player'}</DialogTitle>
+                <DialogTitle sx={{ color: '#1a202c' }}>{selectedPlayer ? 'Edit Player' : 'Add Player'}</DialogTitle>
                 <DialogContent>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1, color: '#1a202c' }}>
                         {selectedPlayer && <TextField label="ID" value={playerForm.id} disabled fullWidth size="small" />}
 
                         {/* Profile Picture Preview & Input */}
