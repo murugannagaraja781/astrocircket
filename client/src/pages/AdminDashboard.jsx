@@ -689,16 +689,15 @@ const DashboardHome = ({ onNavigate }) => {
             </Box>
 
             {/* Activity / Insight Section */}
-            <Typography variant="subtitle2" fontWeight="700" color="#1e293b" sx={{ mt: 3, mb: 1.5, px: 0.5 }}>
+            <Typography variant="subtitle2" fontWeight="700" color="#111827" sx={{ mt: 3, mb: 1.5, px: 0.5 }}>
                 Quick Actions
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                 {[
-                    { title: 'Manage Players', desc: 'Add, edit or remove players', icon: <SportsCricketIcon />, color: '#10b981', viewId: 'players' },
-                    { title: 'Team Groups', desc: 'Create and manage teams', icon: <GroupIcon />, color: '#3b82f6', viewId: 'groups' },
+                    { title: 'Active Teams', desc: 'Manage your cricket teams', icon: <GroupIcon />, color: '#2563eb', viewId: 'groups' },
+                    { title: 'Manage Players', desc: 'Add, edit or remove players', icon: <SportsCricketIcon />, color: '#22c55e', viewId: 'players' },
                     { title: 'User Approvals', desc: `${stats.pendingUsers} pending requests`, icon: <PeopleIcon />, color: '#f59e0b', viewId: 'users' },
-                    { title: 'Match Prediction', desc: 'Client dashboard view', icon: <DashboardIcon />, color: '#8b5cf6', viewId: 'clientDashboard' },
-                    { title: 'Prediction Rules', desc: 'View Tamil astrology rules', icon: <GavelIcon />, color: '#ec4899', viewId: 'rules' },
+                    { title: 'Prediction Rules', desc: 'View Tamil astrology rules', icon: <GavelIcon />, color: '#8b5cf6', viewId: 'rules' },
                 ].map((action, index) => (
                     <Paper
                         key={index}
@@ -734,10 +733,10 @@ const DashboardHome = ({ onNavigate }) => {
                             {action.icon}
                         </Box>
                         <Box sx={{ flexGrow: 1 }}>
-                            <Typography variant="body2" fontWeight="700" color="#1e293b">
+                            <Typography variant="body2" fontWeight="700" color="#111827">
                                 {action.title}
                             </Typography>
-                            <Typography variant="caption" color="#64748b">
+                            <Typography variant="caption" color="#6b7280">
                                 {action.desc}
                             </Typography>
                         </Box>
@@ -746,6 +745,37 @@ const DashboardHome = ({ onNavigate }) => {
                         </Box>
                     </Paper>
                 ))}
+            </Box>
+
+            {/* START PREDICTION - Floating Action Button Style */}
+            <Box
+                onClick={() => onNavigate && onNavigate('clientDashboard')}
+                sx={{
+                    position: 'fixed',
+                    bottom: 24,
+                    right: 24,
+                    width: 64,
+                    height: 64,
+                    borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    boxShadow: '0 8px 24px rgba(37, 99, 235, 0.4)',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    zIndex: 1000,
+                    '&:hover': {
+                        transform: 'scale(1.1)',
+                        boxShadow: '0 12px 32px rgba(37, 99, 235, 0.5)',
+                    },
+                    '&:active': {
+                        transform: 'scale(0.95)',
+                    }
+                }}
+            >
+                <SportsCricketIcon sx={{ fontSize: 28 }} />
             </Box>
         </Box>
     );
@@ -1263,7 +1293,7 @@ const PlayersManager = () => {
                                             sx={{ width: 40, height: 40, border: '2px solid rgba(255,255,255,0.2)' }}
                                         />
                                         <Box>
-                                            <Typography variant="body2" fontWeight="bold" color="#1e293b">{p.name}</Typography>
+                                            <Typography variant="body2" fontWeight="bold" color="#08101cff">{p.name}</Typography>
                                             {isMobile && <Typography variant="caption" color="textSecondary">{p.birthPlace}</Typography>}
                                         </Box>
                                     </Box>
