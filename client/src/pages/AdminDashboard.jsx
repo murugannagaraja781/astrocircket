@@ -340,6 +340,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import DescriptionIcon from '@mui/icons-material/Description'; // New Icon for View Chart
 import GavelIcon from '@mui/icons-material/Gavel'; // Rules Icon
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'; // Chevron for Quick Actions
 import RasiChart from '../components/RasiChart';
 import PlanetaryTable from '../components/PlanetaryTable';
 import AuthContext from '../context/AuthContext';
@@ -500,9 +501,12 @@ const RulesView = () => {
     );
 };
 
-// Placeholder Components for Sections
+// Mobile App Style Dashboard Home
 const DashboardHome = () => {
-    const { token } = useContext(AuthContext);
+    const { token, user } = useContext(AuthContext);
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
     const [stats, setStats] = useState({
         totalUsers: 0,
         pendingUsers: 0,
@@ -525,33 +529,222 @@ const DashboardHome = () => {
         fetchStats();
     }, []);
 
+    // Primary KPI Cards Data
+    const primaryKPIs = [
+        {
+            label: 'Total Users',
+            value: stats.totalUsers,
+            icon: <PeopleIcon sx={{ fontSize: 28 }} />,
+            gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            trend: '+12%'
+        },
+        {
+            label: 'Total Players',
+            value: stats.totalPlayers,
+            icon: <SportsCricketIcon sx={{ fontSize: 28 }} />,
+            gradient: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
+            trend: '+8%'
+        },
+    ];
+
+    // Secondary Mini Cards Data
+    const secondaryKPIs = [
+        { label: 'Pending', value: stats.pendingUsers, icon: <GroupIcon sx={{ fontSize: 20 }} />, color: '#f59e0b' },
+        { label: 'Groups', value: stats.totalGroups, icon: <DashboardIcon sx={{ fontSize: 20 }} />, color: '#ec4899' },
+        { label: 'Views', value: stats.totalViews, icon: <DashboardIcon sx={{ fontSize: 20 }} />, color: '#3b82f6' },
+    ];
+
     return (
-        <Grid container spacing={3}>
-            {[
-                { label: 'Total Users', value: stats.totalUsers, icon: <PeopleIcon />, color: 'linear-gradient(135deg, #0075FF 0%, #2CD9FF 100%)' },
-                { label: 'Pending Users', value: stats.pendingUsers, icon: <GroupIcon />, color: 'linear-gradient(135deg, #FF0080 0%, #7928CA 100%)' },
-                { label: 'Total Players', value: stats.totalPlayers, icon: <SportsCricketIcon />, color: 'linear-gradient(135deg, #429321 0%, #B4EC51 100%)' },
-                { label: 'Total Groups', value: stats.totalGroups, icon: <DashboardIcon />, color: 'linear-gradient(135deg, #FF512F 0%, #DD2476 100%)' },
-                { label: 'Total Views', value: stats.totalViews, icon: <DashboardIcon />, color: 'linear-gradient(135deg, #00B4D8 0%, #0077B6 100%)' }
-            ].map((item, index) => (
-                <Grid item xs={12} sm={6} md={3} key={index}>
-                    <Paper sx={{ p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <Box>
-                            <Typography variant="body2" color="text.secondary" fontWeight="bold">{item.label}</Typography>
-                            <Typography variant="h5" color="white" fontWeight="bold">{item.value}</Typography>
-                        </Box>
+        <Box sx={{ pb: 4, px: isMobile ? 1 : 0 }}>
+            {/* Greeting Section */}
+            <Box sx={{ mb: 3, pt: 1 }}>
+                <Typography variant="h5" fontWeight="800" color="#1e293b" sx={{ mb: 0.5 }}>
+                    Welcome back! 👋
+                </Typography>
+                <Typography variant="body2" color="#64748b">
+                    Here's your dashboard overview
+                </Typography>
+            </Box>
+
+            {/* Primary KPI Cards - Large Gradient Cards */}
+            <Grid container spacing={2} sx={{ mb: 3 }}>
+                {primaryKPIs.map((kpi, index) => (
+                    <Grid item xs={6} key={index}>
+                        <Paper
+                            elevation={0}
+                            sx={{
+                                p: 2.5,
+                                borderRadius: '20px',
+                                background: kpi.gradient,
+                                color: 'white',
+                                position: 'relative',
+                                overflow: 'hidden',
+                                minHeight: 140,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'space-between',
+                                boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+                                transition: 'transform 0.2s ease',
+                                '&:active': {
+                                    transform: 'scale(0.98)',
+                                }
+                            }}
+                        >
+                            {/* Icon Badge */}
+                            <Box sx={{
+                                position: 'absolute',
+                                top: 12,
+                                right: 12,
+                                width: 40,
+                                height: 40,
+                                borderRadius: '12px',
+                                bgcolor: 'rgba(255,255,255,0.2)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                {kpi.icon}
+                            </Box>
+
+                            {/* Value */}
+                            <Typography variant="h3" fontWeight="800" sx={{ mt: 3 }}>
+                                {kpi.value}
+                            </Typography>
+
+                            {/* Label & Trend */}
+                            <Box>
+                                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                                    {kpi.label}
+                                </Typography>
+                                <Typography variant="caption" sx={{
+                                    bgcolor: 'rgba(255,255,255,0.25)',
+                                    px: 1,
+                                    py: 0.25,
+                                    borderRadius: '8px',
+                                    fontWeight: 600,
+                                    fontSize: '0.7rem'
+                                }}>
+                                    {kpi.trend} ↑
+                                </Typography>
+                            </Box>
+                        </Paper>
+                    </Grid>
+                ))}
+            </Grid>
+
+            {/* Secondary Metrics - Horizontal Scrollable Mini Cards */}
+            <Typography variant="subtitle2" fontWeight="700" color="#1e293b" sx={{ mb: 1.5, px: 0.5 }}>
+                Quick Stats
+            </Typography>
+            <Box sx={{
+                display: 'flex',
+                gap: 1.5,
+                overflowX: 'auto',
+                pb: 1,
+                '&::-webkit-scrollbar': { display: 'none' },
+                scrollbarWidth: 'none'
+            }}>
+                {secondaryKPIs.map((kpi, index) => (
+                    <Paper
+                        key={index}
+                        elevation={0}
+                        sx={{
+                            p: 2,
+                            borderRadius: '16px',
+                            minWidth: 110,
+                            bgcolor: 'white',
+                            boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+                            border: '1px solid rgba(0,0,0,0.04)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            gap: 0.5,
+                            transition: 'transform 0.2s ease',
+                            '&:active': {
+                                transform: 'scale(0.96)',
+                            }
+                        }}
+                    >
                         <Box sx={{
-                            width: 45, height: 45, borderRadius: '12px',
-                            background: item.color,
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            color: 'white', boxShadow: '0 4px 6px rgba(0,0,0,0.3)'
+                            width: 36,
+                            height: 36,
+                            borderRadius: '10px',
+                            bgcolor: `${kpi.color}15`,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: kpi.color,
+                            mb: 0.5
                         }}>
-                            {item.icon}
+                            {kpi.icon}
+                        </Box>
+                        <Typography variant="h6" fontWeight="800" color="#1e293b">
+                            {kpi.value}
+                        </Typography>
+                        <Typography variant="caption" color="#64748b" fontWeight={500}>
+                            {kpi.label}
+                        </Typography>
+                    </Paper>
+                ))}
+            </Box>
+
+            {/* Activity / Insight Section */}
+            <Typography variant="subtitle2" fontWeight="700" color="#1e293b" sx={{ mt: 3, mb: 1.5, px: 0.5 }}>
+                Quick Actions
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                {[
+                    { title: 'Manage Players', desc: 'Add, edit or remove players', icon: <SportsCricketIcon />, color: '#10b981' },
+                    { title: 'Team Groups', desc: 'Create and manage teams', icon: <GroupIcon />, color: '#3b82f6' },
+                    { title: 'User Approvals', desc: `${stats.pendingUsers} pending requests`, icon: <PeopleIcon />, color: '#f59e0b' },
+                ].map((action, index) => (
+                    <Paper
+                        key={index}
+                        elevation={0}
+                        sx={{
+                            p: 2,
+                            borderRadius: '16px',
+                            bgcolor: 'white',
+                            boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+                            border: '1px solid rgba(0,0,0,0.04)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 2,
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease',
+                            '&:active': {
+                                transform: 'scale(0.99)',
+                                bgcolor: '#f8fafc'
+                            }
+                        }}
+                    >
+                        <Box sx={{
+                            width: 44,
+                            height: 44,
+                            borderRadius: '12px',
+                            bgcolor: `${action.color}15`,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: action.color
+                        }}>
+                            {action.icon}
+                        </Box>
+                        <Box sx={{ flexGrow: 1 }}>
+                            <Typography variant="body2" fontWeight="700" color="#1e293b">
+                                {action.title}
+                            </Typography>
+                            <Typography variant="caption" color="#64748b">
+                                {action.desc}
+                            </Typography>
+                        </Box>
+                        <Box sx={{ color: '#cbd5e1' }}>
+                            <KeyboardArrowDownIcon sx={{ transform: 'rotate(-90deg)' }} />
                         </Box>
                     </Paper>
-                </Grid>
-            ))}
-        </Grid>
+                ))}
+            </Box>
+        </Box>
     );
 };
 
