@@ -377,4 +377,28 @@ const deletePlayer = async (req, res) => {
     }
 };
 
-module.exports = { syncPlayers, getPlayers, getPlayerById, uploadPlayers, updatePlayer, addPlayer, deletePlayer };
+// Delete All Players (with password protection)
+const deleteAllPlayers = async (req, res) => {
+    try {
+        const { password } = req.body;
+
+        // Password verification
+        if (password !== '123456789') {
+            return res.status(401).json({ msg: 'Invalid password' });
+        }
+
+        // Delete all players
+        const result = await Player.deleteMany({});
+
+        // Also clear all players from groups
+        const Group = require('../models/Group');
+        await Group.updateMany({}, { $set: { players: [] } });
+
+        res.json({ msg: `Deleted ${result.deletedCount} players successfully` });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+};
+
+module.exports = { syncPlayers, getPlayers, getPlayerById, uploadPlayers, updatePlayer, addPlayer, deletePlayer, deleteAllPlayers };

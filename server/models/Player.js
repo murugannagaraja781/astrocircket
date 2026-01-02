@@ -1,18 +1,19 @@
 const mongoose = require('mongoose');
 
 const PlayerSchema = new mongoose.Schema({
-    id: { type: String, required: true, unique: true },
+    id: { type: String, unique: true }, // Auto-generated if not provided
     name: { type: String, required: true },
-    profile: { type: String },
-    dob: { type: String },
-    birthTime: { type: String }, // New field for HH:mm
-    birthPlace: { type: String },
-    latitude: { type: Number },
-    longitude: { type: Number },
-    timezone: { type: String },
-    birthChart: { type: Object }, // Store the entire JSON response here
-    role: { type: String, enum: ['BAT', 'BOWL', 'ALL'], default: 'BAT' },
+    profile: { type: String, required: true },
+    dob: { type: String, required: true },
+    birthTime: { type: String, required: true },
+    birthPlace: { type: String, required: true },
+    latitude: { type: Number, required: true },
+    longitude: { type: Number, required: true },
+    timezone: { type: String, required: true },
+    birthChart: { type: Object }, // Auto-generated from API, not required from user
+    role: { type: String, enum: ['BAT', 'BOWL', 'ALL'], default: 'BAT', required: true },
     manualStatus: { type: String, default: '' }
 });
 
 module.exports = mongoose.model('Player', PlayerSchema);
+

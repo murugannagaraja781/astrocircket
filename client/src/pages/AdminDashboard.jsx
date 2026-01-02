@@ -12,39 +12,39 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const visionTheme = createTheme({
     palette: {
-        mode: 'light',
+        mode: 'dark',
         background: {
-            default: '#F0FDF4', // Light Green
-            paper: '#FFFFFF',
+            default: '#0a0f1a',
+            paper: 'rgba(20, 30, 48, 0.95)',
         },
         primary: {
-            main: '#F9CD05', // CSK Yellow
-            light: '#FDE047',
-            dark: '#B45309',
-            contrastText: '#004D40', // Dark Green Text on Yellow
+            main: '#6366f1',
+            light: '#818cf8',
+            dark: '#4f46e5',
+            contrastText: '#FFFFFF',
         },
         secondary: {
-            main: '#F97316', // Vibrant Orange
-            light: '#FB923C',
-            dark: '#EA580C',
+            main: '#ec4899',
+            light: '#f472b6',
+            dark: '#db2777',
             contrastText: '#FFFFFF',
         },
         warning: {
-            main: '#F59E0B',
-            light: '#FDE68A',
-            contrastText: '#78350F',
+            main: '#f59e0b',
+            light: '#fbbf24',
+            contrastText: '#000000',
         },
         success: {
-            main: '#10B981',
+            main: '#10b981',
             contrastText: '#FFFFFF',
         },
         error: {
-            main: '#EF4444',
+            main: '#ef4444',
             contrastText: '#FFFFFF',
         },
         text: {
-            primary: '#004D40', // Dark Green
-            secondary: '#00695C',
+            primary: '#f1f5f9',
+            secondary: '#94a3b8',
         },
     },
     shape: {
@@ -55,13 +55,14 @@ const visionTheme = createTheme({
             styleOverrides: {
                 root: {
                     backgroundImage: 'none',
-                    backgroundColor: '#FFFFFF',
+                    backgroundColor: 'rgba(20, 30, 48, 0.95)',
                     borderRadius: '16px',
-                    border: '1px solid rgba(0, 77, 64, 0.08)',
-                    boxShadow: '0 4px 20px rgba(0, 77, 64, 0.08)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+                    backdropFilter: 'blur(20px)',
                     transition: 'box-shadow 200ms ease-out, transform 200ms ease-out',
                     '&:hover': {
-                        boxShadow: '0 8px 30px rgba(0, 77, 64, 0.12)',
+                        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.4)',
                     },
                 },
             },
@@ -76,28 +77,25 @@ const visionTheme = createTheme({
                     transition: 'all 150ms ease-out',
                 },
                 contained: {
-                    boxShadow: '0 4px 14px rgba(249, 115, 22, 0.25)',
+                    boxShadow: '0 4px 14px rgba(99, 102, 241, 0.25)',
                     '&:hover': {
                         transform: 'translateY(-2px)',
-                        boxShadow: '0 6px 20px rgba(249, 115, 22, 0.35)',
+                        boxShadow: '0 6px 20px rgba(99, 102, 241, 0.35)',
                     },
                 },
                 containedPrimary: {
-                    background: 'linear-gradient(90deg, #F9CD05, #F97316)',
-                    color: '#004D40', // Dark Green text on Yellow/Orange
+                    background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
                     '&:hover': {
-                        background: 'linear-gradient(90deg, #F59E0B, #EA580C)',
-                        boxShadow: '0 6px 20px rgba(249, 115, 22, 0.35)',
+                        background: 'linear-gradient(135deg, #818cf8, #a78bfa)',
                     },
                 },
                 outlined: {
                     borderWidth: '2px',
-                    borderColor: '#F9CD05',
-                    color: '#004D40',
+                    borderColor: 'rgba(99, 102, 241, 0.5)',
                     '&:hover': {
                         borderWidth: '2px',
-                        backgroundColor: 'rgba(249, 205, 5, 0.08)',
-                        borderColor: '#F9CD05',
+                        backgroundColor: 'rgba(99, 102, 241, 0.08)',
+                        borderColor: '#6366f1',
                     },
                 },
             },
@@ -113,15 +111,15 @@ const visionTheme = createTheme({
         MuiTableCell: {
             styleOverrides: {
                 root: {
-                    borderBottom: '1px solid rgba(0, 77, 64, 0.08)',
-                    color: '#004D40',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                    color: '#f1f5f9',
                     padding: '14px 16px',
                 },
                 head: {
-                    background: 'linear-gradient(90deg, #004D40, #00695C)', // Dark Green Header
+                    background: 'linear-gradient(90deg, #1e293b, #334155)',
                     color: '#FFFFFF',
                     textTransform: 'uppercase',
-                    fontSize: '0.8rem', // Slightly larger
+                    fontSize: '0.75rem',
                     fontWeight: 700,
                     letterSpacing: '0.05em',
                     position: 'sticky',
@@ -135,10 +133,10 @@ const visionTheme = createTheme({
                 root: {
                     transition: 'background-color 150ms ease-out',
                     '&:nth-of-type(odd)': {
-                        backgroundColor: 'rgba(240, 253, 244, 0.5)', // Very light green
+                        backgroundColor: 'rgba(255, 255, 255, 0.02)',
                     },
                     '&:hover': {
-                        backgroundColor: 'rgba(249, 205, 5, 0.08) !important', // Yellow tint on hover
+                        backgroundColor: 'rgba(99, 102, 241, 0.08) !important',
                     },
                 },
             },
@@ -151,8 +149,8 @@ const visionTheme = createTheme({
                 },
                 filled: {
                     '&.MuiChip-colorDefault': {
-                        backgroundColor: 'rgba(0, 77, 64, 0.1)',
-                        color: '#004D40',
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        color: '#f1f5f9',
                     },
                 },
                 outlined: {
@@ -164,36 +162,36 @@ const visionTheme = createTheme({
             styleOverrides: {
                 root: {
                     '& .MuiFilledInput-root': {
-                        backgroundColor: 'rgba(0, 77, 64, 0.03)',
+                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
                         borderRadius: '50px',
-                        border: '1px solid rgba(0, 77, 64, 0.1)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
                         transition: 'all 200ms ease-out',
                         '&:hover': {
-                            backgroundColor: 'rgba(0, 77, 64, 0.06)',
-                            borderColor: 'rgba(0, 77, 64, 0.2)',
+                            backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                            borderColor: 'rgba(255, 255, 255, 0.2)',
                         },
                         '&.Mui-focused': {
-                            backgroundColor: '#FFFFFF',
-                            borderColor: '#F9CD05',
-                            boxShadow: '0 4px 20px rgba(0, 77, 64, 0.1), 0 0 0 3px rgba(249, 205, 5, 0.2)',
+                            backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                            borderColor: '#6366f1',
+                            boxShadow: '0 0 0 3px rgba(99, 102, 241, 0.2)',
                         },
                         '&:before, &:after': {
                             display: 'none',
                         },
                     },
                     '& .MuiInputLabel-root': {
-                        color: '#00695C',
+                        color: '#94a3b8',
                         fontWeight: 500,
-                        '&.Mui-focused': { color: '#004D40' }
+                        '&.Mui-focused': { color: '#818cf8' }
                     },
                     '& .MuiInputBase-input': {
-                        color: '#004D40',
+                        color: '#f1f5f9',
                     },
                     '& .MuiOutlinedInput-root': {
                         borderRadius: '50px',
-                        '& fieldset': { borderColor: 'rgba(0, 77, 64, 0.15)' },
-                        '&:hover fieldset': { borderColor: 'rgba(0, 77, 64, 0.3)' },
-                        '&.Mui-focused fieldset': { borderColor: '#F9CD05', borderWidth: '2px' },
+                        '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.15)' },
+                        '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                        '&.Mui-focused fieldset': { borderColor: '#6366f1', borderWidth: '2px' },
                     }
                 }
             }
@@ -201,11 +199,12 @@ const visionTheme = createTheme({
         MuiDialog: {
             styleOverrides: {
                 paper: {
-                    backgroundColor: '#FFFFFF',
+                    backgroundColor: 'rgba(20, 30, 48, 0.98)',
                     backgroundImage: 'none',
-                    border: '1px solid rgba(0, 77, 64, 0.08)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
                     borderRadius: '20px',
-                    boxShadow: '0 25px 50px rgba(0, 77, 64, 0.15)',
+                    boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)',
+                    backdropFilter: 'blur(20px)',
                 }
             }
         },
@@ -214,9 +213,9 @@ const visionTheme = createTheme({
                 root: {
                     fontSize: '1.25rem',
                     fontWeight: 700,
-                    color: '#004D40',
-                    borderBottom: '1px solid rgba(0, 77, 64, 0.1)',
-                    background: 'linear-gradient(180deg, #F0FDF4 0%, #FFFFFF 100%)',
+                    color: '#f1f5f9',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                    background: 'linear-gradient(180deg, rgba(99, 102, 241, 0.1) 0%, transparent 100%)',
                 }
             }
         },
@@ -224,7 +223,7 @@ const visionTheme = createTheme({
             styleOverrides: {
                 root: {
                     padding: '24px !important',
-                    backgroundColor: '#FFFFFF',
+                    backgroundColor: 'transparent',
                 }
             }
         },
@@ -232,25 +231,26 @@ const visionTheme = createTheme({
             styleOverrides: {
                 root: {
                     padding: '16px 24px',
-                    borderTop: '1px solid rgba(0, 77, 64, 0.1)',
-                    backgroundColor: '#F0FDF4',
+                    borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.2)',
                 }
             }
         },
         MuiAppBar: {
             styleOverrides: {
                 root: {
-                    background: 'linear-gradient(90deg, #004D40, #00695C)', // Dark Green Header
-                    boxShadow: '0 4px 20px rgba(0, 77, 64, 0.2)',
+                    background: 'linear-gradient(90deg, #1e1b4b, #312e81)',
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+                    backdropFilter: 'blur(20px)',
                 },
             },
         },
         MuiDrawer: {
             styleOverrides: {
                 paper: {
-                    background: 'linear-gradient(180deg, #F9CD05, #F59E0B)', // Yellow Sidebar
-                    color: '#004D40', // Dark Text
-                    borderRight: 'none',
+                    background: 'linear-gradient(180deg, #1e1b4b, #0f172a)',
+                    color: '#f1f5f9',
+                    borderRight: '1px solid rgba(255, 255, 255, 0.08)',
                 },
             },
         },
@@ -261,17 +261,16 @@ const visionTheme = createTheme({
                     margin: '4px 8px',
                     transition: 'all 150ms ease-out',
                     '&:hover': {
-                        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                        backgroundColor: 'rgba(99, 102, 241, 0.15)',
                     },
                     '&.Mui-selected': {
-                        backgroundColor: '#FFFFFF',
-                        color: '#004D40',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                        backgroundColor: 'rgba(99, 102, 241, 0.25)',
+                        borderLeft: '3px solid #6366f1',
                         '&:hover': {
-                            backgroundColor: '#FFFFFF',
+                            backgroundColor: 'rgba(99, 102, 241, 0.3)',
                         },
                         '& .MuiListItemIcon-root': {
-                            color: '#F97316', // Orange icon when selected
+                            color: '#818cf8',
                         }
                     },
                 },
@@ -280,7 +279,7 @@ const visionTheme = createTheme({
         MuiListItemIcon: {
             styleOverrides: {
                 root: {
-                    color: 'rgba(0, 77, 64, 0.7)',
+                    color: '#94a3b8',
                     minWidth: '40px',
                 },
             },
@@ -295,8 +294,8 @@ const visionTheme = createTheme({
         MuiAvatar: {
             styleOverrides: {
                 root: {
-                    backgroundColor: '#004D40',
-                    color: '#F9CD05',
+                    backgroundColor: '#6366f1',
+                    color: '#FFFFFF',
                     fontWeight: 700,
                 },
             },
@@ -304,26 +303,27 @@ const visionTheme = createTheme({
         MuiTooltip: {
             styleOverrides: {
                 tooltip: {
-                    backgroundColor: '#004D40',
+                    backgroundColor: '#1e293b',
                     fontSize: '0.75rem',
                     fontWeight: 500,
                     borderRadius: '8px',
                     padding: '8px 12px',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
                 },
                 arrow: {
-                    color: '#004D40',
+                    color: '#1e293b',
                 },
             },
         },
     },
     typography: {
         fontFamily: '"Inter", "Montserrat", "Roboto", "Helvetica", "Arial", sans-serif',
-        h1: { fontWeight: 800, letterSpacing: '-0.02em', color: '#004D40' },
-        h2: { fontWeight: 800, letterSpacing: '-0.01em', color: '#004D40' },
-        h3: { fontWeight: 700, color: '#004D40' },
-        h4: { fontWeight: 700, color: '#00695C' },
-        h5: { fontWeight: 700, color: '#00695C' },
-        h6: { fontWeight: 700, color: '#004D40' },
+        h1: { fontWeight: 800, letterSpacing: '-0.02em', color: '#f1f5f9' },
+        h2: { fontWeight: 800, letterSpacing: '-0.01em', color: '#f1f5f9' },
+        h3: { fontWeight: 700, color: '#f1f5f9' },
+        h4: { fontWeight: 700, color: '#e2e8f0' },
+        h5: { fontWeight: 700, color: '#e2e8f0' },
+        h6: { fontWeight: 700, color: '#f1f5f9' },
         subtitle1: { fontWeight: 600 },
         subtitle2: { fontWeight: 600 },
         body1: { fontWeight: 400 },
@@ -1716,11 +1716,17 @@ const GroupsManager = () => {
 const drawerWidth = 240;
 
 const AdminDashboard = () => {
-    const { logout } = useContext(AuthContext);
+    const { logout, token } = useContext(AuthContext);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [currentView, setCurrentView] = useState('dashboard');
 
     const [currentTime, setCurrentTime] = useState(new Date());
+
+    // Delete All Players State
+    const [deleteAllDialogOpen, setDeleteAllDialogOpen] = useState(false);
+    const [deletePassword, setDeletePassword] = useState('');
+    const [deleteLoading, setDeleteLoading] = useState(false);
+    const [deleteSnackbar, setDeleteSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
     useEffect(() => {
         const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -1729,6 +1735,34 @@ const AdminDashboard = () => {
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
+    };
+
+    // Delete All Players Handler
+    const handleDeleteAllPlayers = async () => {
+        if (!deletePassword) {
+            setDeleteSnackbar({ open: true, message: 'Please enter password', severity: 'warning' });
+            return;
+        }
+
+        setDeleteLoading(true);
+        try {
+            const authToken = token || localStorage.getItem('x-auth-token');
+            const response = await axios.post(
+                `${import.meta.env.VITE_BACKEND_URL}/api/players/delete-all`,
+                { password: deletePassword },
+                { headers: { 'x-auth-token': authToken } }
+            );
+            setDeleteSnackbar({ open: true, message: response.data.msg, severity: 'success' });
+            setDeleteAllDialogOpen(false);
+            setDeletePassword('');
+            // Refresh the page to update player list
+            window.location.reload();
+        } catch (err) {
+            const errorMsg = err.response?.data?.msg || 'Failed to delete players';
+            setDeleteSnackbar({ open: true, message: errorMsg, severity: 'error' });
+        } finally {
+            setDeleteLoading(false);
+        }
     };
 
     const menuItems = [
@@ -1859,6 +1893,30 @@ const AdminDashboard = () => {
                         <Typography variant="h6" noWrap component="div" sx={{ color: 'white', flexGrow: 1 }}>
                             {menuItems.find(i => i.id === currentView)?.label}
                         </Typography>
+
+                        {/* Delete All Players Button */}
+                        <Button
+                            variant="contained"
+                            color="error"
+                            size="small"
+                            startIcon={<DeleteIcon />}
+                            onClick={() => setDeleteAllDialogOpen(true)}
+                            sx={{
+                                mr: 2,
+                                borderRadius: '12px',
+                                textTransform: 'none',
+                                fontWeight: 'bold',
+                                background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                                boxShadow: '0 4px 14px rgba(239, 68, 68, 0.25)',
+                                '&:hover': {
+                                    background: 'linear-gradient(135deg, #dc2626, #b91c1c)',
+                                    transform: 'translateY(-2px)',
+                                }
+                            }}
+                        >
+                            Delete All Players
+                        </Button>
+
                         {currentView === 'clientDashboard' && (
                             <Typography variant="h6" sx={{ color: '#2CD9FF', fontWeight: 'bold' }}>
                                 {currentTime.toLocaleTimeString()}
@@ -1926,6 +1984,62 @@ const AdminDashboard = () => {
                     {renderContent()}
                 </Box>
             </Box>
+
+            {/* Delete All Players Dialog */}
+            <Dialog open={deleteAllDialogOpen} onClose={() => setDeleteAllDialogOpen(false)}>
+                <DialogTitle sx={{ bgcolor: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <DeleteIcon /> Delete All Players
+                </DialogTitle>
+                <DialogContent sx={{ mt: 2 }}>
+                    <Typography color="error" fontWeight="bold" gutterBottom>
+                        ⚠️ WARNING: This will delete ALL players permanently!
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                        Enter the admin password to confirm this action.
+                    </Typography>
+                    <TextField
+                        autoFocus
+                        fullWidth
+                        type="password"
+                        label="Admin Password"
+                        variant="outlined"
+                        value={deletePassword}
+                        onChange={(e) => setDeletePassword(e.target.value)}
+                        onKeyPress={(e) => e.key === 'Enter' && handleDeleteAllPlayers()}
+                        sx={{ mt: 1 }}
+                    />
+                </DialogContent>
+                <DialogActions sx={{ p: 2 }}>
+                    <Button onClick={() => { setDeleteAllDialogOpen(false); setDeletePassword(''); }}>
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="error"
+                        onClick={handleDeleteAllPlayers}
+                        disabled={deleteLoading}
+                        startIcon={deleteLoading ? <CircularProgress size={20} color="inherit" /> : <DeleteIcon />}
+                    >
+                        {deleteLoading ? 'Deleting...' : 'Delete All'}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Delete Snackbar */}
+            <Snackbar
+                open={deleteSnackbar.open}
+                autoHideDuration={6000}
+                onClose={() => setDeleteSnackbar({ ...deleteSnackbar, open: false })}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert
+                    onClose={() => setDeleteSnackbar({ ...deleteSnackbar, open: false })}
+                    severity={deleteSnackbar.severity}
+                    variant="filled"
+                >
+                    {deleteSnackbar.message}
+                </Alert>
+            </Snackbar>
         </ThemeProvider>
     );
 };
