@@ -12,15 +12,15 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const visionTheme = createTheme({
     palette: {
-        mode: 'dark',
+        mode: 'light',
         background: {
-            default: '#0a0f1a',
-            paper: 'rgba(20, 30, 48, 0.95)',
+            default: '#f5f7fa',
+            paper: '#ffffff',
         },
         primary: {
-            main: '#6366f1',
-            light: '#818cf8',
-            dark: '#4f46e5',
+            main: '#20293a',
+            light: '#3d4a5c',
+            dark: '#0f1520',
             contrastText: '#FFFFFF',
         },
         secondary: {
@@ -43,8 +43,8 @@ const visionTheme = createTheme({
             contrastText: '#FFFFFF',
         },
         text: {
-            primary: '#f1f5f9',
-            secondary: '#94a3b8',
+            primary: '#1a202c',
+            secondary: '#4a5568',
         },
     },
     shape: {
@@ -55,14 +55,13 @@ const visionTheme = createTheme({
             styleOverrides: {
                 root: {
                     backgroundImage: 'none',
-                    backgroundColor: 'rgba(20, 30, 48, 0.95)',
+                    backgroundColor: '#ffffff',
                     borderRadius: '16px',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-                    backdropFilter: 'blur(20px)',
+                    border: '1px solid rgba(0, 0, 0, 0.08)',
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
                     transition: 'box-shadow 200ms ease-out, transform 200ms ease-out',
                     '&:hover': {
-                        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.4)',
+                        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.12)',
                     },
                 },
             },
@@ -84,18 +83,18 @@ const visionTheme = createTheme({
                     },
                 },
                 containedPrimary: {
-                    background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                    background: '#20293a',
                     '&:hover': {
-                        background: 'linear-gradient(135deg, #818cf8, #a78bfa)',
+                        background: '#3d4a5c',
                     },
                 },
                 outlined: {
                     borderWidth: '2px',
-                    borderColor: 'rgba(99, 102, 241, 0.5)',
+                    borderColor: 'rgba(32, 41, 58, 0.5)',
                     '&:hover': {
                         borderWidth: '2px',
-                        backgroundColor: 'rgba(99, 102, 241, 0.08)',
-                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(32, 41, 58, 0.08)',
+                        borderColor: '#20293a',
                     },
                 },
             },
@@ -111,12 +110,12 @@ const visionTheme = createTheme({
         MuiTableCell: {
             styleOverrides: {
                 root: {
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                    color: '#f1f5f9',
+                    borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
+                    color: '#1a202c',
                     padding: '14px 16px',
                 },
                 head: {
-                    background: 'linear-gradient(90deg, #1e293b, #334155)',
+                    background: '#20293a',
                     color: '#FFFFFF',
                     textTransform: 'uppercase',
                     fontSize: '0.75rem',
@@ -133,10 +132,10 @@ const visionTheme = createTheme({
                 root: {
                     transition: 'background-color 150ms ease-out',
                     '&:nth-of-type(odd)': {
-                        backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                        backgroundColor: 'rgba(0, 0, 0, 0.02)',
                     },
                     '&:hover': {
-                        backgroundColor: 'rgba(99, 102, 241, 0.08) !important',
+                        backgroundColor: 'rgba(32, 41, 58, 0.08) !important',
                     },
                 },
             },
@@ -149,8 +148,8 @@ const visionTheme = createTheme({
                 },
                 filled: {
                     '&.MuiChip-colorDefault': {
-                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                        color: '#f1f5f9',
+                        backgroundColor: 'rgba(0, 0, 0, 0.08)',
+                        color: '#1a202c',
                     },
                 },
                 outlined: {
@@ -162,36 +161,36 @@ const visionTheme = createTheme({
             styleOverrides: {
                 root: {
                     '& .MuiFilledInput-root': {
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                        backgroundColor: 'rgba(0, 0, 0, 0.04)',
                         borderRadius: '50px',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        border: '1px solid rgba(0, 0, 0, 0.1)',
                         transition: 'all 200ms ease-out',
                         '&:hover': {
-                            backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                            borderColor: 'rgba(255, 255, 255, 0.2)',
+                            backgroundColor: 'rgba(0, 0, 0, 0.06)',
+                            borderColor: 'rgba(0, 0, 0, 0.2)',
                         },
                         '&.Mui-focused': {
-                            backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                            borderColor: '#6366f1',
-                            boxShadow: '0 0 0 3px rgba(99, 102, 241, 0.2)',
+                            backgroundColor: 'rgba(32, 41, 58, 0.08)',
+                            borderColor: '#20293a',
+                            boxShadow: '0 0 0 3px rgba(32, 41, 58, 0.15)',
                         },
                         '&:before, &:after': {
                             display: 'none',
                         },
                     },
                     '& .MuiInputLabel-root': {
-                        color: '#94a3b8',
+                        color: '#4a5568',
                         fontWeight: 500,
-                        '&.Mui-focused': { color: '#818cf8' }
+                        '&.Mui-focused': { color: '#20293a' }
                     },
                     '& .MuiInputBase-input': {
-                        color: '#f1f5f9',
+                        color: '#1a202c',
                     },
                     '& .MuiOutlinedInput-root': {
                         borderRadius: '50px',
-                        '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.15)' },
-                        '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
-                        '&.Mui-focused fieldset': { borderColor: '#6366f1', borderWidth: '2px' },
+                        '& fieldset': { borderColor: 'rgba(0, 0, 0, 0.15)' },
+                        '&:hover fieldset': { borderColor: 'rgba(0, 0, 0, 0.3)' },
+                        '&.Mui-focused fieldset': { borderColor: '#20293a', borderWidth: '2px' },
                     }
                 }
             }
@@ -199,12 +198,11 @@ const visionTheme = createTheme({
         MuiDialog: {
             styleOverrides: {
                 paper: {
-                    backgroundColor: 'rgba(20, 30, 48, 0.98)',
+                    backgroundColor: '#ffffff',
                     backgroundImage: 'none',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(0, 0, 0, 0.1)',
                     borderRadius: '20px',
-                    boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)',
-                    backdropFilter: 'blur(20px)',
+                    boxShadow: '0 25px 50px rgba(0, 0, 0, 0.15)',
                 }
             }
         },
@@ -213,9 +211,9 @@ const visionTheme = createTheme({
                 root: {
                     fontSize: '1.25rem',
                     fontWeight: 700,
-                    color: '#f1f5f9',
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-                    background: 'linear-gradient(180deg, rgba(99, 102, 241, 0.1) 0%, transparent 100%)',
+                    color: '#1a202c',
+                    borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+                    background: 'linear-gradient(180deg, rgba(32, 41, 58, 0.05) 0%, transparent 100%)',
                 }
             }
         },
@@ -231,8 +229,8 @@ const visionTheme = createTheme({
             styleOverrides: {
                 root: {
                     padding: '16px 24px',
-                    borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-                    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+                    borderTop: '1px solid rgba(0, 0, 0, 0.1)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.02)',
                 }
             }
         },
@@ -318,12 +316,12 @@ const visionTheme = createTheme({
     },
     typography: {
         fontFamily: '"Inter", "Montserrat", "Roboto", "Helvetica", "Arial", sans-serif',
-        h1: { fontWeight: 800, letterSpacing: '-0.02em', color: '#f1f5f9' },
-        h2: { fontWeight: 800, letterSpacing: '-0.01em', color: '#f1f5f9' },
-        h3: { fontWeight: 700, color: '#f1f5f9' },
-        h4: { fontWeight: 700, color: '#e2e8f0' },
-        h5: { fontWeight: 700, color: '#e2e8f0' },
-        h6: { fontWeight: 700, color: '#f1f5f9' },
+        h1: { fontWeight: 800, letterSpacing: '-0.02em', color: '#1a202c' },
+        h2: { fontWeight: 800, letterSpacing: '-0.01em', color: '#1a202c' },
+        h3: { fontWeight: 700, color: '#1a202c' },
+        h4: { fontWeight: 700, color: '#2d3748' },
+        h5: { fontWeight: 700, color: '#2d3748' },
+        h6: { fontWeight: 700, color: '#1a202c' },
         subtitle1: { fontWeight: 600 },
         subtitle2: { fontWeight: 600 },
         body1: { fontWeight: 400 },
@@ -767,6 +765,7 @@ const PlayersManager = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [uploadStatus, setUploadStatus] = useState('');
     const [profilePicFile, setProfilePicFile] = useState(null); // For single player add
+    const [savingPlayer, setSavingPlayer] = useState(false); // Loading state for save button
 
     // Async Place Search
     const [placeInputValue, setPlaceInputValue] = useState('');
@@ -855,6 +854,7 @@ const PlayersManager = () => {
     };
 
     const handleSavePlayer = async () => {
+        setSavingPlayer(true);
         try {
              if (!selectedPlayer) {
                 // ADD PLAYER
@@ -887,18 +887,6 @@ const PlayersManager = () => {
                         headers: { 'x-auth-token': token, 'Content-Type': 'multipart/form-data' }
                     });
                 } else {
-                    // Use JSON if no file (legacy/safe way)
-                    // We should remove birthChart from updates to be safe, though existing code sent it all.
-                    // If existing code worked, it means backend either handled it or it wasn't an issue.
-                    // But to be cleaner, let's just send everything as before to minimize regression risk for non-file edits.
-                    // Actually, let's be safer and strip birthChart if possible, but let's stick to existing behavior for consistency.
-                    // Wait, existing behavior sent `playerForm` which is `player`.
-                    // Backend `updatePlayer` uses `req.body` as `updates`.
-                    // If `playerForm` has `birthChart` (object), it is sent as JSON.
-                    // Backend `req.body` parses JSON. `updates.birthChart` is an object.
-                    // `findOneAndUpdate` with `$set: updates` SAVES IT AS IS.
-                    // So sending JSON is fine for objects. sending FormData is NOT.
-                    // So my bifurcation is correct.
                     await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/players/${selectedPlayer.id}`, playerForm, {
                         headers: { 'x-auth-token': token }
                     });
@@ -910,6 +898,8 @@ const PlayersManager = () => {
              fetchPlayers();
         } catch (err) {
             console.error(err); showSnackbar(err.response?.data?.message || "Operation failed", 'error');
+        } finally {
+            setSavingPlayer(false);
         }
     };
 
@@ -1305,8 +1295,15 @@ const PlayersManager = () => {
                     </Box>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setOpenEdit(false)}>Cancel</Button>
-                    <Button onClick={handleSavePlayer} variant="contained">Save</Button>
+                    <Button onClick={() => setOpenEdit(false)} disabled={savingPlayer}>Cancel</Button>
+                    <Button
+                        onClick={handleSavePlayer}
+                        variant="contained"
+                        disabled={savingPlayer}
+                        startIcon={savingPlayer ? <CircularProgress size={16} color="inherit" /> : null}
+                    >
+                        {savingPlayer ? 'Saving...' : 'Save'}
+                    </Button>
                 </DialogActions>
             </Dialog>
 
@@ -1418,6 +1415,7 @@ const GroupsManager = () => {
     // Create State
     const [openCreate, setOpenCreate] = useState(false);
     const [newGroupName, setNewGroupName] = useState('');
+    const [creatingGroup, setCreatingGroup] = useState(false);
 
     // State for managing players in a group
     const [openManage, setOpenManage] = useState(false);
@@ -1462,17 +1460,20 @@ const GroupsManager = () => {
 
     const handleCreateGroup = async () => {
         if (!newGroupName) return;
+        setCreatingGroup(true);
         try {
             await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/create`,
                 { name: newGroupName },
                 { headers: { 'x-auth-token': token } }
             );
+            showSnackbar('Group created successfully', 'success');
             setNewGroupName('');
             setOpenCreate(false);
             fetchGroups();
-            showSnackbar('Group created successfully', 'success');
         } catch (err) {
             showSnackbar(err.response?.data?.msg || 'Failed to create group', 'error');
+        } finally {
+            setCreatingGroup(false);
         }
     };
 
@@ -1600,8 +1601,15 @@ const GroupsManager = () => {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setOpenCreate(false)}>Cancel</Button>
-                    <Button onClick={handleCreateGroup} variant="contained">Create</Button>
+                    <Button onClick={() => setOpenCreate(false)} disabled={creatingGroup}>Cancel</Button>
+                    <Button
+                        onClick={handleCreateGroup}
+                        variant="contained"
+                        disabled={creatingGroup || !newGroupName.trim()}
+                        startIcon={creatingGroup ? <CircularProgress size={16} color="inherit" /> : null}
+                    >
+                        {creatingGroup ? 'Creating...' : 'Create'}
+                    </Button>
                 </DialogActions>
             </Dialog>
 
@@ -1859,13 +1867,13 @@ const AdminDashboard = () => {
 
     return (
         <ThemeProvider theme={visionTheme}>
-            <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#0F1535', color: 'white', overflow: 'hidden' }}>
+            <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#f5f7fa', color: '#1a202c', overflow: 'hidden' }}>
                 <CssBaseline />
                 {/* Background Decor */}
                 <Box sx={{
                     position: 'absolute',
                     top: 0, left: 0, width: '100%', height: '300px',
-                    background: 'linear-gradient(180deg, rgba(0, 117, 255, 0.2) 0%, rgba(15, 21, 53, 0) 100%)',
+                    background: 'linear-gradient(180deg, rgba(32, 41, 58, 0.05) 0%, rgba(245, 247, 250, 0) 100%)',
                     zIndex: 0, pointerEvents: 'none'
                 }} />
 
@@ -1940,7 +1948,7 @@ const AdminDashboard = () => {
                             '& .MuiDrawer-paper': {
                                 boxSizing: 'border-box',
                                 width: drawerWidth,
-                                bgcolor: '#0F1535',
+                                bgcolor: '#20293a',
                                 color: 'white',
                                 borderRight: '1px solid rgba(255,255,255,0.1)'
                             },
