@@ -23,22 +23,23 @@ import GridOnIcon from '@mui/icons-material/GridOn';
 import CloseIcon from '@mui/icons-material/Close';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
-// --- COLOR PALETTE (MOBILE APP STYLE) ---
+// --- COLOR PALETTE (PROFESSIONAL APP STYLE) ---
 const visionPro = {
-    background: '#f8fafc', // Soft neutral (not pure white)
-    paper: '#ffffff', // Clean White
-    primary: '#4f46e5', // Deep Indigo
-    secondary: '#8b5cf6', // Purple
-    accent: '#667eea', // Indigo Light
-    text: '#1e293b', // Dark Slate
-    textSecondary: '#64748b', // Slate Gray
-    border: 'rgba(0, 0, 0, 0.06)', // Very subtle border
-    success: '#10b981', // Green
+    background: '#f4f6f9', // Soft gray background
+    paper: '#ffffff', // Pure white cards
+    primary: '#2563eb', // Professional Blue
+    secondary: '#0ea5e9', // Cyan accent
+    accent: '#3b82f6', // Blue accent
+    text: '#111827', // Near black text
+    textSecondary: '#6b7280', // Gray text
+    border: 'rgba(0, 0, 0, 0.08)', // Subtle border
+    success: '#22c55e', // Green
     warning: '#f59e0b', // Amber
     error: '#ef4444', // Red
-    gradientPrimary: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    gradientWarm: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-    gradientSuccess: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
+    gradientPrimary: 'linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%)', // Blue to Cyan
+    gradientWarm: 'linear-gradient(135deg, #f97316 0%, #facc15 100%)', // Orange to Yellow
+    gradientSuccess: 'linear-gradient(135deg, #22c55e 0%, #10b981 100%)', // Green gradient
+    gradientDark: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)', // Dark slate
 };
 
 // --- HELPERS ---
