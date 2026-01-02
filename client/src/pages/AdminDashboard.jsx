@@ -1067,7 +1067,7 @@ const PlayersManager = () => {
                                             sx={{ width: 40, height: 40, border: '2px solid rgba(255,255,255,0.2)' }}
                                         />
                                         <Box>
-                                            <Typography variant="body2" fontWeight="bold" color="white">{p.name}</Typography>
+                                            <Typography variant="body2" fontWeight="bold" color="#1e293b">{p.name}</Typography>
                                             {isMobile && <Typography variant="caption" color="textSecondary">{p.birthPlace}</Typography>}
                                         </Box>
                                     </Box>
