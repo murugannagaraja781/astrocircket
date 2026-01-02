@@ -897,7 +897,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                 <Box sx={{
                     mb: 2,
                     borderBottom: 1,
-                    borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(79, 70, 229, 0.2)',
+                    borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(37, 99, 235, 0.15)',
                     pb: 1,
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -957,15 +957,15 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                     borderRadius: '12px',
                                     border: '1px solid',
                                     borderColor: isSel ? visionPro.primary : 'rgba(0,0,0,0.08)',
-                                    bgcolor: isSel ? 'rgba(79, 70, 229, 0.08)' : 'white',
+                                    bgcolor: isSel ? 'rgba(37, 99, 235, 0.08)' : 'white',
                                     cursor: 'pointer',
                                     minWidth: isMobile ? '100%' : 'calc(50% - 8px)',
                                     maxWidth: isMobile ? '100%' : 'calc(50% - 8px)',
                                     transition: 'all 0.2s ease',
-                                    boxShadow: isSel ? '0 2px 8px rgba(79, 70, 229, 0.15)' : '0 1px 4px rgba(0,0,0,0.04)',
+                                    boxShadow: isSel ? '0 2px 8px rgba(37, 99, 235, 0.15)' : '0 1px 4px rgba(0,0,0,0.04)',
                                     '&:hover': {
                                         borderColor: visionPro.primary,
-                                        bgcolor: 'rgba(79, 70, 229, 0.04)'
+                                        bgcolor: 'rgba(37, 99, 235, 0.04)'
                                     },
                                     '&:active': {
                                         transform: 'scale(0.98)'
