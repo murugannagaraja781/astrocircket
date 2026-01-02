@@ -14,19 +14,19 @@ const visionTheme = createTheme({
     palette: {
         mode: 'light',
         background: {
-            default: '#f5f7fa',
+            default: '#f4f6f9', // Soft gray background
             paper: '#ffffff',
         },
         primary: {
-            main: '#20293a',
-            light: '#3d4a5c',
-            dark: '#0f1520',
+            main: '#2563eb', // Professional Blue
+            light: '#3b82f6',
+            dark: '#1d4ed8',
             contrastText: '#FFFFFF',
         },
         secondary: {
-            main: '#ec4899',
-            light: '#f472b6',
-            dark: '#db2777',
+            main: '#0ea5e9', // Cyan accent
+            light: '#38bdf8',
+            dark: '#0284c7',
             contrastText: '#FFFFFF',
         },
         warning: {
@@ -35,7 +35,7 @@ const visionTheme = createTheme({
             contrastText: '#000000',
         },
         success: {
-            main: '#10b981',
+            main: '#22c55e',
             contrastText: '#FFFFFF',
         },
         error: {
@@ -43,12 +43,12 @@ const visionTheme = createTheme({
             contrastText: '#FFFFFF',
         },
         text: {
-            primary: '#1a202c',
-            secondary: '#4a5568',
+            primary: '#111827',
+            secondary: '#6b7280',
         },
     },
     shape: {
-        borderRadius: 12,
+        borderRadius: 16, // App-like rounded corners
     },
     components: {
         MuiPaper: {
@@ -1747,31 +1747,154 @@ const GroupsManager = () => {
     };
 
     return (
-        <Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                <Typography variant="h5" gutterBottom>Group Management</Typography>
-                <Button variant="contained" startIcon={<AddIcon />} onClick={() => setOpenCreate(true)}>Create Group</Button>
+        <Box sx={{ pb: 4 }}>
+            {/* Header with gradient accent */}
+            <Box sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                mb: 3
+            }}>
+                <Box>
+                    <Typography variant="h5" fontWeight="800" color="#111827">Active Teams</Typography>
+                    <Typography variant="body2" color="#6b7280">{groups.length} teams created</Typography>
+                </Box>
+                <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={() => setOpenCreate(true)}
+                    sx={{
+                        background: 'linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%)',
+                        borderRadius: '12px',
+                        px: 3,
+                        py: 1,
+                        boxShadow: '0 4px 12px rgba(37, 99, 235, 0.25)',
+                        '&:hover': {
+                            boxShadow: '0 6px 20px rgba(37, 99, 235, 0.35)',
+                        }
+                    }}
+                >
+                    Create Team
+                </Button>
             </Box>
 
-            <Grid container spacing={3}>
+            {/* Team Cards Grid */}
+            <Grid container spacing={2}>
                 {groups.map(g => (
                     <Grid item xs={12} sm={6} md={4} key={g._id}>
-                        <Paper sx={{ p: 2 }}>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-                                <Typography variant="h6">{g.name}</Typography>
-                                <Typography variant="caption" color="text.secondary">{g.players.length} Players</Typography>
+                        <Paper
+                            elevation={0}
+                            sx={{
+                                p: 0,
+                                borderRadius: '16px',
+                                border: '1px solid rgba(0,0,0,0.06)',
+                                boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+                                overflow: 'hidden',
+                                transition: 'all 0.2s ease',
+                                '&:hover': {
+                                    boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
+                                    transform: 'translateY(-2px)'
+                                }
+                            }}
+                        >
+                            {/* Card Header with gradient */}
+                            <Box sx={{
+                                p: 2,
+                                background: 'linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%)',
+                                color: 'white'
+                            }}>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Typography variant="h6" fontWeight="700">{g.name}</Typography>
+                                    <Chip
+                                        label={`${g.players.length} Players`}
+                                        size="small"
+                                        sx={{
+                                            bgcolor: 'rgba(255,255,255,0.2)',
+                                            color: 'white',
+                                            fontWeight: 600,
+                                            fontSize: '0.75rem'
+                                        }}
+                                    />
+                                </Box>
                             </Box>
-                            <Divider sx={{ mb: 2 }} />
-                            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                                <Button variant="contained" size="small" onClick={() => openManageDialog(g)}>
-                                    Manage Players
-                                </Button>
-                                <Button variant="outlined" color="warning" size="small" onClick={() => convertConfirmAction('Clear Group', `Clear all players from ${g.name}?`, () => handleClearGroup(g.name))}>
-                                    Clear
-                                </Button>
-                                <Button variant="outlined" color="error" size="small" onClick={() => convertConfirmAction('Delete Group', 'Are you sure you want to delete this group?', () => handleDeleteGroup(g._id))}>
-                                    Delete
-                                </Button>
+
+                            {/* Card Body */}
+                            <Box sx={{ p: 2 }}>
+                                {/* Player Avatars Preview */}
+                                <Box sx={{ display: 'flex', mb: 2 }}>
+                                    {g.players.slice(0, 5).map((p, idx) => (
+                                        <Avatar
+                                            key={p.id}
+                                            src={p.profile?.startsWith('http') ? p.profile : `${import.meta.env.VITE_BACKEND_URL}/uploads/${p.profile}`}
+                                            sx={{
+                                                width: 32,
+                                                height: 32,
+                                                ml: idx > 0 ? -1 : 0,
+                                                border: '2px solid white',
+                                                fontSize: 12
+                                            }}
+                                        >
+                                            {p.name?.[0]}
+                                        </Avatar>
+                                    ))}
+                                    {g.players.length > 5 && (
+                                        <Avatar sx={{
+                                            width: 32,
+                                            height: 32,
+                                            ml: -1,
+                                            bgcolor: '#e5e7eb',
+                                            color: '#6b7280',
+                                            fontSize: 10,
+                                            fontWeight: 700,
+                                            border: '2px solid white'
+                                        }}>
+                                            +{g.players.length - 5}
+                                        </Avatar>
+                                    )}
+                                    {g.players.length === 0 && (
+                                        <Typography variant="caption" color="#9ca3af">No players yet</Typography>
+                                    )}
+                                </Box>
+
+                                {/* Action Buttons */}
+                                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                                    <Button
+                                        variant="contained"
+                                        size="small"
+                                        onClick={() => openManageDialog(g)}
+                                        sx={{
+                                            borderRadius: '8px',
+                                            textTransform: 'none',
+                                            fontWeight: 600,
+                                            flex: 1,
+                                            background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+                                        }}
+                                    >
+                                        Manage
+                                    </Button>
+                                    <IconButton
+                                        size="small"
+                                        onClick={() => convertConfirmAction('Clear Group', `Clear all players from ${g.name}?`, () => handleClearGroup(g.name))}
+                                        sx={{
+                                            color: '#f59e0b',
+                                            bgcolor: 'rgba(245, 158, 11, 0.1)',
+                                            '&:hover': { bgcolor: 'rgba(245, 158, 11, 0.2)' }
+                                        }}
+                                    >
+                                        <DeleteIcon fontSize="small" />
+                                    </IconButton>
+                                    <IconButton
+                                        size="small"
+                                        onClick={() => convertConfirmAction('Delete Group', 'Are you sure you want to delete this group?', () => handleDeleteGroup(g._id))}
+                                        sx={{
+                                            color: '#ef4444',
+                                            bgcolor: 'rgba(239, 68, 68, 0.1)',
+                                            '&:hover': { bgcolor: 'rgba(239, 68, 68, 0.2)' }
+                                        }}
+                                    >
+                                        <DeleteIcon fontSize="small" />
+                                    </IconButton>
+                                </Box>
                             </Box>
                         </Paper>
                     </Grid>
