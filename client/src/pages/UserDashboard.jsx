@@ -110,6 +110,39 @@ const getNakshatraLordHelper = (nakshatraName) => {
     return '-';
 };
 
+// Helper to get Rasi (Sign) Lord - ராசி அதிபதி
+const getRasiLordHelper = (signName) => {
+    if (!signName) return { english: '-', tamil: '-' };
+    const sign = signName.toLowerCase();
+
+    const rasiLordMap = {
+        'aries': { english: 'Mars', tamil: 'செவ்வாய்' },
+        'taurus': { english: 'Venus', tamil: 'சுக்கிரன்' },
+        'gemini': { english: 'Mercury', tamil: 'புதன்' },
+        'cancer': { english: 'Moon', tamil: 'சந்திரன்' },
+        'leo': { english: 'Sun', tamil: 'சூரியன்' },
+        'virgo': { english: 'Mercury', tamil: 'புதன்' },
+        'libra': { english: 'Venus', tamil: 'சுக்கிரன்' },
+        'scorpio': { english: 'Mars', tamil: 'செவ்வாய்' },
+        'sagittarius': { english: 'Jupiter', tamil: 'குரு' },
+        'capricorn': { english: 'Saturn', tamil: 'சனி' },
+        'aquarius': { english: 'Saturn', tamil: 'சனி' },
+        'pisces': { english: 'Jupiter', tamil: 'குரு' }
+    };
+
+    return rasiLordMap[sign] || { english: '-', tamil: '-' };
+};
+
+// Helper to get Nakshatra Lord Tamil - நட்சத்திர அதிபதி
+const getNakshatraLordTamil = (lordEnglish) => {
+    const lordTamilMap = {
+        'Sun': 'சூரியன்', 'Moon': 'சந்திரன்', 'Mars': 'செவ்வாய்',
+        'Mercury': 'புதன்', 'Jupiter': 'குரு', 'Venus': 'சுக்கிரன்',
+        'Saturn': 'சனி', 'Rahu': 'ராகு', 'Ketu': 'கேது'
+    };
+    return lordTamilMap[lordEnglish] || lordEnglish;
+};
+
 // 1. Planetary Details Table
 // 1. Planetary Details Table
 // 1. Planetary Details Table
