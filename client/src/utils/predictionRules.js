@@ -167,18 +167,38 @@ export const evaluateBatsman = (playerChart, matchChart) => {
 
     // ═══════════════════════════════════════════════════════════════════
     // RULE 2: STAR RULE (2-4 Points)
-    // Match Star Lord = Player Sign Lord
+    // Match Star Lord = Player Sign Lord OR Player Star Lord
+    // பிளேயரின் ராசி அதிபதி or நட்சத்திர அதிபதி உடன் மேட்ச் நட்சத்திர அதிபதி இணைந்து உள்ளதா
     // ═══════════════════════════════════════════════════════════════════
-    if (matchStarLord && playerRasiLord && matchStarLord === playerRasiLord) {
-        const playerRasiLordObj = getPlanet(playerChart, playerRasiLord);
-        const dignity = playerRasiLordObj ? isExaltedOrOwn(playerRasiLord, playerRasiLordObj.sign) : null;
+    if (matchStarLord && (playerRasiLord || playerStarLord)) {
+        let rule2Matched = false;
+        let matchedWith = '';
+        let matchedPlanet = null;
 
-        if (dignity) {
-            score += 4;
-            report.push(`Rule 2 (Star): மேட்ச் நட்சத்திர அதிபதி (${matchStarLord}) = பிளேயர் ராசி அதிபதி, ${dignity.tamil} → GOOD (+4)`);
-        } else {
-            score += 2;
-            report.push(`Rule 2 (Star): மேட்ச் நட்சத்திர அதிபதி (${matchStarLord}) = பிளேயர் ராசி அதிபதி (${playerRasiLord}) → GOOD (+2)`);
+        // Check if Match Star Lord = Player Rasi Lord
+        if (matchStarLord === playerRasiLord) {
+            rule2Matched = true;
+            matchedWith = 'ராசி அதிபதி';
+            matchedPlanet = playerRasiLord;
+        }
+        // Check if Match Star Lord = Player Nakshatra Lord
+        else if (matchStarLord === playerStarLord) {
+            rule2Matched = true;
+            matchedWith = 'நட்சத்திர அதிபதி';
+            matchedPlanet = playerStarLord;
+        }
+
+        if (rule2Matched) {
+            const matchedPlanetObj = getPlanet(playerChart, matchedPlanet);
+            const dignity = matchedPlanetObj ? isExaltedOrOwn(matchedPlanet, matchedPlanetObj.sign) : null;
+
+            if (dignity) {
+                score += 4;
+                report.push(`Rule 2 (Star): மேட்ச் நட்சத்திர அதிபதி (${matchStarLord}) = பிளேயர் ${matchedWith}, ${dignity.tamil} → GOOD (+4)`);
+            } else {
+                score += 2;
+                report.push(`Rule 2 (Star): மேட்ச் நட்சத்திர அதிபதி (${matchStarLord}) = பிளேயர் ${matchedWith} (${matchedPlanet}) → GOOD (+2)`);
+            }
         }
     }
 
