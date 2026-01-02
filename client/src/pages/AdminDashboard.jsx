@@ -1903,27 +1903,7 @@ const AdminDashboard = () => {
                         </Typography>
 
                         {/* Delete All Players Button */}
-                        <Button
-                            variant="contained"
-                            color="error"
-                            size="small"
-                            startIcon={<DeleteIcon />}
-                            onClick={() => setDeleteAllDialogOpen(true)}
-                            sx={{
-                                mr: 2,
-                                borderRadius: '12px',
-                                textTransform: 'none',
-                                fontWeight: 'bold',
-                                background: 'linear-gradient(135deg, #ef4444, #dc2626)',
-                                boxShadow: '0 4px 14px rgba(239, 68, 68, 0.25)',
-                                '&:hover': {
-                                    background: 'linear-gradient(135deg, #dc2626, #b91c1c)',
-                                    transform: 'translateY(-2px)',
-                                }
-                            }}
-                        >
-                            Delete All Players
-                        </Button>
+
 
                         {currentView === 'clientDashboard' && (
                             <Typography variant="h6" sx={{ color: '#2CD9FF', fontWeight: 'bold' }}>
