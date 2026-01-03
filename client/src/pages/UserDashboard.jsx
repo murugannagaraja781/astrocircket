@@ -930,8 +930,8 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                 </TableCell>
                                 <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>Name</TableCell>
 {/* ID Column Header Removed */}
-                                <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>DOB / Time</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>Place</TableCell>
+                                {/* <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>DOB / Time</TableCell> */}
+                                {/* <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>Place</TableCell> */}
                                 {results && <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>Pred.</TableCell>}
                             </TableRow>
                         </TableHead>
@@ -958,17 +958,17 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                             </Box>
                                         </TableCell>
 {/* ID Cell Removed */}
-                                        <TableCell>
+                                        {/* <TableCell>
                                              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                                 <Typography variant="caption" sx={{ fontWeight: 'bold' }}>{p.dob}</Typography>
                                                 <Typography variant="caption" color="text.secondary">{p.birthTime}</Typography>
                                              </Box>
-                                        </TableCell>
-                                        <TableCell>
+                                        </TableCell> */}
+                                        {/* <TableCell>
                                             <Typography variant="caption" color="text.secondary" sx={{ maxWidth: 80, display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                                 {p.birthPlace}
                                             </Typography>
-                                        </TableCell>
+                                        </TableCell> */}
                                         {results && (
                                             <TableCell>
                                                 {res ? (
