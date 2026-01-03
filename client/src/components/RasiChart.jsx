@@ -43,7 +43,9 @@ const DEFAULT_DATA = {
 const planetShortTamilMap = {
     'Sun': 'சூ', 'Moon': 'சந்', 'Mars': 'செவ்', 'Mercury': 'பு',
     'Jupiter': 'குரு', 'Venus': 'சுக்', 'Saturn': 'சனி', 'Rahu': 'ராகு', 'Ketu': 'கேது',
-    'Asc': 'ல', 'Lagna': 'ல'
+    'Asc': 'ல', 'Lagna': 'ல',
+    'Jup': 'குரு', 'Mar': 'செவ்', 'Ven': 'சுக்', 'Sat': 'சனி', 'Mer': 'பு',
+    'Mon': 'சந்', 'Rah': 'ராகு', 'Ket': 'கேது', 'Sun': 'சூ'
 };
 
 
