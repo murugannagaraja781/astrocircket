@@ -1087,9 +1087,79 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                 </Toolbar>
             </AppBar>
 
-            {/* CENTERED TEAM SELECTION - Horizontal on All Screens */}
+
+            {/* MOBILE: FULL SCREEN TEAM SELECTION (when teams not selected) */}
+            {(!teamA || !teamB) && (
+                <Box sx={{
+                    display: { xs: 'flex', sm: 'none' },
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: 'calc(100vh - 70px)',
+                    bgcolor: visionPro.background,
+                    p: 3,
+                    gap: 3
+                }}>
+                    {/* Title */}
+                    <Typography variant="h6" fontWeight="900" sx={{ color: '#FF6F00', textAlign: 'center' }}>
+                        🏏 Select Teams to Start
+                    </Typography>
+
+                    {/* Team A */}
+                    <FormControl fullWidth sx={{ maxWidth: 280 }}>
+                        <InputLabel sx={{ fontWeight: 'bold', fontSize: '1rem' }}>TEAM A</InputLabel>
+                        <Select
+                            value={teamA}
+                            label="TEAM A"
+                            onChange={(e) => setTeamA(e.target.value)}
+                            sx={{
+                                '& .MuiSelect-select': { fontWeight: 'bold', color: '#FF6F00', fontSize: '1.1rem', py: 2 },
+                                borderRadius: '14px',
+                                bgcolor: 'rgba(255, 193, 7, 0.08)',
+                                border: '2px solid #FFC107'
+                            }}
+                        >
+                            {groups.map(g => <MenuItem key={g._id} value={g._id} sx={{ fontSize: '1rem' }}>{g.name}</MenuItem>)}
+                        </Select>
+                    </FormControl>
+
+                    {/* VS Badge */}
+                    <Box sx={{
+                        width: 50, height: 50, borderRadius: '50%',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        background: visionPro.gradientPrimary, color: 'white',
+                        boxShadow: '0 4px 16px rgba(255, 111, 0, 0.4)'
+                    }}>
+                        <Typography variant="subtitle1" fontWeight="900">VS</Typography>
+                    </Box>
+
+                    {/* Team B */}
+                    <FormControl fullWidth sx={{ maxWidth: 280 }}>
+                        <InputLabel sx={{ fontWeight: 'bold', fontSize: '1rem' }}>TEAM B</InputLabel>
+                        <Select
+                            value={teamB}
+                            label="TEAM B"
+                            onChange={(e) => setTeamB(e.target.value)}
+                            sx={{
+                                '& .MuiSelect-select': { fontWeight: 'bold', color: '#FF6F00', fontSize: '1.1rem', py: 2 },
+                                borderRadius: '14px',
+                                bgcolor: 'rgba(255, 193, 7, 0.08)',
+                                border: '2px solid #FFC107'
+                            }}
+                        >
+                            {groups.map(g => <MenuItem key={g._id} value={g._id} sx={{ fontSize: '1rem' }}>{g.name}</MenuItem>)}
+                        </Select>
+                    </FormControl>
+
+                    <Typography variant="caption" sx={{ color: visionPro.textSecondary, mt: 2 }}>
+                        Select both teams to view players
+                    </Typography>
+                </Box>
+            )}
+
+            {/* DESKTOP: INLINE TEAM SELECTION (always visible on desktop) */}
             <Box sx={{
-                display: 'flex',
+                display: { xs: (teamA && teamB) ? 'flex' : 'none', sm: 'flex' },
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -1101,14 +1171,14 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
             }}>
                 {/* TEAM A */}
                 <FormControl size="small" sx={{ flex: 1, maxWidth: { xs: 130, sm: 180 } }}>
-                    <InputLabel sx={{ fontWeight: 'bold' }}>🏏 TEAM A</InputLabel>
+                    <InputLabel sx={{ fontWeight: 'bold' }}>TEAM A</InputLabel>
                     <Select
                         value={teamA}
-                        label="🏏 TEAM A"
+                        label="TEAM A"
                         onChange={(e) => setTeamA(e.target.value)}
                         sx={{
-                            '& .MuiSelect-select': { fontWeight: 'bold', color: '#FF6F00', fontSize: '1rem' },
-                            borderRadius: '12px',
+                            '& .MuiSelect-select': { fontWeight: 'bold', color: '#FF6F00', fontSize: { xs: '0.8rem', sm: '1rem' } },
+                            borderRadius: '10px',
                             bgcolor: 'rgba(255, 193, 7, 0.05)'
                         }}
                     >
@@ -1118,27 +1188,26 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
 
                 {/* VS Badge */}
                 <Box sx={{
-                    width: { xs: 40, sm: 45 },
-                    height: { xs: 40, sm: 45 },
+                    width: { xs: 32, sm: 40 }, height: { xs: 32, sm: 40 },
                     borderRadius: '50%',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     background: visionPro.gradientPrimary, color: 'white',
-                    boxShadow: '0 4px 12px rgba(255, 111, 0, 0.35)',
+                    boxShadow: '0 3px 10px rgba(255, 111, 0, 0.35)',
                     flexShrink: 0
                 }}>
-                    <Typography variant="subtitle2" fontWeight="900">VS</Typography>
+                    <Typography variant="caption" fontWeight="900">VS</Typography>
                 </Box>
 
                 {/* TEAM B */}
                 <FormControl size="small" sx={{ flex: 1, maxWidth: { xs: 130, sm: 180 } }}>
-                    <InputLabel sx={{ fontWeight: 'bold' }}>🏏 TEAM B</InputLabel>
+                    <InputLabel sx={{ fontWeight: 'bold' }}>TEAM B</InputLabel>
                     <Select
                         value={teamB}
-                        label="🏏 TEAM B"
+                        label="TEAM B"
                         onChange={(e) => setTeamB(e.target.value)}
                         sx={{
-                            '& .MuiSelect-select': { fontWeight: 'bold', color: '#FF6F00', fontSize: '1rem' },
-                            borderRadius: '12px',
+                            '& .MuiSelect-select': { fontWeight: 'bold', color: '#FF6F00', fontSize: { xs: '0.8rem', sm: '1rem' } },
+                            borderRadius: '10px',
                             bgcolor: 'rgba(255, 193, 7, 0.05)'
                         }}
                     >
@@ -1147,10 +1216,10 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                 </FormControl>
             </Box>
 
-            {/* SIDE BY SIDE PLAYER TABLES */}
+            {/* SIDE BY SIDE PLAYER TABLES - Only show when both teams selected */}
             <Box sx={{
                 flexGrow: 1,
-                display: 'flex',
+                display: (teamA && teamB) ? 'flex' : 'none',
                 gap: 1,
                 p: 1,
                 overflow: 'hidden',
