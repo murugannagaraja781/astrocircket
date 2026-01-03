@@ -23,21 +23,21 @@ import GridOnIcon from '@mui/icons-material/GridOn';
 import CloseIcon from '@mui/icons-material/Close';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
-// --- COLOR PALETTE (CSK THEME - YELLOW/GREEN/ORANGE) ---
+// --- COLOR PALETTE (YELLOW + ORANGE PURE APP THEME) ---
 const visionPro = {
-    background: '#F0FDF4', // Light Green
-    paper: '#FFFFFF', // Clean White
-    primary: '#F9CD05', // CSK Yellow
-    secondary: '#F97316', // Orange
-    accent: '#FFD600', // Yellow Warm
-    text: '#004D40', // Dark Green
-    textSecondary: '#00695C', // Dark Teal
-    border: 'rgba(0, 77, 64, 0.12)', // Subtle Dark Green Border
-    success: '#10B981', // Success Green
-    warning: '#F59E0B', // Amber
-    error: '#EF4444', // Error Red
-    gradientPrimary: 'linear-gradient(90deg, #F9CD05, #F97316)',
-    gradientWarm: 'linear-gradient(135deg, #F9CD05 0%, #F97316 100%)',
+    background: '#FFFBF5', // Soft off-white / light cream
+    paper: '#FFFFFF', // Pure white cards
+    primary: '#FFC107', // Warm Golden Yellow
+    secondary: '#FF6F00', // Deep Orange
+    accent: '#FFD54F', // Light Yellow accent
+    text: '#212121', // Near-black charcoal
+    textSecondary: '#616161', // Muted dark gray
+    border: 'rgba(0, 0, 0, 0.08)', // Subtle border
+    success: '#4CAF50', // Success Green
+    warning: '#FF9800', // Amber Warning
+    error: '#F44336', // Error Red
+    gradientPrimary: 'linear-gradient(90deg, #FFC107 0%, #FF6F00 100%)', // Yellow to Orange
+    gradientWarm: 'linear-gradient(135deg, #FFD54F 0%, #FF6F00 100%)', // Subtle warm gradient
 };
 
 // --- HELPERS ---
@@ -837,13 +837,13 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                 <Box sx={{
                     mb: 2,
                     borderBottom: 1,
-                    borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(167, 243, 208, 1)',
+                    borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 193, 7, 0.5)',
                     pb: 1,
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center'
                 }}>
-                    <Typography variant="subtitle1" fontWeight="bold" sx={{ color: '#059669', fontSize: isMobile ? '0.9rem' : '1rem' }}>{teamName}</Typography>
+                    <Typography variant="subtitle1" fontWeight="bold" sx={{ color: '#FF6F00', fontSize: isMobile ? '0.9rem' : '1rem' }}>{teamName}</Typography>
                     {results && (
                         <Chip label={`Score: ${myScore}`} color={isWinner ? "success" : "default"} variant={isWinner ? "filled" : "outlined"} size="small" />
                     )}
@@ -875,9 +875,17 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                             <Button
                                 size="small"
                                 variant={filterActive ? "contained" : "outlined"}
-                                color="success"
                                 onClick={() => setFilterActive(!filterActive)}
-                                sx={{ fontSize: '0.65rem', px: 1.5, py: 0.3, borderRadius: '8px' }}
+                                sx={{
+                                    fontSize: '0.65rem',
+                                    px: 1.5,
+                                    py: 0.3,
+                                    borderRadius: '20px',
+                                    bgcolor: filterActive ? '#FF6F00' : 'transparent',
+                                    borderColor: '#FFC107',
+                                    color: filterActive ? 'white' : '#FF6F00',
+                                    '&:hover': { bgcolor: filterActive ? '#E65100' : 'rgba(255, 193, 7, 0.1)' }
+                                }}
                             >
                                 {filterActive ? '✓ Filtered' : 'Filter'}
                             </Button>
@@ -901,14 +909,15 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                 <Paper key={p.id} elevation={0} sx={{
                                     p: 1.5, mb: 1,
                                     border: '2px solid',
-                                    borderColor: isSel ? '#10B981' : 'rgba(0,0,0,0.1)',
-                                    bgcolor: isSel ? 'rgba(16, 185, 129, 0.12)' : 'white',
-                                    borderRadius: 2,
+                                    borderColor: isSel ? '#FF6F00' : 'rgba(0,0,0,0.08)',
+                                    bgcolor: isSel ? 'rgba(255, 111, 0, 0.08)' : 'white',
+                                    borderRadius: '12px',
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: 1.5,
                                     opacity: dimmed ? 0.4 : 1,
-                                    transition: 'all 0.2s ease'
+                                    transition: 'all 0.2s ease',
+                                    boxShadow: isSel ? '0 2px 8px rgba(255, 111, 0, 0.2)' : '0 1px 3px rgba(0,0,0,0.05)'
                                 }} onClick={() => togglePlayer(p.id)}>
                                     <Checkbox checked={isSel} size="small" sx={{ p:0 }} />
                                     <Avatar src={p.profile} sx={{ width: 40, height: 40, fontSize: 14 }}>{p.name[0]}</Avatar>
@@ -935,9 +944,17 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                         <Button
                             size="small"
                             variant={filterActive ? "contained" : "outlined"}
-                            color="success"
                             onClick={() => setFilterActive(!filterActive)}
-                            sx={{ fontSize: '0.7rem', px: 2, py: 0.5, borderRadius: '8px' }}
+                            sx={{
+                                fontSize: '0.7rem',
+                                px: 2,
+                                py: 0.5,
+                                borderRadius: '20px',
+                                bgcolor: filterActive ? '#FF6F00' : 'transparent',
+                                borderColor: '#FFC107',
+                                color: filterActive ? 'white' : '#FF6F00',
+                                '&:hover': { bgcolor: filterActive ? '#E65100' : 'rgba(255, 193, 7, 0.1)' }
+                            }}
                         >
                             {filterActive ? '✓ Filtered' : 'Filter Selected'}
                         </Button>
@@ -965,11 +982,11 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                         }}
                                     />
                                 </TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>Name</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#FF6F00' }}>Name</TableCell>
 {/* ID Column Header Removed */}
-                                {/* <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>DOB / Time</TableCell> */}
-                                {/* <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>Place</TableCell> */}
-                                {results && <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>Pred.</TableCell>}
+                                {/* <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#FF6F00' }}>DOB / Time</TableCell> */}
+                                {/* <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#FF6F00' }}>Place</TableCell> */}
+                                {results && <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#FF6F00' }}>Pred.</TableCell>}
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -993,7 +1010,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                         onClick={() => togglePlayer(p.id)}
                                         sx={{
                                             cursor: 'pointer',
-                                            bgcolor: isSel ? 'rgba(16, 185, 129, 0.12)' : 'inherit',
+                                            bgcolor: isSel ? 'rgba(255, 111, 0, 0.08)' : 'inherit',
                                             opacity: dimmed ? 0.4 : 1,
                                             transition: 'all 0.2s ease'
                                         }}
@@ -1051,7 +1068,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
             TransitionComponent={Slide}
         >
             {/* APP BAR - MATCH PREDICTION SETUP */}
-            <AppBar position="static" sx={{ bgcolor: '#059669', backgroundImage: 'linear-gradient(to right, #059669, #10B981)' }}>
+            <AppBar position="static" sx={{ bgcolor: '#FF6F00', backgroundImage: visionPro.gradientPrimary }}>
                 <Toolbar sx={{ gap: 1, py: 0.5 }}>
 
 
@@ -1087,7 +1104,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                         value={teamA}
                         label="TEAM A"
                         onChange={(e) => setTeamA(e.target.value)}
-                        sx={{ '& .MuiSelect-select': { fontWeight: 'bold', color: '#059669' } }}
+                        sx={{ '& .MuiSelect-select': { fontWeight: 'bold', color: '#FF6F00' } }}
                     >
                         {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
                     </Select>
@@ -1096,8 +1113,8 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                 <Box sx={{
                     width: 45, height: 45, borderRadius: '50%',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    bgcolor: visionPro.primary, color: 'white',
-                    boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)'
+                    background: visionPro.gradientPrimary, color: 'white',
+                    boxShadow: '0 4px 12px rgba(255, 111, 0, 0.35)'
                 }}>
                     <Typography variant="subtitle1" fontWeight="900">VS</Typography>
                 </Box>
@@ -1108,7 +1125,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                         value={teamB}
                         label="TEAM B"
                         onChange={(e) => setTeamB(e.target.value)}
-                        sx={{ '& .MuiSelect-select': { fontWeight: 'bold', color: '#059669' } }}
+                        sx={{ '& .MuiSelect-select': { fontWeight: 'bold', color: '#FF6F00' } }}
                     >
                         {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
                     </Select>
@@ -1716,16 +1733,16 @@ const UserDashboard = ({ hideHeader = false }) => {
             color: hideHeader ? '#fff' : visionPro.text,
             backgroundImage: hideHeader
                 ? 'none'
-                : `radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 50%), radial-gradient(circle at 10% 10%, rgba(110, 231, 183, 0.05) 0%, transparent 40%)`,
+                : `radial-gradient(circle at 50% 50%, rgba(255, 193, 7, 0.05) 0%, transparent 50%), radial-gradient(circle at 10% 10%, rgba(255, 152, 0, 0.05) 0%, transparent 40%)`,
         }}>
              {/* Header */}
             {!hideHeader && (
                 <AppBar position="sticky" sx={{
-                    bgcolor: visionPro.primary,
-                    backgroundImage: `linear-gradient(135deg, ${visionPro.primary} 0%, ${visionPro.secondary} 100%)`,
+                    bgcolor: visionPro.secondary,
+                    backgroundImage: visionPro.gradientPrimary,
                     backdropFilter: 'blur(10px)',
                     borderBottom: `1px solid ${visionPro.border}`,
-                    boxShadow: '0 4px 20px rgba(5, 150, 105, 0.2)'
+                    boxShadow: '0 4px 20px rgba(255, 111, 0, 0.25)'
                 }}>
                     <Toolbar sx={{ justifyContent: 'space-between' }}>
                         {/* Left Side Logo - Round */}
@@ -1830,14 +1847,14 @@ const UserDashboard = ({ hideHeader = false }) => {
                                 px: 3,
                                 fontWeight: '900',
                                 color: '#fff',
-                                bgcolor: visionPro.primary,
+                                bgcolor: visionPro.secondary,
                                 '&:hover': {
-                                    bgcolor: '#047857',
+                                    bgcolor: '#E65100',
                                     transform: 'scale(1.02)'
                                 },
                                 '&:active': { transform: 'scale(0.98)' },
                                 transition: 'all 0.2s ease',
-                                boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)'
+                                boxShadow: '0 4px 12px rgba(255, 111, 0, 0.35)'
                             }}
                         >
                             {showPrediction ? "Close Prediction" : "Predict Match"}
