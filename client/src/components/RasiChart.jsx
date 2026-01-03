@@ -98,7 +98,13 @@ const RasiChart = ({ data, style = {}, planetsData = null }) => {
 
 
     const chartData = (data && Object.keys(data).length > 0) ? data : { houses: DEFAULT_DATA, birthData: {}, moonNakshatra: {} };
+    // DEBUG LOG
+    console.log("RasiChart Props Data:", data);
+    console.log("RasiChart Processed chartData:", chartData);
+
     const housesData = chartData.houses || chartData;
+    console.log("RasiChart housesData:", housesData);
+
     const birthData = chartData.birthData || {};
     const nakshatraData = chartData.moonNakshatra || {};
 
@@ -132,7 +138,7 @@ const RasiChart = ({ data, style = {}, planetsData = null }) => {
         }
 
         const houses = Object.values(housesData);
-        const houseData = houses.find(h => h.signNumber === signId);
+        const houseData = houses.find(h => h.signNumber == signId);
 
         if (houseData) {
             const rawPlanets = houseData.planets || [];

@@ -148,12 +148,21 @@ exports.getBirthChart = async (req, res) => {
         for (let i = 0; i < 12; i++) {
             const houseLng = (ascendant + i * 30) % 360;
             const houseSign = calculateSign(houseLng);
+            const signNumber = Math.floor(houseLng / 30) + 1;
+
+            // Find planets in this house's sign
+            const planetsInHouse = Object.entries(chartData.planets)
+                .filter(([_, pData]) => pData.sign === houseSign.name)
+                .map(([pName]) => pName);
+
             chartData.houses.push({
                 house: i + 1,
                 longitude: houseLng,
+                signNumber: signNumber,
                 sign: houseSign.name,
                 signTamil: houseSign.tamil,
-                lord: houseSign.lord
+                lord: houseSign.lord,
+                planets: planetsInHouse
             });
         }
 

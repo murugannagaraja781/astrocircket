@@ -768,21 +768,23 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewCha
             <TableCell>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                      {/* 3 Icons for Chart, Planets, Panchangam */}
-                     <Tooltip title="Rasi Chart">
-                        <IconButton size="small" onClick={(e) => { e.stopPropagation(); onViewChart(player, 0); }} color="primary">
-                            <GridOnIcon />
-                        </IconButton>
-                     </Tooltip>
-                     <Tooltip title="Planets Details">
-                        <IconButton size="small" onClick={(e) => { e.stopPropagation(); onViewChart(player, 1); }} color="secondary">
-                            <PublicIcon />
-                        </IconButton>
-                     </Tooltip>
-                     <Tooltip title="Panchangam">
-                        <IconButton size="small" onClick={(e) => { e.stopPropagation(); onViewChart(player, 2); }} sx={{ color: visionPro.warning }}>
-                            <CalendarMonthIcon />
-                        </IconButton>
-                     </Tooltip>
+                     <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={(e) => { e.stopPropagation(); onViewChart(player, 0); }}
+                        sx={{
+                            color: '#FF6F00',
+                            borderColor: '#FF6F00',
+                            fontWeight: 'bold',
+                            fontSize: '0.7rem',
+                            padding: '2px 8px',
+                            minWidth: 'auto',
+                            textTransform: 'none',
+                            '&:hover': { bgcolor: 'rgba(255, 111, 0, 0.1)', borderColor: '#FF6F00' }
+                        }}
+                     >
+                        Rasi Details
+                     </Button>
 
                     {matchChart && isSelected && (
                          <Box sx={{ display: 'flex', gap: 1, ml: 2 }}>
@@ -798,7 +800,7 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewCha
     );
 };
 
-const ChartPopup = ({ open, onClose, player, initialTab = 0, hideHeader = false }) => {
+const ChartPopup = ({ open, onClose, player, matchChart, initialTab = 0, hideHeader = false }) => {
     // Local state for fetched chart data
     const [fetchedChart, setFetchedChart] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -823,6 +825,7 @@ const ChartPopup = ({ open, onClose, player, initialTab = 0, hideHeader = false 
 
                 axios.post('/api/charts/birth-chart', payload)
                     .then(res => {
+                        console.log("API Response Data:", res.data);
                         setFetchedChart(res.data);
                         setLoading(false);
                     })
@@ -868,7 +871,7 @@ const ChartPopup = ({ open, onClose, player, initialTab = 0, hideHeader = false 
                         <CircularProgress />
                     </Box>
                 ) : (
-                    <PlayerDetailPanel player={playerWithChart} initialTab={initialTab} hideHeader={hideHeader} />
+                    <PlayerDetailPanel player={playerWithChart} matchChart={matchChart} initialTab={initialTab} hideHeader={hideHeader} />
                 )}
             </DialogContent>
         </Dialog>
@@ -2483,7 +2486,14 @@ const UserDashboard = ({ hideHeader = false }) => {
                 )}
 
                 {/* POPUPS */}
-                <ChartPopup open={chartPopupOpen} onClose={() => setChartPopupOpen(false)} player={chartPopupPlayer} initialTab={chartPopupTab} hideHeader={hideHeader} />
+                <ChartPopup
+                    open={chartPopupOpen}
+                    onClose={() => setChartPopupOpen(false)}
+                    player={chartPopupPlayer}
+                    matchChart={matchChart}
+                    initialTab={chartPopupTab}
+                    hideHeader={hideHeader}
+                />
                 <MatchWizardDialog open={matchWizardOpen} onClose={() => setMatchWizardOpen(false)} groups={groups} token={token} hideHeader={hideHeader} />
 
 
