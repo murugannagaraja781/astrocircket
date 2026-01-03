@@ -1428,20 +1428,24 @@ const PlayersManager = () => {
                         </Box>
                         <Box sx={{ display: 'flex', gap: 1 }}>
                             <TextField
-                                label="Lat"
+                                label="Latitude"
                                 value={playerForm.latitude || ''}
-                                InputProps={{ readOnly: true }}
+                                onChange={(e) => setPlayerForm({...playerForm, latitude: e.target.value})}
                                 fullWidth
                                 size="small"
-                                variant="filled"
+                                type="number"
+                                inputProps={{ step: "0.0001" }}
+                                placeholder="e.g. 13.0827"
                             />
                             <TextField
-                                label="Long"
+                                label="Longitude"
                                 value={playerForm.longitude || ''}
-                                InputProps={{ readOnly: true }}
+                                onChange={(e) => setPlayerForm({...playerForm, longitude: e.target.value})}
                                 fullWidth
                                 size="small"
-                                variant="filled"
+                                type="number"
+                                inputProps={{ step: "0.0001" }}
+                                placeholder="e.g. 80.2707"
                             />
                         </Box>
                         <TextField
