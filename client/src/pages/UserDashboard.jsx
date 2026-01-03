@@ -1087,45 +1087,60 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                 </Toolbar>
             </AppBar>
 
-            {/* CENTERED TEAM SELECTION */}
+            {/* CENTERED TEAM SELECTION - Horizontal on All Screens */}
             <Box sx={{
                 display: 'flex',
+                flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: 2,
+                gap: { xs: 1, sm: 2 },
                 py: 1.5,
-                px: 2,
+                px: 1,
                 bgcolor: visionPro.paper,
                 borderBottom: `1px solid ${visionPro.border}`
             }}>
-                <FormControl size="small" sx={{ minWidth: 180 }}>
-                    <InputLabel>TEAM A</InputLabel>
+                {/* TEAM A */}
+                <FormControl size="small" sx={{ flex: 1, maxWidth: { xs: 130, sm: 180 } }}>
+                    <InputLabel sx={{ fontWeight: 'bold' }}>🏏 TEAM A</InputLabel>
                     <Select
                         value={teamA}
-                        label="TEAM A"
+                        label="🏏 TEAM A"
                         onChange={(e) => setTeamA(e.target.value)}
-                        sx={{ '& .MuiSelect-select': { fontWeight: 'bold', color: '#FF6F00' } }}
+                        sx={{
+                            '& .MuiSelect-select': { fontWeight: 'bold', color: '#FF6F00', fontSize: '1rem' },
+                            borderRadius: '12px',
+                            bgcolor: 'rgba(255, 193, 7, 0.05)'
+                        }}
                     >
                         {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
                     </Select>
                 </FormControl>
 
+                {/* VS Badge */}
                 <Box sx={{
-                    width: 45, height: 45, borderRadius: '50%',
+                    width: { xs: 40, sm: 45 },
+                    height: { xs: 40, sm: 45 },
+                    borderRadius: '50%',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     background: visionPro.gradientPrimary, color: 'white',
-                    boxShadow: '0 4px 12px rgba(255, 111, 0, 0.35)'
+                    boxShadow: '0 4px 12px rgba(255, 111, 0, 0.35)',
+                    flexShrink: 0
                 }}>
-                    <Typography variant="subtitle1" fontWeight="900">VS</Typography>
+                    <Typography variant="subtitle2" fontWeight="900">VS</Typography>
                 </Box>
 
-                <FormControl size="small" sx={{ minWidth: 180 }}>
-                    <InputLabel>TEAM B</InputLabel>
+                {/* TEAM B */}
+                <FormControl size="small" sx={{ flex: 1, maxWidth: { xs: 130, sm: 180 } }}>
+                    <InputLabel sx={{ fontWeight: 'bold' }}>🏏 TEAM B</InputLabel>
                     <Select
                         value={teamB}
-                        label="TEAM B"
+                        label="🏏 TEAM B"
                         onChange={(e) => setTeamB(e.target.value)}
-                        sx={{ '& .MuiSelect-select': { fontWeight: 'bold', color: '#FF6F00' } }}
+                        sx={{
+                            '& .MuiSelect-select': { fontWeight: 'bold', color: '#FF6F00', fontSize: '1rem' },
+                            borderRadius: '12px',
+                            bgcolor: 'rgba(255, 193, 7, 0.05)'
+                        }}
                     >
                         {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
                     </Select>

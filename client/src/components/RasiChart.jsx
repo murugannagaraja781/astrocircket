@@ -323,8 +323,8 @@ const RasiChart = ({ data, style = {}, planetsData = null }) => {
                                         alignItems: 'flex-start',
                                         pointerEvents: 'none'
                                     }}>
-                                        <span style={signNumStyle}>{signNumber}</span>
-                                        <span style={{ fontSize: '8px', color: '#6b7280', marginTop: '10px' }}>{signTamil}</span>
+                                        {/* House number removed - only showing Tamil sign name */}
+                                        <span style={{ fontSize: '9px', color: '#6b7280', fontWeight: 'bold' }}>{signTamil}</span>
                                     </div>
 
                                     {isAscendantSign && <div style={ascBorderBoxStyle}></div>}
