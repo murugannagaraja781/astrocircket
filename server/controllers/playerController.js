@@ -349,17 +349,22 @@ const addPlayer = async (req, res) => {
         // Handle multipart/form-data: req.body will have text fields, req.file will have image
         const playerData = req.body;
 
-        // Check for duplicate player (same name + dob + birthTime)
-        const existingPlayer = await Player.findOne({
+        // Check for duplicate player (same name + dob only - birthTime is optional)
+        const duplicateQuery = {
             name: { $regex: new RegExp(`^${playerData.name?.trim()}$`, 'i') },
-            dob: playerData.dob,
-            birthTime: playerData.birthTime
-        });
+            dob: playerData.dob
+        };
+        // Only add birthTime to query if it's provided
+        if (playerData.birthTime) {
+            duplicateQuery.birthTime = playerData.birthTime;
+        }
+
+        const existingPlayer = await Player.findOne(duplicateQuery);
 
         if (existingPlayer) {
             if (req.file && fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path); // Cleanup uploaded file
             return res.status(400).json({
-                msg: 'Duplicate player! A player with the same name, DOB and birth time already exists.',
+                msg: 'Duplicate player! A player with the same name and DOB already exists.',
                 existingId: existingPlayer.id
             });
         }

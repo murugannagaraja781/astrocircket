@@ -1,4 +1,95 @@
-const { calculateSign, calculateNakshatra, calculateDignity, formatDegree, calculatePlanetaryPositions } = require('../utils/astroCalculator');
+const { calculateSign, calculateNakshatra, calculateDignity, formatDegree, calculatePlanetaryPositions, NAKSHATRAS } = require('../utils/astroCalculator');
+
+// Panchangam calculation helpers
+const TITHIS = [
+    'Pratipada', 'Dwitiya', 'Tritiya', 'Chaturthi', 'Panchami',
+    'Shashti', 'Saptami', 'Ashtami', 'Navami', 'Dashami',
+    'Ekadashi', 'Dwadashi', 'Trayodashi', 'Chaturdashi', 'Purnima/Amavasya'
+];
+
+const TITHIS_TAMIL = [
+    'பிரதமை', 'துவிதியை', 'திருதியை', 'சதுர்த்தி', 'பஞ்சமி',
+    'சஷ்டி', 'சப்தமி', 'அஷ்டமி', 'நவமி', 'தசமி',
+    'ஏகாதசி', 'துவாதசி', 'திரயோதசி', 'சதுர்தசி', 'பூர்ணிமை/அமாவாசை'
+];
+
+const VARAS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const VARAS_TAMIL = ['ஞாயிறு', 'திங்கள்', 'செவ்வாய்', 'புதன்', 'வியாழன்', 'வெள்ளி', 'சனி'];
+
+const YOGAS = [
+    'Vishkumbha', 'Preeti', 'Ayushman', 'Saubhagya', 'Shobhana', 'Atiganda', 'Sukarma',
+    'Dhriti', 'Shoola', 'Ganda', 'Vriddhi', 'Dhruva', 'Vyaghata', 'Harshana', 'Vajra',
+    'Siddhi', 'Vyatipata', 'Variyan', 'Parigha', 'Shiva', 'Siddha', 'Sadhya', 'Shubha',
+    'Shukla', 'Brahma', 'Indra', 'Vaidhriti'
+];
+
+const KARANAS = [
+    'Bava', 'Balava', 'Kaulava', 'Taitila', 'Garija', 'Vanija', 'Vishti',
+    'Shakuni', 'Chatushpada', 'Naga', 'Kimstughna'
+];
+
+const calculateTithi = (sunLng, moonLng) => {
+    let diff = moonLng - sunLng;
+    if (diff < 0) diff += 360;
+    const tithiIndex = Math.floor(diff / 12) % 15;
+    return {
+        name: TITHIS[tithiIndex],
+        tamil: TITHIS_TAMIL[tithiIndex],
+        index: tithiIndex + 1
+    };
+};
+
+const calculateVara = (year, month, day) => {
+    const date = new Date(year, month - 1, day);
+    const dayIndex = date.getDay();
+    return {
+        name: VARAS[dayIndex],
+        tamil: VARAS_TAMIL[dayIndex]
+    };
+};
+
+const calculateYoga = (sunLng, moonLng) => {
+    const sum = (sunLng + moonLng) % 360;
+    const yogaIndex = Math.floor(sum / (360 / 27)) % 27;
+    return {
+        name: YOGAS[yogaIndex],
+        index: yogaIndex + 1
+    };
+};
+
+const calculateKarana = (sunLng, moonLng) => {
+    let diff = moonLng - sunLng;
+    if (diff < 0) diff += 360;
+    const karanaIndex = Math.floor(diff / 6) % 11;
+    return {
+        name: KARANAS[karanaIndex],
+        index: karanaIndex + 1
+    };
+};
+
+// Simple sunrise/sunset calculation (approximate for India)
+const calculateSunTimes = (latitude, longitude, year, month, day) => {
+    const baseRise = 6;
+    const baseSet = 18;
+
+    // Seasonal adjustment (rough approximation)
+    const dayOfYear = Math.floor((new Date(year, month - 1, day) - new Date(year, 0, 0)) / (1000 * 60 * 60 * 24));
+    const adjustment = Math.sin((dayOfYear - 80) * Math.PI / 182.5) * 0.5;
+
+    const riseHour = baseRise - adjustment;
+    const setHour = baseSet + adjustment;
+
+    const formatTime = (h) => {
+        const hours = Math.floor(h);
+        const mins = Math.floor((h - hours) * 60);
+        return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+    };
+
+    return {
+        sunrise: formatTime(riseHour),
+        sunset: formatTime(setHour)
+    };
+};
 
 exports.getBirthChart = async (req, res) => {
     try {
@@ -11,10 +102,6 @@ exports.getBirthChart = async (req, res) => {
             parseFloat(latitude), parseFloat(longitude), parseFloat(timezone)
         );
 
-        // Create timestamp from user input for response
-        const inputDate = new Date(year, month - 1, day, hour, minute);
-        // Ensure accurate ISO string from local components (ignoring server timezone offset for generic ISO generation, or constructing manually)
-        // Manual ISO construction to respect input numbers exactly:
         const pad = (n) => n.toString().padStart(2, '0');
         const userProvidedTimestamp = `${year}-${pad(month)}-${pad(day)}T${pad(hour)}:${pad(minute)}:00.000Z`;
 
@@ -70,7 +157,7 @@ exports.getBirthChart = async (req, res) => {
             });
         }
 
-        // Generate dignity summary - கிரக பலன் சுருக்கம்
+        // Generate dignity summary
         chartData.dignitySummary = {
             title: 'கிரக பலன் சுருக்கம் - Planetary Dignity Summary',
             உச்சம்_Exalted: [],
@@ -103,6 +190,27 @@ exports.getBirthChart = async (req, res) => {
             else if (data.dignity === 'Enemy') chartData.dignitySummary.பகை_Enemy.push(entry);
             else chartData.dignitySummary.சமம்_Neutral.push(entry);
         }
+
+        // *** PANCHANGAM CALCULATION ***
+        const sunLng = planets.Sun;
+        const moonLng = planets.Moon;
+        const moonNak = calculateNakshatra(moonLng);
+        const sunTimes = calculateSunTimes(parseFloat(latitude), parseFloat(longitude), parseInt(year), parseInt(month), parseInt(day));
+
+        chartData.panchangam = {
+            tithi: calculateTithi(sunLng, moonLng),
+            vara: calculateVara(parseInt(year), parseInt(month), parseInt(day)),
+            nakshatra: {
+                name: moonNak.name,
+                tamil: moonNak.tamil,
+                lord: moonNak.lord,
+                pada: moonNak.pada
+            },
+            yoga: calculateYoga(sunLng, moonLng),
+            karana: calculateKarana(sunLng, moonLng),
+            sunrise: sunTimes.sunrise,
+            sunset: sunTimes.sunset
+        };
 
         res.json(chartData);
 
