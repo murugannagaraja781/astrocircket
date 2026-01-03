@@ -5,10 +5,19 @@ const path = require('path');
 const fs = require('fs');
 const xlsx = require('xlsx');
 
-// Helper to calculate or fetch chart
+// Import local astro calculator using vedic-astrology-api
+const {
+    calculateSign,
+    calculateNakshatra,
+    calculateDignity,
+    calculatePlanetaryPositions
+} = require('../utils/astroCalculator');
+
+// Helper to calculate birth chart locally using vedic-astrology-api
 const fetchCharData = async (p) => {
     try {
         if (!p.dob) return null;
+
         // Basic parsing assuming YYYY-MM-DD
         let year, month, day;
         if (p.dob.includes('-')) {
@@ -28,26 +37,52 @@ const fetchCharData = async (p) => {
             }
         }
 
-        const apiPayload = {
-            year,
-            month,
-            day,
-            hour,
-            minute,
-            latitude: parseFloat(p.latitude),
-            longitude: parseFloat(p.longitude),
-            timezone: p.timezone
+        const latitude = parseFloat(p.latitude) || 13.0827;
+        const longitude = parseFloat(p.longitude) || 80.2707;
+        const timezone = parseFloat(p.timezone) || 5.5;
+
+        // Use local vedic-astrology-api calculation
+        const { planets, ascendant, ayanamsaVal } = calculatePlanetaryPositions(
+            year, month, day, hour, minute, latitude, longitude, timezone
+        );
+
+        // Build chart data in expected format
+        const chartData = {
+            planets: {},
+            ascendant: {
+                longitude: ascendant,
+                sign: calculateSign(ascendant)
+            },
+            ayanamsa: ayanamsaVal
         };
 
-        const response = await axios.post('https://astroweb-production.up.railway.app/api/charts/birth-chart', apiPayload);
-        // Store the COMPLETE response data (houses, planets, etc.)
-        // debug logging
-        console.log('--- FETCHED CHAR DATA ---');
-        console.log(JSON.stringify(response.data).substring(0, 500) + '...');
+        // Add sign, nakshatra and dignity for each planet
+        Object.keys(planets).forEach(planetName => {
+            const lng = planets[planetName];
+            const sign = calculateSign(lng);
+            const nakshatra = calculateNakshatra(lng);
+            const dignity = calculateDignity(planetName, lng);
 
-        return response.data; // This is the full JSON object including all attributes
+            chartData.planets[planetName] = {
+                longitude: lng,
+                sign: sign.name,
+                signTamil: sign.tamil,
+                signLord: sign.lord,
+                nakshatra: nakshatra.name,
+                nakshatraTamil: nakshatra.tamil,
+                nakshatraLord: nakshatra.lord,
+                pada: nakshatra.pada,
+                dignity: dignity.english,
+                dignityTamil: dignity.tamil
+            };
+        });
+
+        console.log(`--- LOCAL CHART CALCULATED for ${p.name} ---`);
+        console.log(`Moon: ${chartData.planets.Moon?.sign}, Nakshatra: ${chartData.planets.Moon?.nakshatra}`);
+
+        return chartData;
     } catch (err) {
-        console.error(`Error fetching chart for ${p.name}:`, err.message);
+        console.error(`Error calculating chart for ${p.name}:`, err.message);
         return null;
     }
 };
