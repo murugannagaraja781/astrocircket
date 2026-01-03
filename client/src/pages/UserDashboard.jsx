@@ -1678,7 +1678,9 @@ const UserDashboard = ({ hideHeader = false }) => {
                         {/* Left Side Logo - Round */}
                         <Box sx={{
                             display: 'flex',
-                            alignItems: 'center'
+                            alignItems: 'center',
+                            color:'white',
+                            border:'darkorange'
                         }}>
                             <img
                                 src="/logo.png"
@@ -1692,7 +1694,7 @@ const UserDashboard = ({ hideHeader = false }) => {
                                     filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
                                 }}
                                 className="header-logo"
-                            />
+                            /> S&B Astro
                         </Box>
 
                         {/* Logout Button */}
