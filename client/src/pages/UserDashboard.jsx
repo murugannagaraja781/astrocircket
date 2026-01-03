@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useMemo } from 'react';
+ import React, { useContext, useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
 import RasiChart from '../components/RasiChart';
@@ -23,23 +23,21 @@ import GridOnIcon from '@mui/icons-material/GridOn';
 import CloseIcon from '@mui/icons-material/Close';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
-// --- COLOR PALETTE (PROFESSIONAL APP STYLE) ---
+// --- COLOR PALETTE (CSK THEME - YELLOW/GREEN/ORANGE) ---
 const visionPro = {
-    background: '#f4f6f9', // Soft gray background
-    paper: '#ffffff', // Pure white cards
-    primary: '#2563eb', // Professional Blue
-    secondary: '#0ea5e9', // Cyan accent
-    accent: '#3b82f6', // Blue accent
-    text: '#111827', // Near black text
-    textSecondary: '#6b7280', // Gray text
-    border: 'rgba(0, 0, 0, 0.08)', // Subtle border
-    success: '#22c55e', // Green
-    warning: '#f59e0b', // Amber
-    error: '#ef4444', // Red
-    gradientPrimary: 'linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%)', // Blue to Cyan
-    gradientWarm: 'linear-gradient(135deg, #f97316 0%, #facc15 100%)', // Orange to Yellow
-    gradientSuccess: 'linear-gradient(135deg, #22c55e 0%, #10b981 100%)', // Green gradient
-    gradientDark: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)', // Dark slate
+    background: '#F0FDF4', // Light Green
+    paper: '#FFFFFF', // Clean White
+    primary: '#F9CD05', // CSK Yellow
+    secondary: '#F97316', // Orange
+    accent: '#FFD600', // Yellow Warm
+    text: '#004D40', // Dark Green
+    textSecondary: '#00695C', // Dark Teal
+    border: 'rgba(0, 77, 64, 0.12)', // Subtle Dark Green Border
+    success: '#10B981', // Success Green
+    warning: '#F59E0B', // Amber
+    error: '#EF4444', // Error Red
+    gradientPrimary: 'linear-gradient(90deg, #F9CD05, #F97316)',
+    gradientWarm: 'linear-gradient(135deg, #F9CD05 0%, #F97316 100%)',
 };
 
 // --- HELPERS ---
@@ -110,39 +108,6 @@ const getNakshatraLordHelper = (nakshatraName) => {
         if (nakshatraName.includes(key)) return val;
     }
     return '-';
-};
-
-// Helper to get Rasi (Sign) Lord - ராசி அதிபதி
-const getRasiLordHelper = (signName) => {
-    if (!signName) return { english: '-', tamil: '-' };
-    const sign = signName.toLowerCase();
-
-    const rasiLordMap = {
-        'aries': { english: 'Mars', tamil: 'செவ்வாய்' },
-        'taurus': { english: 'Venus', tamil: 'சுக்கிரன்' },
-        'gemini': { english: 'Mercury', tamil: 'புதன்' },
-        'cancer': { english: 'Moon', tamil: 'சந்திரன்' },
-        'leo': { english: 'Sun', tamil: 'சூரியன்' },
-        'virgo': { english: 'Mercury', tamil: 'புதன்' },
-        'libra': { english: 'Venus', tamil: 'சுக்கிரன்' },
-        'scorpio': { english: 'Mars', tamil: 'செவ்வாய்' },
-        'sagittarius': { english: 'Jupiter', tamil: 'குரு' },
-        'capricorn': { english: 'Saturn', tamil: 'சனி' },
-        'aquarius': { english: 'Saturn', tamil: 'சனி' },
-        'pisces': { english: 'Jupiter', tamil: 'குரு' }
-    };
-
-    return rasiLordMap[sign] || { english: '-', tamil: '-' };
-};
-
-// Helper to get Nakshatra Lord Tamil - நட்சத்திர அதிபதி
-const getNakshatraLordTamil = (lordEnglish) => {
-    const lordTamilMap = {
-        'Sun': 'சூரியன்', 'Moon': 'சந்திரன்', 'Mars': 'செவ்வாய்',
-        'Mercury': 'புதன்', 'Jupiter': 'குரு', 'Venus': 'சுக்கிரன்',
-        'Saturn': 'சனி', 'Rahu': 'ராகு', 'Ketu': 'கேது'
-    };
-    return lordTamilMap[lordEnglish] || lordEnglish;
 };
 
 // 1. Planetary Details Table
@@ -846,9 +811,6 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
         else setSelectedPlayers(prev => [...prev, pid]);
     };
 
-    // State for player detail popup
-    const [popupPlayer, setPopupPlayer] = React.useState(null);
-
     const renderPlayerList = (teamId, teamName) => {
         const grp = groups.find(g => g._id === teamId);
         if (!grp) return null;
@@ -857,241 +819,173 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
         const opponentScore = teamId === teamA ? results?.totalB : results?.totalA;
         const isWinner = results && Number(myScore) > Number(opponentScore);
 
-        // Helper to get player chart data
-        const getPlayerAstroData = (player) => {
-            const chart = player.birthChart?.data || player.birthChart;
-            const moonData = chart?.planets?.Moon || {};
-            const moonSign = moonData.sign || chart?.moonSign?.english || '-';
-            const moonNakshatra = moonData.nakshatra || chart?.moonSign?.nakshatra || '-';
-
-            // Get lords
-            const rasiLord = getRasiLordHelper(moonSign);
-            const nakshatraLordEn = getNakshatraLordHelper(moonNakshatra);
-            const nakshatraLordTamil = getNakshatraLordTamil(nakshatraLordEn);
-
-            return {
-                moonSign,
-                moonSignTamil: signTamilMap[moonSign] || moonSign,
-                moonNakshatra,
-                rasiLordEn: rasiLord.english,
-                rasiLordTamil: rasiLord.tamil,
-                nakshatraLordEn,
-                nakshatraLordTamil
-            };
-        };
-
         return (
             <Paper variant="outlined" sx={{
                 p: isMobile ? 1 : 2,
                 height: '100%',
                 bgcolor: isWinner
                     ? (hideHeader ? 'rgba(76, 175, 80, 0.1)' : 'rgba(16, 185, 129, 0.1)')
-                    : (hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.02)'),
+                    : (hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.02)'), // Slightly darker bg for visibility
                 borderColor: isWinner
                     ? (hideHeader ? 'success.main' : '#10B981')
                     : (hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(167, 243, 208, 0.5)'),
                 borderWidth: isWinner ? 2 : 1,
                 borderRadius: '16px',
-                color: hideHeader ? 'white' : '#1F2937'
+                color: hideHeader ? 'white' : '#1F2937' // Darker text for table readability
             }}>
                 <Box sx={{
                     mb: 2,
                     borderBottom: 1,
-                    borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(37, 99, 235, 0.15)',
+                    borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(167, 243, 208, 1)',
                     pb: 1,
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center'
                 }}>
-                    <Typography variant="subtitle1" fontWeight="bold" sx={{ color: visionPro.primary, fontSize: isMobile ? '0.9rem' : '1rem' }}>{teamName}</Typography>
+                    <Typography variant="subtitle1" fontWeight="bold" sx={{ color: '#059669', fontSize: isMobile ? '0.9rem' : '1rem' }}>{teamName}</Typography>
                     {results && (
                         <Chip label={`Score: ${myScore}`} color={isWinner ? "success" : "default"} variant={isWinner ? "filled" : "outlined"} size="small" />
                     )}
                 </Box>
 
-                {/* Select All */}
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, pl: 1 }}>
-                    <Checkbox
-                        size="small"
-                        indeterminate={
-                            grp.players.some(p => selectedPlayers.includes(p.id)) &&
-                            !grp.players.every(p => selectedPlayers.includes(p.id))
-                        }
-                        checked={grp.players.every(p => selectedPlayers.includes(p.id))}
-                        onChange={() => {
-                            const allIds = grp.players.map(p => p.id);
-                            if (allIds.every(id => selectedPlayers.includes(id))) {
-                                setSelectedPlayers(prev => prev.filter(id => !allIds.includes(id)));
-                            } else {
-                                setSelectedPlayers(prev => [...new Set([...prev, ...allIds])]);
-                            }
-                        }}
-                    />
-                    <Typography variant="caption" fontWeight="bold">Select All</Typography>
-                </Box>
-
-                {/* COMPACT PLAYER LIST - Profile Pic + Name Only */}
-                <Box sx={{
-                    maxHeight: isMobile ? '50vh' : '60vh',
-                    overflowY: 'auto',
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    gap: 1,
-                    p: 1
-                }}>
-                    {grp.players.map(p => {
-                        const isSel = selectedPlayers.includes(p.id);
-                        const res = results?.details?.[p.id];
-                        return (
-                            <Box
-                                key={p.id}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    togglePlayer(p.id);
-                                }}
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 1,
-                                    p: 1,
-                                    borderRadius: '12px',
-                                    border: '1px solid',
-                                    borderColor: isSel ? visionPro.primary : 'rgba(0,0,0,0.08)',
-                                    bgcolor: isSel ? 'rgba(37, 99, 235, 0.08)' : 'white',
-                                    cursor: 'pointer',
-                                    minWidth: isMobile ? '100%' : 'calc(50% - 8px)',
-                                    maxWidth: isMobile ? '100%' : 'calc(50% - 8px)',
-                                    transition: 'all 0.2s ease',
-                                    boxShadow: isSel ? '0 2px 8px rgba(37, 99, 235, 0.15)' : '0 1px 4px rgba(0,0,0,0.04)',
-                                    '&:hover': {
-                                        borderColor: visionPro.primary,
-                                        bgcolor: 'rgba(37, 99, 235, 0.04)'
-                                    },
-                                    '&:active': {
-                                        transform: 'scale(0.98)'
+                {/* --- MOBILE VIEW (CARDS) --- */}
+                {isMobile ? (
+                    <Box sx={{ maxHeight: '60vh', overflowY: 'auto' }}>
+                        {/* Select All for Mobile */}
+                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, pl: 1 }}>
+                             <Checkbox
+                                size="small"
+                                indeterminate={
+                                    grp.players.some(p => selectedPlayers.includes(p.id)) &&
+                                    !grp.players.every(p => selectedPlayers.includes(p.id))
+                                }
+                                checked={grp.players.every(p => selectedPlayers.includes(p.id))}
+                                onChange={() => {
+                                    const allIds = grp.players.map(p => p.id);
+                                    if (allIds.every(id => selectedPlayers.includes(id))) {
+                                        setSelectedPlayers(prev => prev.filter(id => !allIds.includes(id)));
+                                    } else {
+                                        setSelectedPlayers(prev => [...new Set([...prev, ...allIds])]);
                                     }
                                 }}
-                            >
-                                <Checkbox checked={isSel} size="small" sx={{ p: 0 }} onClick={(e) => e.stopPropagation()} />
-                                <Avatar
-                                    src={p.profile}
-                                    sx={{ width: 36, height: 36, fontSize: 14, cursor: 'pointer' }}
-                                    onClick={(e) => { e.stopPropagation(); setPopupPlayer(p); }}
-                                >
-                                    {p.name?.[0]}
-                                </Avatar>
-                                <Typography
-                                    variant="body2"
-                                    fontWeight={isSel ? 'bold' : 'normal'}
-                                    sx={{
-                                        flexGrow: 1,
-                                        cursor: 'pointer',
-                                        '&:hover': { textDecoration: 'underline' }
-                                    }}
-                                    onClick={(e) => { e.stopPropagation(); setPopupPlayer(p); }}
-                                >
-                                    {p.name}
-                                </Typography>
-                                {res && (
-                                    <Box sx={{ display: 'flex', gap: 0.5 }}>
-                                        <Chip label={`B:${res.bat.score}`} size="small" sx={{ height: 18, fontSize: '0.6rem' }} color={res.bat.score >= 1 ? 'success' : 'default'} />
-                                        <Chip label={`Bo:${res.bowl.score}`} size="small" sx={{ height: 18, fontSize: '0.6rem' }} color={res.bowl.score >= 1 ? 'success' : 'default'} />
-                                    </Box>
-                                )}
-                            </Box>
-                        );
-                    })}
-                </Box>
+                            />
+                            <Typography variant="caption" fontWeight="bold">Select All</Typography>
+                        </Box>
 
-                {/* PLAYER DETAIL POPUP */}
-                <Dialog
-                    open={!!popupPlayer && grp.players.some(pl => pl.id === popupPlayer?.id)}
-                    onClose={() => setPopupPlayer(null)}
-                    maxWidth="xs"
-                    fullWidth
-                    PaperProps={{ sx: { borderRadius: 3, m: 1 } }}
-                >
-                    {popupPlayer && (() => {
-                        const astro = getPlayerAstroData(popupPlayer);
-                        const res = results?.details?.[popupPlayer.id];
-                        return (
-                            <>
-                                <DialogTitle sx={{
-                                    background: visionPro.gradientPrimary,
-                                    color: 'white',
-                                    py: 1.5,
+                        {grp.players.map(p => {
+                            const isSel = selectedPlayers.includes(p.id);
+                            const res = results?.details?.[p.id];
+                            return (
+                                <Paper key={p.id} elevation={0} sx={{
+                                    p: 1.5, mb: 1,
+                                    border: '1px solid',
+                                    borderColor: isSel ? '#10B981' : 'rgba(0,0,0,0.1)',
+                                    bgcolor: isSel ? 'rgba(16, 185, 129, 0.05)' : 'white',
+                                    borderRadius: 2,
                                     display: 'flex',
                                     alignItems: 'center',
-                                    gap: 2
-                                }}>
-                                    <Avatar src={popupPlayer.profile} sx={{ width: 48, height: 48 }}>
-                                        {popupPlayer.name?.[0]}
-                                    </Avatar>
+                                    gap: 1.5
+                                }} onClick={() => togglePlayer(p.id)}>
+                                    <Checkbox checked={isSel} size="small" sx={{ p:0 }} />
+                                    <Avatar src={p.profile} sx={{ width: 40, height: 40, fontSize: 14 }}>{p.name[0]}</Avatar>
                                     <Box sx={{ flexGrow: 1 }}>
-                                        <Typography variant="subtitle1" fontWeight="bold">{popupPlayer.name}</Typography>
-                                        <Typography variant="caption">{popupPlayer.birthPlace}</Typography>
+                                        <Typography variant="subtitle2" fontWeight="bold" lineHeight={1.1} fontSize="0.85rem">{p.name}</Typography>
+                                        <Typography variant="caption" color="text.secondary" display="block" fontSize="0.7rem">{p.birthPlace || '-'}</Typography>
+                                        <Typography variant="caption" color="text.secondary" fontSize="0.7rem">{p.dob} | {p.birthTime}</Typography>
                                     </Box>
-                                    <IconButton onClick={() => setPopupPlayer(null)} size="small" sx={{ color: 'white' }}>
-                                        <CloseIcon />
-                                    </IconButton>
-                                </DialogTitle>
-                                <DialogContent sx={{ p: 2 }}>
-                                    {/* Birth Details */}
-                                    <Box sx={{ mb: 2, p: 1.5, bgcolor: '#f0fdf4', borderRadius: 2 }}>
-                                        <Typography variant="caption" color="text.secondary">பிறந்த தேதி / நேரம்</Typography>
-                                        <Typography variant="body2" fontWeight="bold">
-                                            {popupPlayer.dob} | {popupPlayer.birthTime || '-'}
-                                        </Typography>
-                                    </Box>
-
-                                    {/* Astro Details Table */}
-                                    <TableContainer component={Paper} elevation={0} sx={{ border: '1px solid #e0e0e0' }}>
-                                        <Table size="small">
-                                            <TableBody>
-                                                <TableRow>
-                                                    <TableCell sx={{ fontWeight: 'bold', bgcolor: '#f5f5f5', width: '40%' }}>சந்திர ராசி</TableCell>
-                                                    <TableCell>{astro.moonSignTamil} ({astro.moonSign})</TableCell>
-                                                </TableRow>
-                                                <TableRow>
-                                                    <TableCell sx={{ fontWeight: 'bold', bgcolor: '#f5f5f5' }}>நட்சத்திரம்</TableCell>
-                                                    <TableCell>{astro.moonNakshatra}</TableCell>
-                                                </TableRow>
-                                                <TableRow sx={{ bgcolor: '#fff8e1' }}>
-                                                    <TableCell sx={{ fontWeight: 'bold', color: '#e65100' }}>ராசி அதிபதி</TableCell>
-                                                    <TableCell sx={{ fontWeight: 'bold', color: '#e65100' }}>
-                                                        {astro.rasiLordTamil} ({astro.rasiLordEn})
-                                                    </TableCell>
-                                                </TableRow>
-                                                <TableRow sx={{ bgcolor: '#e3f2fd' }}>
-                                                    <TableCell sx={{ fontWeight: 'bold', color: '#1565c0' }}>நட்சத்திர அதிபதி</TableCell>
-                                                    <TableCell sx={{ fontWeight: 'bold', color: '#1565c0' }}>
-                                                        {astro.nakshatraLordTamil} ({astro.nakshatraLordEn})
-                                                    </TableCell>
-                                                </TableRow>
-                                            </TableBody>
-                                        </Table>
-                                    </TableContainer>
-
-                                    {/* Prediction Results if available */}
                                     {res && (
-                                        <Box sx={{ mt: 2, display: 'flex', gap: 2, justifyContent: 'center' }}>
-                                            <Chip
-                                                label={`Batting: ${res.bat.score}`}
-                                                color={res.bat.score >= 1 ? 'success' : 'default'}
-                                                sx={{ fontWeight: 'bold' }}
-                                            />
-                                            <Chip
-                                                label={`Bowling: ${res.bowl.score}`}
-                                                color={res.bowl.score >= 1 ? 'success' : 'default'}
-                                                sx={{ fontWeight: 'bold' }}
-                                            />
+                                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, alignItems: 'flex-end' }}>
+                                            <Chip label={`Bat:${res.bat.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bat.score >= 1 ? 'success' : 'default'} />
+                                            <Chip label={`Bowl:${res.bowl.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bowl.score >= 1 ? 'success' : 'default'} />
                                         </Box>
                                     )}
-                                </DialogContent>
-                            </>
-                        );
-                    })()}
-                </Dialog>
+                                </Paper>
+                            );
+                        })}
+                    </Box>
+                ) : (
+                /* --- DESKTOP VIEW (TABLE) --- */
+                <TableContainer sx={{ maxHeight: 400 }}>
+                    <Table size="small" stickyHeader>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell padding="checkbox" sx={{ bgcolor: 'transparent' }}>
+                                    <Checkbox
+                                        size="small"
+                                        indeterminate={
+                                            grp.players.some(p => selectedPlayers.includes(p.id)) &&
+                                            !grp.players.every(p => selectedPlayers.includes(p.id))
+                                        }
+                                        checked={grp.players.every(p => selectedPlayers.includes(p.id))}
+                                        onChange={() => {
+                                            const allIds = grp.players.map(p => p.id);
+                                            const allSelected = allIds.every(id => selectedPlayers.includes(id));
+                                            if (allSelected) {
+                                                setSelectedPlayers(prev => prev.filter(id => !allIds.includes(id)));
+                                            } else {
+                                                setSelectedPlayers(prev => [...new Set([...prev, ...allIds])]);
+                                            }
+                                        }}
+                                    />
+                                </TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>Name</TableCell>
+{/* ID Column Header Removed */}
+                                <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>DOB / Time</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>Place</TableCell>
+                                {results && <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#059669' }}>Pred.</TableCell>}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {grp.players.map(p => {
+                                const isSel = selectedPlayers.includes(p.id);
+                                const res = results?.details?.[p.id];
+                                return (
+                                    <TableRow
+                                        key={p.id}
+                                        hover
+                                        onClick={() => togglePlayer(p.id)}
+                                        sx={{ cursor: 'pointer', bgcolor: isSel ? 'rgba(16, 185, 129, 0.08)' : 'inherit' }}
+                                    >
+                                        <TableCell padding="checkbox">
+                                            <Checkbox checked={isSel} size="small" />
+                                        </TableCell>
+                                        <TableCell>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                <Avatar src={p.profile} sx={{ width: 24, height: 24, fontSize: 10 }}>{p.name[0]}</Avatar>
+                                                <Typography variant="body2" fontWeight={isSel ? 'bold' : 'normal'}>
+                                                    {p.name}
+                                                </Typography>
+                                            </Box>
+                                        </TableCell>
+{/* ID Cell Removed */}
+                                        <TableCell>
+                                             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                                <Typography variant="caption" sx={{ fontWeight: 'bold' }}>{p.dob}</Typography>
+                                                <Typography variant="caption" color="text.secondary">{p.birthTime}</Typography>
+                                             </Box>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography variant="caption" color="text.secondary" sx={{ maxWidth: 80, display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                                {p.birthPlace}
+                                            </Typography>
+                                        </TableCell>
+                                        {results && (
+                                            <TableCell>
+                                                {res ? (
+                                                     <Box sx={{ display: 'flex', gap: 0.5 }}>
+                                                        <Chip label={`B:${res.bat.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bat.score >= 1 ? 'success' : 'default'} />
+                                                        <Chip label={`Bo:${res.bowl.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bowl.score >= 1 ? 'success' : 'default'} />
+                                                    </Box>
+                                                ) : <Typography variant="caption">-</Typography>}
+                                            </TableCell>
+                                        )}
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                )}
             </Paper>
         );
     };
@@ -1104,7 +998,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
             TransitionComponent={Slide}
         >
             {/* APP BAR - MATCH PREDICTION SETUP */}
-            <AppBar position="static" sx={{ bgcolor: visionPro.primary, backgroundImage: visionPro.gradientPrimary }}>
+            <AppBar position="static" sx={{ bgcolor: '#059669', backgroundImage: 'linear-gradient(to right, #059669, #10B981)' }}>
                 <Toolbar sx={{ gap: 1, py: 0.5 }}>
 
 
@@ -1140,17 +1034,17 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                         value={teamA}
                         label="TEAM A"
                         onChange={(e) => setTeamA(e.target.value)}
-                        sx={{ '& .MuiSelect-select': { fontWeight: 'bold', color: visionPro.primary } }}
+                        sx={{ '& .MuiSelect-select': { fontWeight: 'bold', color: '#059669' } }}
                     >
                         {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
                     </Select>
                 </FormControl>
 
                 <Box sx={{
-                    width: 48, height: 48, borderRadius: '50%',
+                    width: 45, height: 45, borderRadius: '50%',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: visionPro.gradientPrimary, color: 'white',
-                    boxShadow: '0 4px 16px rgba(79, 70, 229, 0.35)'
+                    bgcolor: visionPro.primary, color: 'white',
+                    boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)'
                 }}>
                     <Typography variant="subtitle1" fontWeight="900">VS</Typography>
                 </Box>
@@ -1161,7 +1055,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                         value={teamB}
                         label="TEAM B"
                         onChange={(e) => setTeamB(e.target.value)}
-                        sx={{ '& .MuiSelect-select': { fontWeight: 'bold', color: visionPro.secondary } }}
+                        sx={{ '& .MuiSelect-select': { fontWeight: 'bold', color: '#059669' } }}
                     >
                         {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
                     </Select>
@@ -1780,21 +1674,26 @@ const UserDashboard = ({ hideHeader = false }) => {
                     borderBottom: `1px solid ${visionPro.border}`,
                     boxShadow: '0 4px 20px rgba(5, 150, 105, 0.2)'
                 }}>
-                    <Toolbar sx={{ justifyContent: 'space-between' }}>
-                        {/* Left Side Logo - Round */}
+                    <Toolbar sx={{ justifyContent: 'space-between', position: 'relative' }}>
+                        {/* Empty spacer for left side balance */}
+                        <Box sx={{ width: { xs: 40, sm: 100 } }} />
+
+                        {/* Centered Logo */}
                         <Box sx={{
+                            position: 'absolute',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
                             display: 'flex',
-                            alignItems: 'center'
+                            alignItems: 'center',
+                            justifyContent: 'center'
                         }}>
                             <img
                                 src="/logo.png"
                                 alt="S&B Entertainment"
                                 style={{
-                                    objectFit: 'cover',
-                                    height: '45px',
-                                    width: '45px',
-                                    borderRadius: '50%',
-                                    border: '2px solid rgba(255, 255, 255, 0.5)',
+                                    objectFit: 'contain',
+                                    height: '40px',
+                                    width: 'auto',
                                     filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
                                 }}
                                 className="header-logo"
