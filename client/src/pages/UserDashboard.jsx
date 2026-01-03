@@ -1459,6 +1459,9 @@ const UserDashboard = ({ hideHeader = false }) => {
     const [chartPopupPlayer, setChartPopupPlayer] = useState(null);
     const [matchWizardOpen, setMatchWizardOpen] = useState(false);
 
+    // View State - Controls which view is shown (home, players, prediction)
+    const [currentView, setCurrentView] = useState('home');
+
     // Selection Handlers
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
@@ -1586,6 +1589,152 @@ const UserDashboard = ({ hideHeader = false }) => {
         };
         fetchData();
     }, [token, baseUrl, page, rowsPerPage]);
+
+    // ===== HOME PAGE COMPONENT WITH QUICK ACTIONS =====
+    const HomePage = () => {
+        const quickActions = [
+            {
+                id: 'prediction',
+                title: 'Prediction Wizard',
+                desc: 'Start match prediction',
+                icon: '🏏',
+                color: '#FF6F00',
+                isPrimary: true // Prominent CTA
+            },
+            {
+                id: 'players',
+                title: 'All Players',
+                desc: `${players.length} players available`,
+                icon: '👥',
+                color: '#FFC107'
+            },
+            {
+                id: 'teams',
+                title: 'Teams',
+                desc: `${groups.length} teams created`,
+                icon: '🏟️',
+                color: '#FF9800'
+            },
+        ];
+
+        return (
+            <Box sx={{ px: 2, py: 3 }}>
+                {/* Welcome Header */}
+                <Box sx={{ textAlign: 'center', mb: 4 }}>
+                    <Typography variant="h5" fontWeight="900" sx={{ color: visionPro.text, mb: 1 }}>
+                        🏏 Cricket Astro Prediction
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: visionPro.textSecondary }}>
+                        Select an action to get started
+                    </Typography>
+                </Box>
+
+                {/* PROMINENT PREDICTION WIZARD BUTTON */}
+                <Paper
+                    elevation={0}
+                    onClick={() => setMatchWizardOpen(true)}
+                    sx={{
+                        p: 3,
+                        mb: 3,
+                        borderRadius: '20px',
+                        background: visionPro.gradientPrimary,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 2,
+                        boxShadow: '0 8px 24px rgba(255, 111, 0, 0.35)',
+                        transition: 'all 0.2s ease',
+                        '&:active': { transform: 'scale(0.98)', opacity: 0.9 }
+                    }}
+                >
+                    <Box sx={{
+                        width: 60, height: 60,
+                        borderRadius: '50%',
+                        bgcolor: 'rgba(255,255,255,0.25)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: '1.8rem'
+                    }}>
+                        🏏
+                    </Box>
+                    <Box sx={{ flexGrow: 1 }}>
+                        <Typography variant="h6" fontWeight="900" sx={{ color: 'white' }}>
+                            Start Prediction Wizard
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.8)' }}>
+                            Predict match outcomes with astrology
+                        </Typography>
+                    </Box>
+                    <Box sx={{ fontSize: '1.5rem', color: 'white' }}>→</Box>
+                </Paper>
+
+                {/* QUICK ACTION CARDS */}
+                <Grid container spacing={2}>
+                    {quickActions.filter(a => !a.isPrimary).map(action => (
+                        <Grid item xs={6} key={action.id}>
+                            <Paper
+                                elevation={0}
+                                onClick={() => setCurrentView(action.id)}
+                                sx={{
+                                    p: 2.5,
+                                    borderRadius: '16px',
+                                    bgcolor: visionPro.paper,
+                                    border: `1px solid ${visionPro.border}`,
+                                    cursor: 'pointer',
+                                    textAlign: 'center',
+                                    boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                                    transition: 'all 0.2s ease',
+                                    '&:active': { transform: 'scale(0.97)', opacity: 0.9 }
+                                }}
+                            >
+                                <Box sx={{
+                                    width: 50, height: 50,
+                                    borderRadius: '14px',
+                                    bgcolor: `${action.color}15`,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    fontSize: '1.5rem',
+                                    mx: 'auto', mb: 1.5
+                                }}>
+                                    {action.icon}
+                                </Box>
+                                <Typography variant="subtitle2" fontWeight="bold" sx={{ color: visionPro.text }}>
+                                    {action.title}
+                                </Typography>
+                                <Typography variant="caption" sx={{ color: visionPro.textSecondary }}>
+                                    {action.desc}
+                                </Typography>
+                            </Paper>
+                        </Grid>
+                    ))}
+                </Grid>
+
+                {/* STATS SUMMARY */}
+                <Paper
+                    elevation={0}
+                    sx={{
+                        mt: 3,
+                        p: 2,
+                        borderRadius: '16px',
+                        bgcolor: visionPro.paper,
+                        border: `1px solid ${visionPro.border}`
+                    }}
+                >
+                    <Typography variant="caption" fontWeight="bold" sx={{ color: visionPro.textSecondary, mb: 1.5, display: 'block' }}>
+                        📊 Quick Stats
+                    </Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
+                        <Box sx={{ textAlign: 'center' }}>
+                            <Typography variant="h5" fontWeight="900" sx={{ color: '#FF6F00' }}>{players.length}</Typography>
+                            <Typography variant="caption" sx={{ color: visionPro.textSecondary }}>Players</Typography>
+                        </Box>
+                        <Box sx={{ textAlign: 'center' }}>
+                            <Typography variant="h5" fontWeight="900" sx={{ color: '#FFC107' }}>{groups.length}</Typography>
+                            <Typography variant="caption" sx={{ color: visionPro.textSecondary }}>Teams</Typography>
+                        </Box>
+                    </Box>
+                </Paper>
+            </Box>
+        );
+    };
 
     // Render Teams Section
     const renderTeams = () => (
@@ -1795,7 +1944,43 @@ const UserDashboard = ({ hideHeader = false }) => {
                 </AppBar>
             )}
 
-            <Container maxWidth="xl" sx={{ mt: 4, pb: 8 }}>
+            <Container maxWidth="xl" sx={{ mt: hideHeader ? 4 : 0, pb: 8 }}>
+
+                {/* CONDITIONAL VIEW RENDERING */}
+                {currentView === 'home' ? (
+                    <HomePage />
+                ) : (
+                    <>
+                        {/* BACK BUTTON HEADER */}
+                        <Box sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 2,
+                            mb: 3,
+                            pt: 2
+                        }}>
+                            <Button
+                                variant="text"
+                                onClick={() => setCurrentView('home')}
+                                sx={{
+                                    color: visionPro.secondary,
+                                    fontWeight: 'bold',
+                                    '&:hover': { bgcolor: 'rgba(255, 111, 0, 0.08)' }
+                                }}
+                            >
+                                ← Back
+                            </Button>
+                            <Typography variant="h6" fontWeight="bold" sx={{ color: visionPro.text }}>
+                                {currentView === 'players' ? '👥 All Players' : currentView === 'teams' ? '🏟️ Teams' : ''}
+                            </Typography>
+                        </Box>
+
+                        {/* TEAMS VIEW */}
+                        {currentView === 'teams' && renderTeams()}
+
+                        {/* PLAYERS VIEW - Search Bar + Player Table */}
+                        {currentView === 'players' && (
+                            <>
                 {/* Search Bar */}
                 <Paper sx={{
                     p: 2,
@@ -1804,7 +1989,7 @@ const UserDashboard = ({ hideHeader = false }) => {
                     bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : visionPro.paper,
                     backdropFilter: 'blur(20px)',
                     border: `1px solid ${hideHeader ? 'rgba(255, 255, 255, 0.1)' : visionPro.border}`,
-                    boxShadow: hideHeader ? 'none' : '0 10px 30px rgba(0, 0, 0, 0.3)'
+                    boxShadow: hideHeader ? 'none' : '0 10px 30px rgba(0, 0, 0, 0.08)'
                 }} elevation={0}>
                     <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                          {/* Selection Info */}
@@ -1991,6 +2176,10 @@ const UserDashboard = ({ hideHeader = false }) => {
                         </>
                     )}
                 </Paper>
+                            </>
+                        )}
+                    </>
+                )}
 
                 {/* POPUPS */}
                 <ChartPopup open={chartPopupOpen} onClose={() => setChartPopupOpen(false)} player={chartPopupPlayer} hideHeader={hideHeader} />
