@@ -20,6 +20,7 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
     const [error, setError] = useState('');
     const [viewChartOpen, setViewChartOpen] = useState(false);
     const [chartData, setChartData] = useState(null);
+    const [matchChartResult, setMatchChartResult] = useState(null); // Store result for display
 
     const handleChange = (field, value) => {
         setMatchDetails(prev => ({ ...prev, [field]: value }));
@@ -80,6 +81,9 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
             const res = await axios.post(`${baseUrl}/api/charts/birth-chart`, payload, {
                 headers: { 'x-auth-token': token }
             });
+
+            // Store result for display
+            setMatchChartResult(res.data);
 
             // Pass the derived Match Chart parent
             onPredictionComplete(res.data, matchDetails);
@@ -368,6 +372,69 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
                 </Box>
 
                 {error && <Alert severity="error" sx={{ mt: 2, borderRadius: '12px' }}>{error}</Alert>}
+
+                {/* MATCH CHART SUMMARY TABLE - Tamil Format */}
+                {matchChartResult && (
+                    <Box sx={{ mt: 2.5 }}>
+                        <Typography variant="caption" fontWeight="bold" sx={{ color: '#FF6F00', mb: 1, display: 'block' }}>
+                            📊 போட்டி ராசி விவரம் (Match Chart Details)
+                        </Typography>
+                        <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '10px', border: '1px solid rgba(255, 111, 0, 0.2)' }}>
+                            <Table size="small">
+                                <TableBody>
+                                    {/* Ascendant Row */}
+                                    <TableRow sx={{ bgcolor: 'rgba(255, 193, 7, 0.08)' }}>
+                                        <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', width: '35%', py: 0.8, fontSize: '0.75rem' }}>
+                                            லக்னம் (Asc)
+                                        </TableCell>
+                                        <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
+                                            {matchChartResult.ascendant?.tamil || matchChartResult.ascendant?.english || '-'}
+                                        </TableCell>
+                                        <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
+                                            {matchChartResult.ascendant?.lordTamil || matchChartResult.ascendant?.lord || '-'}
+                                        </TableCell>
+                                    </TableRow>
+
+                                    {/* Moon Sign Row */}
+                                    <TableRow>
+                                        <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
+                                            சந்திரன் (Moon)
+                                        </TableCell>
+                                        <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
+                                            {matchChartResult.moonSign?.tamil || matchChartResult.moonSign?.english || '-'}
+                                        </TableCell>
+                                        <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
+                                            {matchChartResult.moonSign?.lordTamil || matchChartResult.moonSign?.lord || '-'}
+                                        </TableCell>
+                                    </TableRow>
+
+                                    {/* Nakshatra Row */}
+                                    <TableRow sx={{ bgcolor: 'rgba(255, 193, 7, 0.08)' }}>
+                                        <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
+                                            நட்சத்திரம் (Star)
+                                        </TableCell>
+                                        <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
+                                            {matchChartResult.moonNakshatra?.tamil || matchChartResult.moonNakshatra?.name || matchChartResult.nakshatra?.name || '-'}
+                                        </TableCell>
+                                        <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
+                                            {matchChartResult.moonNakshatra?.lordTamil || matchChartResult.moonNakshatra?.lord || '-'}
+                                        </TableCell>
+                                    </TableRow>
+
+                                    {/* Pada Row */}
+                                    <TableRow>
+                                        <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
+                                            பாதம் (Pada)
+                                        </TableCell>
+                                        <TableCell colSpan={2} sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
+                                            {matchChartResult.moonNakshatra?.pada || matchChartResult.nakshatra?.pada || '-'}
+                                        </TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Box>
+                )}
             </Box>
 
             {/* View Chart Dialog */}
