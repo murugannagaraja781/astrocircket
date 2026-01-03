@@ -1667,39 +1667,43 @@ const UserDashboard = ({ hideHeader = false }) => {
                     <Box sx={{ fontSize: '1.5rem', color: 'white' }}>→</Box>
                 </Paper>
 
-                {/* QUICK ACTION CARDS */}
-                <Grid container spacing={2}>
+                {/* QUICK ACTION CARDS - Equal Size Grid */}
+                <Grid container spacing={2} sx={{ mb: 3 }}>
                     {quickActions.filter(a => !a.isPrimary).map(action => (
                         <Grid item xs={6} key={action.id}>
                             <Paper
                                 elevation={0}
                                 onClick={() => setCurrentView(action.id)}
                                 sx={{
-                                    p: 2.5,
+                                    p: 2,
+                                    height: '140px', // Fixed height for equal sizes
                                     borderRadius: '16px',
                                     bgcolor: visionPro.paper,
                                     border: `1px solid ${visionPro.border}`,
                                     cursor: 'pointer',
-                                    textAlign: 'center',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
                                     boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
                                     transition: 'all 0.2s ease',
                                     '&:active': { transform: 'scale(0.97)', opacity: 0.9 }
                                 }}
                             >
                                 <Box sx={{
-                                    width: 50, height: 50,
-                                    borderRadius: '14px',
-                                    bgcolor: `${action.color}15`,
+                                    width: 56, height: 56,
+                                    borderRadius: '16px',
+                                    bgcolor: `${action.color}20`,
                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    fontSize: '1.5rem',
-                                    mx: 'auto', mb: 1.5
+                                    fontSize: '1.8rem',
+                                    mb: 1.5
                                 }}>
                                     {action.icon}
                                 </Box>
-                                <Typography variant="subtitle2" fontWeight="bold" sx={{ color: visionPro.text }}>
+                                <Typography variant="body2" fontWeight="bold" sx={{ color: visionPro.text, textAlign: 'center' }}>
                                     {action.title}
                                 </Typography>
-                                <Typography variant="caption" sx={{ color: visionPro.textSecondary }}>
+                                <Typography variant="caption" sx={{ color: visionPro.textSecondary, textAlign: 'center' }}>
                                     {action.desc}
                                 </Typography>
                             </Paper>

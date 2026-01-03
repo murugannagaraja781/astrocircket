@@ -198,104 +198,144 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
     };
 
     return (
-        <Paper elevation={3} sx={{ p: 0, mb: 3, overflow: 'hidden' }}>
-             {/* AppBar inside Control */}
+        <Paper elevation={0} sx={{ p: 0, mb: 3, overflow: 'hidden', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.08)' }}>
 
+            {/* Form Container */}
+            <Box sx={{ p: 2.5, bgcolor: '#FFFBF5' }}>
+                {/* Title */}
+                <Typography variant="subtitle1" fontWeight="900" sx={{ color: '#FF6F00', mb: 2 }}>
+                    📅 Match Details
+                </Typography>
 
-            <Box sx={{ p: 2 }}>
-                {/* Single Line Flex Layout for All Inputs & Buttons */}
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, alignItems: 'center' }}>
-
+                {/* Input Grid - Mobile Friendly */}
+                <Grid container spacing={2}>
                     {/* Date */}
-                    <TextField
-                        label="Date"
-                        type="date"
-                        size="small"
-                        value={matchDetails.date}
-                        onChange={(e) => handleChange('date', e.target.value)}
-                        InputLabelProps={{ shrink: true }}
-                        sx={{ width: '130px' }}
-                    />
+                    <Grid item xs={6} sm={4} md={2}>
+                        <TextField
+                            label="Date"
+                            type="date"
+                            fullWidth
+                            value={matchDetails.date}
+                            onChange={(e) => handleChange('date', e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                            sx={{
+                                '& .MuiInputBase-root': { borderRadius: '12px', fontSize: '0.95rem' },
+                                '& .MuiInputLabel-root': { fontWeight: 'bold' }
+                            }}
+                        />
+                    </Grid>
 
                     {/* Time */}
-                    <TextField
-                        label="Time"
-                        type="time"
-                        size="small"
-                        value={matchDetails.time}
-                        onChange={(e) => handleChange('time', e.target.value)}
-                        InputLabelProps={{ shrink: true }}
-                        sx={{ width: '100px' }}
-                    />
+                    <Grid item xs={6} sm={4} md={2}>
+                        <TextField
+                            label="Time"
+                            type="time"
+                            fullWidth
+                            value={matchDetails.time}
+                            onChange={(e) => handleChange('time', e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                            sx={{
+                                '& .MuiInputBase-root': { borderRadius: '12px', fontSize: '0.95rem' },
+                                '& .MuiInputLabel-root': { fontWeight: 'bold' }
+                            }}
+                        />
+                    </Grid>
 
                     {/* Location */}
-                    <Autocomplete
-                        freeSolo
-                        options={cityOptions}
-                        getOptionLabel={(option) => typeof option === 'string' ? option : option.label}
-                        value={matchDetails.location}
-                        onChange={handleCityChange}
-                        onInputChange={(event, newInputValue) => handleChange('location', newInputValue)}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="Location"
-                                size="small"
-                                placeholder="City"
-                                sx={{ width: '180px' }}
-                            />
-                        )}
-                        sx={{ width: '180px' }}
-                    />
+                    <Grid item xs={12} sm={4} md={4}>
+                        <Autocomplete
+                            freeSolo
+                            options={cityOptions}
+                            getOptionLabel={(option) => typeof option === 'string' ? option : option.label}
+                            value={matchDetails.location}
+                            onChange={handleCityChange}
+                            onInputChange={(event, newInputValue) => handleChange('location', newInputValue)}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Location"
+                                    placeholder="Select City"
+                                    sx={{
+                                        '& .MuiInputBase-root': { borderRadius: '12px', fontSize: '0.95rem' },
+                                        '& .MuiInputLabel-root': { fontWeight: 'bold' }
+                                    }}
+                                />
+                            )}
+                        />
+                    </Grid>
 
                     {/* Lat */}
-                    <TextField
-                        label="Lat"
-                        type="number"
-                        size="small"
-                        value={matchDetails.lat}
-                        onChange={(e) => handleChange('lat', parseFloat(e.target.value))}
-                        InputLabelProps={{ shrink: true }}
-                        sx={{ width: '100px' }}
-                    />
+                    <Grid item xs={4} sm={4} md={1.5}>
+                        <TextField
+                            label="Lat"
+                            type="number"
+                            fullWidth
+                            value={matchDetails.lat}
+                            onChange={(e) => handleChange('lat', parseFloat(e.target.value))}
+                            InputLabelProps={{ shrink: true }}
+                            inputProps={{ step: 0.01 }}
+                            sx={{
+                                '& .MuiInputBase-root': { borderRadius: '12px', fontSize: '0.9rem' },
+                                '& .MuiInputLabel-root': { fontWeight: 'bold' }
+                            }}
+                        />
+                    </Grid>
 
                     {/* Long */}
-                    <TextField
-                        label="Long"
-                        type="number"
-                        size="small"
-                        value={matchDetails.long}
-                        onChange={(e) => handleChange('long', parseFloat(e.target.value))}
-                        InputLabelProps={{ shrink: true }}
-                        sx={{ width: '100px' }}
-                    />
+                    <Grid item xs={4} sm={4} md={1.5}>
+                        <TextField
+                            label="Long"
+                            type="number"
+                            fullWidth
+                            value={matchDetails.long}
+                            onChange={(e) => handleChange('long', parseFloat(e.target.value))}
+                            InputLabelProps={{ shrink: true }}
+                            inputProps={{ step: 0.01 }}
+                            sx={{
+                                '& .MuiInputBase-root': { borderRadius: '12px', fontSize: '0.9rem' },
+                                '& .MuiInputLabel-root': { fontWeight: 'bold' }
+                            }}
+                        />
+                    </Grid>
 
                     {/* Timezone */}
-                    <TextField
-                        label="TZ"
-                        type="number"
-                        size="small"
-                        value={matchDetails.timezone}
-                        onChange={(e) => handleChange('timezone', parseFloat(e.target.value))}
-                        InputLabelProps={{ shrink: true }}
-                        sx={{ width: '70px' }}
-                    />
+                    <Grid item xs={4} sm={4} md={1}>
+                        <TextField
+                            label="TZ"
+                            type="number"
+                            fullWidth
+                            value={matchDetails.timezone}
+                            onChange={(e) => handleChange('timezone', parseFloat(e.target.value))}
+                            InputLabelProps={{ shrink: true }}
+                            inputProps={{ step: 0.5 }}
+                            sx={{
+                                '& .MuiInputBase-root': { borderRadius: '12px', fontSize: '0.9rem' },
+                                '& .MuiInputLabel-root': { fontWeight: 'bold' }
+                            }}
+                        />
+                    </Grid>
+                </Grid>
 
-                    {/* BUTTONS */}
+                {/* BUTTONS - Full Width on Mobile */}
+                <Box sx={{ display: 'flex', gap: 2, mt: 3, flexWrap: 'wrap' }}>
                     <Button
                         variant="outlined"
                         onClick={handleViewChart}
                         disabled={viewChartLoading || loading}
                         sx={{
-                            height: '40px',
-                            color: '#059669',
-                            borderColor: '#059669',
-                            whiteSpace: 'nowrap',
-                            minWidth: 'auto',
-                            px: 2
+                            flex: 1,
+                            minWidth: '120px',
+                            height: '48px',
+                            fontSize: '1rem',
+                            fontWeight: 'bold',
+                            borderRadius: '14px',
+                            color: '#FFC107',
+                            borderColor: '#FFC107',
+                            borderWidth: '2px',
+                            '&:hover': { bgcolor: 'rgba(255, 193, 7, 0.1)', borderColor: '#FF9800' }
                         }}
                     >
-                        {viewChartLoading ? <CircularProgress size={20} /> : "Chart"}
+                        {viewChartLoading ? <CircularProgress size={24} /> : "📊 View Chart"}
                     </Button>
 
                     <Button
@@ -303,19 +343,23 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
                         onClick={handleRun}
                         disabled={loading || viewChartLoading}
                         sx={{
-                            height: '40px',
-                            bgcolor: '#059669',
-                            '&:hover': { bgcolor: '#047857' },
-                            whiteSpace: 'nowrap',
-                            minWidth: 'auto',
-                            px: 2
+                            flex: 2,
+                            minWidth: '160px',
+                            height: '48px',
+                            fontSize: '1rem',
+                            fontWeight: '900',
+                            borderRadius: '14px',
+                            bgcolor: '#FF6F00',
+                            boxShadow: '0 4px 12px rgba(255, 111, 0, 0.35)',
+                            '&:hover': { bgcolor: '#E65100' },
+                            '&:active': { transform: 'scale(0.98)' }
                         }}
                     >
-                        {loading ? <CircularProgress size={20} color="inherit" /> : "Predict"}
+                        {loading ? <CircularProgress size={24} color="inherit" /> : "🏏 Run Prediction"}
                     </Button>
-
                 </Box>
-                {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+
+                {error && <Alert severity="error" sx={{ mt: 2, borderRadius: '12px' }}>{error}</Alert>}
             </Box>
 
             {/* View Chart Dialog */}
@@ -324,32 +368,33 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
                 onClose={() => setViewChartOpen(false)}
                 maxWidth="md"
                 fullWidth
+                PaperProps={{ sx: { borderRadius: '16px' } }}
             >
-                <DialogTitle component="div" sx={{ m: 0, p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', bgcolor: '#f0fdf4' }}>
-                    <Typography variant="h6" component="div" sx={{ color: '#059669', fontWeight: 'bold' }}>
-                        Rasi Chart View
+                <DialogTitle component="div" sx={{ m: 0, p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(90deg, #FFC107 0%, #FF6F00 100%)' }}>
+                    <Typography variant="h6" component="div" sx={{ color: 'white', fontWeight: 'bold' }}>
+                        📊 Rasi Chart View
                     </Typography>
                     <IconButton
                         aria-label="close"
                         onClick={() => setViewChartOpen(false)}
-                        sx={{ color: (theme) => theme.palette.grey[500] }}
+                        sx={{ color: 'white' }}
                     >
                         <CloseIcon />
                     </IconButton>
                 </DialogTitle>
-                <DialogContent dividers sx={{ p: 3, display: 'flex', justifyContent: 'center', bgcolor: '#fff' }}>
+                <DialogContent dividers sx={{ p: 3, display: 'flex', justifyContent: 'center', bgcolor: '#FFFBF5' }}>
                     {chartData ? (
                         <Box sx={{ width: '100%', maxWidth: '600px' }}>
                              <RasiChart data={chartData} />
 
                              <Box sx={{ mt: 3 }}>
-                                <TableContainer component={Paper} elevation={1} sx={{ borderRadius: 2, border: '1px solid #e0e0e0' }}>
+                                <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '12px', border: '1px solid rgba(255, 111, 0, 0.2)' }}>
                                     <Table size="small">
-                                        <TableHead sx={{ bgcolor: '#f0fdf4' }}>
+                                        <TableHead sx={{ bgcolor: 'rgba(255, 193, 7, 0.15)' }}>
                                             <TableRow>
-                                                <TableCell sx={{ fontWeight: 'bold', color: '#059669' }}>விபரம்</TableCell>
-                                                <TableCell sx={{ fontWeight: 'bold', color: '#059669' }}>இராசி/நட்சத்திரம்</TableCell>
-                                                <TableCell sx={{ fontWeight: 'bold', color: '#059669' }}>அதிபதி</TableCell>
+                                                <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00' }}>விபரம்</TableCell>
+                                                <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00' }}>இராசி/நட்சத்திரம்</TableCell>
+                                                <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00' }}>அதிபதி</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
