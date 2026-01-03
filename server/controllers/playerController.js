@@ -10,7 +10,8 @@ const {
     calculateSign,
     calculateNakshatra,
     calculateDignity,
-    calculatePlanetaryPositions
+    calculatePlanetaryPositions,
+    calculatePanchang
 } = require('../utils/astroCalculator');
 
 // Helper to calculate birth chart locally using vedic-astrology-api
@@ -40,6 +41,9 @@ const fetchCharData = async (p) => {
         const latitude = parseFloat(p.latitude) || 13.0827;
         const longitude = parseFloat(p.longitude) || 80.2707;
         const timezone = parseFloat(p.timezone) || 5.5;
+
+        // Date object for day of week
+        const dateObj = new Date(year, month - 1, day, hour, minute);
 
         // Use local vedic-astrology-api calculation
         const { planets, ascendant, ayanamsaVal } = calculatePlanetaryPositions(
@@ -76,6 +80,11 @@ const fetchCharData = async (p) => {
                 dignityTamil: dignity.tamil
             };
         });
+
+        // Calculate Panchangam (Tithi, Yoga, Karana, Vara)
+        const sunLon = planets.Sun || 0;
+        const moonLon = planets.Moon || 0;
+        chartData.panchangam = calculatePanchang(sunLon, moonLon, dateObj);
 
         console.log(`--- LOCAL CHART CALCULATED for ${p.name} ---`);
         console.log(`Moon: ${chartData.planets.Moon?.sign}, Nakshatra: ${chartData.planets.Moon?.nakshatra}`);

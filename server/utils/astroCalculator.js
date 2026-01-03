@@ -243,6 +243,102 @@ const calculatePlanetaryPositions = (year, month, day, hour, minute, latitude, l
     };
 };
 
+/**
+ * Calculate Tithi, Yoga, Karana, Vara from Sun/Moon/Date
+ */
+const TITHIS = [
+    { name: 'Prathama', tamil: 'பிரதமை' }, { name: 'Dwitiya', tamil: 'துவிதியை' }, { name: 'Tritiya', tamil: 'திரிதியை' },
+    { name: 'Chaturthi', tamil: 'சதுர்த்தி' }, { name: 'Panchami', tamil: 'பஞ்சமி' }, { name: 'Shasthi', tamil: 'சஷ்டி' },
+    { name: 'Saptami', tamil: 'சப்தமி' }, { name: 'Ashtami', tamil: 'அஷ்டமி' }, { name: 'Navami', tamil: 'நவமி' },
+    { name: 'Dashami', tamil: 'தசமி' }, { name: 'Ekadashi', tamil: 'ஏகாதசி' }, { name: 'Dwadashi', tamil: 'துவாதசி' },
+    { name: 'Trayodashi', tamil: 'திரயோதசி' }, { name: 'Chaturdashi', tamil: 'சதுர்த்தசி' }, { name: 'Purnima', tamil: 'பௌர்ணமி' },
+    { name: 'Prathama', tamil: 'பிரதமை' }, { name: 'Dwitiya', tamil: 'துவிதியை' }, { name: 'Tritiya', tamil: 'திரிதியை' },
+    { name: 'Chaturthi', tamil: 'சதுர்த்தி' }, { name: 'Panchami', tamil: 'பஞ்சமி' }, { name: 'Shasthi', tamil: 'சஷ்டி' },
+    { name: 'Saptami', tamil: 'சப்தமி' }, { name: 'Ashtami', tamil: 'அஷ்டமி' }, { name: 'Navami', tamil: 'நவமி' },
+    { name: 'Dashami', tamil: 'தசமி' }, { name: 'Ekadashi', tamil: 'ஏகாதசி' }, { name: 'Dwadashi', tamil: 'துவாதசி' },
+    { name: 'Trayodashi', tamil: 'திரயோதசி' }, { name: 'Chaturdashi', tamil: 'சதுர்த்தசி' }, { name: 'Amavasya', tamil: 'அமாவாசை' }
+];
+
+const YOGAS = [
+    { name: 'Vishkumbha', tamil: 'விஷ்கம்பம்' }, { name: 'Priti', tamil: 'ப்ரீதி' }, { name: 'Ayushman', tamil: 'ஆயுஷ்மான்' },
+    { name: 'Saubhagya', tamil: 'சௌபாக்கியம்' }, { name: 'Shobhana', tamil: 'சோபனம்' }, { name: 'Atiganda', tamil: 'அதிகண்டம்' },
+    { name: 'Sukarma', tamil: 'சுகர்மம்' }, { name: 'Dhriti', tamil: 'திருதி' }, { name: 'Shula', tamil: 'சூலம்' },
+    { name: 'Ganda', tamil: 'கண்டம்' }, { name: 'Vriddhi', tamil: 'விருத்தி' }, { name: 'Dhruva', tamil: 'துருவம்' },
+    { name: 'Vyaghata', tamil: 'வியாகாதம்' }, { name: 'Harshana', tamil: 'ஹர்ஷணம்' }, { name: 'Vajra', tamil: 'வஜ்ரம்' },
+    { name: 'Siddhi', tamil: 'சித்தி' }, { name: 'Vyatipata', tamil: 'வியதிபாதம்' }, { name: 'Variyan', tamil: 'வரியான்' },
+    { name: 'Parigha', tamil: 'பரிகம்' }, { name: 'Shiva', tamil: 'சிவம்' }, { name: 'Siddha', tamil: 'சித்தம்' },
+    { name: 'Sadhya', tamil: 'சாத்தியம்' }, { name: 'Shubha', tamil: 'சுபம்' }, { name: 'Shukla', tamil: 'சுக்கிலம்' },
+    { name: 'Brahma', tamil: 'பிரம்ஹம்' }, { name: 'Indra', tamil: 'இந்திரம்' }, { name: 'Vaidhriti', tamil: 'வைதிருதி' }
+];
+
+const KARANAS = [
+    { name: 'Bava', tamil: 'பவம்' }, { name: 'Balava', tamil: 'பாலவம்' }, { name: 'Kaulava', tamil: 'கௌலவம்' },
+    { name: 'Taitila', tamil: 'தைதுலை' }, { name: 'Gara', tamil: 'கரசை' }, { name: 'Vanija', tamil: 'வனிசை' },
+    { name: 'Visti', tamil: 'பத்ரை' }, { name: 'Shakuni', tamil: 'சகுனி' }, { name: 'Chatushpada', tamil: 'சதுஷ்பாதம்' },
+    { name: 'Naga', tamil: 'நாகவம்' }, { name: 'Kimstughna', tamil: 'கிம்ஸ்துக்னம்' }
+];
+
+const VARAS = [
+    { name: 'Sunday', tamil: 'ஞாயிறு' }, { name: 'Monday', tamil: 'திங்கள்' }, { name: 'Tuesday', tamil: 'செவ்வாய்' },
+    { name: 'Wednesday', tamil: 'புதன்' }, { name: 'Thursday', tamil: 'வியாழன்' }, { name: 'Friday', tamil: 'வெள்ளி' },
+    { name: 'Saturday', tamil: 'சனி' }
+];
+
+const calculatePanchang = (sunLong, moonLong, dateObj) => {
+    // 1. Tithi
+    // Diff = Moon - Sun. (0-360). Each Tithi is 12 deg.
+    let diff = moonLong - sunLong;
+    if (diff < 0) diff += 360;
+    const tithiIndex = Math.floor(diff / 12);
+    const tithi = TITHIS[tithiIndex % 30];
+    const paksha = tithiIndex < 15 ? 'Shukla' : 'Krishna';
+
+    // 2. Yoga
+    // Sum = Moon + Sun. Each Yoga is 13deg 20min = 13.3333 deg.
+    let sum = moonLong + sunLong;
+    const yogaSpan = 360 / 27;
+    const yogaIndex = Math.floor((sum % 360) / yogaSpan);
+    const yoga = YOGAS[yogaIndex % 27];
+
+    // 3. Karana
+    // Half Tithi (6 deg).
+    const karanaIndexFull = Math.floor(diff / 6);
+    let karana;
+    // Calculation mapping logic (standard)
+    // 0=Kimstughna, 1..7 (moving x 8 cycles), 57,58,59 (Fixed)
+    // Simplified logic:
+    // If first half of 1st tithi: Kinstughna.
+    // Fixed ones at end of Krishna Paksha.
+    // For now using simplified map or index
+    // Correct cyclic mapping:
+    // KIN(1), BAVA(2), BAL(3), KAU(4), TAI(5), GAR(6), VAN(7), VIS(8-Bhadra)
+    // Cycle repeats.
+    // 1st Karana (0-6deg): Kimstughna
+    // 2nd to 57th: Cycle of Bava..Vishti (7 karanas)
+    // 58: Shakuni, 59: Chatushpada, 60: Naga
+
+    if (karanaIndexFull === 0) karana = KARANAS[10]; // Kimstughna
+    else if (karanaIndexFull >= 57) {
+        if (karanaIndexFull === 57) karana = KARANAS[7]; // Shakuni
+        else if (karanaIndexFull === 58) karana = KARANAS[8]; // Chatushpada
+        else karana = KARANAS[9]; // Naga
+    } else {
+        const cycleIndex = (karanaIndexFull - 1) % 7;
+        karana = KARANAS[cycleIndex];
+    }
+
+    // 4. Vara (Day of Week)
+    const dayIndex = dateObj.getDay(); // 0=Sun
+    const vara = VARAS[dayIndex];
+
+    return {
+        tithi: { ...tithi, paksha },
+        yoga: yoga,
+        karana: karana,
+        vara: vara
+    };
+};
+
 module.exports = {
     SIGNS,
     NAKSHATRAS,
@@ -252,5 +348,6 @@ module.exports = {
     calculateNakshatra,
     calculateDignity,
     calculatePlanetaryPositions,
+    calculatePanchang,
     formatDegree
 };

@@ -554,6 +554,50 @@ const PlayerDetailPanel = ({ player, matchChart, hideHeader = false }) => {
                                 return styleMap;
                             })()}
                         />
+                         {/* Summary Table mimicking Match Prediction Control */}
+                         <Box sx={{ mt: 3 }}>
+                            <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '12px', border: '1px solid rgba(255, 111, 0, 0.2)' }}>
+                                <Table size="small">
+                                    <TableHead sx={{ bgcolor: 'rgba(255, 193, 7, 0.15)' }}>
+                                        <TableRow>
+                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00' }}>விபரம்</TableCell>
+                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00' }}>இராசி/நட்சத்திரம்</TableCell>
+                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00' }}>அதிபதி</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {(() => {
+                                            const summary = [];
+                                            // 1. Lagna
+                                            const asc = chartData?.ascendant || {};
+                                            const ascSign = asc.tamil || "Not Found";
+                                            const ascLord = asc.lordTamil || asc.lord || "-";
+                                            summary.push({ label: "லக்னம்", sign: ascSign, lord: ascLord });
+                                            // 2. Moon
+                                            const moon = chartData?.moonSign || {};
+                                            const moonSign = moon.tamil || "Not Found";
+                                            const moonLord = moon.lordTamil || moon.lord || "-";
+                                            summary.push({ label: "சந்திரன்", sign: moonSign, lord: moonLord });
+                                            // 3. Nakshatra
+                                            const nak = chartData?.nakshatra || chartData?.moonNakshatra || {};
+                                            const nakName = nak.tamil || nak.name || "Not Found";
+                                            let nakLord = nak.lordTamil || nak.lord || "-";
+                                            const tamilLords = { 'Ketu': 'கேது', 'Venus': 'சுக்கிரன்', 'Sun': 'சூரியன்', 'Moon': 'சந்திரன்', 'Mars': 'செவ்வாய்', 'Rahu': 'ராகு', 'Jupiter': 'குரு', 'Saturn': 'சனி', 'Mercury': 'புதன்' };
+                                            if (tamilLords[nakLord]) nakLord = tamilLords[nakLord];
+                                            summary.push({ label: "நட்சத்திரம்", sign: nakName, lord: nakLord });
+
+                                            return summary.map((row, index) => (
+                                                <TableRow key={index}>
+                                                    <TableCell sx={{ fontWeight: 'bold', color: '#000' }}>{row.label}</TableCell>
+                                                    <TableCell sx={{ color: '#000' }}>{row.sign}</TableCell>
+                                                    <TableCell sx={{ color: '#000' }}>{row.lord}</TableCell>
+                                                </TableRow>
+                                            ));
+                                        })()}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </Box>
                     </Grid>
                 </Grid>
             )}
