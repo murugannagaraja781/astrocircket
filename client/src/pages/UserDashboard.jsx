@@ -559,7 +559,7 @@ const PlayerDetailPanel = ({ player, matchChart, hideHeader = false }) => {
             )}
 
             {tabIndex === 1 && <QuickSummaryTable data={player.birthChart} hideHeader={hideHeader} />}
-            {tabIndex === 2 && <PanchangamGrid panchangam={chartData?.panchangam} birthData={player.birthData} hideHeader={hideHeader} />}
+            {tabIndex === 2 && <PanchangamGrid panchangam={chartData?.panchangam || player.birthChart?.panchangam} birthData={player.birthData} hideHeader={hideHeader} />}
         </Box>
     );
 };
