@@ -1340,7 +1340,7 @@ const PlayersManager = () => {
                             />
                             <Box>
                                 <Typography variant="caption" color="textSecondary" sx={{ mb: 0.5, display: 'block' }}>
-                                    Profile Photo
+                                    Profile Photo (Optional)
                                 </Typography>
                                 <Button variant="outlined" size="small" component="label" sx={{ textTransform: 'none' }}>
                                     Choose File
@@ -2134,9 +2134,17 @@ const AdminDashboard = () => {
     const drawer = (
         <Box sx={{ p: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3, gap: 1 }}>
-                <DashboardIcon sx={{ color: 'white' }} />
-                <Typography variant="h6" fontWeight="bold" color="white" sx={{ letterSpacing: '2px' }}>
-                    ASTRO ADMIN
+                <Typography
+                    variant="h5"
+                    fontWeight="900"
+                    sx={{
+                        color: 'white',
+                        letterSpacing: '1px',
+                        textShadow: '2px 2px 0 #d97706, -2px -2px 0 #d97706, 2px -2px 0 #d97706, -2px 2px 0 #d97706, 2px 0 0 #d97706, -2px 0 0 #d97706, 0 2px 0 #d97706, 0 -2px 0 #d97706',
+                        WebkitTextStroke: '1px #d97706',
+                    }}
+                >
+                    S&B Astro
                 </Typography>
             </Box>
             <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)', mb: 2 }} />
