@@ -1003,6 +1003,9 @@ const PlayersManager = () => {
     const [openChartDialog, setOpenChartDialog] = useState(false);
     const [selectedPlayerForChart, setSelectedPlayerForChart] = useState(null);
 
+    // Quick Select Toggle
+    const [showAllNations, setShowAllNations] = useState(false);
+
     // Chart Preview State for Add/Edit
     const [previewChart, setPreviewChart] = useState(null);
     const [generatingChart, setGeneratingChart] = useState(false);
@@ -1422,17 +1425,29 @@ const PlayersManager = () => {
                             <Typography variant="caption" color="textSecondary">Quick Select (Cricket Nations)</Typography>
                             <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', mt: 0.5 }}>
                                 {[
-                                    { l: '🇮🇳 India', v: 5.5 },
-                                    { l: '🇵🇰 Pak', v: 5 },
-                                    { l: '🇱🇰 SL', v: 5.5 },
-                                    { l: '🇧🇩 Ban', v: 6 },
-                                    { l: '🇬🇧 UK', v: 0 },
-                                    { l: '🇦🇺 Aus (Syd)', v: 10 },
-                                    { l: '🇦🇺 Aus (Per)', v: 8 },
-                                    { l: '🇿🇦 SA', v: 2 },
+                                    { l: '🇦🇫 AFG', v: 4.5 },
+                                    { l: '🇦🇺 AUS', v: 10 },
+                                    { l: '🇧🇩 BAN', v: 6 },
+                                    { l: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 ENG', v: 1 },
+                                    { l: '🇮🇳 IND', v: 5.5 },
+                                    { l: '🇮🇪 IRE', v: 1 },
                                     { l: '🇳🇿 NZ', v: 12 },
-                                    { l: '🏝️ WI (East)', v: -4 }
-                                ].map((tz) => (
+                                    { l: '🇵🇰 PAK', v: 5 },
+                                    { l: '🇿🇦 SA', v: 2 },
+                                    { l: '🇱🇰 SL', v: 5.5 },
+                                    { l: '🏝️ WI', v: -4 },
+                                    { l: '🇿🇼 ZIM', v: 2 },
+                                    { l: '🏴󠁧󠁢󠁳󠁣󠁴󠁿 SCO', v: 1 },
+                                    { l: '🇳🇱 NED', v: 2 },
+                                    { l: '🇦🇪 UAE', v: 4 },
+                                    { l: '🇺🇸 USA', v: -4 },
+                                    { l: '🇳🇵 NEP', v: 5.75 },
+                                    { l: '🇨🇦 CAN', v: -4 },
+                                    { l: '🇴🇲 OMA', v: 4 },
+                                    { l: '🇵🇬 PNG', v: 10 },
+                                    { l: '🇰🇪 KEN', v: 3 },
+                                    { l: '🇭🇰 HK', v: 8 }
+                                ].slice(0, showAllNations ? undefined : 12).map((tz) => (
                                     <Chip
                                         key={tz.l}
                                         label={tz.l}
@@ -1443,6 +1458,15 @@ const PlayersManager = () => {
                                         color={playerForm.timezone == tz.v ? "primary" : "default"}
                                     />
                                 ))}
+                                <Chip
+                                    label={showAllNations ? "Show Less" : "Show More"}
+                                    size="small"
+                                    onClick={() => setShowAllNations(!showAllNations)}
+                                    clickable
+                                    color="secondary"
+                                    variant="filled"
+                                    sx={{ fontWeight: 'bold' }}
+                                />
                             </Box>
                         </Box>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
