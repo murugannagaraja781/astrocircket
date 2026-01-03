@@ -314,18 +314,7 @@ const RasiChart = ({ data, style = {}, planetsData = null }) => {
 
                             return (
                                 <div key={signId} style={cellStyle}>
-                                    <div style={{
-                                        position: 'absolute',
-                                        top: '2px',
-                                        left: '2px',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'flex-start',
-                                        pointerEvents: 'none'
-                                    }}>
-                                        {/* House number removed - only showing Tamil sign name */}
-                                        <span style={{ fontSize: '9px', color: '#6b7280', fontWeight: 'bold' }}>{signTamil}</span>
-                                    </div>
+
 
                                     {isAscendantSign && <div style={ascBorderBoxStyle}></div>}
 
@@ -345,16 +334,7 @@ const RasiChart = ({ data, style = {}, planetsData = null }) => {
                                         ))}
                                     </div>
 
-                                     <div style={{
-                                        position: 'absolute',
-                                        bottom: '2px',
-                                        right: '2px',
-                                        fontSize: '8px',
-                                        color: '#9ca3af',
-                                        pointerEvents: 'none'
-                                    }}>
-                                        {lord && lord.substring(0, 3)}
-                                    </div>
+
                                 </div>
                             );
                         })}

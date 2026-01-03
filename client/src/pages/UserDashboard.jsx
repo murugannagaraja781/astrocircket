@@ -550,9 +550,12 @@ const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = fa
                                     const name = p.name || p.planetName;
                                     const dignity = p.dignityName || p.dignity;
                                     let color = '#000';
-                                    if (['Exalted', 'Uchcham'].includes(dignity)) color = '#059669'; // Green
-                                    else if (['Own Sign', 'Own', 'Atchi'].includes(dignity)) color = '#d97706'; // Orange/Gold
-                                    else if (['Debilitated', 'Neecham'].includes(dignity)) color = '#dc2626'; // Red
+                                    if (dignity) {
+                                        if (['Exalted', 'Uchcham', 'உச்சம்'].some(v => dignity.includes(v))) color = '#059669'; // Green
+                                        else if (['Own', 'Atchi', 'ஆட்சி', 'Moolatrikona'].some(v => dignity.includes(v))) color = '#d97706'; // Orange
+                                        else if (['Debilitated', 'Neecham', 'நீசம்'].some(v => dignity.includes(v))) color = '#dc2626'; // Red
+                                        else if (['Friendly', 'Natpu', 'நட்பு'].some(v => dignity.includes(v))) color = '#2563eb'; // Blue
+                                    }
 
                                     if (name) styleMap[name] = { dignityColor: color };
                                 });
@@ -598,6 +601,53 @@ const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = fa
                                                     <TableCell sx={{ color: '#000' }}>{row.lord}</TableCell>
                                                 </TableRow>
                                             ));
+                                        })()}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </Box>
+
+                         {/* PLANETARY DETAILS LIST (Dignity Colors) */}
+                         <Box sx={{ mt: 3 }}>
+                            <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 1, color: '#FF6F00' }}>
+                                 கிரக விவரங்கள் (Planetary Details)
+                            </Typography>
+                            <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '12px', border: '1px solid rgba(255, 111, 0, 0.2)' }}>
+                                <Table size="small">
+                                    <TableHead sx={{ bgcolor: 'rgba(255, 193, 7, 0.15)' }}>
+                                        <TableRow>
+                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>Planet</TableCell>
+                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>Rasi</TableCell>
+                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>Star</TableCell>
+                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>Dignity</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {(() => {
+                                            const pList = chartData?.formattedPlanets || chartData?.planets || [];
+                                            return Array.isArray(pList) ? pList.map((p, i) => {
+                                                const name = p.name || p.planetName;
+                                                if (!name) return null;
+
+                                                // Dignity Color Logic
+                                                const dignity = p.dignityName || p.dignity || '-';
+                                                let dColor = 'text.primary';
+                                                if (['Exalted', 'Uchcham', 'உச்சம்'].some(v => dignity.toLowerCase().includes(v.toLowerCase()))) dColor = '#059669'; // Green
+                                                else if (['Own', 'Atchi', 'ஆட்சி', 'Moolatrikona'].some(v => dignity.toLowerCase().includes(v.toLowerCase()))) dColor = '#d97706'; // Orange
+                                                else if (['Debilitated', 'Neecham', 'நீசம்'].some(v => dignity.toLowerCase().includes(v.toLowerCase()))) dColor = '#dc2626'; // Red
+                                                else if (['Friendly', 'Natpu', 'நட்பு'].some(v => dignity.toLowerCase().includes(v.toLowerCase()))) dColor = '#2563eb'; // Blue
+
+                                                return (
+                                                    <TableRow key={i} hover sx={{ '& td': { fontSize: '0.75rem', py: 0.8 } }}>
+                                                        <TableCell sx={{ fontWeight: 'bold' }}>{p.tamilName || name}</TableCell>
+                                                        <TableCell>{p.signTamil || p.signName || p.currentSign || '-'}</TableCell>
+                                                        <TableCell>{p.nakshatraTamil || p.nakshatra || '-'}</TableCell>
+                                                        <TableCell sx={{ color: dColor, fontWeight: 'bold' }}>{dignity}</TableCell>
+                                                    </TableRow>
+                                                );
+                                            }) : (
+                                                <TableRow><TableCell colSpan={4} align="center">No details available</TableCell></TableRow>
+                                            );
                                         })()}
                                     </TableBody>
                                 </Table>
