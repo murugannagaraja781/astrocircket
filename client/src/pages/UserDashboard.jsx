@@ -937,19 +937,20 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                     transition: 'all 0.2s ease',
                                     boxShadow: isSel ? '0 2px 8px rgba(255, 111, 0, 0.2)' : '0 1px 3px rgba(0,0,0,0.05)'
                                 }} onClick={() => togglePlayer(p.id)}>
-                                    <Checkbox checked={isSel} size="small" sx={{ p:0 }} />
-                                    <Avatar src={p.profile} sx={{ width: 40, height: 40, fontSize: 14 }}>{p.name[0]}</Avatar>
-                                    <Box sx={{ flexGrow: 1 }}>
+                                    <Checkbox checked={isSel} size="small" sx={{ p: 0.5 }} />
+                                    {/* Avatar Hidden on Mobile as per request */}
+                                    {/* <Avatar src={p.profile} sx={{ width: 40, height: 40, fontSize: 14 }}>{p.name[0]}</Avatar> */}
+                                    <Box sx={{ flexGrow: 1, ml: 1 }}>
                                         <Typography variant="subtitle2" fontWeight="bold" lineHeight={1.1} fontSize="0.85rem">{p.name}</Typography>
-                                        {/* Mobile: Show Time only, Hide Place and DOB */}
-                                        <Typography variant="caption" color="text.secondary" fontSize="0.75rem" display="block">
+                                        {/* Mobile: Time also hidden as requested */}
+                                        {/* <Typography variant="caption" color="text.secondary" fontSize="0.75rem" display="block">
                                             ⏰ {p.birthTime}
-                                        </Typography>
+                                        </Typography> */}
                                     </Box>
                                     {res && (
                                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, alignItems: 'flex-end' }}>
-                                            <Chip label={`Bat:${res.bat.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bat.score >= 1 ? 'success' : 'default'} />
-                                            <Chip label={`Bowl:${res.bowl.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bowl.score >= 1 ? 'success' : 'default'} />
+                                            <Chip label={`Bat:${res.bat.score}`} size="small" sx={{ height: 16, fontSize: '0.65rem', px: 0.5 }} color={res.bat.score >= 1 ? 'success' : 'default'} />
+                                            <Chip label={`Bowl:${res.bowl.score}`} size="small" sx={{ height: 16, fontSize: '0.65rem', px: 0.5 }} color={res.bowl.score >= 1 ? 'success' : 'default'} />
                                         </Box>
                                     )}
                                 </Paper>
