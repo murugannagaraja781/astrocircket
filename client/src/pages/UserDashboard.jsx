@@ -1157,7 +1157,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                 </Box>
             )}
 
-            {/* DESKTOP: INLINE TEAM SELECTION (always visible on desktop) */}
+            {/* DESKTOP: INLINE TEAM SELECTION (always visible on desktop, sticky on mobile) */}
             <Box sx={{
                 display: { xs: (teamA && teamB) ? 'flex' : 'none', sm: 'flex' },
                 flexDirection: 'row',
@@ -1167,7 +1167,11 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                 py: 1.5,
                 px: 1,
                 bgcolor: visionPro.paper,
-                borderBottom: `1px solid ${visionPro.border}`
+                borderBottom: `1px solid ${visionPro.border}`,
+                position: 'sticky',
+                top: 0,
+                zIndex: 100,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
             }}>
                 {/* TEAM A */}
                 <FormControl size="small" sx={{ flex: 1, maxWidth: { xs: 130, sm: 180 } }}>

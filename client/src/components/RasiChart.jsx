@@ -297,12 +297,10 @@ const RasiChart = ({ data, style = {}, planetsData = null }) => {
                                 if (index === 5) {
                                     return (
                                         <div key="center" style={centerBoxStyle}>
-                                            <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px', color: '#000', fontSize: '10px', fontWeight: 'bold' }}>
-                                                    return (
-                                                        <div style={{textAlign: 'center'}}>
-                                                            <span style={{ fontSize: '16px', fontStyle: 'italic', fontWeight: 'bold' }}>இராசி கட்டம்</span>
-                                                        </div>
-                                                    );
+                                            <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '4px', color: '#000', fontSize: '10px', fontWeight: 'bold', width: '100%', height: '100%' }}>
+                                                <div style={{textAlign: 'center'}}>
+                                                    <span style={{ fontSize: '16px', fontStyle: 'italic', fontWeight: 'bold' }}>இராசி கட்டம்</span>
+                                                </div>
                                             </div>
                                         </div>
                                     );

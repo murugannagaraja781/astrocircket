@@ -201,18 +201,38 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
         );
     };
 
+    const [expanded, setExpanded] = useState(false); // Default collapsed
+
     return (
         <Paper elevation={0} sx={{ p: 0, mb: { xs: 1, sm: 3 }, overflow: 'hidden', borderRadius: { xs: '10px', sm: '16px' }, border: '1px solid rgba(0,0,0,0.08)' }}>
 
             {/* Form Container */}
             <Box sx={{ p: { xs: 1.5, sm: 2.5 }, bgcolor: '#FFFBF5' }}>
-                {/* Title */}
-                <Typography variant="caption" fontWeight="900" sx={{ color: '#FF6F00', mb: { xs: 0.5, sm: 2 }, display: 'block', fontSize: { xs: '0.7rem', sm: '0.875rem' } }}>
-                    📅 Match Details
-                </Typography>
+                {/* Title Header - Clickable to Toggle */}
+                <Box
+                    onClick={() => setExpanded(!expanded)}
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        mb: { xs: 0.5, sm: 2 },
+                        cursor: 'pointer',
+                        bgcolor: 'rgba(255, 111, 0, 0.05)',
+                        p: 1,
+                        borderRadius: '8px'
+                    }}
+                >
+                    <Typography variant="caption" fontWeight="900" sx={{ color: '#FF6F00', fontSize: { xs: '0.8rem', sm: '0.9rem' } }}>
+                        {expanded ? '🔽 Hide Match Details' : '▶️ Show Match Details'}
+                    </Typography>
+                    <IconButton size="small" sx={{ p: 0.5, color: '#FF6F00' }}>
+                        {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                    </IconButton>
+                </Box>
 
-                {/* Input Grid - Mobile Friendly */}
-                <Grid container spacing={{ xs: 0.5, sm: 2 }}>
+                {/* Collapsible Input Grid */}
+                <Collapse in={expanded}>
+                    <Grid container spacing={{ xs: 0.5, sm: 2 }}>
                     {/* Date */}
                     <Grid item xs={6} sm={4} md={2}>
                         <TextField
@@ -334,7 +354,8 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
                             }}
                         />
                     </Grid>
-                </Grid>
+                    </Grid>
+                </Collapse>
 
                 {/* BUTTONS - Compact on Mobile */}
                 <Box sx={{ display: 'flex', gap: { xs: 1, sm: 2 }, mt: { xs: 1.5, sm: 3 }, flexWrap: 'wrap' }}>
@@ -436,6 +457,47 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
                                         </TableCell>
                                         <TableCell colSpan={2} sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
                                             {matchChartResult.moonNakshatra?.pada || matchChartResult.nakshatra?.pada || '-'}
+                                        </TableCell>
+                                    </TableRow>
+
+                                    {/* PANCHANGAM DETAILS */}
+                                    {/* Tithi Row */}
+                                    <TableRow sx={{ bgcolor: 'rgba(255, 193, 7, 0.08)' }}>
+                                        <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
+                                            திதி (Tithi)
+                                        </TableCell>
+                                        <TableCell colSpan={2} sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
+                                            {matchChartResult.panchang?.tithi || matchChartResult.tithi || '-'}
+                                        </TableCell>
+                                    </TableRow>
+
+                                    {/* Yoga Row */}
+                                    <TableRow>
+                                        <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
+                                            யோகம் (Yoga)
+                                        </TableCell>
+                                        <TableCell colSpan={2} sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
+                                            {matchChartResult.panchang?.yoga || matchChartResult.yoga || '-'}
+                                        </TableCell>
+                                    </TableRow>
+
+                                    {/* Karana Row */}
+                                    <TableRow sx={{ bgcolor: 'rgba(255, 193, 7, 0.08)' }}>
+                                        <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
+                                            கரணம் (Karana)
+                                        </TableCell>
+                                        <TableCell colSpan={2} sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
+                                            {matchChartResult.panchang?.karana || matchChartResult.karana || '-'}
+                                        </TableCell>
+                                    </TableRow>
+
+                                    {/* Day (Vara) Row */}
+                                    <TableRow>
+                                        <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
+                                            வாரம் (Day)
+                                        </TableCell>
+                                        <TableCell colSpan={2} sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
+                                            {matchChartResult.panchang?.vara || matchChartResult.dayOfWeek || '-'}
                                         </TableCell>
                                     </TableRow>
                                 </TableBody>
