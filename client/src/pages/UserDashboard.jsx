@@ -22,6 +22,7 @@ import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import GridOnIcon from '@mui/icons-material/GridOn';
 import CloseIcon from '@mui/icons-material/Close';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 // --- COLOR PALETTE (YELLOW + ORANGE PURE APP THEME) ---
 const visionPro = {
@@ -430,8 +431,8 @@ const PanchangamGrid = ({ panchangam, birthData, hideHeader = false }) => {
 };
 
 // 3. Player Detail Panel (Collapsible)
-const PlayerDetailPanel = ({ player, matchChart, hideHeader = false }) => {
-    const [tabIndex, setTabIndex] = useState(0);
+const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = false }) => {
+    const [tabIndex, setTabIndex] = useState(initialTab);
 
     // Normalize Data (Handle wrappers)
     const chartData = player.birthChart?.data || player.birthChart;
@@ -609,7 +610,7 @@ const PlayerDetailPanel = ({ player, matchChart, hideHeader = false }) => {
 };
 
 const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewChart, hideHeader = false }) => {
-    const [open, setOpen] = useState(false);
+
 
     // Summary info for the row
     const chart = player.birthChart?.data || player.birthChart;
@@ -640,7 +641,10 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewCha
                     }
                 }}
                 hover
-                onClick={() => setOpen(!open)}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onSelect(player.id);
+                }}
             >
                 <TableCell padding="checkbox">
                     <Checkbox
@@ -652,11 +656,7 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewCha
                         }}
                     />
                 </TableCell>
-                <TableCell width="50">
-                    <IconButton aria-label="expand row" size="small" onClick={(e) => { e.stopPropagation(); setOpen(!open); }}>
-                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                    </IconButton>
-                </TableCell>
+                <TableCell width="20" />
                 <TableCell component="th" scope="row">
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                         <Avatar
@@ -711,50 +711,84 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewCha
                     </Box>
                 </TableCell>
 
-                {(matchChart && isSelected) ? (
-                     <TableCell>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <IconButton size="small" onClick={(e) => { e.stopPropagation(); onViewChart(player); }} color="primary">
-                                <GridOnIcon />
-                            </IconButton>
-                            <Box sx={{ display: 'flex', gap: 1 }}>
-                                <PredictionChip type="Bat" score={batResult?.score} report={batResult?.report} />
-                                <PredictionChip type="Bowl" score={bowlResult?.score} report={bowlResult?.report} />
-                            </Box>
-                        </Box>
-                     </TableCell>
-                ) : (
-                     <TableCell>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <IconButton size="small" onClick={(e) => { e.stopPropagation(); onViewChart(player); }} color="primary">
-                                <GridOnIcon />
-                            </IconButton>
-                            <Chip
-                                label={rasi !== '-' ? `Moon: ${rasi}` : 'No Data'}
-                                size="small"
-                                color={rasi !== '-' ? "primary" : "default"}
-                                variant={rasi !== '-' ? "outlined" : "filled"}
-                            />
-                        </Box>
-                    </TableCell>
-                )}
+            <TableCell>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                     {/* 3 Icons for Chart, Planets, Panchangam */}
+                     <Tooltip title="Rasi Chart">
+                        <IconButton size="small" onClick={(e) => { e.stopPropagation(); onViewChart(player, 0); }} color="primary">
+                            <GridOnIcon />
+                        </IconButton>
+                     </Tooltip>
+                     <Tooltip title="Planets Details">
+                        <IconButton size="small" onClick={(e) => { e.stopPropagation(); onViewChart(player, 1); }} color="secondary">
+                            <PublicIcon />
+                        </IconButton>
+                     </Tooltip>
+                     <Tooltip title="Panchangam">
+                        <IconButton size="small" onClick={(e) => { e.stopPropagation(); onViewChart(player, 2); }} sx={{ color: visionPro.warning }}>
+                            <CalendarMonthIcon />
+                        </IconButton>
+                     </Tooltip>
+
+                    {matchChart && isSelected && (
+                         <Box sx={{ display: 'flex', gap: 1, ml: 2 }}>
+                             <PredictionChip type="Bat" score={batResult?.score} report={batResult?.report} />
+                             <PredictionChip type="Bowl" score={bowlResult?.score} report={bowlResult?.report} />
+                         </Box>
+                    )}
+                </Box>
+             </TableCell>
             </TableRow>
-            <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0, borderBottom: hideHeader ? '1px solid rgba(255, 255, 255, 0.05)' : 'inherit' }} colSpan={7}>
-                    <Collapse in={open} timeout="auto" unmountOnExit>
-                        <PlayerDetailPanel player={player} matchChart={matchChart} hideHeader={hideHeader} />
-                    </Collapse>
-                </TableCell>
-            </TableRow>
+
         </>
     );
 };
 
-const ChartPopup = ({ open, onClose, player, hideHeader = false }) => {
-    const [tabIndex, setTabIndex] = useState(0);
-    if (!player) return null;
+const ChartPopup = ({ open, onClose, player, initialTab = 0, hideHeader = false }) => {
+    // Local state for fetched chart data
+    const [fetchedChart, setFetchedChart] = useState(null);
+    const [loading, setLoading] = useState(false);
 
-    const chartData = player.birthChart?.data || player.birthChart;
+    useEffect(() => {
+        if (open && player) {
+            setLoading(true);
+            setFetchedChart(null);
+
+            // Per User Request: "take call /birth-chart api"
+            const dobParts = player.dob ? player.dob.split('-') : [];
+            const timeParts = player.birthTime ? player.birthTime.split(':') : ['12', '00'];
+
+            if (dobParts.length === 3) {
+                const payload = {
+                    year: dobParts[0], month: dobParts[1], day: dobParts[2],
+                    hour: timeParts[0], minute: timeParts[1],
+                    latitude: player.latitude || 13.0827,
+                    longitude: player.longitude || 80.2707,
+                    timezone: player.timezone || 5.5
+                };
+
+                axios.post('/api/charts/birth-chart', payload)
+                    .then(res => {
+                        setFetchedChart(res.data);
+                        setLoading(false);
+                    })
+                    .catch(err => {
+                        console.error("Error fetching chart:", err);
+                        setLoading(false);
+                    });
+            } else {
+                setLoading(false);
+            }
+        }
+    }, [open, player]);
+
+    // Merge fetched chart into player object
+    const playerWithChart = useMemo(() => {
+        if (!player) return null;
+        return { ...player, birthChart: fetchedChart || player.birthChart };
+    }, [player, fetchedChart]);
+
+    if (!player) return null;
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
@@ -775,7 +809,13 @@ const ChartPopup = ({ open, onClose, player, hideHeader = false }) => {
                 <IconButton onClick={onClose} sx={{ color: visionPro.text }}><CloseIcon /></IconButton>
             </DialogTitle>
             <DialogContent sx={{ p: 0, bgcolor: visionPro.background }}>
-                <PlayerDetailPanel player={player} hideHeader={hideHeader} />
+                {loading ? (
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '300px' }}>
+                        <CircularProgress />
+                    </Box>
+                ) : (
+                    <PlayerDetailPanel player={playerWithChart} initialTab={initialTab} hideHeader={hideHeader} />
+                )}
             </DialogContent>
         </Dialog>
     );
@@ -1655,6 +1695,8 @@ const UserDashboard = ({ hideHeader = false }) => {
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [editingPlayer, setEditingPlayer] = useState(null);
     const [editForm, setEditForm] = useState({});
+    // State for popup tab (0=Chart, 1=Planets, 2=Panchangam)
+    const [chartPopupTab, setChartPopupTab] = useState(0);
 
     const handleEditClick = (player) => {
         setEditingPlayer(player);
@@ -2307,8 +2349,9 @@ const UserDashboard = ({ hideHeader = false }) => {
                                                         isSelected={isItemSelected}
                                                         onSelect={handleSelectClick}
                                                         onEdit={handleEditClick}
-                                                        onViewChart={(p) => {
+                                                        onViewChart={(p, tabIndex = 0) => {
                                                             setChartPopupPlayer(p);
+                                                            setChartPopupTab(tabIndex);
                                                             setChartPopupOpen(true);
                                                         }}
                                                         hideHeader={hideHeader}
@@ -2344,7 +2387,7 @@ const UserDashboard = ({ hideHeader = false }) => {
                 )}
 
                 {/* POPUPS */}
-                <ChartPopup open={chartPopupOpen} onClose={() => setChartPopupOpen(false)} player={chartPopupPlayer} hideHeader={hideHeader} />
+                <ChartPopup open={chartPopupOpen} onClose={() => setChartPopupOpen(false)} player={chartPopupPlayer} initialTab={chartPopupTab} hideHeader={hideHeader} />
                 <MatchWizardDialog open={matchWizardOpen} onClose={() => setMatchWizardOpen(false)} groups={groups} token={token} hideHeader={hideHeader} />
 
 
