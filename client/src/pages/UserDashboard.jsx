@@ -725,6 +725,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
     const [selectedPlayers, setSelectedPlayers] = useState([]);
     const [matchChart, setMatchChart] = useState(null);
     const [results, setResults] = useState(null);
+    const [filterActive, setFilterActive] = useState(false); // Filter to show selected first
     const [matchDetails, setMatchDetails] = useState({
         date: new Date().toISOString().split('T')[0],
         time: '19:30',
@@ -851,8 +852,8 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                 {/* --- MOBILE VIEW (CARDS) --- */}
                 {isMobile ? (
                     <Box sx={{ maxHeight: '60vh', overflowY: 'auto' }}>
-                        {/* Select All for Mobile */}
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, pl: 1 }}>
+                        {/* Select All + Filter Button */}
+                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, pl: 1, gap: 1 }}>
                              <Checkbox
                                 size="small"
                                 indeterminate={
@@ -870,21 +871,44 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                 }}
                             />
                             <Typography variant="caption" fontWeight="bold">Select All</Typography>
+                            <Box sx={{ flexGrow: 1 }} />
+                            <Button
+                                size="small"
+                                variant={filterActive ? "contained" : "outlined"}
+                                color="success"
+                                onClick={() => setFilterActive(!filterActive)}
+                                sx={{ fontSize: '0.65rem', px: 1.5, py: 0.3, borderRadius: '8px' }}
+                            >
+                                {filterActive ? '✓ Filtered' : 'Filter'}
+                            </Button>
                         </Box>
 
-                        {grp.players.map(p => {
+                        {/* Player List - sorted by selection when filter is active */}
+                        {[...grp.players]
+                            .sort((a, b) => {
+                                if (!filterActive) return 0;
+                                const aSelected = selectedPlayers.includes(a.id);
+                                const bSelected = selectedPlayers.includes(b.id);
+                                if (aSelected && !bSelected) return -1;
+                                if (!aSelected && bSelected) return 1;
+                                return 0;
+                            })
+                            .map(p => {
                             const isSel = selectedPlayers.includes(p.id);
                             const res = results?.details?.[p.id];
+                            const dimmed = filterActive && !isSel;
                             return (
                                 <Paper key={p.id} elevation={0} sx={{
                                     p: 1.5, mb: 1,
-                                    border: '1px solid',
+                                    border: '2px solid',
                                     borderColor: isSel ? '#10B981' : 'rgba(0,0,0,0.1)',
-                                    bgcolor: isSel ? 'rgba(16, 185, 129, 0.05)' : 'white',
+                                    bgcolor: isSel ? 'rgba(16, 185, 129, 0.12)' : 'white',
                                     borderRadius: 2,
                                     display: 'flex',
                                     alignItems: 'center',
-                                    gap: 1.5
+                                    gap: 1.5,
+                                    opacity: dimmed ? 0.4 : 1,
+                                    transition: 'all 0.2s ease'
                                 }} onClick={() => togglePlayer(p.id)}>
                                     <Checkbox checked={isSel} size="small" sx={{ p:0 }} />
                                     <Avatar src={p.profile} sx={{ width: 40, height: 40, fontSize: 14 }}>{p.name[0]}</Avatar>
@@ -905,7 +929,20 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                     </Box>
                 ) : (
                 /* --- DESKTOP VIEW (TABLE) --- */
-                <TableContainer sx={{ maxHeight: 400 }}>
+                <Box>
+                    {/* Filter Button for Desktop */}
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+                        <Button
+                            size="small"
+                            variant={filterActive ? "contained" : "outlined"}
+                            color="success"
+                            onClick={() => setFilterActive(!filterActive)}
+                            sx={{ fontSize: '0.7rem', px: 2, py: 0.5, borderRadius: '8px' }}
+                        >
+                            {filterActive ? '✓ Filtered' : 'Filter Selected'}
+                        </Button>
+                    </Box>
+                    <TableContainer sx={{ maxHeight: 400 }}>
                     <Table size="small" stickyHeader>
                         <TableHead>
                             <TableRow>
@@ -936,15 +973,30 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {grp.players.map(p => {
+                            {[...grp.players]
+                                .sort((a, b) => {
+                                    if (!filterActive) return 0;
+                                    const aSelected = selectedPlayers.includes(a.id);
+                                    const bSelected = selectedPlayers.includes(b.id);
+                                    if (aSelected && !bSelected) return -1;
+                                    if (!aSelected && bSelected) return 1;
+                                    return 0;
+                                })
+                                .map(p => {
                                 const isSel = selectedPlayers.includes(p.id);
                                 const res = results?.details?.[p.id];
+                                const dimmed = filterActive && !isSel;
                                 return (
                                     <TableRow
                                         key={p.id}
                                         hover
                                         onClick={() => togglePlayer(p.id)}
-                                        sx={{ cursor: 'pointer', bgcolor: isSel ? 'rgba(16, 185, 129, 0.08)' : 'inherit' }}
+                                        sx={{
+                                            cursor: 'pointer',
+                                            bgcolor: isSel ? 'rgba(16, 185, 129, 0.12)' : 'inherit',
+                                            opacity: dimmed ? 0.4 : 1,
+                                            transition: 'all 0.2s ease'
+                                        }}
                                     >
                                         <TableCell padding="checkbox">
                                             <Checkbox checked={isSel} size="small" />
@@ -985,6 +1037,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                         </TableBody>
                     </Table>
                 </TableContainer>
+                </Box>
                 )}
             </Paper>
         );
@@ -1694,7 +1747,7 @@ const UserDashboard = ({ hideHeader = false }) => {
                                     filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
                                 }}
                                 className="header-logo"
-                            /> <h2 style={{color:'white'}}><b>S&B Astro </b> </h2>
+                            />  <h2 style={{color:'white'}}><b>S&B Astro </b> </h2>
                         </Box>
 
                         {/* Logout Button */}
