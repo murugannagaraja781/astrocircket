@@ -534,8 +534,26 @@ const PlayerDetailPanel = ({ player, matchChart, hideHeader = false }) => {
             {tabIndex === 0 && (
                 <Grid container spacing={2} justifyContent="center">
                     <Grid item xs={12} md={8} lg={6}>
-                        {/* Rasi Chart Component */}
-                        <RasiChart data={chartData} />
+                        {/* Rasi Chart Component with Dignity Colors */}
+                        <RasiChart
+                            data={chartData}
+                            planetsData={(() => {
+                                if (!chartData) return null;
+                                const pList = chartData.formattedPlanets || (chartData.planets && Array.isArray(chartData.planets) ? chartData.planets : []);
+                                const styleMap = {};
+                                pList.forEach(p => {
+                                    const name = p.name || p.planetName;
+                                    const dignity = p.dignityName || p.dignity;
+                                    let color = '#000';
+                                    if (['Exalted', 'Uchcham'].includes(dignity)) color = '#059669'; // Green
+                                    else if (['Own Sign', 'Own', 'Atchi'].includes(dignity)) color = '#d97706'; // Orange/Gold
+                                    else if (['Debilitated', 'Neecham'].includes(dignity)) color = '#dc2626'; // Red
+
+                                    if (name) styleMap[name] = { dignityColor: color };
+                                });
+                                return styleMap;
+                            })()}
+                        />
                     </Grid>
                 </Grid>
             )}
@@ -923,8 +941,10 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                     <Avatar src={p.profile} sx={{ width: 40, height: 40, fontSize: 14 }}>{p.name[0]}</Avatar>
                                     <Box sx={{ flexGrow: 1 }}>
                                         <Typography variant="subtitle2" fontWeight="bold" lineHeight={1.1} fontSize="0.85rem">{p.name}</Typography>
-                                        <Typography variant="caption" color="text.secondary" display="block" fontSize="0.7rem">{p.birthPlace || '-'}</Typography>
-                                        <Typography variant="caption" color="text.secondary" fontSize="0.7rem">{p.dob} | {p.birthTime}</Typography>
+                                        {/* Mobile: Show Time only, Hide Place and DOB */}
+                                        <Typography variant="caption" color="text.secondary" fontSize="0.75rem" display="block">
+                                            ⏰ {p.birthTime}
+                                        </Typography>
                                     </Box>
                                     {res && (
                                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, alignItems: 'flex-end' }}>
