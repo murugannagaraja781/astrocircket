@@ -1080,27 +1080,20 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                     transition: 'all 0.2s ease',
                                     boxShadow: isSel ? '0 2px 8px rgba(255, 111, 0, 0.2)' : '0 1px 3px rgba(0,0,0,0.05)'
                                 }} onClick={() => togglePlayer(p.id)}>
-                                    <Checkbox checked={isSel} size="small" sx={{ p: 0.5 }} />
+                                    <Checkbox checked={isSel} size="small" sx={{ p: 0 }} />
                                     {/* Avatar Hidden on Mobile as per request */}
                                     {/* <Avatar src={p.profile} sx={{ width: 40, height: 40, fontSize: 14 }}>{p.name[0]}</Avatar> */}
-                                    <Box sx={{ flexGrow: 1, ml: 1 }}>
-                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <Typography variant="subtitle2" fontWeight="bold" lineHeight={1.1} fontSize="0.85rem">{p.name}</Typography>
-                                            {/* Prediction Chips inline if space permits or right aligned */}
-                                        </Box>
-                                        {/* Mobile: Show Time Clearly */}
-                                        <Typography variant="caption" color="text.secondary" fontSize="0.75rem" display="block" sx={{ mt: 0.5, display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                            ⏰ <span style={{ fontWeight: 'bold', color: '#555' }}>{p.birthTime}</span>
-                                        </Typography>
-                                    </Box>
+                                    <Box sx={{ flexGrow: 1, ml: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 0.5 }}>
+                                        <Typography variant="subtitle2" fontWeight="bold" lineHeight={1.1} fontSize="0.85rem">{p.name}</Typography>
 
-                                    {/* Right Side Pred Chips */}
-                                    {res && (
-                                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, alignItems: 'flex-end', minWidth: '45px' }}>
-                                            <Chip label={`B:${res.bat.score}`} size="small" sx={{ height: 18, fontSize: '0.65rem', px: 0.5, bgcolor: res.bat.score >= 1 ? '#e6fffa' : '#f3f4f6', color: res.bat.score >= 1 ? '#059669' : '#374151', border: '1px solid', borderColor: res.bat.score >= 1 ? '#10b981' : '#d1d5db' }}  />
-                                            <Chip label={`Bw:${res.bowl.score}`} size="small" sx={{ height: 18, fontSize: '0.65rem', px: 0.5, bgcolor: res.bowl.score >= 1 ? '#e6fffa' : '#f3f4f6', color: res.bowl.score >= 1 ? '#059669' : '#374151', border: '1px solid', borderColor: res.bowl.score >= 1 ? '#10b981' : '#d1d5db'  }} />
-                                        </Box>
-                                    )}
+                                        {/* Prediction Chips (Moved Below Name) */}
+                                        {res && (
+                                            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mt: 0.2 }}>
+                                                <Chip label={`B:${res.bat.score}`} size="small" sx={{ height: 18, fontSize: '0.65rem', px: 0.5, bgcolor: res.bat.score >= 1 ? '#e6fffa' : '#f3f4f6', color: res.bat.score >= 1 ? '#059669' : '#374151', border: '1px solid', borderColor: res.bat.score >= 1 ? '#10b981' : '#d1d5db' }}  />
+                                                <Chip label={`Bw:${res.bowl.score}`} size="small" sx={{ height: 18, fontSize: '0.65rem', px: 0.5, bgcolor: res.bowl.score >= 1 ? '#e6fffa' : '#f3f4f6', color: res.bowl.score >= 1 ? '#059669' : '#374151', border: '1px solid', borderColor: res.bowl.score >= 1 ? '#10b981' : '#d1d5db'  }} />
+                                            </Box>
+                                        )}
+                                    </Box>
                                 </Paper>
                             );
                         })}
@@ -2202,7 +2195,9 @@ const UserDashboard = ({ hideHeader = false }) => {
                             display: 'flex',
                             alignItems: 'center',
                             color:'white',
-                            border:'darkorange'
+                            border:'2px solid darkorange',
+                            borderRadius: '50%', // Optional: if border radius needed for box? No, image has it.
+                            p: '2px' // Padding for border spacing
                         }}>
                             <img
                                 src="/logo.png"
