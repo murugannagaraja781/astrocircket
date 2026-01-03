@@ -1,4 +1,4 @@
- import React, { useContext, useState, useEffect, useMemo } from 'react';
+import React, { useContext, useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
 import RasiChart from '../components/RasiChart';
@@ -1674,26 +1674,21 @@ const UserDashboard = ({ hideHeader = false }) => {
                     borderBottom: `1px solid ${visionPro.border}`,
                     boxShadow: '0 4px 20px rgba(5, 150, 105, 0.2)'
                 }}>
-                    <Toolbar sx={{ justifyContent: 'space-between', position: 'relative' }}>
-                        {/* Empty spacer for left side balance */}
-                        <Box sx={{ width: { xs: 40, sm: 100 } }} />
-
-                        {/* Centered Logo */}
+                    <Toolbar sx={{ justifyContent: 'space-between' }}>
+                        {/* Left Side Logo - Round */}
                         <Box sx={{
-                            position: 'absolute',
-                            left: '50%',
-                            transform: 'translateX(-50%)',
                             display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
+                            alignItems: 'center'
                         }}>
                             <img
                                 src="/logo.png"
                                 alt="S&B Entertainment"
                                 style={{
-                                    objectFit: 'contain',
-                                    height: '40px',
-                                    width: 'auto',
+                                    objectFit: 'cover',
+                                    height: '45px',
+                                    width: '45px',
+                                    borderRadius: '50%',
+                                    border: '2px solid rgba(255, 255, 255, 0.5)',
                                     filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
                                 }}
                                 className="header-logo"
