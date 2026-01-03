@@ -202,29 +202,30 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
     };
 
     return (
-        <Paper elevation={0} sx={{ p: 0, mb: 3, overflow: 'hidden', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.08)' }}>
+        <Paper elevation={0} sx={{ p: 0, mb: { xs: 1, sm: 3 }, overflow: 'hidden', borderRadius: { xs: '10px', sm: '16px' }, border: '1px solid rgba(0,0,0,0.08)' }}>
 
             {/* Form Container */}
-            <Box sx={{ p: 2.5, bgcolor: '#FFFBF5' }}>
+            <Box sx={{ p: { xs: 1.5, sm: 2.5 }, bgcolor: '#FFFBF5' }}>
                 {/* Title */}
-                <Typography variant="subtitle1" fontWeight="900" sx={{ color: '#FF6F00', mb: 2 }}>
+                <Typography variant="caption" fontWeight="900" sx={{ color: '#FF6F00', mb: { xs: 0.5, sm: 2 }, display: 'block', fontSize: { xs: '0.7rem', sm: '0.875rem' } }}>
                     📅 Match Details
                 </Typography>
 
                 {/* Input Grid - Mobile Friendly */}
-                <Grid container spacing={2}>
+                <Grid container spacing={{ xs: 0.5, sm: 2 }}>
                     {/* Date */}
                     <Grid item xs={6} sm={4} md={2}>
                         <TextField
                             label="Date"
                             type="date"
+                            size="small"
                             fullWidth
                             value={matchDetails.date}
                             onChange={(e) => handleChange('date', e.target.value)}
                             InputLabelProps={{ shrink: true }}
                             sx={{
-                                '& .MuiInputBase-root': { borderRadius: '12px', fontSize: '0.95rem' },
-                                '& .MuiInputLabel-root': { fontWeight: 'bold' }
+                                '& .MuiInputBase-root': { borderRadius: '12px', fontSize: { xs: '0.8rem', sm: '0.95rem' }, height: { xs: '36px', sm: 'auto' } },
+                                '& .MuiInputLabel-root': { fontWeight: 'bold', fontSize: { xs: '0.8rem', sm: '1rem' } }
                             }}
                         />
                     </Grid>
@@ -234,13 +235,14 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
                         <TextField
                             label="Time"
                             type="time"
+                            size="small"
                             fullWidth
                             value={matchDetails.time}
                             onChange={(e) => handleChange('time', e.target.value)}
                             InputLabelProps={{ shrink: true }}
                             sx={{
-                                '& .MuiInputBase-root': { borderRadius: '12px', fontSize: '0.95rem' },
-                                '& .MuiInputLabel-root': { fontWeight: 'bold' }
+                                '& .MuiInputBase-root': { borderRadius: '12px', fontSize: { xs: '0.8rem', sm: '0.95rem' }, height: { xs: '36px', sm: 'auto' } },
+                                '& .MuiInputLabel-root': { fontWeight: 'bold', fontSize: { xs: '0.8rem', sm: '1rem' } }
                             }}
                         />
                     </Grid>
@@ -258,16 +260,19 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
                                 <TextField
                                     {...params}
                                     label="📍 Location"
-                                    placeholder="Select City..."
+                                    placeholder="City..."
+                                    size="small"
                                     sx={{
                                         '& .MuiInputBase-root': {
                                             borderRadius: '12px',
-                                            fontSize: '1rem',
+                                            fontSize: { xs: '0.8rem', sm: '1rem' },
                                             fontWeight: 'bold',
                                             bgcolor: 'rgba(255, 193, 7, 0.08)',
                                             border: '2px solid #FFC107',
+                                            height: { xs: '36px', sm: 'auto' },
+                                            pt: { xs: 0, sm: 'auto' }
                                         },
-                                        '& .MuiInputLabel-root': { fontWeight: 'bold', color: '#FF6F00' },
+                                        '& .MuiInputLabel-root': { fontWeight: 'bold', color: '#FF6F00', fontSize: { xs: '0.8rem', sm: '1rem' }, top: { xs: '-3px', sm: 0 } },
                                         '& .MuiOutlinedInput-notchedOutline': { borderColor: '#FFC107' },
                                         '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#FF6F00' }
                                     }}
@@ -281,14 +286,15 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
                         <TextField
                             label="Lat"
                             type="number"
+                            size="small"
                             fullWidth
                             value={matchDetails.lat}
                             onChange={(e) => handleChange('lat', parseFloat(e.target.value))}
                             InputLabelProps={{ shrink: true }}
                             inputProps={{ step: 0.01 }}
                             sx={{
-                                '& .MuiInputBase-root': { borderRadius: '12px', fontSize: '0.9rem' },
-                                '& .MuiInputLabel-root': { fontWeight: 'bold' }
+                                '& .MuiInputBase-root': { borderRadius: '12px', fontSize: { xs: '0.75rem', sm: '0.9rem' }, height: { xs: '36px', sm: 'auto' } },
+                                '& .MuiInputLabel-root': { fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '1rem' } }
                             }}
                         />
                     </Grid>
@@ -298,14 +304,15 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
                         <TextField
                             label="Long"
                             type="number"
+                            size="small"
                             fullWidth
                             value={matchDetails.long}
                             onChange={(e) => handleChange('long', parseFloat(e.target.value))}
                             InputLabelProps={{ shrink: true }}
                             inputProps={{ step: 0.01 }}
                             sx={{
-                                '& .MuiInputBase-root': { borderRadius: '12px', fontSize: '0.9rem' },
-                                '& .MuiInputLabel-root': { fontWeight: 'bold' }
+                                '& .MuiInputBase-root': { borderRadius: '12px', fontSize: { xs: '0.75rem', sm: '0.9rem' }, height: { xs: '36px', sm: 'auto' } },
+                                '& .MuiInputLabel-root': { fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '1rem' } }
                             }}
                         />
                     </Grid>
@@ -315,39 +322,40 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
                         <TextField
                             label="TZ"
                             type="number"
+                            size="small"
                             fullWidth
                             value={matchDetails.timezone}
                             onChange={(e) => handleChange('timezone', parseFloat(e.target.value))}
                             InputLabelProps={{ shrink: true }}
                             inputProps={{ step: 0.5 }}
                             sx={{
-                                '& .MuiInputBase-root': { borderRadius: '12px', fontSize: '0.9rem' },
-                                '& .MuiInputLabel-root': { fontWeight: 'bold' }
+                                '& .MuiInputBase-root': { borderRadius: '12px', fontSize: { xs: '0.75rem', sm: '0.9rem' }, height: { xs: '36px', sm: 'auto' } },
+                                '& .MuiInputLabel-root': { fontWeight: 'bold', fontSize: { xs: '0.75rem', sm: '1rem' } }
                             }}
                         />
                     </Grid>
                 </Grid>
 
-                {/* BUTTONS - Full Width on Mobile */}
-                <Box sx={{ display: 'flex', gap: 2, mt: 3, flexWrap: 'wrap' }}>
+                {/* BUTTONS - Compact on Mobile */}
+                <Box sx={{ display: 'flex', gap: { xs: 1, sm: 2 }, mt: { xs: 1.5, sm: 3 }, flexWrap: 'wrap' }}>
                     <Button
                         variant="outlined"
                         onClick={handleViewChart}
                         disabled={viewChartLoading || loading}
                         sx={{
                             flex: 1,
-                            minWidth: '120px',
-                            height: '48px',
-                            fontSize: '1rem',
+                            minWidth: { xs: '80px', sm: '120px' },
+                            height: { xs: '36px', sm: '48px' },
+                            fontSize: { xs: '0.8rem', sm: '1rem' },
                             fontWeight: 'bold',
-                            borderRadius: '14px',
+                            borderRadius: { xs: '10px', sm: '14px' },
                             color: '#FFC107',
                             borderColor: '#FFC107',
                             borderWidth: '2px',
                             '&:hover': { bgcolor: 'rgba(255, 193, 7, 0.1)', borderColor: '#FF9800' }
                         }}
                     >
-                        {viewChartLoading ? <CircularProgress size={24} /> : "📊 View Chart"}
+                        {viewChartLoading ? <CircularProgress size={20} /> : "📊 Chart"}
                     </Button>
 
                     <Button
@@ -356,18 +364,18 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
                         disabled={loading || viewChartLoading}
                         sx={{
                             flex: 2,
-                            minWidth: '160px',
-                            height: '48px',
-                            fontSize: '1rem',
+                            minWidth: { xs: '120px', sm: '160px' },
+                            height: { xs: '36px', sm: '48px' },
+                            fontSize: { xs: '0.85rem', sm: '1rem' },
                             fontWeight: '900',
-                            borderRadius: '14px',
+                            borderRadius: { xs: '10px', sm: '14px' },
                             bgcolor: '#FF6F00',
                             boxShadow: '0 4px 12px rgba(255, 111, 0, 0.35)',
                             '&:hover': { bgcolor: '#E65100' },
                             '&:active': { transform: 'scale(0.98)' }
                         }}
                     >
-                        {loading ? <CircularProgress size={24} color="inherit" /> : "🏏 Run Prediction"}
+                        {loading ? <CircularProgress size={20} color="inherit" /> : "🏏 Predict"}
                     </Button>
                 </Box>
 
