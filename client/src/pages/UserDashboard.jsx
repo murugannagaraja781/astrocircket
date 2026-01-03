@@ -941,16 +941,21 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                     {/* Avatar Hidden on Mobile as per request */}
                                     {/* <Avatar src={p.profile} sx={{ width: 40, height: 40, fontSize: 14 }}>{p.name[0]}</Avatar> */}
                                     <Box sx={{ flexGrow: 1, ml: 1 }}>
-                                        <Typography variant="subtitle2" fontWeight="bold" lineHeight={1.1} fontSize="0.85rem">{p.name}</Typography>
-                                        {/* Mobile: Time also hidden as requested */}
-                                        {/* <Typography variant="caption" color="text.secondary" fontSize="0.75rem" display="block">
-                                            ⏰ {p.birthTime}
-                                        </Typography> */}
+                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <Typography variant="subtitle2" fontWeight="bold" lineHeight={1.1} fontSize="0.85rem">{p.name}</Typography>
+                                            {/* Prediction Chips inline if space permits or right aligned */}
+                                        </Box>
+                                        {/* Mobile: Show Time Clearly */}
+                                        <Typography variant="caption" color="text.secondary" fontSize="0.75rem" display="block" sx={{ mt: 0.5, display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                            ⏰ <span style={{ fontWeight: 'bold', color: '#555' }}>{p.birthTime}</span>
+                                        </Typography>
                                     </Box>
+
+                                    {/* Right Side Pred Chips */}
                                     {res && (
-                                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, alignItems: 'flex-end' }}>
-                                            <Chip label={`Bat:${res.bat.score}`} size="small" sx={{ height: 16, fontSize: '0.65rem', px: 0.5 }} color={res.bat.score >= 1 ? 'success' : 'default'} />
-                                            <Chip label={`Bowl:${res.bowl.score}`} size="small" sx={{ height: 16, fontSize: '0.65rem', px: 0.5 }} color={res.bowl.score >= 1 ? 'success' : 'default'} />
+                                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, alignItems: 'flex-end', minWidth: '45px' }}>
+                                            <Chip label={`B:${res.bat.score}`} size="small" sx={{ height: 18, fontSize: '0.65rem', px: 0.5, bgcolor: res.bat.score >= 1 ? '#e6fffa' : '#f3f4f6', color: res.bat.score >= 1 ? '#059669' : '#374151', border: '1px solid', borderColor: res.bat.score >= 1 ? '#10b981' : '#d1d5db' }}  />
+                                            <Chip label={`Bw:${res.bowl.score}`} size="small" sx={{ height: 18, fontSize: '0.65rem', px: 0.5, bgcolor: res.bowl.score >= 1 ? '#e6fffa' : '#f3f4f6', color: res.bowl.score >= 1 ? '#059669' : '#374151', border: '1px solid', borderColor: res.bowl.score >= 1 ? '#10b981' : '#d1d5db'  }} />
                                         </Box>
                                     )}
                                 </Paper>
