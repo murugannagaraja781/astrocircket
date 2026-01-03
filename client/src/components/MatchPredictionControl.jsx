@@ -204,6 +204,7 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
     };
 
     const [expanded, setExpanded] = useState(false); // Default collapsed
+    const [chartExpanded, setChartExpanded] = useState(true); // Default open when result available
 
     return (
         <Paper elevation={0} sx={{ p: 0, mb: { xs: 1, sm: 3 }, overflow: 'hidden', borderRadius: { xs: '10px', sm: '16px' }, border: '1px solid rgba(0,0,0,0.08)' }}>
@@ -404,107 +405,89 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
 
                 {error && <Alert severity="error" sx={{ mt: 2, borderRadius: '12px' }}>{error}</Alert>}
 
-                {/* MATCH CHART SUMMARY TABLE - Tamil Format */}
+                {/* MATCH CHART SUMMARY TABLE - Tamil Format (Collapsible) */}
                 {matchChartResult && (
                     <Box sx={{ mt: 2.5 }}>
-                        <Typography variant="caption" fontWeight="bold" sx={{ color: '#FF6F00', mb: 1, display: 'block' }}>
-                            📊 போட்டி ராசி விவரம் (Match Chart Details)
-                        </Typography>
-                        <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '10px', border: '1px solid rgba(255, 111, 0, 0.2)' }}>
-                            <Table size="small">
-                                <TableBody>
-                                    {/* Ascendant Row */}
-                                    <TableRow sx={{ bgcolor: 'rgba(255, 193, 7, 0.08)' }}>
-                                        <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', width: '35%', py: 0.8, fontSize: '0.75rem' }}>
-                                            லக்னம் (Asc)
-                                        </TableCell>
-                                        <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                            {matchChartResult.ascendant?.tamil || matchChartResult.ascendant?.english || '-'}
-                                        </TableCell>
-                                        <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
-                                            {matchChartResult.ascendant?.lordTamil || matchChartResult.ascendant?.lord || '-'}
-                                        </TableCell>
-                                    </TableRow>
+                        {/* Headers - Clickable to Toggle */}
+                        <Box
+                            onClick={() => setChartExpanded(!chartExpanded)}
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                mb: 1,
+                                cursor: 'pointer',
+                                bgcolor: 'rgba(255, 111, 0, 0.05)',
+                                p: 1,
+                                borderRadius: '8px'
+                            }}
+                        >
+                            <Typography variant="caption" fontWeight="bold" sx={{ color: '#FF6F00', fontSize: '0.85rem' }}>
+                                📊 போட்டி ராசி விவரம் (Match Chart Details)
+                            </Typography>
+                            <IconButton size="small" sx={{ p: 0.5, color: '#FF6F00' }}>
+                                {chartExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                            </IconButton>
+                        </Box>
 
-                                    {/* Moon Sign Row */}
-                                    <TableRow>
-                                        <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
-                                            சந்திரன் (Moon)
-                                        </TableCell>
-                                        <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                            {matchChartResult.moonSign?.tamil || matchChartResult.moonSign?.english || '-'}
-                                        </TableCell>
-                                        <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
-                                            {matchChartResult.moonSign?.lordTamil || matchChartResult.moonSign?.lord || '-'}
-                                        </TableCell>
-                                    </TableRow>
+                        <Collapse in={chartExpanded}>
+                            <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '10px', border: '1px solid rgba(255, 111, 0, 0.2)' }}>
+                                <Table size="small">
+                                    <TableBody>
+                                        {/* Ascendant Row */}
+                                        <TableRow sx={{ bgcolor: 'rgba(255, 193, 7, 0.08)' }}>
+                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', width: '35%', py: 0.8, fontSize: '0.75rem' }}>
+                                                லக்னம் (Asc)
+                                            </TableCell>
+                                            <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
+                                                {matchChartResult.ascendant?.tamil || matchChartResult.ascendant?.english || '-'}
+                                            </TableCell>
+                                            <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
+                                                {matchChartResult.ascendant?.lordTamil || matchChartResult.ascendant?.lord || '-'}
+                                            </TableCell>
+                                        </TableRow>
 
-                                    {/* Nakshatra Row */}
-                                    <TableRow sx={{ bgcolor: 'rgba(255, 193, 7, 0.08)' }}>
-                                        <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
-                                            நட்சத்திரம் (Star)
-                                        </TableCell>
-                                        <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                            {matchChartResult.moonNakshatra?.tamil || matchChartResult.moonNakshatra?.name || matchChartResult.nakshatra?.name || '-'}
-                                        </TableCell>
-                                        <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
-                                            {matchChartResult.moonNakshatra?.lordTamil || matchChartResult.moonNakshatra?.lord || '-'}
-                                        </TableCell>
-                                    </TableRow>
+                                        {/* Moon Sign Row */}
+                                        <TableRow>
+                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
+                                                சந்திரன் (Moon)
+                                            </TableCell>
+                                            <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
+                                                {matchChartResult.moonSign?.tamil || matchChartResult.moonSign?.english || '-'}
+                                            </TableCell>
+                                            <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
+                                                {matchChartResult.moonSign?.lordTamil || matchChartResult.moonSign?.lord || '-'}
+                                            </TableCell>
+                                        </TableRow>
 
-                                    {/* Pada Row */}
-                                    <TableRow>
-                                        <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
-                                            பாதம் (Pada)
-                                        </TableCell>
-                                        <TableCell colSpan={2} sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                            {matchChartResult.moonNakshatra?.pada || matchChartResult.nakshatra?.pada || '-'}
-                                        </TableCell>
-                                    </TableRow>
+                                        {/* Nakshatra Row */}
+                                        <TableRow sx={{ bgcolor: 'rgba(255, 193, 7, 0.08)' }}>
+                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
+                                                நட்சத்திரம் (Star)
+                                            </TableCell>
+                                            <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
+                                                {matchChartResult.moonNakshatra?.tamil || matchChartResult.moonNakshatra?.name || matchChartResult.nakshatra?.name || '-'}
+                                            </TableCell>
+                                            <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
+                                                {matchChartResult.moonNakshatra?.lordTamil || matchChartResult.moonNakshatra?.lord || '-'}
+                                            </TableCell>
+                                        </TableRow>
 
-                                    {/* PANCHANGAM DETAILS */}
-                                    {/* Tithi Row */}
-                                    <TableRow sx={{ bgcolor: 'rgba(255, 193, 7, 0.08)' }}>
-                                        <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
-                                            திதி (Tithi)
-                                        </TableCell>
-                                        <TableCell colSpan={2} sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                            {matchChartResult.panchang?.tithi || matchChartResult.tithi || '-'}
-                                        </TableCell>
-                                    </TableRow>
+                                        {/* Pada Row */}
+                                        <TableRow>
+                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
+                                                பாதம் (Pada)
+                                            </TableCell>
+                                            <TableCell colSpan={2} sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
+                                                {matchChartResult.moonNakshatra?.pada || matchChartResult.nakshatra?.pada || '-'}
+                                            </TableCell>
+                                        </TableRow>
 
-                                    {/* Yoga Row */}
-                                    <TableRow>
-                                        <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
-                                            யோகம் (Yoga)
-                                        </TableCell>
-                                        <TableCell colSpan={2} sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                            {matchChartResult.panchang?.yoga || matchChartResult.yoga || '-'}
-                                        </TableCell>
-                                    </TableRow>
 
-                                    {/* Karana Row */}
-                                    <TableRow sx={{ bgcolor: 'rgba(255, 193, 7, 0.08)' }}>
-                                        <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
-                                            கரணம் (Karana)
-                                        </TableCell>
-                                        <TableCell colSpan={2} sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                            {matchChartResult.panchang?.karana || matchChartResult.karana || '-'}
-                                        </TableCell>
-                                    </TableRow>
-
-                                    {/* Day (Vara) Row */}
-                                    <TableRow>
-                                        <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
-                                            வாரம் (Day)
-                                        </TableCell>
-                                        <TableCell colSpan={2} sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                            {matchChartResult.panchang?.vara || matchChartResult.dayOfWeek || '-'}
-                                        </TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </Collapse>
                     </Box>
                 )}
             </Box>
