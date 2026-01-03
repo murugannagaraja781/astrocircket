@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, forwardRef, useImperativeHandle } from 'react';
 import { Paper, Typography, Box, TextField, Button, Grid, CircularProgress, Alert, Autocomplete, Collapse } from '@mui/material';
 import axios from 'axios';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
@@ -8,7 +8,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { Dialog, DialogTitle, DialogContent, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import RasiChart, { tamilSigns, signLords, signLordsTamil, nakshatraTamilMap, planetFullTamilMap } from './RasiChart';
 
-const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token }) => {
+const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionStart, token }, ref) => {
     const [matchDetails, setMatchDetails] = useState({
         date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
         time: '19:30',
@@ -97,6 +97,10 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
             setLoading(false);
         }
     };
+
+    useImperativeHandle(ref, () => ({
+        runPrediction: handleRun
+    }));
 
     const handleViewChart = async () => {
         setViewChartLoading(true);
@@ -558,6 +562,6 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
             </Dialog>
         </Paper>
     );
-};
+});
 
 export default MatchPredictionControl;

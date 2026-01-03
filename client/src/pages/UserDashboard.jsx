@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useMemo } from 'react';
+import React, { useContext, useState, useEffect, useMemo, useRef } from 'react';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
 import RasiChart from '../components/RasiChart';
@@ -25,6 +25,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 
 // --- COLOR PALETTE (YELLOW + ORANGE PURE APP THEME) ---
 const visionPro = {
@@ -838,6 +840,8 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
         long: 72.877,
         timezone: 5.5
     });
+    const [isFullView, setIsFullView] = useState(false);
+    const predictionControlRef = useRef(null);
 
     // Reset when opening or teams change
     useEffect(() => {
@@ -1180,7 +1184,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
             TransitionComponent={Slide}
         >
             {/* APP BAR - MATCH PREDICTION SETUP */}
-            <AppBar position="static" sx={{ bgcolor: '#FF6F00', backgroundImage: visionPro.gradientPrimary }}>
+            <AppBar position="static" sx={{ bgcolor: '#FF6F00', backgroundImage: visionPro.gradientPrimary, display: isFullView ? 'none' : 'block' }}>
                 <Toolbar sx={{ gap: 1, py: 0.5 }}>
 
 
@@ -1188,6 +1192,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                     {/* Match Setup - Using MatchPredictionControl */}
                     <Box sx={{ flexGrow: 1 }}>
                         <MatchPredictionControl
+                            ref={predictionControlRef}
                             onPredictionComplete={handleMatchReady}
                             token={token}
                         />
@@ -1200,7 +1205,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
             </AppBar>
 
             {/* BREADCRUMBS: Match Details -> Team Selection */}
-            <Box sx={{ px: 2, py: 1.5, bgcolor: '#fff', borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
+            <Box sx={{ px: 2, py: 1.5, bgcolor: '#fff', borderBottom: '1px solid rgba(0,0,0,0.08)', display: isFullView ? 'none' : 'block' }}>
                  <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
                     <Typography color="inherit" sx={{ display: 'flex', alignItems: 'center', fontSize: '0.9rem' }}>
                         Match Details
@@ -1286,7 +1291,10 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                 display: { xs: (teamA && teamB) ? 'flex' : 'none', sm: 'flex' },
                 flexDirection: 'row',
                 alignItems: 'center',
-                justifyContent: 'center',
+                display: { xs: (teamA && teamB) ? 'flex' : 'none', sm: 'flex' },
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
                 gap: { xs: 1, sm: 2 },
                 py: 1.5,
                 px: 1,
@@ -1342,6 +1350,30 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                         {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
                     </Select>
                 </FormControl>
+
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                     {isFullView && (
+                         <Button
+                            variant="contained"
+                            size="small"
+                            onClick={() => predictionControlRef.current?.runPrediction()}
+                            sx={{
+                                bgcolor: '#FF6F00',
+                                color: 'white',
+                                fontWeight: 'bold',
+                                whiteSpace: 'nowrap',
+                                minWidth: 'auto',
+                                px: 1,
+                                '&:hover': { bgcolor: '#E65100' }
+                            }}
+                         >
+                            Predict
+                         </Button>
+                     )}
+                     <IconButton onClick={() => setIsFullView(!isFullView)} color="primary" sx={{ p:0.5 }}>
+                        {isFullView ? <FullscreenExitIcon /> : <FullscreenIcon />}
+                     </IconButton>
+                </Box>
             </Box>
 
             {/* SIDE BY SIDE PLAYER TABLES - Only show when both teams selected */}
