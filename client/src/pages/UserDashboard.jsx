@@ -1694,7 +1694,7 @@ const UserDashboard = ({ hideHeader = false }) => {
                                     filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
                                 }}
                                 className="header-logo"
-                            /> S&B Astro
+                            /> <h2><b>S&B Astro </b> </h2>
                         </Box>
 
                         {/* Logout Button */}
