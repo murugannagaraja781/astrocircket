@@ -241,7 +241,7 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
                         />
                     </Grid>
 
-                    {/* Location */}
+                    {/* Location - More Visible */}
                     <Grid item xs={12} sm={4} md={4}>
                         <Autocomplete
                             freeSolo
@@ -253,11 +253,19 @@ const MatchPredictionControl = ({ onPredictionComplete, onPredictionStart, token
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
-                                    label="Location"
-                                    placeholder="Select City"
+                                    label="📍 Location"
+                                    placeholder="Select City..."
                                     sx={{
-                                        '& .MuiInputBase-root': { borderRadius: '12px', fontSize: '0.95rem' },
-                                        '& .MuiInputLabel-root': { fontWeight: 'bold' }
+                                        '& .MuiInputBase-root': {
+                                            borderRadius: '12px',
+                                            fontSize: '1rem',
+                                            fontWeight: 'bold',
+                                            bgcolor: 'rgba(255, 193, 7, 0.08)',
+                                            border: '2px solid #FFC107',
+                                        },
+                                        '& .MuiInputLabel-root': { fontWeight: 'bold', color: '#FF6F00' },
+                                        '& .MuiOutlinedInput-notchedOutline': { borderColor: '#FFC107' },
+                                        '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#FF6F00' }
                                     }}
                                 />
                             )}
