@@ -10,7 +10,8 @@ import {
     Select, MenuItem, FormControl, InputLabel, Collapse, IconButton,
     Container, AppBar, Toolbar, Avatar, Chip, Grid, Card, CardContent, Button,
     CircularProgress, Tabs, Tab, Divider, useMediaQuery, useTheme,
-    Dialog, DialogTitle, DialogContent, DialogActions, Tooltip, Switch, Checkbox, Slide
+    Dialog, DialogTitle, DialogContent, DialogActions, Tooltip, Switch, Checkbox, Slide,
+    Breadcrumbs, Link
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -23,6 +24,7 @@ import GridOnIcon from '@mui/icons-material/GridOn';
 import CloseIcon from '@mui/icons-material/Close';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 // --- COLOR PALETTE (YELLOW + ORANGE PURE APP THEME) ---
 const visionPro = {
@@ -1196,6 +1198,18 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                     </IconButton>
                 </Toolbar>
             </AppBar>
+
+            {/* BREADCRUMBS: Match Details -> Team Selection */}
+            <Box sx={{ px: 2, py: 1.5, bgcolor: '#fff', borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
+                 <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
+                    <Typography color="inherit" sx={{ display: 'flex', alignItems: 'center', fontSize: '0.9rem' }}>
+                        Match Details
+                    </Typography>
+                    <Typography sx={{ display: 'flex', alignItems: 'center', color: '#FF6F00', fontWeight: 'bold', fontSize: '0.9rem' }}>
+                        Team A vs Team B
+                    </Typography>
+                </Breadcrumbs>
+            </Box>
 
 
             {/* MOBILE: FULL SCREEN TEAM SELECTION (when teams not selected) */}
