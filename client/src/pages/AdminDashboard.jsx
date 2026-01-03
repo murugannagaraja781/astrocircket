@@ -1003,6 +1003,10 @@ const PlayersManager = () => {
     const [openChartDialog, setOpenChartDialog] = useState(false);
     const [selectedPlayerForChart, setSelectedPlayerForChart] = useState(null);
 
+    // Chart Preview State for Add/Edit
+    const [previewChart, setPreviewChart] = useState(null);
+    const [generatingChart, setGeneratingChart] = useState(false);
+
     const handleViewChart = (player) => {
         setSelectedPlayerForChart(player);
         setOpenChartDialog(true);
@@ -1046,6 +1050,7 @@ const PlayersManager = () => {
         setSelectedPlayer(null);
         setPlayerForm({});
         setProfilePicFile(null);
+        setPreviewChart(null); // Reset preview
         setOpenEdit(true);
     };
 
@@ -1059,6 +1064,15 @@ const PlayersManager = () => {
             role: player.role || 'BAT', manualStatus: player.manualStatus || ''
         });
         setOpenEdit(true);
+        setPreviewChart(player.birthChart?.data || player.birthChart); // Load existing chart logic if editing? Maybe easier to restart.
+        // Actually user wants to CHECK. If editing, they might change details.
+        // Let's reset preview on Edit too, ensuring they re-generate if they change params. Or show existing if valid.
+        // For simplicity: If editing, show existing chart as preview initially?
+        // User workflow: "change Gentrate rasi chart call rasicahrt api then below rasikadm show".
+        // If they change details, they MUST re-generate.
+        // If I populate previewChart with existing data, handleGeneratePreview must update it.
+        // Let's set previewChart to null to force Re-generation if they want to check.
+        setPreviewChart(null);
     };
 
     const handleDeleteClick = async (id) => {
@@ -1079,6 +1093,33 @@ const PlayersManager = () => {
         else setSelectedIds([...selectedIds, id]);
     };
 
+    // Generate Preview Logic
+    const handleGeneratePreview = async () => {
+        if (!playerForm.dob || !playerForm.birthTime || !playerForm.latitude || !playerForm.longitude) {
+           showSnackbar("Please fill Date, Time, and Place/Coordinates", "error");
+           return;
+        }
+        setGeneratingChart(true);
+        try {
+            const dobParts = playerForm.dob.split('-'); // YYYY-MM-DD
+            const timeParts = playerForm.birthTime.split(':');
+            const data = {
+                year: dobParts[0], month: dobParts[1], day: dobParts[2],
+                hour: timeParts[0], minute: timeParts[1],
+                latitude: playerForm.latitude, longitude: playerForm.longitude,
+                timezone: playerForm.timezone || 5.5
+            };
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/charts/birth-chart`, data);
+            setPreviewChart(res.data);
+            showSnackbar("Chart Generated! Please Verify.", "success");
+        } catch (err) {
+            console.error(err);
+            showSnackbar("Failed to Generate Chart", "error");
+        } finally {
+            setGeneratingChart(false);
+        }
+    };
+
     const handleSavePlayer = async () => {
         setSavingPlayer(true);
         try {
@@ -1093,7 +1134,7 @@ const PlayersManager = () => {
                 }
 
                 await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/players/add`, formData, {
-                    headers: { 'x-auth-token': token, 'Content-Type': 'multipart/form-data' }
+                    headers: { 'x-auth-token': token }
                 });
                 showSnackbar('Player Added Successfully', 'success');
             } else {
@@ -1110,7 +1151,7 @@ const PlayersManager = () => {
                     formData.append('image', profilePicFile);
 
                     await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/players/${selectedPlayer.id}`, formData, {
-                        headers: { 'x-auth-token': token, 'Content-Type': 'multipart/form-data' }
+                        headers: { 'x-auth-token': token }
                     });
                 } else {
                     await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/players/${selectedPlayer.id}`, playerForm, {
@@ -1136,7 +1177,7 @@ const PlayersManager = () => {
         formData.append('file', selectedFile);
         try {
              await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/players/upload`, formData, {
-                headers: { 'x-auth-token': token, 'Content-Type': 'multipart/form-data' }
+                headers: { 'x-auth-token': token }
             });
             setUploadStatus('Success!'); setOpenUpload(false); fetchPlayers();
         } catch (err) { setUploadStatus('Error uploading.'); }
@@ -1522,18 +1563,50 @@ const PlayersManager = () => {
                         </Box>
 
 
+
+                        {/* CHART PREVIEW SECTION */}
+                        {previewChart && (
+                            <Box sx={{ mt: 3, p: 2, border: '1px solid rgba(0,0,0,0.1)', borderRadius: 2, bgcolor: '#fff' }}>
+                                <Typography variant="subtitle2" gutterBottom>Rasi Chart Verification</Typography>
+                                <Box sx={{ height: 300, width: '100%', display: 'flex', justifyContent: 'center' }}>
+                                     <RasiChart data={previewChart} style={{ width: '100%', height: '100%' }} />
+                                </Box>
+                                <Typography variant="caption" color="textSecondary" align="center" display="block" sx={{ mt: 1 }}>
+                                    Check if planets are in correct signs.
+                                </Typography>
+                            </Box>
+                        )}
                     </Box>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpenEdit(false)} disabled={savingPlayer}>Cancel</Button>
-                    <Button
-                        onClick={handleSavePlayer}
-                        variant="contained"
-                        disabled={savingPlayer}
-                        startIcon={savingPlayer ? <CircularProgress size={16} color="inherit" /> : null}
-                    >
-                        {savingPlayer ? 'Saving...' : 'Save'}
-                    </Button>
+
+                    {!previewChart ? (
+                        <Button
+                            onClick={handleGeneratePreview}
+                            variant="contained"
+                            color="warning"
+                            disabled={generatingChart}
+                            startIcon={generatingChart ? <CircularProgress size={16} /> : <DescriptionIcon />}
+                        >
+                            {generatingChart ? "Generating..." : "Generate Rasi Chart"}
+                        </Button>
+                    ) : (
+                        <>
+                            <Button onClick={() => setPreviewChart(null)} color="secondary">
+                                Edit Details
+                            </Button>
+                            <Button
+                                onClick={handleSavePlayer}
+                                variant="contained"
+                                color="success"
+                                disabled={savingPlayer}
+                                startIcon={savingPlayer ? <CircularProgress size={16} color="inherit" /> : null}
+                            >
+                                {savingPlayer ? 'Saving...' : 'Save Player'}
+                            </Button>
+                        </>
+                    )}
                 </DialogActions>
             </Dialog>
 
