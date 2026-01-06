@@ -619,6 +619,7 @@ const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = fa
                                             <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>Planet</TableCell>
                                             <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>Rasi</TableCell>
                                             <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>Star</TableCell>
+                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>Star Lord</TableCell>
                                             <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>Dignity</TableCell>
                                         </TableRow>
                                     </TableHead>
@@ -642,6 +643,7 @@ const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = fa
                                                         <TableCell sx={{ fontWeight: 'bold' }}>{p.tamilName || name}</TableCell>
                                                         <TableCell>{p.signTamil || p.signName || p.currentSign || '-'}</TableCell>
                                                         <TableCell>{p.nakshatraTamil || p.nakshatra || '-'}</TableCell>
+                                                        <TableCell>{p.nakshatraLordTamil || p.nakshatraLord || '-'}</TableCell>
                                                         <TableCell sx={{ color: dColor, fontWeight: 'bold' }}>{dignity}</TableCell>
                                                     </TableRow>
                                                 );
@@ -1616,6 +1618,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                         <th style={{ padding: 8 }}>கிரகம்</th>
                                         <th style={{ padding: 8 }}>ராசி</th>
                                         <th style={{ padding: 8 }}>நட்சத்திரம்</th>
+                                        <th style={{ padding: 8 }}>நட்சத்திர நாதன்</th>
                                         <th style={{ padding: 8 }}>பாதம்</th>
                                         <th style={{ padding: 8 }}>நிலை</th>
                                         <th style={{ padding: 8 }}>டிகிரி</th>
@@ -1627,6 +1630,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                             <td style={{ padding: 8, fontWeight: 'bold' }}>{planet}</td>
                                             <td style={{ padding: 8 }}>{data.signTamil} ({data.sign})</td>
                                             <td style={{ padding: 8 }}>{data.nakshatraTamil}</td>
+                                            <td style={{ padding: 8 }}>{data.nakshatraLordTamil || data.nakshatraLord}</td>
                                             <td style={{ padding: 8, textAlign: 'center' }}>{data.pada}</td>
                                             <td style={{
                                                 padding: 8,
