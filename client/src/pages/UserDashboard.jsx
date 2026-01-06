@@ -1000,6 +1000,13 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
         }
     }, [open]);
 
+    // Track expanded rules for players
+    const [expandedRules, setExpandedRules] = useState({});
+
+    const toggleRules = (pid) => {
+        setExpandedRules(prev => ({ ...prev, [pid]: !prev[pid] }));
+    };
+
     // Update selected players when teams change
     useEffect(() => {
         const newSelected = [];
@@ -1190,7 +1197,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                     opacity: dimmed ? 0.4 : 1,
                                     transition: 'all 0.2s ease',
                                     boxShadow: isSel ? '0 2px 8px rgba(255, 111, 0, 0.2)' : '0 1px 3px rgba(0,0,0,0.05)'
-                                }} onClick={() => togglePlayer(p.id)}>
+                                }} onClick={() => results ? toggleRules(p.id) : togglePlayer(p.id)}>
                                     <Checkbox checked={isSel} size="small" sx={{ p: 0 }} />
                                     {/* Avatar Hidden on Mobile as per request */}
                                     {/* <Avatar src={p.profile} sx={{ width: 40, height: 40, fontSize: 14 }}>{p.name[0]}</Avatar> */}
@@ -1205,6 +1212,21 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                             </Box>
                                         )}
                                     </Box>
+
+                                    {/* RULES DISPLAY (Mobile) */}
+                                    {res && expandedRules[p.id] && (
+                                        <Box sx={{ mt: 1, p: 1, bgcolor: '#f8fafc', borderRadius: 1, border: '1px solid #e2e8f0' }}>
+                                            <Typography variant="caption" fontWeight="bold" display="block" color="#000" sx={{ mb: 0.5 }}>Target Success List:</Typography>
+                                            {[...(res.bat.logs || []), ...(res.bowl.logs || [])].map((log, i) => (
+                                                <Typography key={i} variant="caption" display="block" color="#000" sx={{ fontSize: '0.7rem', mb: 0.5 }}>
+                                                    • {log}
+                                                </Typography>
+                                            ))}
+                                            {(!res.bat.logs?.length && !res.bowl.logs?.length) && (
+                                                <Typography variant="caption" color="#000">No specific rules matched.</Typography>
+                                            )}
+                                        </Box>
+                                    )}
                                 </Paper>
                             );
                         })}
@@ -1277,10 +1299,10 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                 const res = results?.details?.[p.id];
                                 const dimmed = filterActive && !isSel;
                                 return (
+                                <React.Fragment key={p.id}>
                                     <TableRow
-                                        key={p.id}
                                         hover
-                                        onClick={() => togglePlayer(p.id)}
+                                        onClick={() => results ? toggleRules(p.id) : togglePlayer(p.id)}
                                         sx={{
                                             cursor: 'pointer',
                                             bgcolor: isSel ? 'rgba(255, 111, 0, 0.08)' : 'inherit',
@@ -1322,6 +1344,27 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                             </TableCell>
                                         )}
                                     </TableRow>
+                                    {/* RULES ROW (Desktop) */}
+                                    {res && expandedRules[p.id] && (
+                                        <TableRow>
+                                            <TableCell colSpan={4} sx={{ p: 0, borderBottom: 'none' }}>
+                                                 <Box sx={{ p: 2, bgcolor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                                                    <Typography variant="subtitle2" fontWeight="bold" color="#000" gutterBottom>Target Success List:</Typography>
+                                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                                                        {[...(res.bat.logs || []), ...(res.bowl.logs || [])].map((log, i) => (
+                                                            <Typography key={i} variant="body2" color="#000" sx={{ fontSize: '0.8rem' }}>
+                                                                • {log}
+                                                            </Typography>
+                                                        ))}
+                                                        {(!res.bat.logs?.length && !res.bowl.logs?.length) && (
+                                                            <Typography variant="body2" color="#000">No specific rules matched.</Typography>
+                                                        )}
+                                                    </Box>
+                                                 </Box>
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                    </React.Fragment>
                                 );
                             })}
                         </TableBody>
@@ -2307,28 +2350,26 @@ const UserDashboard = ({ hideHeader = false }) => {
                     boxShadow: '0 4px 20px rgba(255, 111, 0, 0.25)'
                 }}>
                     <Toolbar sx={{ justifyContent: 'space-between' }}>
-                        {/* Left Side Logo - Round */}
+                        {/* Left Side Logo */}
                         <Box sx={{
                             display: 'flex',
                             alignItems: 'center',
                             color:'white',
-                            border:'2px solid darkorange',
-                            borderRadius: '50%', // Optional: if border radius needed for box? No, image has it.
-                            p: '2px' // Padding for border spacing
+                            gap: 2
                         }}>
                             <img
                                 src="/logo.png"
                                 alt="S&B Entertainment"
                                 style={{
-                                    objectFit: 'cover',
-                                    height: '45px',
-                                    width: '45px',
+                                    objectFit: 'contain',
+                                    height: '50px',
+                                    width: '50px',
                                     borderRadius: '50%',
-                                    border: '2px solid rgba(255, 255, 255, 0.5)',
                                     filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
                                 }}
                                 className="header-logo"
-                            />  <h2 style={{color:'white'}}><b>S&B Astro </b> </h2>
+                            />
+                            <h2 style={{color:'white', margin: 0, fontSize: '1.5rem'}}><b>S&B Astro</b></h2>
                         </Box>
 
                         {/* Logout Button */}

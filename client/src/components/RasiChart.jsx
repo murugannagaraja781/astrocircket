@@ -305,10 +305,37 @@ const RasiChart = ({ data, style = {}, planetsData = null }) => {
                                 if (index === 5) {
                                     return (
                                         <div key="center" style={centerBoxStyle}>
-                                            <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '4px', color: '#000', fontSize: '10px', fontWeight: 'bold', width: '100%', height: '100%' }}>
-                                                <div style={{textAlign: 'center'}}>
-                                                    <span style={{ fontSize: '16px', fontStyle: 'italic', fontWeight: 'bold' }}>இராசி கட்டம்</span>
+                                            <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '2px', color: '#000', fontSize: '10px', fontWeight: 'bold', width: '100%', height: '100%' }}>
+                                                {/* Date & Time */}
+                                                <div style={{ fontSize: '10px', color: '#B91C1C' }}>{formattedDate}</div>
+                                                <div style={{ fontSize: '10px', color: '#B91C1C', marginBottom: '4px' }}>{timeStr}</div>
+
+                                                <div style={{textAlign: 'center', borderTop: '1px solid #B91C1C', borderBottom: '1px solid #B91C1C', margin: '2px 0', padding: '2px 0', width: '90%'}}>
+                                                    <span style={{ fontSize: '14px', fontStyle: 'italic', fontWeight: 'bold', color: '#B91C1C', letterSpacing: '1px' }}>RASI</span>
                                                 </div>
+
+                                                {/* Rasi & Nakshatra */}
+                                                 {(chartData.moonSign || chartData.moonNakshatra) && (
+                                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1px' }}>
+                                                        {chartData.moonSign && (
+                                                            <div style={{ fontSize: '11px', color: '#1F2937' }}>
+                                                                {chartData.moonSign.tamil || chartData.moonSign.name}
+                                                            </div>
+                                                        )}
+                                                        {nakshatraData.name && (
+                                                            <div style={{
+                                                                fontSize: '10px',
+                                                                color: '#B91C1C',
+                                                                backgroundColor: 'rgba(255, 237, 213, 0.5)',
+                                                                padding: '1px 6px',
+                                                                borderRadius: '4px',
+                                                                border: '1px solid #FED7AA'
+                                                            }}>
+                                                                {nakshatraTamilMap[nakshatraData.name] || nakshatraData.name}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     );

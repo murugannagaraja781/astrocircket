@@ -30,21 +30,58 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
 
     // Predefined City Data (Major Cricket Venues & Cities)
     const cityOptions = [
+        // India
         { label: "Mumbai (மும்பை), India", lat: 19.0760, long: 72.8777, timezone: 5.5 },
-        { label: "Chennai (சென்னை), India", lat: 13.0827, long: 80.2707, timezone: 5.5 }, // Corrected Chennai Long
+        { label: "Chennai (சென்னை), India", lat: 13.0827, long: 80.2707, timezone: 5.5 },
         { label: "Bangalore (பெங்களூரு), India", lat: 12.9716, long: 77.5946, timezone: 5.5 },
         { label: "Delhi (டெல்லி), India", lat: 28.6139, long: 77.2090, timezone: 5.5 },
         { label: "Kolkata (கொல்கத்தா), India", lat: 22.5726, long: 88.3639, timezone: 5.5 },
         { label: "Hyderabad (ஹைதராபாத்), India", lat: 17.3850, long: 78.4867, timezone: 5.5 },
         { label: "Ahmedabad (அகமதாபாத்), India", lat: 23.0225, long: 72.5714, timezone: 5.5 },
         { label: "Pune (புனே), India", lat: 18.5204, long: 73.8567, timezone: 5.5 },
-        { label: "London (லண்டன்), UK", lat: 51.5074, long: -0.1278, timezone: 0.0 },
-        { label: "Melbourne (மெல்போர்ன்), Australia", lat: -37.8136, long: 144.9631, timezone: 10.0 },
-        { label: "Sydney (சிட்னி), Australia", lat: -33.8688, long: 151.2093, timezone: 10.0 },
-        { label: "Dubai (துபாய்), UAE", lat: 25.276987, long: 55.296249, timezone: 4.0 },
-        { label: "Colombo (கொழும்பு), Sri Lanka", lat: 6.9271, long: 79.8612, timezone: 5.5 },
+        { label: "Dharamshala (தரம்சாலா), India", lat: 32.2190, long: 76.3234, timezone: 5.5 },
+
+        // Australia (Multi-Timezone)
+        { label: "Melbourne (மெல்போர்ன்), Australia", lat: -37.8136, long: 144.9631, timezone: 10.0 }, // AEST
+        { label: "Sydney (சிட்னி), Australia", lat: -33.8688, long: 151.2093, timezone: 10.0 }, // AEST
+        { label: "Brisbane (பிரிஸ்பேன்), Australia", lat: -27.4698, long: 153.0251, timezone: 10.0 }, // AEST (No DST)
+        { label: "Adelaide (அடிலெய்டு), Australia", lat: -34.9285, long: 138.6007, timezone: 9.5 }, // ACST
+        { label: "Perth (பெர்த்), Australia", lat: -31.9505, long: 115.8605, timezone: 8.0 },  // AWST
+        { label: "Hobart (ஹோபார்ட்), Australia", lat: -42.8821, long: 147.3272, timezone: 10.0 },
+
+        // West Indies (Caribbean - Mixed Timezones)
+        { label: "Kingston (கிங்ஸ்டன்), Jamaica", lat: 17.9714, long: -76.7936, timezone: -5.0 },
+        { label: "Bridgetown (பிரிட்ஜ்டவுன்), Barbados", lat: 13.1132, long: -59.5988, timezone: -4.0 },
+        { label: "Port of Spain (போர்ட் ஆஃப் ஸ்பெயின்), Trinidad", lat: 10.6549, long: -61.5022, timezone: -4.0 },
+        { label: "Georgetown (ஜார்ஜ்டவுன்), Guyana", lat: 6.8013, long: -58.1551, timezone: -4.0 },
+        { label: "St. John's (செயின்ட் ஜான்ஸ்), Antigua", lat: 17.1175, long: -61.8503, timezone: -4.0 },
+        { label: "Castries (காஸ்ட்ரீஸ்), St Lucia", lat: 14.0101, long: -60.9856, timezone: -4.0 },
+
+        // England
+        { label: "London (லண்டன்), UK", lat: 51.5074, long: -0.1278, timezone: 0.0 }, // GMT/BST
+        { label: "Birmingham (பர்மிங்காம்), UK", lat: 52.4862, long: -1.8904, timezone: 0.0 },
+        { label: "Manchester (மான்செஸ்டர்), UK", lat: 53.4808, long: -2.2426, timezone: 0.0 },
+
+        // South Africa
         { label: "Johannesburg (ஜோகன்னஸ்பர்க்), SA", lat: -26.2041, long: 28.0473, timezone: 2.0 },
+        { label: "Cape Town (கேப் டவுன்), SA", lat: -33.9249, long: 18.4241, timezone: 2.0 },
+        { label: "Durban (டர்பன்), SA", lat: -29.8587, long: 31.0218, timezone: 2.0 },
+
+        // New Zealand
+        { label: "Auckland (ஆக்லாந்து), NZ", lat: -36.8485, long: 174.7633, timezone: 12.0 }, // NZST
+        { label: "Wellington (வெலிங்டன்), NZ", lat: -41.2865, long: 174.7762, timezone: 12.0 },
+        { label: "Christchurch (கிறிஸ்ட்சர்ச்), NZ", lat: -43.5321, long: 172.6362, timezone: 12.0 },
+
+        // Other Major Venues
+        { label: "Dubai (துபாய்), UAE", lat: 25.276987, long: 55.296249, timezone: 4.0 },
+        { label: "Sharjah (ஷார்ஜா), UAE", lat: 25.3463, long: 55.4209, timezone: 4.0 },
+        { label: "Colombo (கொழும்பு), Sri Lanka", lat: 6.9271, long: 79.8612, timezone: 5.5 },
+        { label: "Kandy (கண்டி), Sri Lanka", lat: 7.2906, long: 80.6337, timezone: 5.5 },
+        { label: "Dhaka (டாக்கா), Bangladesh", lat: 23.8103, long: 90.4125, timezone: 6.0 },
+        { label: "Karachi (கராச்சி), Pakistan", lat: 24.8607, long: 67.0011, timezone: 5.0 },
+        { label: "Lahore (லாகூர்), Pakistan", lat: 31.5204, long: 74.3587, timezone: 5.0 },
         { label: "New York (நியூயார்க்), USA", lat: 40.7128, long: -74.0060, timezone: -5.0 }, // EST usually, careful with DST
+        { label: "Lauderhill (லாடர்ஹில்), Florida, USA", lat: 26.1404, long: -80.2134, timezone: -5.0 }
     ];
 
     const handleCityChange = (event, newValue) => {
