@@ -878,6 +878,92 @@ const ChartPopup = ({ open, onClose, player, matchChart, initialTab = 0, hideHea
     );
 };
 
+// --- TAMIL RULES LIST (For Animation) ---
+const TAMIL_RULE_LIST = [
+    { id: 1, label: "BAT Rule 1: ZigZag Rule (ஜிக் ஜாக் விதி - ராசி/நட்சத்திர பரிவர்த்தனை)" },
+    { id: 2, label: "BAT Rule 2: Star Rule (நட்சத்திர அதிபதி விதி)" },
+    { id: 3, label: "BAT Rule 3: House Rule (வீடு விதி)" },
+    { id: 4, label: "BAT Rule 4: Same House Rule (ஒரே வீடு இடமாற்றம்)" },
+    { id: 5, label: "BAT Rule 5: Conjunction Rule (கிரக சேர்க்கை விதி)" },
+    { id: 6, label: "BAT Rule 6: Lagna Rule (லக்ன விதி)" },
+    { id: 7, label: "BOWL Rule 1: Exact Match Flop (துல்லியமான பொருத்த தோல்வி)" },
+    { id: 8, label: "BOWL Rule 2: Lagna Rasi Lord Rule (லக்ன ராசி அதிபதி விதி)" },
+    { id: 9, label: "BOWL Rule 3: Both Lords in House (இரு அதிபதிகள் ஒரே வீட்டில்)" },
+    { id: 10, label: "BOWL Rule 4: Triple Conjunction (மும்முனை சேர்க்கை விதி)" }
+];
+
+// --- RULE APPLYING DIALOG ---
+const RuleApplyingDialog = ({ open, completedRules }) => {
+    return (
+        <Dialog
+            open={open}
+            maxWidth="sm"
+            fullWidth
+            PaperProps={{
+                sx: {
+                    borderRadius: '20px',
+                    bgcolor: '#FFFBF5',
+                    p: 2,
+                    border: '2px solid #FFC107'
+                }
+            }}
+        >
+            <DialogTitle sx={{ textAlign: 'center', color: '#FF6F00', fontWeight: '900', fontSize: '1.2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+                <CircularProgress size={40} sx={{ color: '#FF6F00' }} />
+                கணிப்பு விதிகள் சரிபார்க்கப்படுகிறது...
+                <Typography variant="caption" sx={{ color: '#F57C00' }}>Applying Astrological Prediction Rules</Typography>
+            </DialogTitle>
+            <DialogContent>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mt: 1 }}>
+                    {TAMIL_RULE_LIST.map((rule, index) => {
+                        const isCompleted = completedRules.includes(rule.id);
+                        const isCurrent = !isCompleted && (index === 0 || completedRules.includes(TAMIL_RULE_LIST[index-1].id));
+
+                        return (
+                            <Box
+                                key={rule.id}
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 2,
+                                    p: 1.5,
+                                    borderRadius: '12px',
+                                    bgcolor: isCompleted ? 'rgba(76, 175, 80, 0.1)' : (isCurrent ? 'rgba(255, 193, 7, 0.1)' : 'white'),
+                                    border: '1px solid',
+                                    borderColor: isCompleted ? '#4CAF50' : (isCurrent ? '#FFC107' : 'rgba(0,0,0,0.05)'),
+                                    transition: 'all 0.3s ease',
+                                    transform: isCurrent ? 'scale(1.02)' : 'scale(1)'
+                                }}
+                            >
+                                <Box sx={{
+                                    width: 24, height: 24, borderRadius: '50%',
+                                    bgcolor: isCompleted ? '#4CAF50' : (isCurrent ? '#FFC107' : '#E0E0E0'),
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    color: 'white', fontSize: '0.8rem', fontWeight: 'bold'
+                                }}>
+                                    {isCompleted ? '✓' : (index + 1)}
+                                </Box>
+                                <Typography
+                                    variant="body2"
+                                    sx={{
+                                        fontWeight: isCompleted || isCurrent ? 'bold' : 'normal',
+                                        color: isCompleted ? '#2E7D32' : (isCurrent ? '#FF6F00' : '#9E9E9E'),
+                                        flexGrow: 1
+                                    }}
+                                >
+                                    {rule.label}
+                                </Typography>
+                                {isCompleted && <Typography variant="caption" sx={{ color: '#4CAF50', fontWeight: 'bold' }}>APPLIED</Typography>}
+                                {isCurrent && <CircularProgress size={16} sx={{ color: '#FF6F00' }} />}
+                            </Box>
+                        );
+                    })}
+                </Box>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
 const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false }) => {
     const [teamA, setTeamA] = useState('');
     const [teamB, setTeamB] = useState('');
@@ -896,6 +982,10 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
     const [isFullView, setIsFullView] = useState(false);
     const predictionControlRef = useRef(null);
 
+    // Rule Animation State
+    const [ruleDialogOpen, setRuleDialogOpen] = useState(false);
+    const [completedRules, setCompletedRules] = useState([]);
+
     // Reset when opening or teams change
     useEffect(() => {
         if (!open) {
@@ -903,6 +993,8 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
             setTeamB('');
             setMatchChart(null);
             setResults(null);
+            setRuleDialogOpen(false);
+            setCompletedRules([]);
         }
     }, [open]);
 
@@ -923,7 +1015,21 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
         setResults(null);
     }, [teamA, teamB, groups]);
 
-    const handleMatchReady = (chart, details) => {
+    const handleMatchReady = async (chart, details) => {
+        // 1. Open Rule Dialog
+        setRuleDialogOpen(true);
+        setCompletedRules([]);
+
+        // 2. Animate Rules Loop
+        for (const rule of TAMIL_RULE_LIST) {
+            await new Promise(resolve => setTimeout(resolve, 600)); // 600ms delay per rule
+            setCompletedRules(prev => [...prev, rule.id]);
+        }
+
+        // Short pause after all done
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // 3. Process Actual Prediction
         setMatchChart(chart);
         if (details) setMatchDetails(details);
         const resDetails = {};
@@ -962,6 +1068,9 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
         const avgB = countB > 0 ? (scoreB / countB).toFixed(1) : 0;
 
         setResults({ details: resDetails, scoreA: avgA, scoreB: avgB, totalA: scoreA, totalB: scoreB });
+
+        // 4. Close Rule Dialog
+        setRuleDialogOpen(false);
     };
 
     // --- MOBILE RESPONSIVE HOOK ---
@@ -1596,6 +1705,10 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                     </DialogContent>
                 </Dialog>
             )}
+
+            {/* RULE ANIMATION POPUP */}
+            <RuleApplyingDialog open={ruleDialogOpen} completedRules={completedRules} />
+
         </Dialog>
     );
 };
