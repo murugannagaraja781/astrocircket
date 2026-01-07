@@ -974,7 +974,7 @@ const PlayersManager = () => {
     const [filterPlace, setFilterPlace] = useState('');
 
     // Selection
-    const [selectedIds, setSelectedIds] = useState([]);
+    const [selectedItems, setSelectedItems] = useState([]);
 
     // Dialog States
     const [openEdit, setOpenEdit] = useState(false);
@@ -1091,9 +1091,13 @@ const PlayersManager = () => {
         }
     };
 
-    const handleSelect = (id) => {
-        if (selectedIds.includes(id)) setSelectedIds(selectedIds.filter(sid => sid !== id));
-        else setSelectedIds([...selectedIds, id]);
+    const handleSelect = (player) => {
+        const exists = selectedItems.find(item => item._id === player._id);
+        if (exists) {
+            setSelectedItems(selectedItems.filter(item => item._id !== player._id));
+        } else {
+            setSelectedItems([...selectedItems, { _id: player._id, id: player.id }]);
+        }
     };
 
     // Generate Preview Logic
@@ -1300,7 +1304,7 @@ const PlayersManager = () => {
                 </Box>
             </Box>
             <Box sx={{ display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap' }}>
-                 {selectedIds.length > 0 && <Button variant="contained" color="secondary" onClick={handleOpenGroupDialog} size="small">Add to Team ({selectedIds.length})</Button>}
+                 {selectedItems.length > 0 && <Button variant="contained" color="secondary" onClick={handleOpenGroupDialog} size="small">Add to Team ({selectedItems.length})</Button>}
                  <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddClick} size="small">Add</Button>
                  <Button variant="outlined" onClick={() => setOpenUpload(true)} size="small">Upload</Button>
             </Box>
@@ -1322,7 +1326,7 @@ const PlayersManager = () => {
                         {players.map((p) => (
                             <TableRow key={p._id} hover>
                                 <TableCell padding="checkbox">
-                                    <input type="checkbox" checked={selectedIds.includes(p.id)} onChange={() => handleSelect(p.id)} style={{ width: 18, height: 18, cursor: 'pointer' }} />
+                                    <input type="checkbox" checked={selectedItems.some(item => item._id === p._id)} onChange={() => handleSelect(p)} style={{ width: 18, height: 18, cursor: 'pointer' }} />
                                 </TableCell>
 {/* ID Cell Removed */}
                                 <TableCell>
@@ -1676,11 +1680,11 @@ const PlayersManager = () => {
                                         try {
                                             await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/add`, {
                                                 groupName: g.name,
-                                                playerIds: selectedIds
+                                                playerIds: selectedItems.map(item => item.id).filter(Boolean)
                                             }, { headers: { 'x-auth-token': token } });
                                             showSnackbar(`Added to ${g.name}`, 'success');
                                             setOpenGroupDialog(false);
-                                            setSelectedIds([]);
+                                            setSelectedItems([]);
                                         } catch (e) { console.error(e); }
                                     }}
                                 >

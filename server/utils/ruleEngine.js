@@ -305,6 +305,17 @@ const evaluatePrediction = async (playerBirthChart, matchDateParams) => {
         bowlingRules.push("Rule 2 (Good): Lords in Moon Star Lord House");
     }
 
+    // Rule 3 (BothInHouse)
+    // Both Player Rasi Lord + Star Lord are in Match Rasi Lord's House -> GOOD (+4)
+    const matchRasiLordOwnedSigns = getPlanetOwnedSigns(matchRasiLord);
+    const pRasiInMatchRasi = isInSigns(playerRasiLordPos, matchRasiLordOwnedSigns);
+    const pStarInMatchRasi = isInSigns(playerStarLordPos, matchRasiLordOwnedSigns);
+
+    if (pRasiInMatchRasi && pStarInMatchRasi) {
+        bowlingScore += 4;
+        bowlingRules.push("Rule 3 (Excellent): Both Lords in Match Rasi Lord House");
+    }
+
     // Rule 3: Lagna Special
     // Match Rasi Lord == Match Lagna Lord
     if (matchRasiLord === matchLagnaLord) {
