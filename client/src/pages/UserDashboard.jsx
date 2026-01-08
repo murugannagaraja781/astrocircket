@@ -530,11 +530,31 @@ const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = fa
                 <Tab label="Panchangam" />
             </Tabs>
 
-            {/* Debug Data Structure - Remove in Prod */}
-            {/* <Box sx={{ p: 1, bgcolor: '#000', color: '#0f0', fontSize: 10, overflow: 'auto', maxHeight: 100 }}>
-                Keys: {JSON.stringify(Object.keys(chartData || {}))}
-                Planets: {JSON.stringify(chartData?.planets ? 'Yes' : 'No')}
-            </Box> */}
+            {/* Debug JSON Toggle */}
+            <Box sx={{ mt: 2, mb: 1 }}>
+                <Button
+                    size="small"
+                    onClick={() => {
+                        console.log(`=== PLAYER JSON (${player.name}) ===`, chartData);
+                        console.log(`=== MATCH JSON ===`, matchData);
+                        const el = document.getElementById(`debug-${player.id || player._id}`);
+                        if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+                    }}
+                    sx={{ fontSize: '0.7rem', color: '#666' }}
+                >
+                    🔍 Debug JSON
+                </Button>
+                <Box id={`debug-${player.id || player._id}`} sx={{ display: 'none', p: 1, bgcolor: '#111', color: '#0f0', fontSize: 10, overflow: 'auto', maxHeight: 200, borderRadius: 1 }}>
+                    <pre>
+{JSON.stringify({
+    playerChart: chartData,
+    matchChart: matchData,
+    batPrediction: batsmanPred,
+    bowlPrediction: bowlerPred
+}, null, 2)}
+                    </pre>
+                </Box>
+            </Box>
 
             {tabIndex === 0 && (
                 <Grid container spacing={2} justifyContent="center">
@@ -1025,6 +1045,9 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
     }, [teamA, teamB, groups]);
 
     const handleMatchReady = async (chart, details) => {
+        console.log("=== MATCH CHART JSON ===", chart);
+        console.log("=== MATCH DETAILS ===", details);
+
         // 1. Open Rule Dialog
         setRuleDialogOpen(true);
         setCompletedRules([]);
