@@ -1126,6 +1126,8 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
             <Paper variant="outlined" sx={{
                 p: isMobile ? 1 : 2,
                 height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
                 bgcolor: isWinner
                     ? (hideHeader ? 'rgba(76, 175, 80, 0.1)' : 'rgba(16, 185, 129, 0.1)')
                     : (hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.02)'), // Slightly darker bg for visibility
@@ -1143,7 +1145,8 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                     pb: 1,
                     display: 'flex',
                     justifyContent: 'space-between',
-                    alignItems: 'center'
+                    alignItems: 'center',
+                    flexShrink: 0
                 }}>
                     <Typography variant="subtitle1" fontWeight="bold" sx={{ color: '#FF6F00', fontSize: isMobile ? '0.9rem' : '1rem' }}>{teamName}</Typography>
                     {results && (
@@ -1153,7 +1156,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
 
                 {/* --- MOBILE VIEW (CARDS) --- */}
                 {isMobile ? (
-                    <Box sx={{ maxHeight: '60vh', overflowY: 'auto' }}>
+                    <Box sx={{ flexGrow: 1, overflowY: 'auto', minHeight: 0 }}>
                         {/* Select All + Filter Button */}
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, pl: 1, gap: 1 }}>
                              <Checkbox
@@ -1256,9 +1259,9 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                     </Box>
                 ) : (
                 /* --- DESKTOP VIEW (TABLE) --- */
-                <Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, overflow: 'hidden' }}>
                     {/* Filter Button for Desktop */}
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1, flexShrink: 0 }}>
                         <Button
                             size="small"
                             variant={filterActive ? "contained" : "outlined"}
@@ -1277,11 +1280,11 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                             {filterActive ? '✓ Filtered' : 'Filter Selected'}
                         </Button>
                     </Box>
-                    <TableContainer sx={{ maxHeight: 400 }}>
+                    <TableContainer sx={{ flexGrow: 1, overflow: 'auto', minHeight: 0 }}>
                     <Table size="small" stickyHeader>
                         <TableHead>
                             <TableRow>
-                                <TableCell padding="checkbox" sx={{ bgcolor: 'transparent' }}>
+                                <TableCell padding="checkbox" sx={{ bgcolor: 'white' }}>
                                     <Checkbox
                                         size="small"
                                         indeterminate={
@@ -1300,11 +1303,11 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                         }}
                                     />
                                 </TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#FF6F00' }}>Name</TableCell>
+                                <TableCell sx={{ fontWeight: 'bold', bgcolor: 'white', color: '#FF6F00' }}>Name</TableCell>
 {/* ID Column Header Removed */}
                                 {/* <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#FF6F00' }}>DOB / Time</TableCell> */}
                                 {/* <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#FF6F00' }}>Place</TableCell> */}
-                                {results && <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#FF6F00' }}>Pred.</TableCell>}
+                                {results && <TableCell sx={{ fontWeight: 'bold', bgcolor: 'white', color: '#FF6F00' }}>Pred.</TableCell>}
                             </TableRow>
                         </TableHead>
                         <TableBody>
