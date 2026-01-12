@@ -1,0 +1,40 @@
+🔹 RAHU / KETU RULE
+Same as batting:
++4
+Dignity: +4
+
+
+🔹 LAGNA RULE
+If:
+Match Lagna Lord = Player Rasi Lord
+
+Then: +4 points
+If dignity present: +4 more
+
+If any planet in that house is exalted / own: +4 more
+
+
+🔹 MATCH SIGN LORD RULE(BOWLING ONLY)
+If:
+Match Rasi Lord = Player Rasi Lord
+
+Then: +3 points
+If exalted: +8 points
+
+
+1️⃣1️⃣ SPECIAL NAKSHATRA RULES
+Applied after core rules
+Affect both batting & bowling unless explicitly stated
+Words like:
+Game changer
+Show special player
+Sure flop
+→ are UI labels only
+→ numeric points already defined
+No override.Math only.
+1️⃣2️⃣ FINAL OUTPUT
+Batting Score → numeric
+Bowling Score → numeric
+Net Score = Batting + Bowling
+Zero score → show 0
+No semantic meaning enforced by engine

@@ -992,7 +992,8 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
     const [selectedPlayers, setSelectedPlayers] = useState([]);
     const [matchChart, setMatchChart] = useState(null);
     const [results, setResults] = useState(null);
-    const [filterActive, setFilterActive] = useState(false); // Filter to show selected first
+    const [filterA, setFilterA] = useState(false);
+    const [filterB, setFilterB] = useState(false);
     const [matchDetails, setMatchDetails] = useState({
         date: new Date().toISOString().split('T')[0],
         time: '19:30',
@@ -1114,7 +1115,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
         else setSelectedPlayers(prev => [...prev, pid]);
     };
 
-    const renderPlayerList = (teamId, teamName) => {
+    const renderPlayerList = (teamId, teamName, filterActive, setFilterActive) => {
         const grp = groups.find(g => g._id === teamId);
         if (!grp) return null;
 
@@ -1198,6 +1199,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
 
                         {/* Player List - sorted by selection when filter is active */}
                         {[...grp.players]
+                            .filter(p => !filterActive || selectedPlayers.includes(p.id))
                             .sort((a, b) => {
                                 if (!filterActive) return 0;
                                 const aSelected = selectedPlayers.includes(a.id);
@@ -1224,7 +1226,12 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                     transition: 'all 0.2s ease',
                                     boxShadow: isSel ? '0 2px 8px rgba(255, 111, 0, 0.2)' : '0 1px 3px rgba(0,0,0,0.05)'
                                 }} onClick={() => results ? toggleRules(p.id) : togglePlayer(p.id)}>
-                                    <Checkbox checked={isSel} size="small" sx={{ p: 0 }} />
+                                    <Checkbox
+                                        checked={isSel}
+                                        size="small"
+                                        sx={{ p: 0 }}
+                                        onClick={(e) => { e.stopPropagation(); togglePlayer(p.id); }}
+                                    />
                                     {/* Avatar Hidden on Mobile as per request */}
                                     {/* <Avatar src={p.profile} sx={{ width: 40, height: 40, fontSize: 14 }}>{p.name[0]}</Avatar> */}
                                     <Box sx={{ flexGrow: 1, ml: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 0.5 }}>
@@ -1312,6 +1319,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                         </TableHead>
                         <TableBody>
                             {[...grp.players]
+                                .filter(p => !filterActive || selectedPlayers.includes(p.id))
                                 .sort((a, b) => {
                                     if (!filterActive) return 0;
                                     const aSelected = selectedPlayers.includes(a.id);
@@ -1337,7 +1345,11 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                         }}
                                     >
                                         <TableCell padding="checkbox">
-                                            <Checkbox checked={isSel} size="small" />
+                                            <Checkbox
+                                                checked={isSel}
+                                                size="small"
+                                                onClick={(e) => { e.stopPropagation(); togglePlayer(p.id); }}
+                                            />
                                         </TableCell>
                                         <TableCell>
                                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -1615,11 +1627,11 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                     <>
                         {/* TEAM A - LEFT */}
                         <Box sx={{ flex: 1, overflow: 'auto' }}>
-                            {renderPlayerList(teamA, groups.find(g => g._id === teamA)?.name)}
+                            {renderPlayerList(teamA, groups.find(g => g._id === teamA)?.name, filterA, setFilterA)}
                         </Box>
                         {/* TEAM B - RIGHT */}
                         <Box sx={{ flex: 1, overflow: 'auto' }}>
-                            {renderPlayerList(teamB, groups.find(g => g._id === teamB)?.name)}
+                            {renderPlayerList(teamB, groups.find(g => g._id === teamB)?.name, filterB, setFilterB)}
                         </Box>
                     </>
                 ) : (

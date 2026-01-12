@@ -997,6 +997,7 @@ const PlayersManager = () => {
     const [placeInputValue, setPlaceInputValue] = useState('');
     const [placeOptions, setPlaceOptions] = useState([]);
     const [placeLoading, setPlaceLoading] = useState(false);
+    const [timezoneLoading, setTimezoneLoading] = useState(false);
     const searchTimeout = React.useRef(null);
 
     // State for Viewing Chart & Table
@@ -1213,20 +1214,32 @@ const PlayersManager = () => {
         } catch (err) { console.error(err); } finally { setPlaceLoading(false); }
     };
 
-    const fetchTimezone = async (lat, long) => {
-        try {
-            console.log(`Fetching timezone for lat: ${lat}, long: ${long}`);
-            const res = await axios.get(`https://api.open-meteo.com/v1/forecast`, { params: { latitude: lat, longitude: long, current_weather: true, timezone: 'auto' } });
-            console.log('Timezone Fetch Result:', res.data.utc_offset_seconds / 3600);
-            return res.data.utc_offset_seconds / 3600;
-        } catch (err) {
-            console.error('Timezone Fetch Error:', err);
-            return null;
+    const fetchTimezone = (lat, long) => {
+        console.log(`Calculating timezone for lat: ${lat}, long: ${long}`);
+
+        const lonNum = parseFloat(long);
+        if (isNaN(lonNum)) {
+             console.error("Invalid longitude for calculation:", long);
+             return null;
         }
+
+        // Step 1: calculate raw offset
+        let offset = lonNum / 15;
+
+        // Step 2: round to nearest whole hour
+        offset = Math.round(offset);
+
+        // Step 3: clamp to valid timezone range
+        if (offset > 14) offset = 14;
+        if (offset < -12) offset = -12;
+
+        console.log('Calculated Offset:', offset);
+        return offset;
     };
 
     const handlePlaceInputChange = (e, val) => {
-        setPlaceInputValue(val); setPlayerForm({...playerForm, birthPlace: val});
+        setPlaceInputValue(val);
+        setPlayerForm(prev => ({...prev, birthPlace: val}));
         if (searchTimeout.current) clearTimeout(searchTimeout.current);
         searchTimeout.current = setTimeout(() => fetchPlaces(val), 800);
     };
@@ -1235,11 +1248,26 @@ const PlayersManager = () => {
         console.log('Place Selected:', val);
         if (val && typeof val === 'object') {
             // Selected from list
-            setPlayerForm({ ...playerForm, birthPlace: val.label, latitude: val.lat, longitude: val.long });
-            const tz = await fetchTimezone(val.lat, val.long);
-            if (tz !== null) {
-                console.log('Setting Timezone:', tz);
-                setPlayerForm(prev => ({ ...prev, timezone: tz }));
+            // Update place first
+            setPlayerForm(prev => ({ ...prev, birthPlace: val.label, latitude: val.lat, longitude: val.long }));
+
+            // Check for valid lat/long before fetching
+            // Use explicit undefined check to allow 0 (Equator/Prime Meridian)
+            if (val.lat !== undefined && val.long !== undefined) {
+                setTimezoneLoading(true);
+                try {
+                    const tz = fetchTimezone(val.lat, val.long);
+                    if (tz !== null) {
+                        console.log('Setting Timezone:', tz);
+                        setPlayerForm(prev => ({ ...prev, timezone: tz, manualTimezone: false }));
+                    } else {
+                         console.warn('Could not calculate timezone.');
+                    }
+                } catch (error) {
+                    console.error("Error updating timezone:", error);
+                } finally {
+                    setTimezoneLoading(false);
+                }
             }
         } else if (typeof val === 'string' && val.trim().length > 0) {
             // Free typed string - Auto-resolve best match
@@ -1259,20 +1287,23 @@ const PlayersManager = () => {
                     console.log('Auto-resolved to:', bestMatch.display_name);
 
                     // 2. Update form with resolved place
-                    // We preserve the user's typed name or use the formal one?
-                    // Usually safer to use the formal one so they know it was detected,
-                    // BUT user might prefer their short name. Let's keep formal for clarity
-                    // or just update lat/long hiddenly. Let's update birthPlace to formal to confirm detection.
+                    setPlayerForm(prev => ({
+                        ...prev,
+                        birthPlace: bestMatch.display_name,
+                        latitude: lat,
+                        longitude: long
+                    }));
 
-                    const tz = await fetchTimezone(lat, long);
+                    // 3. Fetch Timezone
+                    setTimezoneLoading(true);
+                    const tz = fetchTimezone(lat, long);
 
                     setPlayerForm(prev => ({
                         ...prev,
-                        birthPlace: bestMatch.display_name, // Update to full name to show we found it
-                        latitude: lat,
-                        longitude: long,
-                        timezone: tz !== null ? tz : prev.timezone
+                        timezone: tz !== null ? tz : prev.timezone,
+                        manualTimezone: tz !== null ? false : prev.manualTimezone
                     }));
+                     setTimezoneLoading(false);
 
                 } else {
                     console.warn('No match found for manual entry');
@@ -1282,6 +1313,8 @@ const PlayersManager = () => {
                 console.error('Auto-resolve error:', err);
             } finally {
                 setPlaceLoading(false);
+                 // Ensure timezone loading is off if we missed the inner finally
+                 setTimezoneLoading(false);
             }
         }
     };
@@ -1309,7 +1342,7 @@ const PlayersManager = () => {
                  <Button variant="outlined" onClick={() => setOpenUpload(true)} size="small">Upload</Button>
             </Box>
 
-            <TableContainer component={Paper} sx={{ maxHeight: '60vh' }}>
+            <TableContainer component={Paper} sx={{ maxHeight: '75vh', overflow: 'auto', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.08)' }}>
                 <Table stickyHeader size={isMobile ? "small" : "medium"}>
                     <TableHead>
                         <TableRow>
@@ -1424,61 +1457,59 @@ const PlayersManager = () => {
                             )}
                         />
 
-                        {/* Cricket Nations Timezone Helper */}
-                        <Box sx={{ mb: 1 }}>
-                            <Typography variant="caption" color="textSecondary">Quick Select (Cricket Nations)</Typography>
-                            <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', mt: 0.5 }}>
-                                {[
-                                    { l: '🇦🇫 AFG', v: 4.5 },
-                                    { l: '🇦🇺 AUS', v: 10 },
-                                    { l: '🇧🇩 BAN', v: 6 },
-                                    { l: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 ENG', v: 1 },
-                                    { l: '🇮🇳 IND', v: 5.5 },
-                                    { l: '🇮🇪 IRE', v: 1 },
-                                    { l: '🇳🇿 NZ', v: 12 },
-                                    { l: '🇵🇰 PAK', v: 5 },
-                                    { l: '🇿🇦 SA', v: 2 },
-                                    { l: '🇱🇰 SL', v: 5.5 },
-                                    { l: '🏝️ WI', v: -4 },
-                                    { l: '🇿🇼 ZIM', v: 2 },
-                                    { l: '🏴󠁧󠁢󠁳󠁣󠁴󠁿 SCO', v: 1 },
-                                    { l: '🇳🇱 NED', v: 2 },
-                                    { l: '🇦🇪 UAE', v: 4 },
-                                    { l: '🇺🇸 USA', v: -4 },
-                                    { l: '🇳🇵 NEP', v: 5.75 },
-                                    { l: '🇨🇦 CAN', v: -4 },
-                                    { l: '🇴🇲 OMA', v: 4 },
-                                    { l: '🇵🇬 PNG', v: 10 },
-                                    { l: '🇰🇪 KEN', v: 3 },
-                                    { l: '🇭🇰 HK', v: 8 }
-                                ].slice(0, showAllNations ? undefined : 12).map((tz) => (
-                                    <Chip
-                                        key={tz.l}
-                                        label={tz.l}
-                                        size="small"
-                                        onClick={() => setPlayerForm(prev => ({ ...prev, timezone: tz.v, manualTimezone: true }))}
-                                        clickable
-                                        variant="outlined"
-                                        color={playerForm.timezone == tz.v ? "primary" : "default"}
-                                    />
-                                ))}
-                                <Chip
-                                    label={showAllNations ? "Show Less" : "Show More"}
-                                    size="small"
-                                    onClick={() => setShowAllNations(!showAllNations)}
-                                    clickable
-                                    color="secondary"
-                                    variant="filled"
-                                    sx={{ fontWeight: 'bold' }}
-                                />
-                            </Box>
-                        </Box>
+
+
+
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <TextField
                                 label="Timezone (Auto)"
                                 value={playerForm.timezone || ''}
-                                onChange={(e) => setPlayerForm({...playerForm, timezone: e.target.value})}
-                                InputProps={{ readOnly: !playerForm.manualTimezone }}
+                                onChange={(e) => {
+                                     const val = e.target.value;
+                                     setPlayerForm(prev => ({...prev, timezone: val}));
+                                }}
+                                InputProps={{
+                                    readOnly: !playerForm.manualTimezone,
+                                    endAdornment: (
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            {timezoneLoading ? (
+                                                <CircularProgress size={20} />
+                                            ) : (
+                                                 <IconButton
+                                                    size="small"
+                                                    onClick={async (e) => {
+                                                        e.stopPropagation(); // Prevent bubbling issues
+                                                        if (playerForm.latitude && playerForm.longitude) {
+                                                            console.log('Manual refresh clicked');
+                                                            setTimezoneLoading(true);
+                                                            try {
+                                                                const tz = await fetchTimezone(playerForm.latitude, playerForm.longitude);
+                                                                if (tz !== null) {
+                                                                    setPlayerForm(prev => ({ ...prev, timezone: tz, manualTimezone: false }));
+                                                                }
+                                                            } finally {
+                                                                setTimezoneLoading(false);
+                                                            }
+                                                        } else {
+                                                            alert("Please select a valid place first");
+                                                        }
+                                                    }}
+                                                    title="Refresh Timezone"
+                                                    disabled={!playerForm.latitude}
+                                                    sx={{
+                                                        ml: 1,
+                                                        zIndex: 10,
+                                                        color: '#2563eb', // Explicit primary color
+                                                        visibility: 'visible !important', // Force show
+                                                        opacity: 1
+                                                    }}
+                                                >
+                                                    <Box component="span" sx={{ fontSize: '1.2rem', cursor: 'pointer', lineHeight: 1 }}>↻</Box>
+                                                </IconButton>
+                                            )}
+                                        </div>
+                                    )
+                                }}
                                 fullWidth
                                 size="small"
                                 variant={playerForm.manualTimezone ? "outlined" : "filled"}
@@ -1540,7 +1571,7 @@ const PlayersManager = () => {
                         <Box sx={{ mt: 1 }}>
                             <Typography variant="caption" sx={{ mb: 0.5, display: 'block', color: '#A0AEC0' }}>Role</Typography>
                             <Box sx={{ display: 'flex', gap: 1 }}>
-                                {['BAT', 'BOWL'].map((role) => (
+                                {['BAT', 'BOWL', 'ALL'].map((role) => (
                                     <Button
                                         key={role}
                                         variant={playerForm.role === role ? 'contained' : 'outlined'}
@@ -1599,6 +1630,11 @@ const PlayersManager = () => {
                                 <Box sx={{ height: 300, width: '100%', display: 'flex', justifyContent: 'center' }}>
                                      <RasiChart data={previewChart} style={{ width: '100%', height: '100%' }} />
                                 </Box>
+                                {previewChart.nakshatra && (
+                                    <Typography variant="body1" align="center" sx={{ mt: 2, fontWeight: 'bold', color: 'primary.main' }}>
+                                        Star: {previewChart.nakshatra.name} ({previewChart.nakshatra.tamil})
+                                    </Typography>
+                                )}
                                 <Typography variant="caption" color="textSecondary" align="center" display="block" sx={{ mt: 1 }}>
                                     Check if planets are in correct signs.
                                 </Typography>
