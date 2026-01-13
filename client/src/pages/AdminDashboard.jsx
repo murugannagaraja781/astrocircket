@@ -1633,6 +1633,8 @@ const PlayersManager = () => {
                                 {previewChart.nakshatra && (
                                     <Typography variant="body1" align="center" sx={{ mt: 2, fontWeight: 'bold', color: 'primary.main' }}>
                                         Star: {previewChart.nakshatra.name} ({previewChart.nakshatra.tamil})
+                                        {/* Add Athipathi */}
+                                        {previewChart.nakshatra.lord && ` - Athipathi: ${previewChart.nakshatra.lord} (${previewChart.nakshatra.lordTamil || '-'})`}
                                     </Typography>
                                 )}
                                 <Typography variant="caption" color="textSecondary" align="center" display="block" sx={{ mt: 1 }}>

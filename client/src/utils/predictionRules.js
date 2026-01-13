@@ -1,16 +1,6 @@
 /**
  * === ASTRO CRICKET PREDICTION RULES ===
- * விதி இயந்திரம் - Vedic Astrology Prediction Rules for Cricket
- *
- * Match Base Data Required:
- * - Match Date, Time, Place
- * - Match Moon Rasi & Star (Rasi Athibathi + Star Athibathi)
- * - Match Lagna Rasi & Star (Lagna Athibathi + Lagna Star Athibathi)
- *
- * Player Data Required:
- * - Player Sign Lord (ராசி அதிபதி)
- * - Player Star Lord (நட்சத்திர அதிபதி)
- * - Player planets positions for conjunction check
+ * Refactored based on finalroulse.txt
  */
 
 // --- Constants & Mappings ---
@@ -102,28 +92,24 @@ const isExaltedOrOwn = (planetName, signName) => {
     return null;
 };
 
-// Check if two planets are in the same sign (conjunction)
-const areConjunct = (chart, planet1, planet2) => {
-    const p1 = getPlanet(chart, planet1);
-    const p2 = getPlanet(chart, planet2);
-    if (!p1 || !p2) return false;
-    return p1.sign === p2.sign;
+// Helper: Check if planet is strong (Exalted or Own)
+const isStrong = (planetName, signName) => {
+    return isExalted(planetName, signName) || isOwnSign(planetName, signName);
 };
 
-// Check if a planet is in a sign owned by another planet
-const isInHouseOf = (chart, planetToCheck, ownerPlanet) => {
-    const p = getPlanet(chart, planetToCheck);
-    if (!p) return false;
-    const signOwner = getSignLord(p.sign);
-    return signOwner === ownerPlanet;
+// Helper: Check if ANY planet in a specific house (sign) is Exalted or Own
+const hasStrongPlanetInHouse = (chart, signName) => {
+    if (!chart || !chart.planets) return false;
+    for (const [name, data] of Object.entries(chart.planets)) {
+        if (data.sign === signName) {
+            if (isStrong(name, data.sign)) return true;
+        }
+    }
+    return false;
 };
 
 // === MAIN PREDICTION ENGINE ===
 
-/**
- * Evaluate Both Batting and Bowling
- * Common Rules for Both
- */
 export const evaluateBatsman = (playerChart, matchChart) => {
     const report = [];
     let score = 0;
@@ -147,151 +133,113 @@ export const evaluateBatsman = (playerChart, matchChart) => {
 
     // Match Data
     const matchRasiLord = getSignLord(mMoon.sign);
-    const matchStarLord = getStarLord(mMoon.nakshatra);
+    // const matchStarLord = getStarLord(mMoon.nakshatra); // Not used in new rules directly? Keep in case.
 
     // Match Lagna Data
     const matchLagnaRasi = mLagna?.sign;
     const matchLagnaLord = getSignLord(matchLagnaRasi);
 
     // ═══════════════════════════════════════════════════════════════════
-    // RULE 1: ZIG ZAG RULE (5 Points - EXCELLENT)
-    // Match Rasi+Star Lords ↔ Player Rasi+Star Lords (Reverse Match)
-    // Ex: Match = Guru + Pudhan, Player = Pudhan + Guru
+    // 1. RAHU / KETU RULE
+    // If Player Star Lord is Rahu or Ketu
     // ═══════════════════════════════════════════════════════════════════
-    if (matchRasiLord && matchStarLord && playerRasiLord && playerStarLord) {
-        if (matchRasiLord === playerStarLord && matchStarLord === playerRasiLord) {
-            score += 5;
-            report.push(`Rule 1 (ZigZag): மேட்ச் (${matchRasiLord}+${matchStarLord}) ↔ பிளேயர் (${playerRasiLord}+${playerStarLord}) → EXCELLENT (+5)`);
-        }
-    }
+    if (playerStarLord === 'Rahu' || playerStarLord === 'Ketu') {
+        score += 4;
+        let log = `Rahu/Ketu Rule: பிளேயர் நட்சத்திர அதிபதி ${playerStarLord} (+4)`;
 
-    // ═══════════════════════════════════════════════════════════════════
-    // RULE 2: STAR RULE (2-4 Points)
-    // Match Star Lord = Player Sign Lord OR Player Star Lord
-    // பிளேயரின் ராசி அதிபதி or நட்சத்திர அதிபதி உடன் மேட்ச் நட்சத்திர அதிபதி இணைந்து உள்ளதா
-    // ═══════════════════════════════════════════════════════════════════
-    if (matchStarLord && (playerRasiLord || playerStarLord)) {
-        let rule2Matched = false;
-        let matchedWith = '';
-        let matchedPlanet = null;
-
-        // Check if Match Star Lord = Player Rasi Lord
-        if (matchStarLord === playerRasiLord) {
-            rule2Matched = true;
-            matchedWith = 'ராசி அதிபதி';
-            matchedPlanet = playerRasiLord;
-        }
-        // Check if Match Star Lord = Player Nakshatra Lord
-        else if (matchStarLord === playerStarLord) {
-            rule2Matched = true;
-            matchedWith = 'நட்சத்திர அதிபதி';
-            matchedPlanet = playerStarLord;
-        }
-
-        if (rule2Matched) {
-            const matchedPlanetObj = getPlanet(playerChart, matchedPlanet);
-            const dignity = matchedPlanetObj ? isExaltedOrOwn(matchedPlanet, matchedPlanetObj.sign) : null;
-
+        // Dignity Check (Check Rahu/Ketu dignity in Player Chart?)
+        // Usually dignity is checked where the planet is positioned.
+        // Assuming we check the Player's Rahu/Ketu dignity in the PLAYER chart.
+        const pStarLordObj = getPlanet(playerChart, playerStarLord);
+        if (pStarLordObj) {
+            const dignity = isExaltedOrOwn(playerStarLord, pStarLordObj.sign);
             if (dignity) {
                 score += 4;
-                report.push(`Rule 2 (Star): மேட்ச் நட்சத்திர அதிபதி (${matchStarLord}) = பிளேயர் ${matchedWith}, ${dignity.tamil} → GOOD (+4)`);
-            } else {
-                score += 2;
-                report.push(`Rule 2 (Star): மேட்ச் நட்சத்திர அதிபதி (${matchStarLord}) = பிளேயர் ${matchedWith} (${matchedPlanet}) → GOOD (+2)`);
+                log += `, Dignity (${dignity.tamil}) ok (+4)`;
             }
         }
+        report.push(log);
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    // RULE 3: PLAYER SIGN LORD HOUSE RULE (2 Points)
-    // Player Rasi Lord's house has both Match Rasi Lord & Match Star Lord
-    // (Match Rasi+Star Lords are same)
+    // 2. LAGNA RULE
+    // If Match Lagna Lord = Player Rasi Lord
     // ═══════════════════════════════════════════════════════════════════
-    if (matchRasiLord && matchStarLord && matchRasiLord === matchStarLord) {
-        score += 2;
-        report.push(`Rule 3 (House): மேட்ச் ராசி அதிபதி + நட்சத்திர அதிபதி ஒன்று (${matchRasiLord}) → GOOD (+2)`);
-    }
+    if (matchLagnaLord && playerRasiLord && matchLagnaLord === playerRasiLord) {
+        score += 4;
+        let log = `Lagna Rule: மேட்ச் லக்னாதிபதி = பிளேயர் ராசி அதிபதி (${matchLagnaLord}) (+4)`;
 
-    // ═══════════════════════════════════════════════════════════════════
-    // RULE 4: SAME HOUSE RULE (3 Points)
-    // Player Sign Lord AND Star Lord in Match Star Lord's house
-    // ═══════════════════════════════════════════════════════════════════
-    if (matchStarLord && playerRasiLord && playerStarLord) {
-        const pRasiLordInMatchStarHouse = isInHouseOf(playerChart, playerRasiLord, matchStarLord);
-        const pStarLordInMatchStarHouse = isInHouseOf(playerChart, playerStarLord, matchStarLord);
-
-        if (pRasiLordInMatchStarHouse || pStarLordInMatchStarHouse) {
-            score += 3;
-            report.push(`Rule 4 (SameHouse): பிளேயர் அதிபதி(கள்) மேட்ச் நட்சத்திர அதிபதி (${matchStarLord}) வீட்டில் → GOOD (+3)`);
-        }
-    }
-
-    // ═══════════════════════════════════════════════════════════════════
-    // RULE 5: CONJUNCTION RULE (2-4 Points)
-    // Match Star Lord conjunct with Player Rasi Lord OR Star Lord
-    // ═══════════════════════════════════════════════════════════════════
-    if (matchStarLord && playerRasiLord) {
-        // Check in Player Chart if these planets are conjunct
-        const mStarLordInPlayer = getPlanet(playerChart, matchStarLord);
-        const pRasiLordObj = getPlanet(playerChart, playerRasiLord);
-        const pStarLordObj = getPlanet(playerChart, playerStarLord);
-
-        let conjunctFound = false;
-        let conjunctPlanet = '';
-
-        if (mStarLordInPlayer && pRasiLordObj && mStarLordInPlayer.sign === pRasiLordObj.sign) {
-            conjunctFound = true;
-            conjunctPlanet = playerRasiLord;
-        } else if (mStarLordInPlayer && pStarLordObj && mStarLordInPlayer.sign === pStarLordObj.sign) {
-            conjunctFound = true;
-            conjunctPlanet = playerStarLord;
-        }
-
-        if (conjunctFound) {
-            const dignityCheck = isExaltedOrOwn(conjunctPlanet, getPlanet(playerChart, conjunctPlanet)?.sign);
-            if (dignityCheck) {
+        // If dignity present (Player Rasi Lord's dignity in Match Chart? Or Player Chart?)
+        // "If dignity present": Logic implies checking the Planet (Player Rasi Lord) strength.
+        // Standard practice: Check planet status in the MATCH chart (transit).
+        const pRasiLordInMatch = getPlanet(matchChart, playerRasiLord);
+        if (pRasiLordInMatch) {
+            const dignity = isExaltedOrOwn(playerRasiLord, pRasiLordInMatch.sign);
+            if (dignity) {
                 score += 4;
-                report.push(`Rule 5 (Conjunction): மேட்ச் நட்சத்திர அதிபதி (${matchStarLord}) + பிளேயர் (${conjunctPlanet}) இணைப்பு, ${dignityCheck.tamil} → GOOD (+4)`);
-            } else {
-                score += 2;
-                report.push(`Rule 5 (Conjunction): மேட்ச் நட்சத்திர அதிபதி (${matchStarLord}) + பிளேயர் (${conjunctPlanet}) இணைப்பு → GOOD (+2)`);
+                log += `, Dignity (${dignity.tamil}) (+4)`;
             }
         }
-    }
 
-    // ═══════════════════════════════════════════════════════════════════
-    // RULE 6: LAGNA RULE (2-4 Points)
-    // Match Lagna Rasi = Player Sign Lord's Sign
-    // ═══════════════════════════════════════════════════════════════════
-    if (matchLagnaRasi && playerRasiLord) {
-        const playerRasiLordObj = getPlanet(playerChart, playerRasiLord);
-
-        if (playerRasiLordObj && playerRasiLordObj.sign === matchLagnaRasi) {
-            const dignityCheck = isExaltedOrOwn(playerRasiLord, playerRasiLordObj.sign);
-            if (dignityCheck) {
+        // If any planet in that house is exalted / own: +4 more
+        // "That house" = Match Lagna House
+        if (matchLagnaRasi) {
+            const hasStrong = hasStrongPlanetInHouse(matchChart, matchLagnaRasi);
+            if (hasStrong) {
                 score += 4;
-                report.push(`Rule 6 (Lagna): மேட்ச் லக்னம் (${matchLagnaRasi}) = பிளேயர் ராசி அதிபதி இடம், ${dignityCheck.tamil} → GOOD (+4)`);
-            } else {
-                score += 2;
-                report.push(`Rule 6 (Lagna): மேட்ச் லக்னம் (${matchLagnaRasi}) ல் பிளேயர் ராசி அதிபதி (${playerRasiLord}) → GOOD (+2)`);
+                log += `, Strong Planet in Lagna (+4)`;
             }
         }
+        report.push(log);
     }
 
     // --- Final Verdict ---
     let label = "Flop";
-    if (score >= 5) label = "Excellent";
-    else if (score >= 3) label = "Very Good";
-    else if (score >= 2) label = "Good";
-    else if (score >= 1) label = "Average";
+    if (score >= 4) label = "Good"; // Adjusted scale slightly for new points?
+    if (score >= 8) label = "Excellent";
 
     return { score, label, report };
 };
 
-// Bowling uses the same rules
 export const evaluateBowler = (playerChart, matchChart) => {
-    // Same rules apply for bowling
-    return evaluateBatsman(playerChart, matchChart);
+    // START with Batting Rules (Common Rules)
+    const baseResult = evaluateBatsman(playerChart, matchChart);
+    let { score, report } = baseResult;
+
+    if (!playerChart || !matchChart) return baseResult;
+
+    const pMoon = getPlanet(playerChart, "Moon");
+    const mMoon = getPlanet(matchChart, "Moon");
+
+    if (!pMoon || !mMoon) return baseResult;
+
+    const playerRasiLord = getSignLord(pMoon.sign);
+    const matchRasiLord = getSignLord(mMoon.sign);
+
+    // ═══════════════════════════════════════════════════════════════════
+    // 3. MATCH SIGN LORD RULE (BOWLING ONLY)
+    // If Match Rasi Lord = Player Rasi Lord
+    // ═══════════════════════════════════════════════════════════════════
+    if (matchRasiLord && playerRasiLord && matchRasiLord === playerRasiLord) {
+        score += 3;
+        let log = `Match Sign Lord Rule: மேட்ச் ராசி அதிபதி = பிளேயர் ராசி அதிபதி (${matchRasiLord}) (+3)`;
+
+        // If exalted: +8 points
+        // Check if Match Rasi Lord is Exalted in Match Chart?
+        const mRasiLordObj = getPlanet(matchChart, matchRasiLord);
+        if (mRasiLordObj && isExalted(matchRasiLord, mRasiLordObj.sign)) {
+            score += 8;
+            log += `, Exalted (உச்சம்) (+8)`;
+        }
+        report.push(log);
+    }
+
+    // Recalculate Label
+    let label = "Flop";
+    if (score >= 4) label = "Good";
+    if (score >= 8) label = "Excellent";
+
+    return { score, label, report };
 };
 
 // Export helper for UI

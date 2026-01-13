@@ -1287,7 +1287,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                             {filterActive ? '✓ Filtered' : 'Filter Selected'}
                         </Button>
                     </Box>
-                    <TableContainer sx={{ flexGrow: 1, overflow: 'auto', minHeight: 0 }}>
+                    <TableContainer sx={{ flexGrow: 1, overflow: 'auto', minHeight: 0, maxHeight: 'calc(100vh - 240px)' }}>
                     <Table size="small" stickyHeader>
                         <TableHead>
                             <TableRow>
@@ -1784,7 +1784,8 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                         <Box sx={{ mt: 2, p: 1.5, bgcolor: '#ecfdf5', borderRadius: 1, border: '1px solid #059669' }}>
                             <Typography variant="body2" fontWeight="bold">
                                 🏠 லக்னம்: {matchChart.ascendant?.tamil} ({matchChart.ascendant?.name}) |
-                                ⭐ நட்சத்திரம்: {matchChart.ascendant?.nakshatra?.tamil}
+                                ⭐ நட்சத்திரம்: {matchChart.ascendant?.nakshatra?.tamil} |
+                                அதிபதி: {matchChart.ascendant?.nakshatra?.lordTamil || matchChart.ascendant?.nakshatra?.lord || '-'}
                             </Typography>
                         </Box>
                     </DialogContent>

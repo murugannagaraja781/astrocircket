@@ -548,7 +548,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                                 {matchChartResult.moonNakshatra?.tamil || matchChartResult.moonNakshatra?.name || matchChartResult.nakshatra?.name || '-'}
                                             </TableCell>
                                             <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
-                                                {matchChartResult.moonNakshatra?.lordTamil || matchChartResult.moonNakshatra?.lord || '-'}
+                                                {matchChartResult.moonNakshatra?.lordTamil || matchChartResult.moonNakshatra?.lord || getNakshatraLordHelper(matchChartResult.moonNakshatra?.name || matchChartResult.nakshatra?.name) || '-'}
                                             </TableCell>
                                         </TableRow>
 

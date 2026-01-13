@@ -127,62 +127,22 @@ const evaluatePrediction = (playerBirthChart, matchParams) => {
         }
     };
 
-    /* ================= CORE RULES ("11 SPECIAL NAKSHATRA RULES") ================= */
-    /* Applied to BOTH Batting and Bowling */
-
-    // Rule 1: ZigZag Rule (+12)
-    if (matchRasiLord === playerStarLord && matchStarLord === playerRasiLord) {
-        addRule('Rule 1: ZigZag', 12);
-    }
-
-    // Rule 2: Conjunction Rule (+4 / +8)
-    if (isConjoined(mStarLordPos_M, pRasiLordPos_M) || isConjoined(mStarLordPos_M, pStarLordPos_M)) {
-        const strong = isStrong(matchStarLord, mStarLordPos_M.longitude);
-        addRule('Rule 2: Conjunction', strong ? 8 : 4);
-    }
-
-    // Rule 3: Star Rule (+4 / +8)
-    if (matchStarLord === playerRasiLord || matchStarLord === playerStarLord) {
-        const strong = isStrong(matchStarLord, mStarLordPos_M.longitude);
-        addRule('Rule 3: Star', strong ? 8 : 4);
-    }
-
-    // Rule 4: Double Match Rule (+4 / +8)
-    if (matchRasiLord === matchStarLord) {
-        const strong = isStrong(matchRasiLord, mRasiLordPos_M.longitude);
-        addRule('Rule 4: Double Match', strong ? 8 : 4);
-    }
-
-    // Rule 5: Same House Rule (+4 / +8)
-    if (isInHouseOf(pRasiLordPos_M, matchStarLord) && isInHouseOf(pStarLordPos_M, matchStarLord)) {
-        const strong = isStrong(matchStarLord, mStarLordPos_M.longitude);
-        addRule('Rule 5: Same House', strong ? 8 : 4);
-    }
-
-    // Rule 6: General Conjunction Rule (+4 / +8)
-    if (isConjoined(mStarLordPos_P, pRasiLordPos_P) || isConjoined(mStarLordPos_P, pStarLordPos_P)) {
-        const strong = isStrong(matchStarLord, mStarLordPos_P.longitude);
-        addRule('Rule 6: General Conjunction', strong ? 8 : 4);
-    }
-
-    // Special Rule 1: Special Conjunction (+6 / +10)
-    // (Kept as part of the core set)
-    if (isConjoined(mRasiLordPos_M, mStarLordPos_M) && isInHouseOf(mRasiLordPos_M, playerRasiLord)) {
-        const strong = isStrong(matchRasiLord, mRasiLordPos_M.longitude);
-        addRule('Special Rule 1', strong ? 10 : 6);
-    }
-
     /* ================= RAHU / KETU RULE ================= */
-    // Same as batting (Applies to Both via 'both' or just Batting?)
-    // "Affect both... unless explicitly stated"
-    // Header says "RAHU / KETU RULE". Text: "Same as batting".
-    // I'll apply to BOTH to be safe, or just keep it as a core rule.
     if (["Rahu", "Ketu"].includes(playerStarLord)) {
         // Base +4
-        // Dignity +4
-        const pStarStrong = isStrong(playerStarLord, pStarLordPos_M.longitude); // Check dignity in Match Chart
-        const points = 4 + (pStarStrong ? 4 : 0);
-        addRule('Rahu/Ketu Rule', points);
+        let points = 4;
+        let reasons = ["Base (+4)"];
+
+        // Dignity +4 (Check Player Star Lord dignity in Player Chart)
+        if (pStarLordPos_P) {
+            const pStarStrong = isStrong(playerStarLord, pStarLordPos_P.longitude);
+            if (pStarStrong) {
+                points += 4;
+                reasons.push("Dignity (+4)");
+            }
+        }
+
+        addRule(`Rahu/Ketu Rule: ${reasons.join(', ')}`, points);
     }
 
     /* ================= LAGNA RULE ================= */
@@ -192,11 +152,13 @@ const evaluatePrediction = (playerBirthChart, matchParams) => {
         let reasons = ["Base (+4)"];
 
         // If dignity present: +4 more
-        // Dignity of Player Rasi Lord (who is also Match Lagna Lord)
-        const pRasiStrong = isStrong(playerRasiLord, pRasiLordPos_M.longitude);
-        if (pRasiStrong) {
-            points += 4;
-            reasons.push("Dignity (+4)");
+        // Dignity of Player Rasi Lord (in Match Chart - Transit strength)
+        if (pRasiLordPos_M) {
+            const pRasiStrong = isStrong(playerRasiLord, pRasiLordPos_M.longitude);
+            if (pRasiStrong) {
+                points += 4;
+                reasons.push("Dignity (+4)");
+            }
         }
 
         // If any planet in that house is exalted / own: +4 more
@@ -212,17 +174,19 @@ const evaluatePrediction = (playerBirthChart, matchParams) => {
     /* ================= MATCH SIGN LORD RULE (BOWLING ONLY) ================= */
     // Match Rasi Lord = Player Rasi Lord
     if (matchRasiLord === playerRasiLord) {
-        // If exalted: +8 points (Total 8). Else +3.
-        const mRasiStrong = isStrong(matchRasiLord, mRasiLordPos_M.longitude);
-        addRule('Match Sign Lord Rule', mRasiStrong ? 8 : 3, 'bowl');
+        let points = 3;
+        // Check if Exalted specifically? (Client logic: +8 if exalted)
+        // Using isStrong (Exalted/Own) as general check, but if strict Exalt needed:
+        const q = calculateDignity(matchRasiLord, mRasiLordPos_M.longitude).english;
+        if (q === 'Exalted') {
+            points = 8;
+        }
+        addRule('Match Sign Lord Rule', points, 'bowl');
     }
 
     /* ================= FINAL OUTPUT ================= */
     // Net Score
     const netScore = batting.score + bowling.score;
-
-    // Zero score show 0 (already handled by numeric type)
-    // No semantic meaning enforced.
 
     return {
         batting,
