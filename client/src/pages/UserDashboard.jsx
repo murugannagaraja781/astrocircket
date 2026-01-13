@@ -694,14 +694,16 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewCha
     // Use first letter of name for Avatar
     const avatarLetter = player.name ? player.name.charAt(0).toUpperCase() : '?';
 
-    // Calculate Permissions if Match Chart is available AND player is selected
+    // Calculate Permissions if Match Chart is available
     let batResult = null;
     let bowlResult = null;
 
-    if (matchChart && chart && isSelected) {
+    if (matchChart && chart) {
         batResult = runPrediction(chart, matchChart.data || matchChart, "BAT");
         bowlResult = runPrediction(chart, matchChart.data || matchChart, "BOWL");
     }
+
+    const isSpecialPlayer = batResult?.isSpecial || bowlResult?.isSpecial;
 
     return (
         <>
@@ -752,6 +754,14 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewCha
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
                                     {player.name} {getFlag(player)}
+                                    {isSpecialPlayer && (
+                                        <Chip
+                                            label="SPECIAL"
+                                            size="small"
+                                            color="secondary"
+                                            sx={{ ml: 1, height: 20, fontSize: '0.65rem', fontWeight: 'bold' }}
+                                        />
+                                    )}
                                 </Typography>
                                 <IconButton
                                     size="small"

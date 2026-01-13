@@ -93,6 +93,7 @@ export const runPrediction = (playerChart, matchChart, role = "BAT") => {
         confidence: finalResult.confidence,
         color: finalResult.color,
         // Rule 2 flag for UI to show special split indicator
-        isRule2Split: engineOutput.rule2Applied || (isBowling && engineOutput.score <= -5)
+        isRule2Split: engineOutput.rule2Applied || (isBowling && engineOutput.score <= -5),
+        isSpecial: engineOutput.isSpecial
     };
 };
