@@ -1092,17 +1092,19 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                 const bat = runPrediction(pChart, mChart, "BAT");
                 const bowl = runPrediction(pChart, mChart, "BOWL");
 
-                // Save Result
-                resDetails[pid] = { bat, bowl };
+                if (bat && bowl) {
+                    // Save Result
+                    resDetails[pid] = { bat, bowl };
 
-                // Add to team totals (Using MAX of Bat/Bowl as contribution)
-                const contribution = Math.max(bat.score, bowl.score);
+                    // Add to team totals (Using MAX of Bat/Bowl as contribution)
+                    const contribution = Math.max(bat.score, bowl.score);
 
-                const isTeamA = groups.find(g => g._id === teamA)?.players.some(tp => tp.id === pid);
-                const isTeamB = groups.find(g => g._id === teamB)?.players.some(tp => tp.id === pid);
+                    const isTeamA = groups.find(g => g._id === teamA)?.players?.some(tp => tp.id === pid);
+                    const isTeamB = groups.find(g => g._id === teamB)?.players?.some(tp => tp.id === pid);
 
-                if (isTeamA) { scoreA += contribution; countA++; }
-                else if (isTeamB) { scoreB += contribution; countB++; }
+                    if (isTeamA) { scoreA += contribution; countA++; }
+                    else if (isTeamB) { scoreB += contribution; countB++; }
+                }
             }
         });
 
