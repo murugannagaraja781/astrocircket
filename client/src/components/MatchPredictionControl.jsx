@@ -639,4 +639,20 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
     );
 });
 
+// Helper to get Star Lord (copied from predictionRules/adapter to avoid circular dep issues quickly)
+const getNakshatraLordHelper = (starName) => {
+    if (!starName) return null;
+    const n = starName.toLowerCase();
+    if (['ashwini', 'magha', 'mula', 'moola'].some(s => n.includes(s))) return 'Ketu';
+    if (['bharani', 'purva phalguni', 'purvaphalguni', 'purva ashadha', 'purvashada'].some(s => n.includes(s))) return 'Venus';
+    if (['krittika', 'uttara phalguni', 'uttaraphalguni', 'uttara ashadha', 'uttarashada'].some(s => n.includes(s))) return 'Sun';
+    if (['rohini', 'hasta', 'shravana'].some(s => n.includes(s))) return 'Moon';
+    if (['mrigashira', 'chitra', 'dhanishta'].some(s => n.includes(s))) return 'Mars';
+    if (['ardra', 'swati', 'shatabhisha'].some(s => n.includes(s))) return 'Rahu';
+    if (['punarvasu', 'vishakha', 'purva bhadrapada', 'purvabhadra'].some(s => n.includes(s))) return 'Jupiter';
+    if (['pushya', 'anuradha', 'uttara bhadrapada', 'uttarabhadra'].some(s => n.includes(s))) return 'Saturn';
+    if (['ashlesha', 'jyeshtha', 'revati'].some(s => n.includes(s))) return 'Mercury';
+    return null;
+};
+
 export default MatchPredictionControl;
