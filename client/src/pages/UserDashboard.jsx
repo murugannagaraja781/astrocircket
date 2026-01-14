@@ -918,18 +918,16 @@ const ChartPopup = ({ open, onClose, player, matchChart, initialTab = 0, hideHea
     );
 };
 
-// --- TAMIL RULES LIST (For Animation) ---
+// --- TAMIL RULES LIST (For Animation - Grouped for all 27 Stars) ---
 const TAMIL_RULE_LIST = [
-    { id: 1, label: "BAT Rule 1: ZigZag Rule (ஜிக் ஜாக் விதி - ராசி/நட்சத்திர பரிவர்த்தனை)" },
-    { id: 2, label: "BAT Rule 2: Star Rule (நட்சத்திர அதிபதி விதி)" },
-    { id: 3, label: "BAT Rule 3: House Rule (வீடு விதி)" },
-    { id: 4, label: "BAT Rule 4: Same House Rule (ஒரே வீடு இடமாற்றம்)" },
-    { id: 5, label: "BAT Rule 5: Conjunction Rule (கிரக சேர்க்கை விதி)" },
-    { id: 6, label: "BAT Rule 6: Lagna Rule (லக்ன விதி)" },
-    { id: 7, label: "BOWL Rule 1: Exact Match Flop (துல்லியமான பொருத்த தோல்வி)" },
-    { id: 8, label: "BOWL Rule 2: Lagna Rasi Lord Rule (லக்ன ராசி அதிபதி விதி)" },
-    { id: 9, label: "BOWL Rule 3: Both Lords in House (இரு அதிபதிகள் ஒரே வீட்டில்)" },
-    { id: 10, label: "BOWL Rule 4: Triple Conjunction (மும்முனை சேர்க்கை விதி)" }
+    { id: 1, label: "ராசி/நட்சத்திர பொருத்தம் (Rasi/Nakshatra Matching)" },
+    { id: 2, label: "உச்சம்/நீசம் நிலைகள் (Exaltation/Debilitation Check)" },
+    { id: 3, label: "பாஸ்கர ஜிக் ஜாக் விதி (ZigZag Rule - Parivarthana)" },
+    { id: 4, label: "ஒரே வீடு இடமாற்றம் (Same House Rule)" },
+    { id: 5, label: "கிரக சேர்க்கை விதிகள் (Conjunction Rules)" },
+    { id: 6, label: "லக்ன ராசி அதிபதி விதி (Lagna/Rasi Lord Evaluation)" },
+    { id: 7, label: "27 நட்சத்திர சிறப்பு விதிகள் (27 Star Special Rules)" },
+    { id: 8, label: "வெற்றி வாய்ப்பு கணக்கீடு (Success Probability Logic)" }
 ];
 
 // --- RULE APPLYING DIALOG ---

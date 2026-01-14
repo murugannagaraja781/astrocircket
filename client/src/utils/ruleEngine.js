@@ -114,15 +114,28 @@ function getPrediction(player, match, transit) {
         // 2. Bharani
         case 'Bharani':
             if (areInSameSign(['Venus', 'Mercury'])) addRule('Bharani: Venus & Mercury Conjoined', -12, 'both', true);
+            if (playerStarLord === 'Venus') addRule('Bharani: Star Lord Venus', 6);
             break;
 
-        // 3. Rohini
+        // 3. Krittika
+        case 'Krittika':
+            if (isExalted('Sun', P['Sun'])) addRule('Krittika: Sun Exalted', 8);
+            if (playerRasiLord === 'Sun') addRule('Krittika: Rasi Lord Sun', 5);
+            break;
+
+        // 4. Rohini
         case 'Rohini':
             if (isDebilitated('Moon', P['Moon'])) addRule('Rohini: Moon Debilitated', 8);
-            if (playerStar === 'Shatabhisha') addRule('Rohini: Player Star Sathayam', 12, 'both', true);
+            if (playerStar === 'Shatabhisha' || playerStar === 'Sathayam') addRule('Rohini: Player Star Sathayam', 12, 'both', true);
             break;
 
-        // 4. Ardra
+        // 5. Mrigashira
+        case 'Mrigashira':
+            if (playerRasiLord === 'Mars') addRule('Mrigashira: Rasi Lord Mars', 6);
+            if (areInSameSign(['Mars', 'Jupiter'])) addRule('Mrigashira: Mars & Jupiter Conjoined', 8);
+            break;
+
+        // 6. Ardra
         case 'Ardra':
             if (playerRasiLord === 'Mars' || playerStarLord === 'Mars') {
                 addRule('Ardra: Mars is Rasi or Star Lord', 4);
@@ -132,20 +145,35 @@ function getPrediction(player, match, transit) {
             }
             break;
 
-        // 5. Ashlesha
-        case 'Ashlesha':
-            if (areInSameSign(['Venus', 'Mercury'])) addRule('Ashlesha: Venus & Mercury Conjoined', -12, 'both', true);
+        // 7. Punarvasu
+        case 'Punarvasu':
+            if (playerRasiLord === 'Jupiter') addRule('Punarvasu: Rasi Lord Jupiter', 6);
+            if (isExalted('Jupiter', P['Jupiter'])) addRule('Punarvasu: Jupiter Exalted', 10);
             break;
 
-        // 6. Magha
+        // 8. Pushya
+        case 'Pushya':
+            if (playerStarLord === 'Saturn') addRule('Pushya: Star Lord Saturn', 6);
+            if (isOwnSign('Saturn', P['Saturn'])) addRule('Pushya: Saturn in Own Sign', 8);
+            break;
+
+        // 9. Ashlesha
+        case 'Ashlesha':
+            if (areInSameSign(['Venus', 'Mercury'])) addRule('Ashlesha: Venus & Mercury Conjoined', -12, 'both', true);
+            if (playerStarLord === 'Mercury') addRule('Ashlesha: Star Lord Mercury', 5);
+            break;
+
+        // 10. Magha
         case 'Magha':
             if (playerRasiLord === 'Mercury' && playerStarLord === 'Mars') {
                 addRule('Magha: Rasi Lord Mercury & Star Lord Mars', 12, 'both', true);
             }
+            if (playerStarLord === 'Ketu') addRule('Magha: Star Lord Ketu', 4);
             break;
 
-        // 7. Purva Phalguni
+        // 11. Purva Phalguni
         case 'Purva Phalguni':
+        case 'Pooram':
             if (playerRasiLord === 'Saturn' && playerStarLord === 'Mars') {
                 addRule('Pooram: Rasi Lord Saturn & Star Lord Mars', 12, 'bat', true);
             }
@@ -154,20 +182,28 @@ function getPrediction(player, match, transit) {
             }
             break;
 
-        // 8. Uttara Phalguni (Using Sign Name logic if needed, but here dependent on Moon Sign)
+        // 12. Uttara Phalguni
         case 'Uttara Phalguni':
-            // Check Match Moon Sign. Transit Moon positions.
-            // Virgo = Kanni. If Match Moon in Virgo.
-            if (M['Moon'] === 'Virgo') {
+        case 'Uthiram':
+            if (M['Moon'] === 'Virgo' || M['Moon'] === 'Kanya') {
                 if (playerRasiLord === 'Saturn' && playerStarLord === 'Rahu') {
                     addRule('Uthiram (Kanni): Rasi Lord Saturn & Star Lord Rahu', 12, 'both', true);
                 }
             }
+            if (playerRasiLord === 'Sun') addRule('Uthiram: Rasi Lord Sun', 5);
             break;
 
-        // 9. Chitra
+        // 13. Hasta
+        case 'Hasta':
+        case 'Hastham':
+            if (playerStarLord === 'Moon') addRule('Hastham: Star Lord Moon', 6);
+            if (isExalted('Moon', P['Moon'])) addRule('Hastham: Moon Exalted', 10);
+            break;
+
+        // 14. Chitra
         case 'Chitra':
-            if (M['Moon'] === 'Virgo') { // Padas 1,2
+        case 'Chithirai':
+            if (M['Moon'] === 'Virgo' || M['Moon'] === 'Kanya') {
                 if (playerRasiLord === 'Mercury') {
                     if (areInSameSign(['Mercury', 'Sun'])) {
                         const withJup = areInSameSign(['Mercury', 'Sun', 'Jupiter']);
@@ -177,15 +213,27 @@ function getPrediction(player, match, transit) {
                         else addRule('Chitra (Virgo): Mercury + Sun', 6);
                     }
                 }
-            } else if (M['Moon'] === 'Libra') { // Padas 3,4
+            } else if (M['Moon'] === 'Libra' || M['Moon'] === 'Thula') {
                 if (playerRasiLord === 'Moon' && playerStarLord === 'Saturn') {
                     addRule('Chitra (Libra): Rasi Lord Moon & Star Lord Saturn', 12, 'both', true);
                 }
             }
             break;
 
-        // 10. Anuradha
+        // 15. Swati
+        case 'Swati':
+            if (playerStarLord === 'Rahu') addRule('Swati: Star Lord Rahu', 5);
+            if (isExalted('Saturn', P['Saturn'])) addRule('Swati: Saturn Exalted (in Libra)', 10);
+            break;
+
+        // 16. Vishakha
+        case 'Vishakha':
+            if (playerRasiLord === 'Jupiter' || playerStarLord === 'Jupiter') addRule('Vishakha: Jupiter Influence', 6);
+            break;
+
+        // 17. Anuradha
         case 'Anuradha':
+        case 'Anusham':
             if (playerRasiLord === 'Jupiter') {
                 addRule('Anuradha: Rasi Lord Jupiter', 5, 'both', false, 'அனுஷம்: ராசி அதிபதி குரு');
                 if (isOwnSign('Jupiter', P['Jupiter']) || isExalted('Jupiter', P['Jupiter'])) {
@@ -194,50 +242,80 @@ function getPrediction(player, match, transit) {
             }
             break;
 
-        // 11. Jyeshtha
+        // 18. Jyeshtha
         case 'Jyeshtha':
+        case 'Kettai':
             if (areInSameSign(['Mercury', 'Venus'])) addRule('Jyeshtha: Mercury & Venus Conjoined', -12);
+            if (playerStarLord === 'Mercury') addRule('Kettai: Star Lord Mercury', 5);
             break;
 
-        // 12. Mula
+        // 19. Mula
         case 'Mula':
+        case 'Moolam':
             if (playerRasiLord === 'Saturn' && playerStarLord === 'Mars') addRule('Mula: Rasi Lord Saturn & Star Lord Mars', 12, 'bat', true);
             else if (playerRasiLord === 'Mars' && playerStarLord === 'Saturn') addRule('Mula: Rasi Lord Mars & Star Lord Saturn', 12, 'bowl', true);
             break;
 
-        // 13. Purva Ashadha
+        // 20. Purva Ashadha
         case 'Purva Ashadha':
+        case 'Pooradam':
             if (areInSameSign(['Venus', 'Mercury'])) addRule('Purva Ashadha: Venus & Mercury Conjoined', -12, 'both', true);
+            if (playerStarLord === 'Venus') addRule('Pooradam: Star Lord Venus', 5);
             break;
 
-        // 14. Uttara Ashadha
+        // 21. Uttara Ashadha
         case 'Uttara Ashadha':
-            if (M['Moon'] === 'Capricorn') {
+        case 'Uthiradam':
+            if (M['Moon'] === 'Capricorn' || M['Moon'] === 'Makara') {
                 if (playerRasiLord === 'Moon') addRule('Uthiradam (Capricorn): Rasi Lord Moon', 12, 'both', true);
             }
             break;
 
-        // 15. Shravana
+        // 22. Shravana
         case 'Shravana':
+        case 'Thiruvonam':
             if (playerRasiLord === 'Mars') {
-                // Mars in Moon House (Cancer) -> Debilitated basically, but specific house check
-                if (P['Mars'] === 'Cancer') addRule('Thiruvonam: Rasi Lord Mars in Moon House', 6, 'bowl');
+                if (P['Mars'] === 'Cancer' || P['Mars'] === 'Karka') addRule('Thiruvonam: Rasi Lord Mars in Moon House', 6, 'bowl');
             }
             if (playerRasiLord === 'Saturn' && playerStarLord === 'Rahu') {
                 addRule('Thiruvonam: Rasi Lord Saturn & Star Lord Rahu', 12, 'both', true);
             }
             break;
 
-        // 16. Dhanishta
+        // 23. Dhanishta
         case 'Dhanishta':
-            if (M['Moon'] === 'Capricorn') {
+        case 'Avittam':
+            if (M['Moon'] === 'Capricorn' || M['Moon'] === 'Makara') {
                 if (playerRasiLord === 'Saturn') addRule('Avittam (Capricorn): Rasi Lord Saturn', 4);
             }
+            if (playerStarLord === 'Mars') addRule('Avittam: Star Lord Mars', 5);
             break;
 
-        // 17. Shatabhisha
+        // 24. Shatabhisha
         case 'Shatabhisha':
+        case 'Sathayam':
             if (playerRasiLord === 'Moon') addRule('Sathayam: Rasi Lord Moon', 12, 'both', true);
+            break;
+
+        // 25. Purva Bhadrapada
+        case 'Purva Bhadrapada':
+        case 'Poorattadhi':
+            if (playerStarLord === 'Jupiter') addRule('Poorattadhi: Star Lord Jupiter', 6);
+            if (areInSameSign(['Jupiter', 'Saturn'])) addRule('Poorattadhi: Jupiter & Saturn Conjoined', 8);
+            break;
+
+        // 26. Uttara Bhadrapada
+        case 'Uttara Bhadrapada':
+        case 'Uthirattadhi':
+            if (playerRasiLord === 'Saturn') addRule('Uthirattadhi: Rasi Lord Saturn', 5);
+            if (isOwnSign('Saturn', P['Saturn'])) addRule('Uthirattadhi: Saturn Strong', 8);
+            break;
+
+        // 27. Revati
+        case 'Revati':
+        case 'Revathi':
+            if (playerStarLord === 'Mercury') addRule('Revathi: Star Lord Mercury', 6);
+            if (isExalted('Venus', P['Venus'])) addRule('Revathi: Venus Exalted (in Pisces)', 10);
             break;
     }
 

@@ -280,164 +280,152 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
             <Box sx={{ p: { xs: 1.5, sm: 2.5 }, bgcolor: '#FFFBF5' }}>
                 {/* Title Header - Clickable to Toggle */}
                 <Box
-                    onClick={() => setExpanded(!expanded)}
                     sx={{
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                        mb: { xs: 0.5, sm: 2 },
-                        cursor: 'pointer',
-                        bgcolor: 'rgba(255, 111, 0, 0.05)',
-                        p: 1,
-                        borderRadius: '8px'
+                        mb: 2,
+                        bgcolor: 'rgba(255, 111, 0, 0.08)',
+                        p: 1.5,
+                        borderRadius: '12px',
+                        border: '1px solid rgba(255, 111, 0, 0.2)'
                     }}
                 >
-                    <Typography variant="caption" fontWeight="900" sx={{ color: '#FF6F00', fontSize: { xs: '0.8rem', sm: '0.9rem' } }}>
-                        {expanded ? '🔽 Hide Match Details' : '▶️ Show Match Details'}
+                    <Typography variant="subtitle2" fontWeight="900" sx={{ color: '#FF6F00', display: 'flex', alignItems: 'center', gap: 1 }}>
+                        📅 Match Schedule & Venue
                     </Typography>
-                    <IconButton size="small" sx={{ p: 0.5, color: '#FF6F00' }}>
-                        {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                    </IconButton>
+                    <Typography variant="caption" sx={{ color: '#E65100', fontWeight: 'bold', bgcolor: 'white', px: 1, py: 0.5, borderRadius: '6px', border: '1px solid #FFCC80' }}>
+                        {matchDetails.date} @ {matchDetails.time}
+                    </Typography>
                 </Box>
 
-                {/* Collapsible Input Grid */}
-                <Collapse in={expanded}>
-                    <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', flexWrap: 'wrap' }}>
-                        {/* Date - Fixed small width */}
-                        <Box sx={{ width: '130px', flexShrink: 0 }}>
-                            <TextField
-                                label="Date"
-                                type="date"
-                                size="small"
-                                fullWidth
-                                value={matchDetails.date}
-                                onChange={(e) => handleChange('date', e.target.value)}
-                                InputLabelProps={{ shrink: true }}
-                                sx={{
-                                    '& .MuiInputBase-root': { borderRadius: '12px', fontSize: '0.9rem' },
-                                    '& .MuiInputLabel-root': { fontWeight: 'bold' }
-                                }}
-                            />
-                        </Box>
-
-                        {/* Time - Fixed small width */}
-                        <Box sx={{ width: '100px', flexShrink: 0 }}>
-                            <TextField
-                                label="Time"
-                                type="time"
-                                size="small"
-                                fullWidth
-                                value={matchDetails.time}
-                                onChange={(e) => handleChange('time', e.target.value)}
-                                InputLabelProps={{ shrink: true }}
-                                sx={{
-                                    '& .MuiInputBase-root': { borderRadius: '12px', fontSize: '0.9rem' },
-                                    '& .MuiInputLabel-root': { fontWeight: 'bold' }
-                                }}
-                            />
-                        </Box>
-
-                        {/* Location - MAXIMUM POSSIBLE WIDTH */}
-                        <Box sx={{ flexGrow: 1, minWidth: '200px' }}>
-                            <Autocomplete
-                                freeSolo
-                                options={placeOptions}
-                                getOptionLabel={(option) => typeof option === 'string' ? option : option.label}
-                                value={matchDetails.location}
-                                onChange={handleCityChange}
-                                onInputChange={(event, newInputValue) => {
-                                    handleChange('location', newInputValue);
-                                    if (searchTimeout.current) clearTimeout(searchTimeout.current);
-                                    searchTimeout.current = setTimeout(() => fetchPlaces(newInputValue), 800);
-                                }}
-                                loading={placeLoading}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label="📍 Location"
-                                        placeholder="Search City..."
-                                        size="small"
-                                        InputProps={{
-                                            ...params.InputProps,
-                                            endAdornment: (
-                                                <>
-                                                    {placeLoading ? <CircularProgress color="inherit" size={20} /> : null}
-                                                    {params.InputProps.endAdornment}
-                                                </>
-                                            ),
-                                        }}
-                                        sx={{
-                                            '& .MuiInputBase-root': {
-                                                borderRadius: '12px',
-                                                fontSize: '1rem',
-                                                fontWeight: 'bold',
-                                                bgcolor: 'rgba(255, 193, 7, 0.08)',
-                                                border: '2px solid #FFC107',
-                                            },
-                                            '& .MuiInputLabel-root': { fontWeight: 'bold', color: '#FF6F00' },
-                                            '& .MuiOutlinedInput-notchedOutline': { borderColor: '#FFC107' },
-                                            '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#FF6F00' }
-                                        }}
-                                    />
-                                )}
-                            />
-                        </Box>
-
-                        {/* Lat - Small */}
-                        <Box sx={{ width: '85px', flexShrink: 0 }}>
-                            <TextField
-                                label="Lat"
-                                type="number"
-                                size="small"
-                                fullWidth
-                                value={matchDetails.lat}
-                                onChange={(e) => handleChange('lat', parseFloat(e.target.value))}
-                                InputLabelProps={{ shrink: true }}
-                                inputProps={{ step: 0.01 }}
-                                sx={{
-                                    '& .MuiInputBase-root': { borderRadius: '12px', fontSize: '0.85rem' },
-                                    '& .MuiInputLabel-root': { fontWeight: 'bold', fontSize: '0.85rem' }
-                                }}
-                            />
-                        </Box>
-
-                        {/* Long - Small */}
-                        <Box sx={{ width: '85px', flexShrink: 0 }}>
-                            <TextField
-                                label="Long"
-                                type="number"
-                                size="small"
-                                fullWidth
-                                value={matchDetails.long}
-                                onChange={(e) => handleChange('long', parseFloat(e.target.value))}
-                                InputLabelProps={{ shrink: true }}
-                                inputProps={{ step: 0.01 }}
-                                sx={{
-                                    '& .MuiInputBase-root': { borderRadius: '12px', fontSize: '0.85rem' },
-                                    '& .MuiInputLabel-root': { fontWeight: 'bold', fontSize: '0.85rem' }
-                                }}
-                            />
-                        </Box>
-
-                        {/* TZ - Very Small */}
-                        <Box sx={{ width: '60px', flexShrink: 0 }}>
-                            <TextField
-                                label="TZ"
-                                type="number"
-                                size="small"
-                                fullWidth
-                                value={matchDetails.timezone}
-                                onChange={(e) => handleChange('timezone', parseFloat(e.target.value))}
-                                InputLabelProps={{ shrink: true }}
-                                inputProps={{ step: 0.5 }}
-                                sx={{
-                                    '& .MuiInputBase-root': { borderRadius: '12px', fontSize: '0.85rem' },
-                                    '& .MuiInputLabel-root': { fontWeight: 'bold', fontSize: '0.85rem' }
-                                }}
-                            />
-                        </Box>
+                <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center', flexWrap: 'wrap' }}>
+                    {/* Date - Prominent */}
+                    <Box sx={{ width: '160px', flexShrink: 0 }}>
+                        <TextField
+                            label="Match Date"
+                            type="date"
+                            size="small"
+                            fullWidth
+                            value={matchDetails.date}
+                            onChange={(e) => handleChange('date', e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                            sx={{
+                                '& .MuiInputBase-root': {
+                                    borderRadius: '12px',
+                                    fontSize: '1rem',
+                                    fontWeight: 'bold',
+                                    bgcolor: '#fff',
+                                    border: '2px solid #FFCC80'
+                                },
+                                '& .MuiInputLabel-root': { fontWeight: 'bold', color: '#E65100' }
+                            }}
+                        />
                     </Box>
-                </Collapse>
+
+                    {/* Time - Prominent */}
+                    <Box sx={{ width: '120px', flexShrink: 0 }}>
+                        <TextField
+                            label="Match Time"
+                            type="time"
+                            size="small"
+                            fullWidth
+                            value={matchDetails.time}
+                            onChange={(e) => handleChange('time', e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                            sx={{
+                                '& .MuiInputBase-root': {
+                                    borderRadius: '12px',
+                                    fontSize: '1rem',
+                                    fontWeight: 'bold',
+                                    bgcolor: '#fff',
+                                    border: '2px solid #FFCC80'
+                                },
+                                '& .MuiInputLabel-root': { fontWeight: 'bold', color: '#E65100' }
+                            }}
+                        />
+                    </Box>
+
+                    {/* Location - MAXIMUM POSSIBLE WIDTH */}
+                    <Box sx={{ flexGrow: 1, minWidth: '250px' }}>
+                        <Autocomplete
+                            freeSolo
+                            options={placeOptions}
+                            getOptionLabel={(option) => typeof option === 'string' ? option : option.label}
+                            value={matchDetails.location}
+                            onChange={handleCityChange}
+                            onInputChange={(event, newInputValue) => {
+                                handleChange('location', newInputValue);
+                                if (searchTimeout.current) clearTimeout(searchTimeout.current);
+                                searchTimeout.current = setTimeout(() => fetchPlaces(newInputValue), 800);
+                            }}
+                            loading={placeLoading}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="📍 Location"
+                                    placeholder="Search Venue..."
+                                    size="small"
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        endAdornment: (
+                                            <>
+                                                {placeLoading ? <CircularProgress color="inherit" size={20} /> : null}
+                                                {params.InputProps.endAdornment}
+                                            </>
+                                        ),
+                                    }}
+                                    sx={{
+                                        '& .MuiInputBase-root': {
+                                            borderRadius: '12px',
+                                            fontSize: '1rem',
+                                            fontWeight: 'bold',
+                                            bgcolor: 'rgba(255, 193, 7, 0.08)',
+                                            border: '2px solid #FFC107',
+                                        },
+                                        '& .MuiInputLabel-root': { fontWeight: 'bold', color: '#FF6F00' },
+                                        '& .MuiOutlinedInput-notchedOutline': { borderColor: '#FFC107' },
+                                        '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#FF6F00' }
+                                    }}
+                                />
+                            )}
+                        />
+                    </Box>
+
+                    {/* Lat/Long/TZ - Compact Row */}
+                    <Box sx={{ display: 'flex', gap: 1, width: '100%', mt: 0.5 }}>
+                        <TextField
+                            label="Lat"
+                            type="number"
+                            size="small"
+                            value={matchDetails.lat}
+                            onChange={(e) => handleChange('lat', parseFloat(e.target.value))}
+                            InputLabelProps={{ shrink: true }}
+                            inputProps={{ step: 0.01 }}
+                            sx={{ width: '90px', '& .MuiInputBase-root': { borderRadius: '10px' } }}
+                        />
+                        <TextField
+                            label="Long"
+                            type="number"
+                            size="small"
+                            value={matchDetails.long}
+                            onChange={(e) => handleChange('long', parseFloat(e.target.value))}
+                            InputLabelProps={{ shrink: true }}
+                            inputProps={{ step: 0.01 }}
+                            sx={{ width: '90px', '& .MuiInputBase-root': { borderRadius: '10px' } }}
+                        />
+                        <TextField
+                            label="Timezone"
+                            type="number"
+                            size="small"
+                            value={matchDetails.timezone}
+                            onChange={(e) => handleChange('timezone', parseFloat(e.target.value))}
+                            InputLabelProps={{ shrink: true }}
+                            inputProps={{ step: 0.5 }}
+                            sx={{ width: '80px', '& .MuiInputBase-root': { borderRadius: '10px' } }}
+                        />
+                    </Box>
+                </Box>
 
                 {/* BUTTONS - Compact on Mobile */}
                 <Box sx={{ display: 'flex', gap: { xs: 1, sm: 2 }, mt: { xs: 1.5, sm: 3 }, flexWrap: 'wrap' }}>
