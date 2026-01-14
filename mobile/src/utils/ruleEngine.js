@@ -82,9 +82,10 @@ const isSignOwnedBy = (sign, lord) => {
 export function evaluateBatsman(player, match, transit = {}) {
     let score = 0;
     let logs = [];
+    let isSpecial = false;
 
     if (!player || !match) {
-        return { score: 0, logs: ['Missing data'] };
+        return { score: 0, logs: ['Missing data'], isSpecial: false };
     }
 
     // Get positions from transit
@@ -104,13 +105,13 @@ export function evaluateBatsman(player, match, transit = {}) {
     if (match.rashiLord && match.nakshatraLord && player.rashiLord && player.nakshatraLord) {
         if (match.rashiLord === player.nakshatraLord && match.nakshatraLord === player.rashiLord) {
             score += 5;
+            isSpecial = true;
             logs.push(`BAT Rule 1 (ZigZag): மேட்ச் (${match.rashiLord}+${match.nakshatraLord}) ↔ பிளேயர் (${player.rashiLord}+${player.nakshatraLord}) → EXCELLENT (+5)`);
         }
     }
 
     // ═══════════════════════════════════════════════════════════════════
     // BATTING RULE 2: STAR RULE (2-4 Points)
-    // Match Star Lord = Player Rasi Lord OR Star Lord
     // ═══════════════════════════════════════════════════════════════════
     if (match.nakshatraLord && (player.rashiLord || player.nakshatraLord)) {
         let rule2Matched = false;
@@ -141,7 +142,6 @@ export function evaluateBatsman(player, match, transit = {}) {
 
     // ═══════════════════════════════════════════════════════════════════
     // BATTING RULE 3: HOUSE RULE (2 Points)
-    // Match Rasi Lord AND Star Lord are SAME
     // ═══════════════════════════════════════════════════════════════════
     if (match.rashiLord && match.nakshatraLord && match.rashiLord === match.nakshatraLord) {
         score += 2;
@@ -150,7 +150,6 @@ export function evaluateBatsman(player, match, transit = {}) {
 
     // ═══════════════════════════════════════════════════════════════════
     // BATTING RULE 4: SAME HOUSE RULE (3 Points)
-    // Player Rasi Lord OR Star Lord in Match Star Lord's house
     // ═══════════════════════════════════════════════════════════════════
     if (match.nakshatraLord && player.rashiLord && player.nakshatraLord) {
         const rasiLordInHouse = isSignOwnedBy(playerRashiLordPos, match.nakshatraLord);
@@ -158,13 +157,13 @@ export function evaluateBatsman(player, match, transit = {}) {
 
         if (rasiLordInHouse || starLordInHouse) {
             score += 3;
+            isSpecial = true;
             logs.push(`BAT Rule 4 (SameHouse): பிளேயர் அதிபதி மேட்ச் நட்சத்திர அதிபதி (${match.nakshatraLord}) வீட்டில் → GOOD (+3)`);
         }
     }
 
     // ═══════════════════════════════════════════════════════════════════
     // BATTING RULE 5: CONJUNCTION RULE (2-4 Points)
-    // Match Star Lord conjunct with Player Rasi Lord OR Star Lord
     // ═══════════════════════════════════════════════════════════════════
     if (matchStarLordPos && (playerRashiLordPos || playerStarLordPos)) {
         let conjunctFound = false;
@@ -192,8 +191,6 @@ export function evaluateBatsman(player, match, transit = {}) {
 
     // ═══════════════════════════════════════════════════════════════════
     // BATTING RULE 6: NEW LAGNA RULE (1-3 Points)
-    // Match Lagna Rasi Lord = Player Rasi Lord
-    // லக்னத்தின் ராசி அதிபதியே பிளேயரின் ராசி அதிபதியாக இருந்தால்
     // ═══════════════════════════════════════════════════════════════════
     if (matchLagnaLord && player.rashiLord && matchLagnaLord === player.rashiLord) {
         const dignityCheck = isInExaltedOrOwnSign(player.rashiLord, playerRashiLordPos);
@@ -206,7 +203,7 @@ export function evaluateBatsman(player, match, transit = {}) {
         }
     }
 
-    return { score, logs };
+    return { score, logs, isSpecial };
 }
 
 /**
@@ -215,9 +212,10 @@ export function evaluateBatsman(player, match, transit = {}) {
 export function evaluateBowler(player, match, transit = {}) {
     let score = 0;
     let logs = [];
+    let isSpecial = false;
 
     if (!player || !match) {
-        return { score: 0, logs: ['Missing data'] };
+        return { score: 0, logs: ['Missing data'], isSpecial: false };
     }
 
     // Get positions from transit
@@ -233,8 +231,6 @@ export function evaluateBowler(player, match, transit = {}) {
 
     // ═══════════════════════════════════════════════════════════════════
     // BOWLING RULE 1: EXACT MATCH FLOP (-2 Points)
-    // Match Rasi+Star Lord = Player Rasi+Star Lord → SURE FLOP
-    // Ex: Match = குரு + புதன், Player = குரு + புதன்
     // ═══════════════════════════════════════════════════════════════════
     if (match.rashiLord && match.nakshatraLord && player.rashiLord && player.nakshatraLord) {
         if (match.rashiLord === player.rashiLord && match.nakshatraLord === player.nakshatraLord) {
@@ -245,8 +241,6 @@ export function evaluateBowler(player, match, transit = {}) {
 
     // ═══════════════════════════════════════════════════════════════════
     // BOWLING RULE 2: LAGNA RASI LORD RULE (2-6 Points)
-    // Match Lagna Rasi Lord = Player Rasi Lord
-    // மேட்ச் லக்ன ராசி அதிபதி = பிளேயர் ராசி அதிபதி
     // ═══════════════════════════════════════════════════════════════════
     if (matchLagnaLord && player.rashiLord && matchLagnaLord === player.rashiLord) {
         const dignityCheck = isInExaltedOrOwnSign(player.rashiLord, playerRashiLordPos);
@@ -261,8 +255,6 @@ export function evaluateBowler(player, match, transit = {}) {
 
     // ═══════════════════════════════════════════════════════════════════
     // BOWLING RULE 3: BOTH LORDS IN HOUSE (4 Points)
-    // Player Rasi Lord AND Star Lord BOTH in Match Rasi Lord's house
-    // பிளேயர் ராசி அதிபதி மற்றும் நட்சத்திர அதிபதி இரண்டும் சேர்ந்து மேட்ச் ராசி அதிபதி வீட்டில்
     // ═══════════════════════════════════════════════════════════════════
     if (match.rashiLord && player.rashiLord && player.nakshatraLord) {
         const playerRasiLordInMatchHouse = isSignOwnedBy(playerRashiLordPos, match.rashiLord);
@@ -270,14 +262,13 @@ export function evaluateBowler(player, match, transit = {}) {
 
         if (playerRasiLordInMatchHouse && playerStarLordInMatchHouse) {
             score += 4;
+            isSpecial = true;
             logs.push(`BOWL Rule 3 (BothInHouse): பிளேயர் ராசி+நட்சத்திர அதிபதி இரண்டும் மேட்ச் ராசி அதிபதி (${match.rashiLord}) வீட்டில் → GOOD (+4)`);
         }
     }
 
     // ═══════════════════════════════════════════════════════════════════
     // BOWLING RULE 4: TRIPLE CONJUNCTION (10 Points)
-    // Player Rasi Lord + Match Star Lord + Match Lagna Lord conjunct in Atchi/Utcham
-    // பிளேயர் ராசி அதிபதி + மேட்ச் நட்சத்திர அதிபதி + மேட்ச் லக்ன ராசி அதிபதி இணைந்து ஆட்சி/உச்சம்
     // ═══════════════════════════════════════════════════════════════════
     if (playerRashiLordPos && matchStarLordPos && matchLagnaLordPos) {
         // Check if all three are in the same sign (conjunct)
@@ -285,12 +276,13 @@ export function evaluateBowler(player, match, transit = {}) {
             const dignityCheck = isInExaltedOrOwnSign(player.rashiLord, playerRashiLordPos);
             if (dignityCheck) {
                 score += 10;
+                isSpecial = true;
                 logs.push(`BOWL Rule 4 (TripleConjunction): பிளேயர் ராசி அதிபதி + மேட்ச் நட்சத்திர அதிபதி + லக்ன அதிபதி இணைப்பு, ${dignityCheck.tamil} → EXCELLENT (+10)`);
             }
         }
     }
 
-    return { score, logs };
+    return { score, logs, isSpecial };
 }
 
 /**

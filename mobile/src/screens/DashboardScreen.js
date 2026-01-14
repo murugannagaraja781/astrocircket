@@ -1,4 +1,3 @@
-```javascript
 import React, { useContext, useState, useEffect, useMemo } from 'react';
 import { View, FlatList, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { Appbar, Card, Title, Paragraph, Button, ActivityIndicator, Chip, Avatar, Text } from 'react-native-paper';
@@ -20,7 +19,7 @@ const DashboardScreen = ({ navigation }) => {
 
     const fetchPlayers = async () => {
         try {
-            const res = await axios.get(`${ config.API_URL } /api/players`, {
+            const res = await axios.get(`${config.API_URL}/api/players`, {
                 headers: { 'x-auth-token': userToken }
             });
             setPlayers(res.data);
@@ -48,10 +47,10 @@ const DashboardScreen = ({ navigation }) => {
     const handlePredict = async (payload) => {
         // Fetch Match Chart here using the payload from Modal
         try {
-             const res = await axios.post(`${ config.API_URL } /api/charts / birth - chart`, payload, {
+            const res = await axios.post(`${config.API_URL}/api/charts/birth-chart`, payload, {
                 headers: { 'x-auth-token': userToken }
             });
-            if(res.data && res.data.success) {
+            if (res.data) {
                 setMatchChart(res.data);
             }
         } catch (err) {
@@ -61,26 +60,31 @@ const DashboardScreen = ({ navigation }) => {
     };
 
     const getFlag = (player) => {
-         const tz = player.timezone || '';
-         const place = player.birthPlace || '';
-         if (tz.includes('Kolkata') || place.includes('India')) return '🇮🇳';
-         if (tz.includes('Australia') || place.includes('Australia')) return '🇦🇺';
-         if (tz.includes('London') || place.includes('UK')) return '🇬🇧';
-         return '🏳️';
+        const tz = player.timezone || '';
+        const place = player.birthPlace || '';
+        if (tz.includes('Kolkata') || place.includes('India')) return '🇮🇳';
+        if (tz.includes('Australia') || place.includes('Australia')) return '🇦🇺';
+        if (tz.includes('London') || place.includes('UK')) return '🇬🇧';
+        return '🏳️';
     };
 
     const renderItem = ({ item }) => {
         let batResult = null;
         let bowlResult = null;
 
-        if (matchChart && item.birthChart?.data) {
-             batResult = runPrediction(item.birthChart.data, matchChart.data, "BAT");
-             bowlResult = runPrediction(item.birthChart.data, matchChart.data, "BOWL");
+        const playerChart = item.birthChart?.data || item.birthChart;
+        const transitChart = matchChart?.data || matchChart;
+
+        if (transitChart && playerChart) {
+            batResult = runPrediction(playerChart, transitChart, "BAT");
+            bowlResult = runPrediction(playerChart, transitChart, "BOWL");
         }
+
+        const isSpecial = batResult?.isSpecial || bowlResult?.isSpecial;
 
         return (
             <TouchableOpacity onPress={() => navigation.navigate('PlayerDetail', { player: item, matchChart: matchChart })}>
-                <Card style={styles.card}>
+                <Card style={[styles.card, isSpecial && { borderLeftWidth: 5, borderLeftColor: '#D4AF37', backgroundColor: '#fffdf5' }]}>
                     <Card.Content style={styles.cardContent}>
                         <View style={styles.avatarContainer}>
                             <Avatar.Text size={40} label={item.name.charAt(0)} style={{ backgroundColor: '#1e40af' }} />
@@ -175,4 +179,3 @@ const styles = StyleSheet.create({
 });
 
 export default DashboardScreen;
-```

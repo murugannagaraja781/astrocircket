@@ -87,6 +87,7 @@ export const runPrediction = (playerChart, matchChart, role = "BAT") => {
         logs: engineOutput.logs,
         verdict: finalResult.verdict,
         message: finalResult.message,
-        confidence: finalResult.confidence
+        confidence: finalResult.confidence,
+        isSpecial: engineOutput.isSpecial
     };
 };

@@ -77,7 +77,11 @@ const PredictionChip = ({ score, type, report = [] }) => {
     return (
         <Tooltip title={
             <div className="text-xs">
-                {report && report.map((r, i) => <div key={i}>• {r}</div>)}
+                {report && report.map((r, i) => (
+                    <div key={i}>
+                        • {typeof r === 'object' ? `${r.en} / ${r.ta}` : r}
+                    </div>
+                ))}
                 {(!report || report.length === 0) && "No rules matched (Flop)"}
             </div>
         } arrow placement="top">
@@ -489,7 +493,9 @@ const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = fa
                             <Typography variant="body2" color="text.secondary" gutterBottom>{batsmanPred?.message}</Typography>
                             <Divider sx={{ my: 1 }} />
                             {batsmanPred?.logs?.map((log, i) => (
-                                <Typography key={i} variant="caption" display="block" sx={{ color: 'green' }}>✓ {log}</Typography>
+                                <Typography key={i} variant="caption" display="block" sx={{ color: 'green' }}>
+                                    ✓ {typeof log === 'object' ? `${log.en} / ${log.ta}` : log}
+                                </Typography>
                             ))}
                        </Paper>
                     </Grid>
@@ -508,7 +514,9 @@ const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = fa
                              <Typography variant="body2" color="text.secondary" gutterBottom>{bowlerPred?.message}</Typography>
                              <Divider sx={{ my: 1 }} />
                              {bowlerPred?.logs?.map((log, i) => (
-                                <Typography key={i} variant="caption" display="block" sx={{ color: 'green' }}>✓ {log}</Typography>
+                                <Typography key={i} variant="caption" display="block" sx={{ color: 'green' }}>
+                                    ✓ {typeof log === 'object' ? `${log.en} / ${log.ta}` : log}
+                                </Typography>
                             ))}
                        </Paper>
                     </Grid>
@@ -1344,18 +1352,20 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                 const isSel = selectedPlayers.includes(p.id);
                                 const res = results?.details?.[p.id];
                                 const dimmed = filterActive && !isSel;
-                                return (
-                                <React.Fragment key={p.id}>
-                                    <TableRow
-                                        hover
-                                        onClick={() => results ? toggleRules(p.id) : togglePlayer(p.id)}
-                                        sx={{
-                                            cursor: 'pointer',
-                                            bgcolor: isSel ? 'rgba(255, 111, 0, 0.08)' : 'inherit',
-                                            opacity: dimmed ? 0.4 : 1,
-                                            transition: 'all 0.2s ease'
-                                        }}
-                                    >
+                                 const isSpecial = res?.bat?.isSpecial || res?.bowl?.isSpecial;
+                                 return (
+                                 <React.Fragment key={p.id}>
+                                     <TableRow
+                                         hover
+                                         onClick={() => results ? toggleRules(p.id) : togglePlayer(p.id)}
+                                         sx={{
+                                             cursor: 'pointer',
+                                             bgcolor: isSpecial ? 'rgba(212, 175, 55, 0.15)' : (isSel ? 'rgba(255, 111, 0, 0.08)' : 'inherit'),
+                                             borderLeft: isSpecial ? '4px solid #D4AF37' : 'none',
+                                             opacity: dimmed ? 0.4 : 1,
+                                             transition: 'all 0.2s ease'
+                                         }}
+                                     >
                                         <TableCell padding="checkbox">
                                             <Checkbox
                                                 checked={isSel}
@@ -1401,9 +1411,9 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                                  <Box sx={{ p: 2, bgcolor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
                                                     <Typography variant="subtitle2" fontWeight="bold" color="#000" gutterBottom>Target Success List:</Typography>
                                                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                                                        {[...(res.bat.logs || []), ...(res.bowl.logs || [])].map((log, i) => (
+                                                         {[...(res.bat.logs || []), ...(res.bowl.logs || [])].map((log, i) => (
                                                             <Typography key={i} variant="body2" color="#000" sx={{ fontSize: '0.8rem' }}>
-                                                                • {log}
+                                                                • {typeof log === 'object' ? `${log.en} / ${log.ta}` : log}
                                                             </Typography>
                                                         ))}
                                                         {(!res.bat.logs?.length && !res.bowl.logs?.length) && (
@@ -1602,24 +1612,23 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                 </FormControl>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                     {isFullView && (
-                         <Button
-                            variant="contained"
-                            size="small"
-                            onClick={() => predictionControlRef.current?.runPrediction()}
-                            sx={{
-                                bgcolor: '#FF6F00',
-                                color: 'white',
-                                fontWeight: 'bold',
-                                whiteSpace: 'nowrap',
-                                minWidth: 'auto',
-                                px: 1,
-                                '&:hover': { bgcolor: '#E65100' }
-                            }}
-                         >
-                            Predict
-                         </Button>
-                     )}
+                     <Button
+                        variant="contained"
+                        size="small"
+                        onClick={() => predictionControlRef.current?.runPrediction()}
+                        sx={{
+                            bgcolor: '#FF6F00',
+                            color: 'white',
+                            fontWeight: 'bold',
+                            whiteSpace: 'nowrap',
+                            minWidth: 'auto',
+                            px: 1,
+                            '&:hover': { bgcolor: '#E65100' },
+                            display: isFullView ? 'inline-flex' : 'none'
+                        }}
+                     >
+                        Predict
+                     </Button>
                      <IconButton onClick={() => setIsFullView(!isFullView)} color="primary" sx={{ p:0.5 }}>
                         {isFullView ? <FullscreenExitIcon /> : <FullscreenIcon />}
                      </IconButton>

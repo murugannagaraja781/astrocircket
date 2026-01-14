@@ -72,16 +72,22 @@ function getPrediction(player, match, transit) {
     const playerStar = player.nakshatra;
     const matchStar = match.nakshatra; // Name
 
-    const addRule = (name, score, type = 'both', isSpecial = false) => {
+    const addRule = (name, score, type = 'both', isSpecial = false, nameTamil = '') => {
         const ruleText = `${name} (${score > 0 ? '+' : ''}${score})`;
+        const ruleTextTamil = nameTamil ? `${nameTamil} (${score > 0 ? '+' : ''}${score})` : ruleText;
+
+        const logEntry = { en: ruleText, ta: ruleTextTamil };
+
         if (type === 'both' || type === 'bat') {
             batting.score += score;
-            batting.logs.push(ruleText);
+            if (!batting.logs) batting.logs = [];
+            batting.logs.push(logEntry);
             if (isSpecial) batting.isSpecial = true;
         }
         if (type === 'both' || type === 'bowl') {
             bowling.score += score;
-            bowling.logs.push(ruleText);
+            if (!bowling.logs) bowling.logs = [];
+            bowling.logs.push(logEntry);
             if (isSpecial) bowling.isSpecial = true;
         }
     };
@@ -181,9 +187,9 @@ function getPrediction(player, match, transit) {
         // 10. Anuradha
         case 'Anuradha':
             if (playerRasiLord === 'Jupiter') {
-                addRule('Anuradha: Rasi Lord Jupiter', 5);
+                addRule('Anuradha: Rasi Lord Jupiter', 5, 'both', false, 'அனுஷம்: ராசி அதிபதி குரு');
                 if (isOwnSign('Jupiter', P['Jupiter']) || isExalted('Jupiter', P['Jupiter'])) {
-                    addRule('Anuradha: Jupiter Strong', 10);
+                    addRule('Anuradha: Jupiter Strong', 10, 'both', false, 'அனுஷம்: குரு வலுவாக உள்ளார்');
                 }
             }
             break;
