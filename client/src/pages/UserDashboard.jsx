@@ -1757,7 +1757,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                         </Box>
 
                         {/* Planet Details Table */}
-                        <Paper sx={{ overflow: 'auto' }}>
+                        <Paper sx={{ overflow: 'auto', maxHeight: '400px' }}>
                             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem', color: '#000' }}>
                                 <thead>
                                     <tr style={{ background: '#059669', color: 'white' }}>
@@ -2631,7 +2631,12 @@ const UserDashboard = ({ hideHeader = false }) => {
                     ) : (
                         <>
                             {isMobile ? (
-                                <Box sx={{ p: 2, bgcolor: hideHeader ? 'transparent' : '#f8fafc' }}>
+                                <Box sx={{
+                                    p: 2,
+                                    bgcolor: hideHeader ? 'transparent' : '#f8fafc',
+                                    maxHeight: 'calc(100vh - 350px)',
+                                    overflowY: 'auto'
+                                }}>
                                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, justifyContent: 'space-between' }}>
                                          <Typography variant="subtitle2" color="text.secondary">
                                             {paginatedPlayers.length} Players Found
@@ -2670,7 +2675,7 @@ const UserDashboard = ({ hideHeader = false }) => {
                                     )}
                                 </Box>
                             ) : (
-                            <TableContainer sx={{ maxHeight: '70vh' }}>
+                            <TableContainer sx={{ maxHeight: 'calc(100vh - 450px)', overflow: 'auto' }}>
                                 <Table stickyHeader>
                                     <TableHead>
                                         <TableRow>

@@ -352,151 +352,10 @@ const RulesView = () => {
     return (
         <Box sx={{ p: 2 }}>
             <Typography variant="h4" gutterBottom sx={{ mb: 4, color: '#fff' }}>
-                Astrological Prediction Rules (கணிப்பு விதிமுறைகள்)
+                Astrological Prediction Rules (கணிப்பு விதிமுறைகள்) update comming soon...
             </Typography>
 
-            <Grid container spacing={4}>
-                {/* BATSMAN RULES */}
-                <Grid item xs={12} lg={6}>
-                    <Paper sx={{ p: 4, height: '100%', bgcolor: '#ffffff', color: '#000', border: '1px solid rgba(0,0,0,0.1)', boxShadow: 1 }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                            <SportsCricketIcon sx={{ mr: 1, color: '#4caf50' }} />
-                            <Typography variant="h5" color="primary" fontWeight="bold">
-                                Rules for Batsman
-                            </Typography>
-                        </Box>
-                        <Divider sx={{ mb: 3 }} />
 
-                        <List sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                            <ListItem alignItems="flex-start" disablePadding>
-                                <ListItemText
-                                    primary="Pre-requisites:"
-                                    secondary={<span style={{ color: '#333' }}>1) Need to take match location date time place.<br/>2) Need to find Moon Rasi and Star Lord.</span>}
-                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#f59e0b' }} // Warning color
-                                />
-                            </ListItem>
-
-                            <ListItem alignItems="flex-start" disablePadding>
-                                <ListItemText
-                                    primary="First Rule:"
-                                    secondary={<span style={{ color: '#000' }}>பிளேயர் உடைய ராசி நட்சத்திரம் மேட்ச் ராசி நட்சத்திரத்துடன் இணைந்து இருந்தால் <b>Good</b> அல்லது பரிவர்த்தனை பெற்றிருந்தால் <b>Excellent (நன்று)</b>.</span>}
-                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#4caf50' }}
-                                />
-                            </ListItem>
-
-                            <ListItem alignItems="flex-start" disablePadding>
-                                <ListItemText
-                                    primary="3rd Rule:"
-                                    secondary={<span style={{ color: '#000' }}>சந்திரனின் நட்சத்திர அதிபதி யாருக்கெல்லாம் ராசி அதிபதியாகவோ வருகிறது என்று பார்க்க வேண்டும். இது <b>Good</b>.</span>}
-                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#4caf50' }}
-                                />
-                            </ListItem>
-
-                            <ListItem alignItems="flex-start" disablePadding>
-                                <ListItemText
-                                    primary="4th Rule:"
-                                    secondary={<span style={{ color: '#000' }}>ராசி அதிபதி மற்றும் நட்சத்திராதிபதி இரண்டும் இணைந்து இன்று நடக்கும் மேச்சின் நட்சத்திராதிபதி வீட்டில் இருந்தால் <b>Good</b>.<br/>இரண்டு வேறு வேறு வீட்டில் இருந்தாலும் <b>Good</b> (உதாரணத்திற்கு இன்று சுக்கிரனின் நட்சத்திரம் என்றால் செவ்வாய் துலாத்திலும் சனி ரிஷபத்திலும் இருந்தால் ஓகே அல்லது இரண்டு கிரகங்களும் துலாம் ரிஷபத்தில் இருந்தால் ஓகே குட்).</span>}
-                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#4caf50' }}
-                                />
-                            </ListItem>
-
-                            <ListItem alignItems="flex-start" disablePadding>
-                                <ListItemText
-                                    primary="5th Rule:"
-                                    secondary={<span style={{ color: '#000' }}>நான்கு ரூல்ஸ்ளையும் அடைபடவில்லை என்றால் பிளேயரின் ராசி நட்சத்திர அதிபதி வீட்டில் மேட்ச்சின் ராசி நட்சத்திர அதிபதிகள் இணைந்து இருந்தால் <b>நன்று</b>.</span>}
-                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#4caf50' }}
-                                />
-                            </ListItem>
-
-                             <ListItem alignItems="flex-start" disablePadding>
-                                <ListItemText
-                                    primary="Result:"
-                                    secondary={<span style={{ color: '#d32f2f' }}>இதில் எந்த ரூல்சிலும் வரவில்லை என்றால் <b>Flop</b>.</span>}
-                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#d32f2f' }}
-                                />
-                            </ListItem>
-
-                             <ListItem alignItems="flex-start" disablePadding>
-                                <ListItemText
-                                    primary="6th Rule:"
-                                    secondary={<span style={{ color: '#000' }}>ராசி அதிபதியுடன் இன்றைய மேட்சிங் நட்சத்திர அதிபதி இணைந்திருந்தால் <b>நன்று</b>.</span>}
-                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#4caf50' }}
-                                />
-                            </ListItem>
-
-                            <ListItem alignItems="flex-start" disablePadding>
-                                <ListItemText
-                                    primary="7th Rule:"
-                                    secondary={<span style={{ color: '#000' }}>ஒரு பிளேயருடைய நட்சத்திராதிபதி ராகு கேதுவாக வந்தால் அந்த ராசியாதிபதி அன்றைய மேட்சிங் நட்சத்திர அதிபதி வீட்டில் இருந்தால் <b>நலம்</b>, மற்றபடி <b>பிளாப்</b>.</span>}
-                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#4caf50' }}
-                                />
-                            </ListItem>
-                        </List>
-                    </Paper>
-                </Grid>
-
-                {/* BOWLER RULES */}
-                <Grid item xs={12} lg={6}>
-                     <Paper sx={{ p: 4, height: '100%', bgcolor: '#ffffff', color: '#000', border: '1px solid rgba(0,0,0,0.1)', boxShadow: 1 }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                            <GavelIcon sx={{ mr: 1, color: '#f44336' }} />
-                            <Typography variant="h5" color="secondary" fontWeight="bold">
-                                Bowler Rule
-                            </Typography>
-                        </Box>
-                        <Divider sx={{ mb: 3 }} />
-
-                        <List sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                            <ListItem alignItems="flex-start" disablePadding>
-                                <ListItemText
-                                    primary="First Rule:"
-                                    secondary={<span style={{ color: '#000' }}>பிளேயர் உடைய ராசி நட்சத்திரம் மேட்ச் ராசி நட்சத்திரத்துடன் இணைந்து இருந்தால் <b>Good</b> அல்லது பரிவர்த்தனை பெற்றிருந்தால் <b>Excellent (நன்று)</b>.</span>}
-                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#f44336' }}
-                                />
-                            </ListItem>
-
-                            <ListItem alignItems="flex-start" disablePadding>
-                                <ListItemText
-                                    primary="Second:"
-                                    secondary={<span style={{ color: '#000' }}>சந்திரனின் நட்சத்திர அதிபதி யாருக்கெல்லாம் ராசி அதிபதியாகவோ வருகிறது என்று பார்க்க வேண்டும். இது <b>Good</b>.</span>}
-                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#f44336' }}
-                                />
-                            </ListItem>
-
-                            <ListItem alignItems="flex-start" disablePadding>
-                                <ListItemText
-                                    primary="Lagna Rule:"
-                                    secondary={<span style={{ color: '#000' }}>மேட்சிங் ராசி அதிபதி லக்னாதிபதியாக பிளேருடைய ராசி அதிபதி அல்லது நட்சத்திராதிபதி இருந்தால் <b>சிறப்பு</b>.</span>}
-                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#f59e0b' }}
-                                />
-                            </ListItem>
-
-                            <ListItem alignItems="flex-start" disablePadding>
-                                <ListItemText
-                                    primary="3rd Rule:"
-                                    secondary={<span style={{ color: '#000' }}>பிளேருடைய ராசி நட்சத்திரம் மேட்சிங் ராசி அதிபதி நட்சத்திராதிபதி வீட்டில் இருந்தால் <b>ஓகே</b> இல்லையென்றால் <b>பிளாப்</b>.</span>}
-                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#f44336' }}
-                                />
-                            </ListItem>
-
-                            <ListItem alignItems="flex-start" disablePadding>
-                                <ListItemText
-                                    primary="4th Rule:"
-                                    secondary={<span style={{ color: '#000' }}>பிளேருடைய ராசி அதிபதி மேட்ச் நடக்கும் லக்னத்தில் இருந்தால் <b>சிறப்பு</b>.</span>}
-                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#f44336' }}
-                                />
-                            </ListItem>
-                             <ListItem alignItems="flex-start" disablePadding>
-                                <ListItemText
-                                    primary="5th Rule:"
-                                    secondary={<span style={{ color: '#000' }}>ராசி அதிபதியுடன் மேட்ச் நடக்கும் லக்னாதிபதி இணைந்திருந்தாள் <b>சிறப்பு</b>.</span>}
-                                    primaryTypographyProps={{ fontWeight: 'bold', color: '#f44336' }}
-                                />
-                            </ListItem>
-                        </List>
-                    </Paper>
-                </Grid>
-            </Grid>
         </Box>
     );
 };
@@ -2110,7 +1969,7 @@ const GroupsManager = () => {
                 <DialogTitle>Manage Group: {selectedGroup?.name}</DialogTitle>
                 <DialogContent dividers>
                     {selectedGroup && selectedGroup.players.length > 0 ? (
-                        <TableContainer component={Paper} elevation={0} variant="outlined">
+                        <TableContainer component={Paper} elevation={0} variant="outlined" sx={{ maxHeight: '400px', overflow: 'auto' }}>
                             <Table size="small">
                                 <TableHead>
                                     <TableRow>
