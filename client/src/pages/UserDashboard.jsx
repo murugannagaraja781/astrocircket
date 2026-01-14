@@ -1019,7 +1019,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
         timezone: 5.5
     });
     const [isFullView, setIsFullView] = useState(false);
-    const predictionControlRef = useRef(null);
+    const wizardPredictionRef = useRef(null);
 
     // Rule Animation State
     const [ruleDialogOpen, setRuleDialogOpen] = useState(false);
@@ -1174,9 +1174,8 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                             variant="contained"
                             size="small"
                             onClick={() => {
-                                if (!showPrediction) setShowPrediction(true);
                                 setTimeout(() => {
-                                    predictionControlRef.current?.runPrediction();
+                                    wizardPredictionRef.current?.runPrediction();
                                 }, 100);
                             }}
                             sx={{
@@ -1497,7 +1496,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                     {/* Match Setup - Using MatchPredictionControl */}
                     <Box sx={{ flexGrow: 1 }}>
                         <MatchPredictionControl
-                            ref={predictionControlRef}
+                            ref={wizardPredictionRef}
                             onPredictionComplete={handleMatchReady}
                             token={token}
                         />
@@ -1660,7 +1659,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                      <Button
                         variant="contained"
                         size="small"
-                        onClick={() => predictionControlRef.current?.runPrediction()}
+                        onClick={() => wizardPredictionRef.current?.runPrediction()}
                         sx={{
                             bgcolor: '#FF6F00',
                             color: 'white',
@@ -2013,7 +2012,7 @@ const UserDashboard = ({ hideHeader = false }) => {
     const [chartPopupOpen, setChartPopupOpen] = useState(false);
     const [chartPopupPlayer, setChartPopupPlayer] = useState(null);
     const [matchWizardOpen, setMatchWizardOpen] = useState(false);
-    const predictionControlRef = useRef(null);
+    const dashboardPredictionRef = useRef(null);
 
     // View State - Controls which view is shown (home, players, prediction)
     const [currentView, setCurrentView] = useState('home');
@@ -2611,7 +2610,7 @@ const UserDashboard = ({ hideHeader = false }) => {
 
                 {/* Match Prediction Control */}
                 <Collapse in={showPrediction}>
-                    <MatchPredictionControl ref={predictionControlRef} onPredictionComplete={handlePredictionReady} token={token} />
+                    <MatchPredictionControl ref={dashboardPredictionRef} onPredictionComplete={handlePredictionReady} token={token} />
                 </Collapse>
 
                 {/* Content Area */}
