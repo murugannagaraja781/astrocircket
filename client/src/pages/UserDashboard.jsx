@@ -1167,9 +1167,34 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    flexShrink: 0
+                    flexShrink: 0,
+                    gap: 1
                 }}>
-                    <Typography variant="subtitle1" fontWeight="bold" sx={{ color: '#FF6F00', fontSize: isMobile ? '0.9rem' : '1rem' }}>{teamName}</Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Typography variant="subtitle1" fontWeight="bold" sx={{ color: '#FF6F00', fontSize: isMobile ? '0.8rem' : '1rem' }}>{teamName}</Typography>
+                        <Button
+                            variant="contained"
+                            size="small"
+                            onClick={() => {
+                                if (!showPrediction) setShowPrediction(true);
+                                setTimeout(() => {
+                                    predictionControlRef.current?.runPrediction();
+                                }, 100);
+                            }}
+                            sx={{
+                                height: 24,
+                                fontSize: '0.65rem',
+                                px: 1,
+                                bgcolor: '#FF6F00',
+                                '&:hover': { bgcolor: '#E65100' },
+                                borderRadius: '12px',
+                                textTransform: 'none',
+                                fontWeight: 'bold'
+                            }}
+                        >
+                            Predict
+                        </Button>
+                    </Box>
                     {results && (
                         <Chip label={`Score: ${myScore}`} color={isWinner ? "success" : "default"} variant={isWinner ? "filled" : "outlined"} size="small" />
                     )}
@@ -1221,11 +1246,22 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                         {[...grp.players]
                             .filter(p => !filterActive || selectedPlayers.includes(p.id))
                             .sort((a, b) => {
-                                if (!filterActive) return 0;
-                                const aSelected = selectedPlayers.includes(a.id);
-                                const bSelected = selectedPlayers.includes(b.id);
-                                if (aSelected && !bSelected) return -1;
-                                if (!aSelected && bSelected) return 1;
+                                // 1. Matched Rules First (Score > 0)
+                                if (results?.details) {
+                                    const aScore = Math.max(results.details[a.id]?.bat?.score || 0, results.details[a.id]?.bowl?.score || 0);
+                                    const bScore = Math.max(results.details[b.id]?.bat?.score || 0, results.details[b.id]?.bowl?.score || 0);
+                                    if (aScore > 0 && bScore === 0) return -1;
+                                    if (aScore === 0 && bScore > 0) return 1;
+                                    if (aScore !== bScore) return bScore - aScore; // Highest score first
+                                }
+
+                                // 2. Selected First (if filter active)
+                                if (filterActive) {
+                                    const aSelected = selectedPlayers.includes(a.id);
+                                    const bSelected = selectedPlayers.includes(b.id);
+                                    if (aSelected && !bSelected) return -1;
+                                    if (!aSelected && bSelected) return 1;
+                                }
                                 return 0;
                             })
                             .map(p => {
@@ -1341,11 +1377,22 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                             {[...grp.players]
                                 .filter(p => !filterActive || selectedPlayers.includes(p.id))
                                 .sort((a, b) => {
-                                    if (!filterActive) return 0;
-                                    const aSelected = selectedPlayers.includes(a.id);
-                                    const bSelected = selectedPlayers.includes(b.id);
-                                    if (aSelected && !bSelected) return -1;
-                                    if (!aSelected && bSelected) return 1;
+                                    // 1. Matched Rules First (Score > 0)
+                                    if (results?.details) {
+                                        const aScore = Math.max(results.details[a.id]?.bat?.score || 0, results.details[a.id]?.bowl?.score || 0);
+                                        const bScore = Math.max(results.details[b.id]?.bat?.score || 0, results.details[b.id]?.bowl?.score || 0);
+                                        if (aScore > 0 && bScore === 0) return -1;
+                                        if (aScore === 0 && bScore > 0) return 1;
+                                        if (aScore !== bScore) return bScore - aScore; // Highest score first
+                                    }
+
+                                    // 2. Selected First (if filter active)
+                                    if (filterActive) {
+                                        const aSelected = selectedPlayers.includes(a.id);
+                                        const bSelected = selectedPlayers.includes(b.id);
+                                        if (aSelected && !bSelected) return -1;
+                                        if (!aSelected && bSelected) return 1;
+                                    }
                                     return 0;
                                 })
                                 .map(p => {
@@ -2565,7 +2612,7 @@ const UserDashboard = ({ hideHeader = false }) => {
 
                 {/* Match Prediction Control */}
                 <Collapse in={showPrediction}>
-                    <MatchPredictionControl onPredictionComplete={handlePredictionReady} token={token} />
+                    <MatchPredictionControl ref={predictionControlRef} onPredictionComplete={handleMatchReady} token={token} />
                 </Collapse>
 
                 {/* Content Area */}
