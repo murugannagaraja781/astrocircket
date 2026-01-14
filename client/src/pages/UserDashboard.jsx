@@ -2013,6 +2013,7 @@ const UserDashboard = ({ hideHeader = false }) => {
     const [chartPopupOpen, setChartPopupOpen] = useState(false);
     const [chartPopupPlayer, setChartPopupPlayer] = useState(null);
     const [matchWizardOpen, setMatchWizardOpen] = useState(false);
+    const predictionControlRef = useRef(null);
 
     // View State - Controls which view is shown (home, players, prediction)
     const [currentView, setCurrentView] = useState('home');
@@ -2610,7 +2611,7 @@ const UserDashboard = ({ hideHeader = false }) => {
 
                 {/* Match Prediction Control */}
                 <Collapse in={showPrediction}>
-                    <MatchPredictionControl ref={predictionControlRef} onPredictionComplete={handleMatchReady} token={token} />
+                    <MatchPredictionControl ref={predictionControlRef} onPredictionComplete={handlePredictionReady} token={token} />
                 </Collapse>
 
                 {/* Content Area */}
