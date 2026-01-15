@@ -920,14 +920,8 @@ const ChartPopup = ({ open, onClose, player, matchChart, initialTab = 0, hideHea
 
 // --- TAMIL RULES LIST (For Animation - Grouped for all 27 Stars) ---
 const TAMIL_RULE_LIST = [
-    { id: 1, label: "ராசி/நட்சத்திர பொருத்தம் (Rasi/Nakshatra Matching)" },
-    { id: 2, label: "உச்சம்/நீசம் நிலைகள் (Exaltation/Debilitation Check)" },
-    { id: 3, label: "பாஸ்கர ஜிக் ஜாக் விதி (ZigZag Rule - Parivarthana)" },
-    { id: 4, label: "ஒரே வீடு இடமாற்றம் (Same House Rule)" },
-    { id: 5, label: "கிரக சேர்க்கை விதிகள் (Conjunction Rules)" },
-    { id: 6, label: "லக்ன ராசி அதிபதி விதி (Lagna/Rasi Lord Evaluation)" },
-    { id: 7, label: "27 நட்சத்திர சிறப்பு விதிகள் (27 Star Special Rules)" },
-    { id: 8, label: "வெற்றி வாய்ப்பு கணக்கீடு (Success Probability Logic)" }
+    { id: 1, label: " பொருத்தம் " },
+
 ];
 
 // --- RULE APPLYING DIALOG ---

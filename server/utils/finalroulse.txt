@@ -1,40 +1,37 @@
-🔹 RAHU / KETU RULE
-Same as batting:
-+4
-Dignity: +4
+🏏 CRICKET ASTROLOGY RULE BOOK (Updated)
 
+🔴 PART 2: IMPORTANT RAHU / KETU RULE (MATCH)
+🔹 If Match Nakshatra Lord = Rahu or Ketu -> Use Match Rasi Lord.
+🔹 Special: Magam -> Star Lord becomes Chevvai (Mars).
+🔹 Special: Ashwini -> Star Lord becomes Chevvai (Mars).
 
-🔹 LAGNA RULE
-If:
-Match Lagna Lord = Player Rasi Lord
+🟢 PART 4: BATTING RULES
+🟩 Rule 1: ZIG–ZAG RULE (Strongest)
+Rasi Lord A = Star Lord B AND Star Lord A = Rasi Lord B -> 12 Pts (+4 Bonus)
+🟩 Rule 2: DIRECT RULE
+Rasi Lord Match = Rasi Lord Player AND Star Lord Match = Star Lord Player -> 6 Pts (+4 Bonus)
+🟩 Rule 3: STAR RULE
+Match Star Lord = Player Rasi OR Star Lord -> 4 Pts (+4 Bonus)
+🟩 Rule 4: CONJUNCTION RULE
+Match Star Lord conjoined with Player Rasi Lord -> 4 Pts (+4 Bonus)
+🟩 Rule 5: SAME HOUSE RULE
+Both Player Rasi and Star Lords in signs owned by Match Star Lord -> 4 Pts (+2 Bonus)
+🟩 Rule 6: PLAYER RASI ATHIPATHI HOME
+Match Rasi and Star Lords both in Player Rasi -> 6 Pts (+4 Bonus)
+🟩 Rule 7: RAHU / KETU PLAYER RULE
+Player Nak Lord is Rahu/Ketu AND Player Rasi Lord in Match Star house -> 4 Pts (+4 Bonus)
+🟩 Rule 8: LAGNA RULE (BATTING)
+Match Lagna Lord = Player Rasi Lord -> 2 Pts (+2 Bonus)
 
-Then: +4 points
-If dignity present: +4 more
+🔵 PART 5: BOWLING RULES
+🟦 Rule 1: ZIG–ZAG RULE (12 Pts + Bonus)
+🟦 Rule 2: DIRECT RULE (NEGATIVE) -> -12 Pts
+🟦 Rule 3: STAR RULE -> 3 Pts (+6 Bonus)
+🟦 Rule 4: CONJUNCTION RULE -> 4 Pts (+4 Bonus)
+🟦 Rule 5: SAME HOUSE RULE -> 4 Pts (+2 Bonus)
+🟦 Rule 6: PLAYER RASI HOME -> 4 Pts (+2 Bonus)
+🟦 Rule 7: RAHU / KETU RULE -> 4 Pts (+4 Bonus)
+🟦 Rule 8: LAGNA RULE -> 4 Pts (+4 Bonus + 4 Planet Bonus)
+🟦 Rule 9: MATCH SIGN LORD RULE -> 3 Pts (+8 Bonus)
 
-If any planet in that house is exalted / own: +4 more
-
-
-🔹 MATCH SIGN LORD RULE(BOWLING ONLY)
-If:
-Match Rasi Lord = Player Rasi Lord
-
-Then: +3 points
-If exalted: +8 points
-
-
-1️⃣1️⃣ SPECIAL NAKSHATRA RULES
-Applied after core rules
-Affect both batting & bowling unless explicitly stated
-Words like:
-Game changer
-Show special player
-Sure flop
-→ are UI labels only
-→ numeric points already defined
-No override.Math only.
-1️⃣2️⃣ FINAL OUTPUT
-Batting Score → numeric
-Bowling Score → numeric
-Net Score = Batting + Bowling
-Zero score → show 0
-No semantic meaning enforced by engine
+(Original Star Specific Rules from Aswini to Sathayam are also active)

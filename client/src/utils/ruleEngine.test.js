@@ -44,7 +44,39 @@ describe('ruleEngine', () => {
 
         const resultExalted = evaluateBatsman(playerExalted, match, transit);
         // Expect score to include +8
-        expect(resultExalted.logs).toEqual(expect.arrayContaining([expect.stringContaining('Ashwini: Mars Exalted')]));
+        expect(resultExalted.logs).toEqual(expect.arrayContaining([
+            expect.objectContaining({ en: expect.stringMatching(/As[hw]ini: Mars Exalted/) })
+        ]));
+    });
+
+    it('should trigger Zig-Zag rule for matching rasi and star lords', () => {
+        const playerZigZag = {
+            planetPositions: {
+                'Moon': 'Gemini', // Rasi Mithuna (Lord Mercury)
+                'Mercury': 'Gemini',
+                'Jupiter': 'Gemini'
+            },
+            rashiLord: 'Mercury',
+            nakshatraLord: 'Jupiter',
+            nakshatra: 'Punarvasu',
+            rashi: 'Gemini'
+        };
+        const matchZigZag = {
+            nakshatra: 'Revati',
+            rashiLord: 'Jupiter',
+            nakshatraLord: 'Mercury'
+        };
+        const transitZigZag = {
+            planetPositions: { 'Moon': 'Pisces' },
+            ascendantLord: 'Jupiter',
+            ascendantSign: 'Pisces'
+        };
+
+        const result = evaluateBatsman(playerZigZag, matchZigZag, transitZigZag);
+        expect(result.score).toBeGreaterThanOrEqual(12);
+        expect(result.logs).toEqual(expect.arrayContaining([
+            expect.objectContaining({ en: expect.stringContaining('Zig-Zag') })
+        ]));
     });
 
     it('should not crash with null inputs', () => {
