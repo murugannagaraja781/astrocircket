@@ -35,3 +35,17 @@ Match Lagna Lord = Player Rasi Lord -> 2 Pts (+2 Bonus)
 🟦 Rule 9: MATCH SIGN LORD RULE -> 3 Pts (+8 Bonus)
 
 (Original Star Specific Rules from Aswini to Sathayam are also active)
+
+⭐ SPECIAL MATCH NAKSHATRA RULES (+12 Points – Show Special Player)
+
+🔶 1️⃣ Magam: Rasi Suriyan, Nak Kethu. Player: Rasi Budhan, Nak Chevvai -> +12 👉 Special
+🔶 2️⃣ Uthiram (Kanya): Nak Budhan, Sec Suriyan. Player: Rasi Sani, Nak Rahu -> +12 👉 Special
+🔶 3️⃣ Chithirai (3,4): Nak Sukkiran, RL Chevvai. Player: Rasi Chandran, Nak Sani -> +12 👉 Special
+🔶 4️⃣ Moolam: Nak Guru, Sec Kethu.
+   - Batting: Rasi Sani, Nak Chevvai -> +12 👉 Special
+   - Bowling: Rasi Chevvai, Nak Sani -> +12 👉 Special
+🔶 5️⃣ Uthiradam (Makara): Nak Sani, RL Suriyan. Player: Rasi Chandran -> +12 👉 Special
+🔶 6️⃣ Thiruvonam: Nak Sani, RL Chandran.
+   - Bowl Type 1: Rasi Chevvai, Chevvai in Cancer -> +6
+   - Bowl Type 2: Rasi Sani, Nak Rahu -> +12 👉 Special
+🔶 7️⃣ Sathayam: Nak Sani, Sec Rahu. Player: Rasi Chandran -> +12 👉 GAME CHANGER

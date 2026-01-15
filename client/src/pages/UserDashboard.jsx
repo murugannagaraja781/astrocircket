@@ -1258,20 +1258,21 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                             .map(p => {
                             const isSel = selectedPlayers.includes(p.id);
                             const res = results?.details?.[p.id];
+                            const isSpecial = res?.bat?.isSpecial || res?.bowl?.isSpecial;
                             const dimmed = filterActive && !isSel;
                             return (
                                 <Paper key={p.id} elevation={0} sx={{
                                     p: 1.5, mb: 1,
                                     border: '2px solid',
-                                    borderColor: isSel ? '#FF6F00' : 'rgba(0,0,0,0.08)',
-                                    bgcolor: isSel ? 'rgba(255, 111, 0, 0.08)' : 'white',
+                                    borderColor: isSpecial ? '#8A2BE2' : (isSel ? '#FF6F00' : 'rgba(0,0,0,0.08)'),
+                                    bgcolor: isSpecial ? 'rgba(138, 43, 226, 0.15)' : (isSel ? 'rgba(255, 111, 0, 0.08)' : 'white'),
                                     borderRadius: '12px',
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: 1.5,
                                     opacity: dimmed ? 0.4 : 1,
                                     transition: 'all 0.2s ease',
-                                    boxShadow: isSel ? '0 2px 8px rgba(255, 111, 0, 0.2)' : '0 1px 3px rgba(0,0,0,0.05)'
+                                    boxShadow: isSpecial ? '0 2px 8px rgba(138, 43, 226, 0.3)' : (isSel ? '0 2px 8px rgba(255, 111, 0, 0.2)' : '0 1px 3px rgba(0,0,0,0.05)')
                                 }} onClick={() => results ? toggleRules(p.id) : togglePlayer(p.id)}>
                                     <Checkbox
                                         checked={isSel}
@@ -1299,7 +1300,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                             <Typography variant="caption" fontWeight="bold" display="block" color="#000" sx={{ mb: 0.5 }}>Target Success List:</Typography>
                                             {[...(res.bat.logs || []), ...(res.bowl.logs || [])].map((log, i) => (
                                                 <Typography key={i} variant="caption" display="block" color="#000" sx={{ fontSize: '0.7rem', mb: 0.5 }}>
-                                                    • {log}
+                                                    • {typeof log === 'object' ? `${log.en} / ${log.ta}` : log}
                                                 </Typography>
                                             ))}
                                             {(!res.bat.logs?.length && !res.bowl.logs?.length) && (
@@ -1398,8 +1399,8 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                          onClick={() => results ? toggleRules(p.id) : togglePlayer(p.id)}
                                          sx={{
                                              cursor: 'pointer',
-                                             bgcolor: isSpecial ? 'rgba(212, 175, 55, 0.15)' : (isSel ? 'rgba(255, 111, 0, 0.08)' : 'inherit'),
-                                             borderLeft: isSpecial ? '4px solid #D4AF37' : 'none',
+                                             bgcolor: isSpecial ? 'rgba(138, 43, 226, 0.15)' : (isSel ? 'rgba(255, 111, 0, 0.08)' : 'inherit'),
+                                             borderLeft: isSpecial ? '4px solid #8A2BE2' : 'none',
                                              opacity: dimmed ? 0.4 : 1,
                                              transition: 'all 0.2s ease'
                                          }}

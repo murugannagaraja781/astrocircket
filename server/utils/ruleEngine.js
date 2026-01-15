@@ -328,7 +328,7 @@ const evaluatePrediction = (playerBirthChart, matchParams) => {
         // 6. MAGAM
         case 'Magha':
         case 'Magam':
-            if (playerRasiLord === 'Mercury' && playerStarLord === 'Mars') addRule('Magam: Rasi Lord Mercury & Star Lord Mars', 12, 'both', true, 'மகம்: ராசி அதிபதி புதன் & நட்சத்திர அதிபதி செவ்வாய்');
+            if (playerRasiLord === 'Mercury' && playerStarLord === 'Mars') addRule('Magam: Rasi Lord Mercury & Star Lord Mars (+12) 👉 Show Special Player', 12, 'both', true, 'மகம்: ராசி அதிபதி புதன் & நட்சத்திர அதிபதி செவ்வாய் (+12) 👉 சிறப்பு வீரர்');
             break;
 
         // 7. POORAM
@@ -342,7 +342,7 @@ const evaluatePrediction = (playerBirthChart, matchParams) => {
         case 'Uttara Phalguni':
         case 'Uthiram':
             if (matchChart.moon.signId === 6) { // Virgo
-                if (playerRasiLord === 'Saturn' && playerStarLord === 'Rahu') addRule('Uthiram (Kanya): Rasi Lord Saturn & Star Lord Rahu', 12, 'both', true, 'உத்திரம் (கன்னி): ராசி அதிபதி சனி & நட்சத்திர அதிபதி ராகு');
+                if (playerRasiLord === 'Saturn' && playerStarLord === 'Rahu') addRule('Uthiram (Kanya): Rasi Lord Saturn & Star Lord Rahu (+12) 👉 Show Special Player', 12, 'both', true, 'உத்திரம் (கன்னி): ராசி அதிபதி சனி & நட்சத்திர அதிபதி ராகு (+12) 👉 சிறப்பு வீரர்');
             }
             break;
 
@@ -356,7 +356,7 @@ const evaluatePrediction = (playerBirthChart, matchParams) => {
                     else addRule('Chithirai (Virgo): Merc+Sun', 6, 'both', false, 'சித்திரை (கன்னி): புதன்+சூரியன்');
                 }
             } else if (matchChart.moon.signId === 7) { // Padas 3,4
-                if (playerRasiLord === 'Moon' && playerStarLord === 'Saturn') addRule('Chithirai (Libra): Rasi Lord Moon & Star Lord Saturn', 12, 'both', true, 'சித்திரை (துலாம்): ராசி அதிபதி சந்திரன் & நட்சத்திர அதிபதி சனி');
+                if (playerRasiLord === 'Moon' && playerStarLord === 'Saturn') addRule('Chithirai (Libra): Rasi Lord Moon & Star Lord Saturn (+12) ⭐ Show SPECIAL PLAYER', 12, 'both', true, 'சித்திரை (துலாம்): ராசி அதிபதி சந்திரன் & நட்சத்திர அதிபதி சனி (+12) ⭐ சிறப்பு வீரர்');
             }
             break;
 
@@ -378,8 +378,8 @@ const evaluatePrediction = (playerBirthChart, matchParams) => {
         // 12. MOOLAM
         case 'Mula':
         case 'Moolam':
-            if (playerRasiLord === 'Saturn' && playerStarLord === 'Mars') addRule('Moolam: Rasi Lord Saturn & Star Lord Mars', 12, 'bat', true, 'மூலம்: ராசி அதிபதி சனி & நட்சத்திர அதிபதி செவ்வாய்');
-            if (playerRasiLord === 'Mars' && playerStarLord === 'Saturn') addRule('Moolam: Rasi Lord Mars & Star Lord Saturn', 12, 'bowl', true, 'மூலம்: ராசி அதிபதி செவ்வாய் & நட்சத்திர அதிபதி சனி');
+            if (playerRasiLord === 'Saturn' && playerStarLord === 'Mars') addRule('Moolam: Rasi Lord Saturn & Star Lord Mars (Batting) (+12) 👉 Show Special Player', 12, 'bat', true, 'மூலம்: ராசி அதிபதி சனி & நட்சத்திர அதிபதி செவ்வாய் (பேட்டிங்) (+12) 👉 சிறப்பு வீரர்');
+            if (playerRasiLord === 'Mars' && playerStarLord === 'Saturn') addRule('Moolam: Rasi Lord Mars & Star Lord Saturn (Bowling) (+12) 👉 Show Special Player', 12, 'bowl', true, 'மூலம்: ராசி அதிபதி செவ்வாய் & நட்சத்திர அதிபதி சனி (பவுலிங்) (+12) 👉 சிறப்பு வீரர்');
             break;
 
         // 13. POORADAM
@@ -392,15 +392,15 @@ const evaluatePrediction = (playerBirthChart, matchParams) => {
         case 'Uttara Ashadha':
         case 'Uthiradam':
             if (matchChart.moon.signId === 10) { // Capricorn
-                if (playerRasiLord === 'Moon') addRule('Uthiradam (Capricorn): Rasi Lord Moon', 12, 'both', true, 'உத்திராடம் (மகரம்): ராசி அதிபதி சந்திரன்');
+                if (playerRasiLord === 'Moon') addRule('Uthiradam (Makara): Rasi Lord Moon (+12) 👉 Show Special Player', 12, 'both', true, 'உத்திராடம் (மகரம்): ராசி அதிபதி சந்திரன் (+12) 👉 சிறப்பு வீரர்');
             }
             break;
 
         // 15. THIRUVONAM
         case 'Shravana':
         case 'Thiruvonam':
-            if (playerRasiLord === 'Mars' && P.mars.signId === 4) addRule('Thiruvonam: Mars in Moon House', 6, 'bowl', false, 'திருவோணம்: செவ்வாய் சந்திரன் வீட்டில்');
-            if (playerRasiLord === 'Saturn' && playerStarLord === 'Rahu') addRule('Thiruvonam: Rasi Lord Saturn & Star Lord Rahu', 12, 'both', true, 'திருவோணம்: ராசி அதிபதி சனி & நட்சத்திர அதிபதி ராகு');
+            if (playerRasiLord === 'Mars' && P.mars.signId === 4) addRule('Thiruvonam: Mars in Moon House (Bowling) (+6)', 6, 'bowl', false, 'திருவோணம்: செவ்வாய் சந்திரன் வீட்டில் (பவுலிங்) (+6)');
+            if (playerRasiLord === 'Saturn' && playerStarLord === 'Rahu') addRule('Thiruvonam: Rasi Lord Saturn & Star Lord Rahu (+12) 👉 Show Special Player', 12, 'both', true, 'திருவோணம்: ராசி அதிபதி சனி & நட்சத்திர அதிபதி ராகு (+12) 👉 சிறப்பு வீரர்');
             break;
 
         // 16. AVITTAM
@@ -412,7 +412,7 @@ const evaluatePrediction = (playerBirthChart, matchParams) => {
         // 17. SATHAYAM
         case 'Shatabhisha':
         case 'Sathayam':
-            if (playerRasiLord === 'Moon') addRule('Sathayam: Rasi Lord Moon', 12, 'both', true, 'சதயம்: ராசி அதிபதி சந்திரன்');
+            if (playerRasiLord === 'Moon') addRule('Sathayam: Rasi Lord Moon (+12) 👉 GAME CHANGER 👉 Must Show Special Player', 12, 'both', true, 'சதயம்: ராசி அதிபதி சந்திரன் (+12) 👉 கேம் சேஞ்சர் 👉 சிறப்பு வீரர்');
             break;
     }
 
