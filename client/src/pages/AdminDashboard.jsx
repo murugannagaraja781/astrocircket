@@ -341,10 +341,12 @@ import AddIcon from '@mui/icons-material/Add';
 import DescriptionIcon from '@mui/icons-material/Description'; // New Icon for View Chart
 import GavelIcon from '@mui/icons-material/Gavel'; // Rules Icon
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'; // Chevron for Quick Actions
+import StickyNote2Icon from '@mui/icons-material/StickyNote2'; // Notes Icon
 import RasiChart from '../components/RasiChart';
 import PlanetaryTable from '../components/PlanetaryTable';
 import AuthContext from '../context/AuthContext';
 import UserDashboard from './UserDashboard';
+import NotesOverlay from '../components/NotesOverlay';
 
 
 // Rules View Component (Tamil)
@@ -2081,6 +2083,9 @@ const AdminDashboard = () => {
 
     const [currentTime, setCurrentTime] = useState(new Date());
 
+    // Notes Overlay State
+    const [notesOpen, setNotesOpen] = useState(false);
+
     // Delete All Players State
     const [deleteAllDialogOpen, setDeleteAllDialogOpen] = useState(false);
     const [deletePassword, setDeletePassword] = useState('');
@@ -2387,6 +2392,40 @@ const AdminDashboard = () => {
                     {deleteSnackbar.message}
                 </Alert>
             </Snackbar>
+
+            {/* Notes Overlay */}
+            <NotesOverlay isOpen={notesOpen} onClose={() => setNotesOpen(false)} />
+
+            {/* Floating Notes Button */}
+            <Box
+                onClick={() => setNotesOpen(true)}
+                sx={{
+                    position: 'fixed',
+                    bottom: 100,
+                    right: 24,
+                    width: 56,
+                    height: 56,
+                    borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    boxShadow: '0 8px 24px rgba(245, 158, 11, 0.4)',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    zIndex: 1000,
+                    '&:hover': {
+                        transform: 'scale(1.1)',
+                        boxShadow: '0 12px 32px rgba(245, 158, 11, 0.5)',
+                    },
+                    '&:active': {
+                        transform: 'scale(0.95)',
+                    }
+                }}
+            >
+                <StickyNote2Icon sx={{ fontSize: 28 }} />
+            </Box>
         </ThemeProvider>
     );
 };
