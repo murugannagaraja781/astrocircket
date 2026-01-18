@@ -155,11 +155,24 @@ function getPrediction(player, match, transit) {
         applyBonuses(matchStarLord, 4, 'bat');
     }
 
-    // Rule 4: CONJUNCTION RULE
-    if (areInSameSign([matchStarLord, playerRasiLord])) {
-        addRule('BAT Rule 4: Conjunction', 4, 'bat', false, 'பேட்டிங் விதி 4: சேர்க்கை விதி');
+
+    // Rule 4: CONJUNCTION RULE (Modified)
+    // Match Nakshatra Athipathi joins Player Rasi Athipathi OR Player Nakshatra Athipathi
+    // இருக்கும் அதே வீட்டில் (Same House) இணைந்து (Conjunction) இருந்தால்
+    const conjunctionPlanets = [];
+    if (P[matchStarLord]) conjunctionPlanets.push(matchStarLord);
+
+    // Check Player Rasi Lord
+    if (playerRasiLord && P[playerRasiLord] && P[matchStarLord] && P[matchStarLord] === P[playerRasiLord]) {
+        addRule('BAT Rule 4: Conjunction (Rasi Lord)', 4, 'bat', false, 'பேட்டிங் விதி 4: சேர்க்கை விதி (ராசி அதிபதி)');
         applyBonuses(playerRasiLord, 4, 'bat');
         if (matchLagnaSign === player.rashi) addRule('BAT Rule 4: Lagna Match', 2, 'bat', false, 'பேட்டிங் விதி 4: லக்ன பொருத்தம்');
+    }
+    // Check Player Nakshatra Lord (if not same as Rasi Lord to avoid double counting, or allow double?)
+    // Requirement says "OR". Typically handled as finding at least one match.
+    else if (playerStarLord && P[playerStarLord] && P[matchStarLord] && P[matchStarLord] === P[playerStarLord]) {
+        addRule('BAT Rule 4: Conjunction (Star Lord)', 4, 'bat', false, 'பேட்டிங் விதி 4: சேர்க்கை விதி (நட்சத்திர அதிபதி)');
+        applyBonuses(playerStarLord, 4, 'bat'); // Bonus for the planet involved? Requirement says "அந்த கிரகம் Aatchi / Ucham ஆக இருந்தால்".
     }
 
     // Rule 5: SAME HOUSE RULE
@@ -209,12 +222,17 @@ function getPrediction(player, match, transit) {
         if (isExalted(matchStarLord, P[matchStarLord]) || isOwnSign(matchStarLord, P[matchStarLord])) addRule('BOWL Rule 3: Bonus', 6, 'bowl', false, 'பவுலிங் விதி 3: போனஸ்');
     }
 
-    // BOWL Rule 4: CONJUNCTION
-    const playerRasiLordSignSigns = OWN_SIGNS[playerRasiLord] || [];
-    if (playerRasiLordSignSigns.includes(M[matchStarLord])) {
-        addRule('BOWL Rule 4: Conjunction', 4, 'bowl', false, 'பவுலிங் விதி 4: சேர்க்கை விதி');
+
+    // BOWL Rule 4: CONJUNCTION (Modified)
+    // Same logic as Batting
+    if (playerRasiLord && P[playerRasiLord] && P[matchStarLord] && P[matchStarLord] === P[playerRasiLord]) {
+        addRule('BOWL Rule 4: Conjunction (Rasi Lord)', 4, 'bowl', false, 'பவுலிங் விதி 4: சேர்க்கை விதி (ராசி அதிபதி)');
         applyBonuses(playerRasiLord, 4, 'bowl');
-        if (matchLagnaSign === M[matchStarLord]) addRule('BOWL Rule 4: Lagna Match', 2, 'bowl', false, 'பவுலிங் விதி 4: லக்ன பொருத்தம்');
+        if (matchLagnaSign === P[matchStarLord]) addRule('BOWL Rule 4: Lagna Match', 2, 'bowl', false, 'பவுலிங் விதி 4: லக்ன பொருத்தம்');
+    }
+    else if (playerStarLord && P[playerStarLord] && P[matchStarLord] && P[matchStarLord] === P[playerStarLord]) {
+        addRule('BOWL Rule 4: Conjunction (Star Lord)', 4, 'bowl', false, 'பவுலிங் விதி 4: சேர்க்கை விதி (நட்சத்திர அதிபதி)');
+        applyBonuses(playerStarLord, 4, 'bowl');
     }
 
     // BOWL Rule 5: SAME HOUSE
@@ -346,14 +364,57 @@ function getPrediction(player, match, transit) {
         // 12. MOOLAM
         case 'Mula':
         case 'Moolam':
-            if (playerRasiLord === 'Saturn' && playerStarLord === 'Mars') addRule('Moolam: Rasi Lord Saturn & Star Lord Mars (Batting) (+12) 👉 Show Special Player', 12, 'bat', true, 'மூலம்: ராசி அதிபதி சனி & நட்சத்திர அதிபதி செவ்வாய் (பேட்டிங்) (+12) 👉 சிறப்பு வீரர்');
-            if (playerRasiLord === 'Mars' && playerStarLord === 'Saturn') addRule('Moolam: Rasi Lord Mars & Star Lord Saturn (Bowling) (+12) 👉 Show Special Player', 12, 'bowl', true, 'மூலம்: ராசி அதிபதி செவ்வாய் & நட்சத்திர அதிபதி சனி (பவுலிங்) (+12) 👉 சிறப்பு வீரர்');
+            // Case 1: Batting Special
+            if (playerRasiLord === 'Saturn' && playerStarLord === 'Mars') {
+                addRule('Moolam: Rasi Lord Saturn & Star Lord Mars (Batting) (+12) 👉 Show Special Player', 12, 'bat', true, 'மூலம்: ராசி அதிபதி சனி & நட்சத்திர அதிபதி செவ்வாய் (பேட்டிங்) (+12) 👉 சிறப்பு வீரர்');
+            }
+
+            // Case 2: Bowling Special
+            else if (playerRasiLord === 'Mars' && playerStarLord === 'Saturn') {
+                addRule('Moolam: Rasi Lord Mars & Star Lord Saturn (Bowling) (+12) 👉 Show Special Player', 12, 'bowl', true, 'மூலம்: ராசி அதிபதி செவ்வாய் & நட்சத்திர அதிபதி சனி (பவுலிங்) (+12) 👉 சிறப்பு வீரர்');
+            }
+
+            // Case 3: Neutral/Partial Case (NEW CHANGE)
+            // Player Rasi Athipathi = Chevvai (Mars)
+            else if (playerRasiLord === 'Mars') {
+                // Batting 0 Point (Neutral) - Implicit as simple adding 0 or not adding anything
+                addRule('Moolam: Rasi Lord Mars (Batting 0)', 0, 'bat', false, 'மூலம்: ராசி அதிபதி செவ்வாய் (பேட்டிங் 0)');
+
+                // Bowling +4 Points
+                addRule('Moolam: Rasi Lord Mars (Bowling) (+4)', 4, 'bowl', true, 'மூலம்: ராசி அதிபதி செவ்வாய் (பவுலிங்) (+4)');
+
+                // If Aatchi / Ucham -> +6 Points (Total logic: +4 base, add +2 if Exalted/Own? Or +6 Total?)
+                // Requirement: "If Aatchi / Ucham -> +6 Points".
+                // Let's assume +6 TOTAL. So we add +2 extra.
+                if (isOwnSign('Mars', P['Mars']) || isExalted('Mars', P['Mars'])) {
+                    addRule('Moolam: Mars Ucham/Aatchi Bonus (+2)', 2, 'bowl', true, 'மூலம்: செவ்வாய் உச்சம்/ஆட்சி போனஸ் (+2)');
+                }
+            }
             break;
 
         // 13. POORADAM
         case 'Purva Ashadha':
         case 'Pooradam':
-            if (areInSameSign(['Venus', 'Mercury'])) setSureFlop('Pooradam: Venus + Mercury Conjunction', 'பூராடம்: சுக்கிரன் + புதன் சேர்க்கை');
+            // "Pooradam Match-ku OVERRIDE RULE"
+            if (areInSameSign(['Venus', 'Mercury'])) {
+                // Batting: -12 Points, Sure Flop
+                // Using setSureFlop will wipe out Bowling too if "globalNegative" flag is used globally.
+                // We need to handle this strictly for Batting here or modifying globalNegative logic.
+                // Let's manually set batting.score negative and status instead of using global setSureFlop which affects both.
+
+                // setSureFlop('Pooradam: Venus + Mercury Conjunction', 'பூராடம்: சுக்கிரன் + புதன் சேர்க்கை'); <- This was the old way
+
+                addRule('Pooradam: Venus + Mercury Conjunction (Batting Sure Flop)', -12, 'bat', false, 'பூராடம்: சுக்கிரன் + புதன் சேர்க்கை (பேட்டிங் வீழ்ச்சி)');
+                batting.status = "SURE FLOP"; // Manually set status if possible (returned obj has status?)
+                // Note: The helper function returns {batting, bowling}. Batting internal obj has {score, logs, isSpecial}.
+                // It doesn't seem to have a 'status' property in this client version?
+                // Wait, server version has `status`. Client version: `const batting = { score: 0, logs: [], isSpecial: false };`
+                // I will add status to the object just in case the UI uses it or it's implicitly needed.
+                batting.status = "SURE FLOP";
+
+                // Bowling: +12 Points, Show Special Player
+                addRule('Pooradam: Venus + Mercury Conjunction (Bowling) (+12)', 12, 'bowl', true, 'பூராடம்: சுக்கிரன் + புதன் சேர்க்கை (பவுலிங்) (+12)');
+            }
             break;
 
         // 14. UTHIRADAM
