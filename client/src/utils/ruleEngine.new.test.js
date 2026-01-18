@@ -127,7 +127,7 @@ describe('Updated Rule Engine Rules', () => {
         it('Case 3: Neutral/Partial (Player Rasi Lord Mars Only)', () => {
             const player = {
                 rashiLord: 'Mars',
-                nakshatraLord: 'Jupiter', // NOT Saturn
+                nakshatraLord: 'Mercury', // CHANGED from Jupiter to Mercury to avoid Rule 3 (Star Rule) match with Match Star Lord (Jupiter)
                 planetPositions: { 'Mars': 'Pisces' } // Neutral sign for Mars
             };
 
@@ -135,7 +135,11 @@ describe('Updated Rule Engine Rules', () => {
             const bowlingResult = evaluateBowler(player, moolamMatch, transit);
 
             // Batting: 0 (Neutral)
-            expect(battingResult.score).toBe(0); // Assuming no other rules trigger
+            // Ensure no "Moolam" batting rule added (since score is 0 and we didn't add a rule with 0 score with text)
+            // Actually implementation added: addRule('Moolam: Rasi Lord Mars (Batting 0)', 0, 'bat', ...);
+            // So score should be 0.
+            expect(battingResult.score).toBe(0);
+
 
             // Bowling: +4
             expect(bowlingResult.score).toBeGreaterThanOrEqual(4);
