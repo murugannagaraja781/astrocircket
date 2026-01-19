@@ -1080,6 +1080,11 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
         let scoreB = 0;
         let countA = 0;
         let countB = 0;
+        // Separated Scores
+        let batA = 0;
+        let bowlA = 0;
+        let batB = 0;
+        let bowlB = 0;
 
         const allPlayers = groups.flatMap(g => g.players);
 
@@ -1096,14 +1101,24 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                     // Save Result
                     resDetails[pid] = { bat, bowl };
 
-                    // Add to team totals (Using MAX of Bat/Bowl as contribution)
+                    // Add to team totals (Using MAX of Bat/Bowl as contribution for Main Score)
                     const contribution = Math.max(bat.score, bowl.score);
 
                     const isTeamA = groups.find(g => g._id === teamA)?.players?.some(tp => tp.id === pid);
                     const isTeamB = groups.find(g => g._id === teamB)?.players?.some(tp => tp.id === pid);
 
-                    if (isTeamA) { scoreA += contribution; countA++; }
-                    else if (isTeamB) { scoreB += contribution; countB++; }
+                    if (isTeamA) {
+                        scoreA += contribution;
+                        batA += bat.score;
+                        bowlA += bowl.score;
+                        countA++;
+                    }
+                    else if (isTeamB) {
+                        scoreB += contribution;
+                        batB += bat.score;
+                        bowlB += bowl.score;
+                        countB++;
+                    }
                 }
             }
         });
@@ -1112,7 +1127,14 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
         const avgA = countA > 0 ? (scoreA / countA).toFixed(1) : 0;
         const avgB = countB > 0 ? (scoreB / countB).toFixed(1) : 0;
 
-        setResults({ details: resDetails, scoreA: avgA, scoreB: avgB, totalA: scoreA, totalB: scoreB });
+        setResults({
+            details: resDetails,
+            scoreA: avgA,
+            scoreB: avgB,
+            totalA: scoreA,
+            totalB: scoreB,
+            batA, bowlA, batB, bowlB
+        });
 
         // 4. Close Rule Dialog
         setRuleDialogOpen(false);
@@ -1132,6 +1154,9 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
         if (!grp) return null;
 
         const myScore = teamId === teamA ? results?.totalA : results?.totalB;
+        const myBat = teamId === teamA ? results?.batA : results?.batB;
+        const myBowl = teamId === teamA ? results?.bowlA : results?.bowlB;
+
         const opponentScore = teamId === teamA ? results?.totalB : results?.totalA;
         const isWinner = results && Number(myScore) > Number(opponentScore);
 
@@ -1187,7 +1212,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                         </Button>
                     </Box>
                     {results && (
-                        <Chip label={`Score: ${myScore}`} color={isWinner ? "success" : "default"} variant={isWinner ? "filled" : "outlined"} size="small" />
+                        <Chip label={`Score: ${myScore} (b=${myBat}, bw=${myBowl})`} color={isWinner ? "success" : "default"} variant={isWinner ? "filled" : "outlined"} size="small" />
                     )}
                 </Box>
 
