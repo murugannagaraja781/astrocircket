@@ -318,54 +318,18 @@ const NotesOverlay = ({ isOpen, onClose }) => {
             {/* Team Selection */}
             <Box sx={{ px: 3, pt: 2, display: 'flex', gap: 2 }}>
                 <Autocomplete
+                    disablePortal
                     freeSolo
                     options={CRICKET_TEAMS}
-                    inputValue={teamA}
-                    onInputChange={(_, newInputValue) => setTeamA(newInputValue)}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            label="TEAM A"
-                            variant="standard"
-                            size="small"
-                            sx={{
-                                '& .MuiInputBase-input': {
-                                    color: '#5d4a1f',
-                                    fontWeight: 'bold',
-                                    fontFamily: '"Courier New", monospace'
-                                },
-                                '& .MuiInputLabel-root': { color: '#8b6914' },
-                                '& .MuiInput-underline:before': { borderBottomColor: '#d4af37' },
-                                '& .MuiInput-underline:after': { borderBottomColor: '#8b6914' }
-                            }}
-                        />
-                    )}
                     sx={{ flex: 1 }}
+                    renderInput={(params) => <TextField {...params} label="TEAM A" variant="standard" size="small" />}
                 />
                 <Autocomplete
+                    disablePortal
                     freeSolo
                     options={CRICKET_TEAMS}
-                    inputValue={teamB}
-                    onInputChange={(_, newInputValue) => setTeamB(newInputValue)}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            label="TEAM B"
-                            variant="standard"
-                            size="small"
-                            sx={{
-                                '& .MuiInputBase-input': {
-                                    color: '#5d4a1f',
-                                    fontWeight: 'bold',
-                                    fontFamily: '"Courier New", monospace'
-                                },
-                                '& .MuiInputLabel-root': { color: '#8b6914' },
-                                '& .MuiInput-underline:before': { borderBottomColor: '#d4af37' },
-                                '& .MuiInput-underline:after': { borderBottomColor: '#8b6914' }
-                            }}
-                        />
-                    )}
                     sx={{ flex: 1 }}
+                    renderInput={(params) => <TextField {...params} label="TEAM B" variant="standard" size="small" />}
                 />
             </Box>
 
