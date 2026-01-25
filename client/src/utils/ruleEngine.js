@@ -449,9 +449,23 @@ function getPrediction(player, match, transit) {
             break;
 
         // 17. SATHAYAM
+        // 17. SATHAYAM
         case 'Shatabhisha':
         case 'Sathayam':
-            if (playerRasiLord === 'Moon') addRule('Sathayam: Rasi Lord Moon (+12) 👉 GAME CHANGER 👉 Must Show Special Player', 12, 'both', true, 'சதயம்: ராசி அதிபதி சந்திரன் (+12) 👉 கேம் சேஞ்சர் 👉 சிறப்பு வீரர்');
+            // Rule 2: DIRECT RULE (NEGATIVE) - BOWLING Specifics for Sathayam
+
+            // Case 2: SURE FLOP (NEW UPDATE)
+            // Moon (Chandran) AND Guru (Jupiter) 👉 Both present / joined / active (as per chart)
+            // "Sathayam + Moon + Guru together → ❌ Sure Flop"
+            if (areInSameSign(['Moon', 'Jupiter'])) {
+                setSureFlop('Sathayam: Moon + Jupiter Conjunction (Sure Flop)', 'சதயம்: சந்திரன் + குரு சேர்க்கை (Sure Flop)');
+            }
+            // Case 1: GAME CHANGER
+            // Player Rasi Athipathi = Chandran (Moon)
+            // "Sathayam + Moon only → 🔥 +12 Game Changer"
+            else if (playerRasiLord === 'Moon') {
+                addRule('Sathayam: Rasi Lord Moon (+12) 👉 GAME CHANGER 👉 Must Show Special Player', 12, 'bowl', true, 'சதயம்: ராசி அதிபதி சந்திரன் (+12) 👉 கேம் சேஞ்சர் 👉 சிறப்பு வீரர்');
+            }
             break;
     }
 

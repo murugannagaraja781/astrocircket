@@ -5,7 +5,9 @@ import {
     Typography,
     Box,
     Tooltip,
-    Divider
+    Divider,
+    Autocomplete,
+    TextField
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
@@ -14,6 +16,8 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
 const NotesOverlay = ({ isOpen, onClose }) => {
     const [notes, setNotes] = useState('');
+    const [teamA, setTeamA] = useState('');
+    const [teamB, setTeamB] = useState('');
     const [fontSize, setFontSize] = useState(14);
     const [position, setPosition] = useState({ x: 100, y: 100 });
     const [size, setSize] = useState({ width: 500, height: 400 });
@@ -62,7 +66,8 @@ const NotesOverlay = ({ isOpen, onClose }) => {
 
     // Handle dragging
     const handleMouseDown = (e) => {
-        if (e.target.closest('.drag-handle')) {
+        // Allow dragging from anywhere except interactive elements and resize handles
+        if (!e.target.closest('input, textarea, button, [role="button"], .resize-handle')) {
             setIsDragging(true);
             setDragStart({
                 x: e.clientX - position.x,
@@ -190,6 +195,7 @@ const NotesOverlay = ({ isOpen, onClose }) => {
             {['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'].map(direction => (
                 <Box
                     key={direction}
+                    className="resize-handle"
                     onMouseDown={handleResizeStart(direction)}
                     sx={{
                         position: 'absolute',
@@ -304,6 +310,60 @@ const NotesOverlay = ({ isOpen, onClose }) => {
                         </IconButton>
                     </Tooltip>
                 </Box>
+            </Box>
+
+            {/* Team Selection */}
+            <Box sx={{ px: 3, pt: 2, display: 'flex', gap: 2 }}>
+                <Autocomplete
+                    freeSolo
+                    options={[]}
+                    value={teamA}
+                    onInputChange={(_, newValue) => setTeamA(newValue)}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            label="TEAM A"
+                            variant="standard"
+                            size="small"
+                            sx={{
+                                '& .MuiInputBase-input': {
+                                    color: '#5d4a1f',
+                                    fontWeight: 'bold',
+                                    fontFamily: '"Courier New", monospace'
+                                },
+                                '& .MuiInputLabel-root': { color: '#8b6914' },
+                                '& .MuiInput-underline:before': { borderBottomColor: '#d4af37' },
+                                '& .MuiInput-underline:after': { borderBottomColor: '#8b6914' }
+                            }}
+                        />
+                    )}
+                    sx={{ flex: 1 }}
+                />
+                <Autocomplete
+                    freeSolo
+                    options={[]}
+                    value={teamB}
+                    onInputChange={(_, newValue) => setTeamB(newValue)}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            label="TEAM B"
+                            variant="standard"
+                            size="small"
+                            sx={{
+                                '& .MuiInputBase-input': {
+                                    color: '#5d4a1f',
+                                    fontWeight: 'bold',
+                                    fontFamily: '"Courier New", monospace'
+                                },
+                                '& .MuiInputLabel-root': { color: '#8b6914' },
+                                '& .MuiInput-underline:before': { borderBottomColor: '#d4af37' },
+                                '& .MuiInput-underline:after': { borderBottomColor: '#8b6914' }
+                            }}
+                        />
+                    )}
+                    sx={{ flex: 1 }}
+                />
             </Box>
 
             {/* Text Area */}
