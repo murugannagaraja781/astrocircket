@@ -13,6 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import { CRICKET_TEAMS } from '../utils/teams';
 
 const NotesOverlay = ({ isOpen, onClose }) => {
     const [notes, setNotes] = useState('');
@@ -152,26 +153,7 @@ const NotesOverlay = ({ isOpen, onClose }) => {
 
     if (!isOpen) return null;
 
-const CRICKET_TEAMS = [
-    // IPL Teams
-    'CSK (Chennai Super Kings)',
-    'RCB (Royal Challengers Bangalore)',
-    'MI (Mumbai Indians)',
-    'KKR (Kolkata Knight Riders)',
-    'SRH (Sunrisers Hyderabad)',
-    'DC (Delhi Capitals)',
-    'PBKS (Punjab Kings)',
-    'RR (Rajasthan Royals)',
-    'GT (Gujarat Titans)',
-    'LSG (Lucknow Super Giants)',
-    // International Teams
-    'India', 'Australia', 'England', 'South Africa', 'New Zealand',
-    'Pakistan', 'Sri Lanka', 'West Indies', 'Bangladesh', 'Afghanistan',
-    // TNPL / State / Others
-    'Chepauk Super Gillies', 'Lyca Kovai Kings', 'Dindigul Dragons',
-    'Nellai Royal Kings', 'Madurai Panthers', 'Salem Spartans',
-    'Trichy Grand Cholas', 'Tiruppur Tamizhans'
-];
+
 
     return (
         <Paper

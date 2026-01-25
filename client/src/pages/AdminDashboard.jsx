@@ -8,6 +8,7 @@ import {
     useTheme, useMediaQuery, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination,
     Snackbar, Alert, Checkbox, FormControlLabel, Chip, Avatar
 } from '@mui/material';
+import { CRICKET_TEAMS } from '../utils/teams';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const visionTheme = createTheme({
@@ -1575,6 +1576,7 @@ const PlayersManager = () => {
                                 <Button
                                     key={g._id}
                                     variant="outlined"
+                                    variant="outlined"
                                     onClick={async () => {
                                         try {
                                             await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/add`, {
@@ -1591,8 +1593,52 @@ const PlayersManager = () => {
                                 </Button>
                             ))
                         ) : (
-                            <Typography>No teams found. Create one in Groups tab.</Typography>
+                            <Typography>No active teams found. Create one in Groups tab.</Typography>
                         )}
+
+                        <Divider sx={{ my: 1 }}>OR</Divider>
+
+                        <Autocomplete
+                            freeSolo
+                            options={CRICKET_TEAMS}
+                            value={selectedGroupToAdd}
+                            onChange={(event, newValue) => setSelectedGroupToAdd(newValue)}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Select/Type Team Name"
+                                    fullWidth
+                                    variant="outlined"
+                                    helperText="Type to search existing cricket teams"
+                                />
+                            )}
+                        />
+                        <Button
+                            variant="contained"
+                            disabled={!selectedGroupToAdd}
+                            onClick={async () => {
+                                try {
+                                    // First check if group exists, if not create it on the fly?
+                                    // For now, let's assume 'add to team' implies adding to an existing group or creating if logic supports.
+                                    // The current backend 'api/groups/add' likely expects an existing group name or creates it?
+                                    // Let's use the same endpoint. If backend supports creation by name, this works.
+                                    await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/add`, {
+                                        groupName: selectedGroupToAdd,
+                                        playerIds: selectedItems.map(item => item.id).filter(Boolean)
+                                    }, { headers: { 'x-auth-token': token } });
+                                    showSnackbar(`Added to ${selectedGroupToAdd}`, 'success');
+                                    setOpenGroupDialog(false);
+                                    setSelectedItems([]);
+                                    setSelectedGroupToAdd('');
+                                } catch (e) {
+                                    console.error(e);
+                                    showSnackbar('Failed to add to team. Ensure team exists.', 'error');
+                                }
+                            }}
+                        >
+                            Add to "{selectedGroupToAdd}"
+                        </Button>
+
                     </Box>
                 </DialogContent>
                 <DialogActions>
@@ -1944,13 +1990,22 @@ const GroupsManager = () => {
             <Dialog open={openCreate} onClose={() => setOpenCreate(false)}>
                 <DialogTitle>Create New Group</DialogTitle>
                 <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        label="Group Name"
-                        fullWidth
+                    <Autocomplete
+                        freeSolo
+                        options={CRICKET_TEAMS}
                         value={newGroupName}
-                        onChange={(e) => setNewGroupName(e.target.value)}
+                        onInputChange={(event, newInputValue) => setNewGroupName(newInputValue)}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                autoFocus
+                                margin="dense"
+                                label="Group/Team Name"
+                                fullWidth
+                                variant="outlined"
+                                helperText="Select a standard team or type a custom name"
+                            />
+                        )}
                     />
                 </DialogContent>
                 <DialogActions>
