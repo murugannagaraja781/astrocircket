@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-// Icons
+// Icons done
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import LoginScreen from './src/screens/LoginScreen';
