@@ -159,7 +159,6 @@ const NotesOverlay = ({ isOpen, onClose }) => {
         <Paper
             ref={overlayRef}
             elevation={8}
-            onMouseDown={handleMouseDown}
             sx={{
                 position: 'fixed',
                 left: `${position.x}px`,
@@ -222,9 +221,10 @@ const NotesOverlay = ({ isOpen, onClose }) => {
                 />
             ))}
 
-            {/* Header */}
+            {/* Header - Drag only from here */}
             <Box
                 className="drag-handle"
+                onMouseDown={handleMouseDown}
                 sx={{
                     display: 'flex',
                     alignItems: 'center',
