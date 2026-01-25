@@ -401,9 +401,9 @@ function getPrediction(player, match, transit) {
                 // Bowling +4 Points
                 addRule('Moolam: Rasi Lord Mars (Bowling) (+4)', 4, 'bowl', true, 'மூலம்: ராசி அதிபதி செவ்வாய் (பவுலிங்) (+4)');
 
-                // If Aatchi / Ucham -> +6 Points (Total logic: +4 base, add +2 to make 6)
+                // If Aatchi / Ucham -> +6 Points (User Request)
                 if (isOwnSign('Mars', P['Mars']) || isExalted('Mars', P['Mars'])) {
-                    addRule('Moolam: Mars Ucham/Aatchi Bonus (+2)', 2, 'bowl', true, 'மூலம்: செவ்வாய் உச்சம்/ஆட்சி போனஸ் (+2)');
+                    addRule('Moolam: Mars Ucham/Aatchi Bonus (+6)', 6, 'bowl', true, 'மூலம்: செவ்வாய் உச்சம்/ஆட்சி போனஸ் (+6)');
                 }
             }
             break;
@@ -411,19 +411,19 @@ function getPrediction(player, match, transit) {
         // 13. POORADAM
         case 'Purva Ashadha':
         case 'Pooradam':
-            // "Pooradam Match-ku OVERRIDE RULE"
-            // Use Transit (M) for Venus + Mercury Conjunction
+            // "Pooradam Match: Guru - Sukkiran (Venus)"
+            // Condition: Venus and Mercury (Sukkiran and Puthan) joined in same house
             if (M['Venus'] && M['Mercury'] && M['Venus'] === M['Mercury']) {
                 // OVERRIDE: Clear previous rules/scores
                 batting.score = 0; batting.logs = [];
                 bowling.score = 0; bowling.logs = [];
 
                 // BAT: -12 Sure Flop
-                addRule('Pooradam: Venus + Mercury Conjunction (OVERRIDE -12)', -12, 'bat', false, 'பூராடம்: சுக்கிரன் + புதன் சேர்க்கை (OVERRIDE -12)');
+                addRule('Pooradam: Venus + Mercury Conjunction (SURE FLOP)', -12, 'bat', false, 'பூராடம்: சுக்கிரன் + புதன் சேர்க்கை (SURE FLOP)');
                 batting.status = "SURE FLOP";
 
                 // BOWL: +12 Special
-                addRule('Pooradam: Venus + Mercury Conjunction (OVERRIDE +12)', 12, 'bowl', true, 'பூராடம்: சுக்கிரன் + புதன் சேர்க்கை (OVERRIDE +12)');
+                addRule('Pooradam: Venus + Mercury Conjunction (+12)', 12, 'bowl', true, 'பூராடம்: சுக்கிரன் + புதன் சேர்க்கை (+12)');
             }
             break;
 

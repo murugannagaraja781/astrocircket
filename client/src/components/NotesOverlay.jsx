@@ -152,6 +152,27 @@ const NotesOverlay = ({ isOpen, onClose }) => {
 
     if (!isOpen) return null;
 
+const CRICKET_TEAMS = [
+    // IPL Teams
+    'CSK (Chennai Super Kings)',
+    'RCB (Royal Challengers Bangalore)',
+    'MI (Mumbai Indians)',
+    'KKR (Kolkata Knight Riders)',
+    'SRH (Sunrisers Hyderabad)',
+    'DC (Delhi Capitals)',
+    'PBKS (Punjab Kings)',
+    'RR (Rajasthan Royals)',
+    'GT (Gujarat Titans)',
+    'LSG (Lucknow Super Giants)',
+    // International Teams
+    'India', 'Australia', 'England', 'South Africa', 'New Zealand',
+    'Pakistan', 'Sri Lanka', 'West Indies', 'Bangladesh', 'Afghanistan',
+    // TNPL / State / Others
+    'Chepauk Super Gillies', 'Lyca Kovai Kings', 'Dindigul Dragons',
+    'Nellai Royal Kings', 'Madurai Panthers', 'Salem Spartans',
+    'Trichy Grand Cholas', 'Tiruppur Tamizhans'
+];
+
     return (
         <Paper
             ref={overlayRef}
@@ -316,7 +337,7 @@ const NotesOverlay = ({ isOpen, onClose }) => {
             <Box sx={{ px: 3, pt: 2, display: 'flex', gap: 2 }}>
                 <Autocomplete
                     freeSolo
-                    options={[]}
+                    options={CRICKET_TEAMS}
                     value={teamA}
                     onInputChange={(_, newValue) => setTeamA(newValue)}
                     renderInput={(params) => (
@@ -341,7 +362,7 @@ const NotesOverlay = ({ isOpen, onClose }) => {
                 />
                 <Autocomplete
                     freeSolo
-                    options={[]}
+                    options={CRICKET_TEAMS}
                     value={teamB}
                     onInputChange={(_, newValue) => setTeamB(newValue)}
                     renderInput={(params) => (
