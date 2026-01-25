@@ -1576,7 +1576,6 @@ const PlayersManager = () => {
                                 <Button
                                     key={g._id}
                                     variant="outlined"
-                                    variant="outlined"
                                     onClick={async () => {
                                         try {
                                             await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/add`, {
@@ -2325,10 +2324,16 @@ const AdminDashboard = () => {
 
 
                         {currentView === 'clientDashboard' && (
-                            <Typography variant="h6" sx={{ color: '#2CD9FF', fontWeight: 'bold' }}>
+                            <Typography variant="h6" sx={{ color: '#2CD9FF', fontWeight: 'bold', mr: 2, display: { xs: 'none', md: 'block' } }}>
                                 {currentTime.toLocaleTimeString()}
                             </Typography>
                         )}
+
+                        <Tooltip title="Open Notes">
+                            <IconButton onClick={() => setNotesOpen(true)} sx={{ color: '#fcd34d' }}>
+                                <StickyNote2Icon />
+                            </IconButton>
+                        </Tooltip>
                     </Toolbar>
                 </AppBar>
 
@@ -2448,39 +2453,8 @@ const AdminDashboard = () => {
                 </Alert>
             </Snackbar>
 
-            {/* Notes Overlay */}
+            {/* Floating Notes Button Removed - Moved to Header */}
             <NotesOverlay isOpen={notesOpen} onClose={() => setNotesOpen(false)} />
-
-            {/* Floating Notes Button */}
-            <Box
-                onClick={() => setNotesOpen(true)}
-                sx={{
-                    position: 'fixed',
-                    bottom: 100,
-                    right: 24,
-                    width: 56,
-                    height: 56,
-                    borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'white',
-                    boxShadow: '0 8px 24px rgba(245, 158, 11, 0.4)',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    zIndex: 1000,
-                    '&:hover': {
-                        transform: 'scale(1.1)',
-                        boxShadow: '0 12px 32px rgba(245, 158, 11, 0.5)',
-                    },
-                    '&:active': {
-                        transform: 'scale(0.95)',
-                    }
-                }}
-            >
-                <StickyNote2Icon sx={{ fontSize: 28 }} />
-            </Box>
         </ThemeProvider>
     );
 };

@@ -320,8 +320,8 @@ const NotesOverlay = ({ isOpen, onClose }) => {
                 <Autocomplete
                     freeSolo
                     options={CRICKET_TEAMS}
-                    value={teamA}
-                    onInputChange={(_, newValue) => setTeamA(newValue)}
+                    inputValue={teamA}
+                    onInputChange={(_, newInputValue) => setTeamA(newInputValue)}
                     renderInput={(params) => (
                         <TextField
                             {...params}
@@ -345,8 +345,8 @@ const NotesOverlay = ({ isOpen, onClose }) => {
                 <Autocomplete
                     freeSolo
                     options={CRICKET_TEAMS}
-                    value={teamB}
-                    onInputChange={(_, newValue) => setTeamB(newValue)}
+                    inputValue={teamB}
+                    onInputChange={(_, newInputValue) => setTeamB(newInputValue)}
                     renderInput={(params) => (
                         <TextField
                             {...params}
