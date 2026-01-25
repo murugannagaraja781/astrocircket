@@ -68,7 +68,7 @@ const NotesOverlay = ({ isOpen, onClose }) => {
     // Handle dragging
     const handleMouseDown = (e) => {
         // Allow dragging from anywhere except interactive elements and resize handles
-        if (!e.target.closest('input, textarea, button, [role="button"], .resize-handle')) {
+        if (!e.target.closest('input, textarea, button, [role="button"], [role="combobox"], .MuiAutocomplete-root, .resize-handle')) {
             setIsDragging(true);
             setDragStart({
                 x: e.clientX - position.x,
