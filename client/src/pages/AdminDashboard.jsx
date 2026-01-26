@@ -352,12 +352,267 @@ import NotesOverlay from '../components/NotesOverlay';
 
 // Rules View Component (Tamil)
 const RulesView = () => {
+    const sectionStyle = {
+        mb: 4,
+        p: 3,
+        borderRadius: '16px',
+        bgcolor: '#fff',
+        boxShadow: '0 2px 12px rgba(0,0,0,0.08)'
+    };
+
+    const headerStyle = {
+        color: '#1a202c',
+        fontWeight: 700,
+        mb: 2,
+        pb: 1,
+        borderBottom: '2px solid #e2e8f0'
+    };
+
+    const tableHeaderStyle = {
+        bgcolor: '#1e293b',
+        '& th': { color: '#fff', fontWeight: 700, fontSize: '0.85rem' }
+    };
+
+    const tableCellStyle = {
+        color: '#1a202c',
+        fontSize: '0.9rem'
+    };
+
     return (
         <Box sx={{ p: 2 }}>
-            <Typography variant="h4" gutterBottom sx={{ mb: 4, color: '#fff' }}>
-                Astrological Prediction Rules (கணிப்பு விதிமுறைகள்) update comming soon...
+            <Typography variant="h4" gutterBottom sx={{ mb: 4, color: '#1a202c', fontWeight: 800 }}>
+                🔮 Astrological Prediction Rules (கணிப்பு விதிமுறைகள்)
             </Typography>
 
+            {/* Summary Section */}
+            <Paper sx={sectionStyle}>
+                <Typography variant="h6" sx={headerStyle}>
+                    📊 மொத்த விதிகள் எண்ணிக்கை (Total Rules Summary)
+                </Typography>
+                <TableContainer>
+                    <Table size="small">
+                        <TableHead>
+                            <TableRow sx={tableHeaderStyle}>
+                                <TableCell>வகை (Category)</TableCell>
+                                <TableCell align="center">எண்ணிக்கை (Count)</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell sx={tableCellStyle}>பேட்டிங் பொது விதிகள் (Batting Rules)</TableCell>
+                                <TableCell align="center" sx={tableCellStyle}>8</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell sx={tableCellStyle}>பவுலிங் பொது விதிகள் (Bowling Rules)</TableCell>
+                                <TableCell align="center" sx={tableCellStyle}>9</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell sx={tableCellStyle}>நட்சத்திர சிறப்பு விதிகள் (Nakshatra Rules)</TableCell>
+                                <TableCell align="center" sx={tableCellStyle}>17 நட்சத்திரங்கள்</TableCell>
+                            </TableRow>
+                            <TableRow sx={{ bgcolor: '#f0fdf4' }}>
+                                <TableCell sx={{ ...tableCellStyle, fontWeight: 700 }}>மொத்தம் (Total)</TableCell>
+                                <TableCell align="center" sx={{ ...tableCellStyle, fontWeight: 700 }}>~34 விதிகள்</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Paper>
+
+            {/* Batting Rules */}
+            <Paper sx={sectionStyle}>
+                <Typography variant="h6" sx={headerStyle}>
+                    🏏 பேட்டிங் விதிகள் (Batting Rules 1-8)
+                </Typography>
+                <TableContainer>
+                    <Table size="small">
+                        <TableHead>
+                            <TableRow sx={tableHeaderStyle}>
+                                <TableCell>விதி (Rule)</TableCell>
+                                <TableCell>தமிழ் பெயர் (Tamil Name)</TableCell>
+                                <TableCell align="center">புள்ளிகள் (Points)</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {[
+                                { rule: 'BAT Rule 1', tamil: 'ஜிக்-ஜாக் விதி', points: '+12' },
+                                { rule: 'BAT Rule 2', tamil: 'நேரடி விதி', points: '+6' },
+                                { rule: 'BAT Rule 3', tamil: 'நட்சத்திர விதி', points: '+4' },
+                                { rule: 'BAT Rule 4', tamil: 'சேர்க்கை விதி', points: '+4' },
+                                { rule: 'BAT Rule 5', tamil: 'ஒரே ராசி விதி', points: '+4' },
+                                { rule: 'BAT Rule 6', tamil: 'ராசி அதிபதி வீடு', points: '+6' },
+                                { rule: 'BAT Rule 7', tamil: 'ராகு/கேது விதி', points: '+4' },
+                                { rule: 'BAT Rule 8', tamil: 'லக்ன விதி', points: '+2' },
+                            ].map((row, idx) => (
+                                <TableRow key={idx} sx={{ '&:nth-of-type(odd)': { bgcolor: '#f8fafc' } }}>
+                                    <TableCell sx={tableCellStyle}>{row.rule}</TableCell>
+                                    <TableCell sx={tableCellStyle}>{row.tamil}</TableCell>
+                                    <TableCell align="center" sx={{ ...tableCellStyle, color: '#16a34a', fontWeight: 600 }}>{row.points}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Paper>
+
+            {/* Bowling Rules */}
+            <Paper sx={sectionStyle}>
+                <Typography variant="h6" sx={headerStyle}>
+                    🎳 பவுலிங் விதிகள் (Bowling Rules 1-9)
+                </Typography>
+                <TableContainer>
+                    <Table size="small">
+                        <TableHead>
+                            <TableRow sx={tableHeaderStyle}>
+                                <TableCell>விதி (Rule)</TableCell>
+                                <TableCell>தமிழ் பெயர் (Tamil Name)</TableCell>
+                                <TableCell align="center">புள்ளிகள் (Points)</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {[
+                                { rule: 'BOWL Rule 1', tamil: 'ஜிக்-ஜாக் விதி', points: '+12' },
+                                { rule: 'BOWL Rule 2', tamil: 'நேரடி விதி (எதிர்மறை)', points: '-12', negative: true },
+                                { rule: 'BOWL Rule 3', tamil: 'நட்சத்திர விதி', points: '+3' },
+                                { rule: 'BOWL Rule 4', tamil: 'சேர்க்கை விதி', points: '+4' },
+                                { rule: 'BOWL Rule 5', tamil: 'ஒரே ராசி விதி', points: '+4' },
+                                { rule: 'BOWL Rule 6', tamil: 'ராசி அதிபதி வீடு', points: '+4' },
+                                { rule: 'BOWL Rule 7', tamil: 'ராகு/கேது விதி', points: '+4' },
+                                { rule: 'BOWL Rule 8', tamil: 'லக்ன விதி', points: '+4' },
+                                { rule: 'BOWL Rule 9', tamil: 'ராசி அதிபதி விதி', points: '+3' },
+                            ].map((row, idx) => (
+                                <TableRow key={idx} sx={{ '&:nth-of-type(odd)': { bgcolor: '#f8fafc' } }}>
+                                    <TableCell sx={tableCellStyle}>{row.rule}</TableCell>
+                                    <TableCell sx={tableCellStyle}>{row.tamil}</TableCell>
+                                    <TableCell align="center" sx={{ ...tableCellStyle, color: row.negative ? '#dc2626' : '#16a34a', fontWeight: 600 }}>{row.points}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Paper>
+
+            {/* Nakshatra Specific Rules */}
+            <Paper sx={sectionStyle}>
+                <Typography variant="h6" sx={headerStyle}>
+                    ⭐ நட்சத்திர சிறப்பு விதிகள் (Nakshatra Specific Rules - 17 Stars)
+                </Typography>
+                <TableContainer sx={{ maxHeight: 500 }}>
+                    <Table size="small" stickyHeader>
+                        <TableHead>
+                            <TableRow sx={tableHeaderStyle}>
+                                <TableCell sx={{ bgcolor: '#1e293b', color: '#fff' }}>#</TableCell>
+                                <TableCell sx={{ bgcolor: '#1e293b', color: '#fff' }}>நட்சத்திரம் (Nakshatra)</TableCell>
+                                <TableCell sx={{ bgcolor: '#1e293b', color: '#fff' }}>சிறப்பு நிபந்தனைகள் (Special Conditions)</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {[
+                                { num: 1, star: 'அசுவினி (Ashwini)', condition: 'செவ்வாய் உச்சம் (+8), செவ்வாய்+சுக்கிரன் சேர்க்கை (+10)' },
+                                { num: 2, star: 'பரணி (Bharani)', condition: 'சுக்கிரன்+புதன் சேர்க்கை = SURE FLOP ❌' },
+                                { num: 3, star: 'ரோகிணி (Rohini)', condition: 'சந்திரன் நீசம் (+8), சதயம்+சனி+ராகு (+12)' },
+                                { num: 4, star: 'திருவாதிரை (Ardra)', condition: 'செவ்வாய் ராசி/நட்சத்திர அதிபதி (+4), செவ்வாய் ஆட்சி/உச்சம் (+10)' },
+                                { num: 5, star: 'ஆயில்யம் (Ashlesha)', condition: 'சுக்கிரன்+புதன் சேர்க்கை = SURE FLOP ❌' },
+                                { num: 6, star: 'மகம் (Magha)', condition: 'புதன் ராசி + செவ்வாய் நட்சத்திரம் (+12) ⭐ சிறப்பு வீரர்' },
+                                { num: 7, star: 'பூரம் (Purva Phalguni)', condition: 'சனி+செவ்வாய் (+12 பேட்டிங்), குரு+புதன் (+12 பவுலிங்)' },
+                                { num: 8, star: 'உத்திரம் (Uttara Phalguni)', condition: 'கன்னி ராசி + சனி+ராகு (+12) ⭐ சிறப்பு வீரர்' },
+                                { num: 9, star: 'சித்திரை (Chitra)', condition: 'கன்னி: புதன்+சூரியன் (+6-12), துலாம்: சந்திரன்+சனி (+12)' },
+                                { num: 10, star: 'அனுஷம் (Anuradha)', condition: 'குரு ராசி (+5), குரு ஆட்சி/உச்சம் (+10)' },
+                                { num: 11, star: 'கேட்டை (Jyeshtha)', condition: 'புதன்+சுக்கிரன் சேர்க்கை (-12) ⚠️' },
+                                { num: 12, star: 'மூலம் (Mula)', condition: 'சனி+செவ்வாய் (+12 பேட்டிங்), செவ்வாய்+சனி (+12 பவுலிங்)' },
+                                { num: 13, star: 'பூராடம் (Purva Ashadha)', condition: 'சுக்கிரன்+புதன் சேர்க்கை = SURE FLOP ❌' },
+                                { num: 14, star: 'உத்திராடம் (Uttara Ashadha)', condition: 'மகரம்: சந்திரன் ராசி (+12) ⭐ சிறப்பு வீரர்' },
+                                { num: 15, star: 'திருவோணம் (Shravana)', condition: 'செவ்வாய் கடகத்தில் (+6), சனி+ராகு (+12)' },
+                                { num: 16, star: 'அவிட்டம் (Dhanishta)', condition: 'மகரம்: சனி ராசி (+4)' },
+                                { num: 17, star: 'சதயம் (Shatabhisha)', condition: 'சந்திரன் ராசி (+12) ⭐ GAME CHANGER 🏆' },
+                            ].map((row, idx) => (
+                                <TableRow key={idx} sx={{ '&:nth-of-type(odd)': { bgcolor: '#f8fafc' } }}>
+                                    <TableCell sx={tableCellStyle}>{row.num}</TableCell>
+                                    <TableCell sx={{ ...tableCellStyle, fontWeight: 600 }}>{row.star}</TableCell>
+                                    <TableCell sx={tableCellStyle}>{row.condition}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Paper>
+
+            {/* Verdict Section */}
+            <Paper sx={sectionStyle}>
+                <Typography variant="h6" sx={headerStyle}>
+                    🎯 முடிவு மதிப்பீடு (Final Verdict)
+                </Typography>
+                <TableContainer>
+                    <Table size="small">
+                        <TableHead>
+                            <TableRow sx={tableHeaderStyle}>
+                                <TableCell>Score Range</TableCell>
+                                <TableCell>Label</TableCell>
+                                <TableCell>தமிழ் (Tamil)</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            <TableRow sx={{ bgcolor: '#fef2f2' }}>
+                                <TableCell sx={tableCellStyle}>&lt; 4</TableCell>
+                                <TableCell sx={{ ...tableCellStyle, color: '#dc2626', fontWeight: 700 }}>Flop</TableCell>
+                                <TableCell sx={tableCellStyle}>தோல்வி</TableCell>
+                            </TableRow>
+                            <TableRow sx={{ bgcolor: '#fefce8' }}>
+                                <TableCell sx={tableCellStyle}>4 - 7</TableCell>
+                                <TableCell sx={{ ...tableCellStyle, color: '#ca8a04', fontWeight: 700 }}>Good</TableCell>
+                                <TableCell sx={tableCellStyle}>நல்லது</TableCell>
+                            </TableRow>
+                            <TableRow sx={{ bgcolor: '#f0fdf4' }}>
+                                <TableCell sx={tableCellStyle}>≥ 8</TableCell>
+                                <TableCell sx={{ ...tableCellStyle, color: '#16a34a', fontWeight: 700 }}>Excellent</TableCell>
+                                <TableCell sx={tableCellStyle}>சிறப்பு</TableCell>
+                            </TableRow>
+                            <TableRow sx={{ bgcolor: '#fef2f2' }}>
+                                <TableCell sx={tableCellStyle}>SURE FLOP</TableCell>
+                                <TableCell sx={{ ...tableCellStyle, color: '#dc2626', fontWeight: 700 }}>Score = 0</TableCell>
+                                <TableCell sx={tableCellStyle}>நிச்சய தோல்வி</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Paper>
+
+            {/* Planetary Strength Section */}
+            <Paper sx={sectionStyle}>
+                <Typography variant="h6" sx={headerStyle}>
+                    🌟 கிரக பலம் (Planetary Strength)
+                </Typography>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                        <Typography variant="subtitle2" sx={{ color: '#1a202c', fontWeight: 700, mb: 1 }}>
+                            உச்சம் (Exalted - Strong)
+                        </Typography>
+                        <Box sx={{ fontSize: '0.85rem', color: '#1a202c' }}>
+                            <div>☀️ சூரியன் → மேஷம் (Sun → Aries)</div>
+                            <div>🌙 சந்திரன் → ரிஷபம் (Moon → Taurus)</div>
+                            <div>♂️ செவ்வாய் → மகரம் (Mars → Capricorn)</div>
+                            <div>☿ புதன் → கன்னி (Mercury → Virgo)</div>
+                            <div>♃ குரு → கடகம் (Jupiter → Cancer)</div>
+                            <div>♀ சுக்கிரன் → மீனம் (Venus → Pisces)</div>
+                            <div>♄ சனி → துலாம் (Saturn → Libra)</div>
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Typography variant="subtitle2" sx={{ color: '#1a202c', fontWeight: 700, mb: 1 }}>
+                            நீசம் (Debilitated - Weak)
+                        </Typography>
+                        <Box sx={{ fontSize: '0.85rem', color: '#1a202c' }}>
+                            <div>☀️ சூரியன் → துலாம் (Sun → Libra)</div>
+                            <div>🌙 சந்திரன் → விருச்சிகம் (Moon → Scorpio)</div>
+                            <div>♂️ செவ்வாய் → கடகம் (Mars → Cancer)</div>
+                            <div>☿ புதன் → மீனம் (Mercury → Pisces)</div>
+                            <div>♃ குரு → மகரம் (Jupiter → Capricorn)</div>
+                            <div>♀ சுக்கிரன் → கன்னி (Venus → Virgo)</div>
+                            <div>♄ சனி → மேஷம் (Saturn → Aries)</div>
+                        </Box>
+                    </Grid>
+                </Grid>
+            </Paper>
 
         </Box>
     );
