@@ -6,7 +6,7 @@ import {
     ListItem, ListItemButton, ListItemIcon, ListItemText, Container, Grid, Paper, Button,
     Dialog, DialogTitle, DialogContent, DialogActions, TextField, Autocomplete, CircularProgress,
     useTheme, useMediaQuery, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination,
-    Snackbar, Alert, Checkbox, FormControlLabel, Chip, Avatar
+    Snackbar, Alert, Checkbox, FormControlLabel, Chip, Avatar, Tooltip
 } from '@mui/material';
 import { CRICKET_TEAMS } from '../utils/teams';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -2449,7 +2449,22 @@ const AdminDashboard = () => {
 
     const drawer = (
         <Box sx={{ p: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3, gap: 1 }}>
+            <Box
+                onClick={logout}
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mb: 3,
+                    gap: 1,
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                        transform: 'scale(1.05)',
+                        opacity: 0.9
+                    }
+                }}
+            >
                 <Typography
                     variant="h5"
                     fontWeight="900"
