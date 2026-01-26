@@ -1535,7 +1535,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                         Match Details
                     </Typography>
                     <Typography sx={{ display: 'flex', alignItems: 'center', color: '#FF6F00', fontWeight: 'bold', fontSize: '0.9rem' }}>
-                        Team A vs Team B
+                        {teamA ? groups.find(g => g._id === teamA)?.name : 'Team A'} vs {teamB ? groups.find(g => g._id === teamB)?.name : 'Team B'}
                     </Typography>
                 </Breadcrumbs>
             </Box>
