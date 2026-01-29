@@ -1,23 +1,23 @@
 /**
- * === RULE ENGINE FOR ASTRO CRICKET PREDICTION ===
- * விதி இயந்திரம் - Updated Rules System (Nakshatra Based)
+ * === RULE ENGINE FOR ASTRO CRICKET PREDICTION (REFACTORED) ===
+ * Declarative Rule Engine Structure
  */
 
-// Exalted Signs (உச்சம்)
+// Exalted Signs
 const EXALTED_SIGNS = {
     'Sun': 'Aries', 'Moon': 'Taurus', 'Mars': 'Capricorn',
     'Mercury': 'Virgo', 'Jupiter': 'Cancer', 'Venus': 'Pisces',
     'Saturn': 'Libra', 'Rahu': 'Taurus', 'Ketu': 'Scorpio'
 };
 
-// Debilitated Signs (நீசம்)
+// Debilitated Signs
 const DEBILITATED_SIGNS = {
     'Sun': 'Libra', 'Moon': 'Scorpio', 'Mars': 'Cancer',
     'Mercury': 'Pisces', 'Jupiter': 'Capricorn', 'Venus': 'Virgo',
     'Saturn': 'Aries', 'Rahu': 'Scorpio', 'Ketu': 'Taurus'
 };
 
-// Own Signs (ஆட்சி)
+// Own Signs
 const OWN_SIGNS = {
     'Sun': ['Leo'],
     'Moon': ['Cancer'],
@@ -26,13 +26,11 @@ const OWN_SIGNS = {
     'Jupiter': ['Sagittarius', 'Pisces'],
     'Venus': ['Taurus', 'Libra'],
     'Saturn': ['Capricorn', 'Aquarius'],
-    'Rahu': ['Aquarius'], // Simplified
-    'Ketu': ['Scorpio']   // Simplified
+    'Rahu': ['Aquarius'],
+    'Ketu': ['Scorpio']
 };
 
-/**
- * Check Dignity
- */
+/** Utility Functions **/
 function getDignity(planetName, signName) {
     if (!planetName || !signName) return 'Neutral';
     if (EXALTED_SIGNS[planetName] === signName) return 'Exalted';
@@ -41,600 +39,332 @@ function getDignity(planetName, signName) {
     return 'Neutral';
 }
 
-function isExalted(planetName, signName) { return getDignity(planetName, signName) === 'Exalted'; }
-function isDebilitated(planetName, signName) { return getDignity(planetName, signName) === 'Debilitated'; }
-function isOwnSign(planetName, signName) { return getDignity(planetName, signName) === 'Own Sign'; }
+const isExalted = (p, s) => getDignity(p, s) === 'Exalted';
+const isOwnSign = (p, s) => getDignity(p, s) === 'Own Sign';
+const isSignInList = (sign, list) => sign && list.includes(sign);
 
-/**
- * Common Prediction Logic
- */
-function getPrediction(player, match, transit) {
-    const batting = { score: 0, logs: [], isSpecial: false };
-    const bowling = { score: 0, logs: [], isSpecial: false };
+class RuleContext {
+    constructor(player, match, transit) {
+        this.player = player;
+        this.match = match;
+        this.transit = transit;
 
-    if (!player || !match) return { batting, bowling };
+        this.batting = { score: 0, logs: [], isSpecial: false, status: 'Active' };
+        this.bowling = { score: 0, logs: [], isSpecial: false, status: 'Active' };
 
-    const planetPositions = transit.planetPositions || {}; // Map: Planet -> SignName
+        this.P = player.planetPositions || {};
+        this.M = transit.planetPositions || {};
 
-    // Helper to get positions specifically for player planets using Player's chart mapped to Transit Signs?
-    // Wait, the Server Logic checks Player's Natal Planet positions for Dignity (Exalted in Natal).
-    // Client `player` object has `planetPositions` which seems to be Natal positions.
-    // Client `transit` object has `planetPositions` which is MATCH DAY positions.
+        this.playerRasiLord = player.rashiLord;
+        this.playerStarLord = player.nakshatraLord;
+        this.playerStar = player.nakshatra;
+        this.playerRasi = player.rashi;
 
-    // Server: `pMap` is Player Birth Chart. `matchChart` is Match Chart.
-    // `isExalted('Mars', P.mars.longitude)` -> Checks PLAYER'S Mars.
+        this.matchStar = match.nakshatra;
+        this.matchRasiLord = match.rashiLord;
+        this.matchStarLord = match.nakshatraLord;
+        this.matchLagnaLord = transit.ascendantLord;
+        this.matchLagnaSign = transit.ascendantSign;
 
-    const P = player.planetPositions || {}; // Player Natal Positions (Planet Name -> Sign Name)
-    const M = transit.planetPositions || {}; // Match Transit Positions (Planet Name -> Sign Name)
-
-    let playerRasiLord = player.rashiLord;
-    let playerStarLord = player.nakshatraLord;
-    let playerStar = player.nakshatra;
-
-    let matchStar = match.nakshatra; // Name
-    let matchRasiLord = match.rashiLord;
-    let matchStarLord = match.nakshatraLord;
-
-    /* RAHU / KETU STAR LORD OVERRIDES (Match) per Part 2 */
-    if (matchStarLord === 'Rahu' || matchStarLord === 'Ketu') {
-        matchStarLord = matchRasiLord;
-        if (matchStar === 'Magha' || matchStar === 'Magam') {
-            matchStarLord = 'Mars';
+        // Overrides
+        if (this.matchStarLord === 'Rahu' || this.matchStarLord === 'Ketu') {
+            this.matchStarLord = this.matchRasiLord;
+            if (['Magha', 'Magam', 'Ashwini', 'Aswini'].includes(this.matchStar)) this.matchStarLord = 'Mars';
         }
-        if (matchStar === 'Ashwini' || matchStar === 'Aswini') {
-            matchStarLord = 'Mars';
+        if (this.playerStarLord === 'Rahu' || this.playerStarLord === 'Ketu') {
+            this.playerStarLord = this.playerRasiLord;
         }
+
+        this.sureFlopBat = false;
+        this.sureFlopBowl = false;
     }
 
-    /* RAHU / KETU STAR LORD OVERRIDES (Player) */
-    if (playerStarLord === 'Rahu' || playerStarLord === 'Ketu') {
-        playerStarLord = playerRasiLord;
-    }
-
-    const matchLagnaLord = transit.ascendantLord; // Assume this is available in transit or derived
-    const matchLagnaSign = transit.ascendantSign;
-
-    let sureFlopBat = false;
-    let sureFlopBowl = false;
-
-    const addRule = (name, score, type = 'both', isSpecial = false, nameTamil = '') => {
+    addRule(name, score, type = 'both', isSpecial = false, nameTamil = '') {
         const ruleText = `${name} (${score > 0 ? '+' : ''}${score})`;
-        const ruleTextTamil = nameTamil ? `${nameTamil} (${score > 0 ? '+' : ''}${score})` : ruleText;
-
-        const logEntry = { en: ruleText, ta: ruleTextTamil };
+        const logEntry = { en: ruleText, ta: nameTamil ? `${nameTamil} (${score > 0 ? '+' : ''}${score})` : ruleText };
 
         if (type === 'both' || type === 'bat') {
-            batting.score += score;
-            if (!batting.logs) batting.logs = [];
-            batting.logs.push(logEntry);
-            if (isSpecial) batting.isSpecial = true;
+            this.batting.score += score;
+            this.batting.logs.push(logEntry);
+            if (isSpecial) this.batting.isSpecial = true;
         }
         if (type === 'both' || type === 'bowl') {
-            bowling.score += score;
-            if (!bowling.logs) bowling.logs = [];
-            bowling.logs.push(logEntry);
-            if (isSpecial) bowling.isSpecial = true;
-        }
-    };
-
-    const applyBonuses = (planet, baseScore, type = 'both') => {
-        if (isExalted(planet, P[planet]) || isOwnSign(planet, P[planet])) {
-            addRule(`${planet} Aatchi/Ucham Bonus`, 4, type);
-        }
-    };
-
-    const setSureFlop = (name, nameTamil = '', type = 'both') => {
-        if (type === 'both' || type === 'bat') sureFlopBat = true;
-        if (type === 'both' || type === 'bowl') sureFlopBowl = true;
-        addRule(`${name} (SURE FLOP)`, 0, type, true, nameTamil ? `${nameTamil} (SURE FLOP)` : '');
-    };
-
-    // Helper for Conjunctions (in Player Chart)
-    const areInSameSign = (planets) => {
-        if (!planets || planets.length < 2) return false;
-        const firstSign = P[planets[0]];
-        if (!firstSign) return false;
-        return planets.every(p => P[p] === firstSign);
-    };
-
-    /* ================= GENERAL BATTING RULES ================= */
-
-    // Rule 1: ZIG-ZAG RULE
-    if (matchRasiLord === playerStarLord && matchStarLord === playerRasiLord) {
-        addRule('BAT Rule 1: Zig-Zag', 12, 'bat', false, 'பேட்டிங் விதி 1: ஜிக்-ஜாக்');
-        applyBonuses(playerRasiLord, 4, 'bat');
-    }
-
-    // Rule 2: DIRECT RULE
-    if (matchRasiLord === playerRasiLord && matchStarLord === playerStarLord) {
-        addRule('BAT Rule 2: Direct', 6, 'bat', false, 'பேட்டிங் விதி 2: நேரடி விதி');
-        applyBonuses(playerRasiLord, 4, 'bat');
-    }
-
-    // Rule 3: STAR RULE
-    if (matchStarLord === playerRasiLord || matchStarLord === playerStarLord) {
-        addRule('BAT Rule 3: Star', 4, 'bat', false, 'பேட்டிங் விதி 3: நட்சத்திர விதி');
-        applyBonuses(matchStarLord, 4, 'bat');
-    }
-
-
-    // Rule 4: CONJUNCTION RULE (Modified)
-    // Match Nakshatra Athipathi joins Player Rasi Athipathi OR Player Nakshatra Athipathi
-    // இருக்கும் அதே வீட்டில் (Same House) இணைந்து (Conjunction) இருந்தால்
-    // Check Transit Match Star Lord (M) vs Natal Player Rasi Lord (P)
-    // console.log('DEBUG Conjunction:', { matchStarLord, playerRasiLord, playerStarLord, M_Star: M[matchStarLord], P_Rasi: P[playerRasiLord], P_Star: P[playerStarLord] });
-    // CONJUNCTION RULE (Updated: Using Player Chart)
-    // Check Natal Match Star Lord (P) vs Natal Player Rasi/Star Lord (P)
-    // CONJUNCTION RULE (Updated: Star Lord & Rasi Lord)
-
-    // PART A: Match Star Lord (Positive for Batting)
-    if (P[matchStarLord]) {
-        if (playerRasiLord && P[playerRasiLord] && P[matchStarLord] === P[playerRasiLord]) {
-            addRule('BAT Rule 4: Conjunction (Rasi Lord)', 4, 'bat', false, 'பேட்டிங் விதி 4: சேர்க்கை விதி (ராசி அதிபதி)');
-            applyBonuses(playerRasiLord, 4, 'bat');
-            if (matchLagnaSign === P[matchStarLord]) {
-                addRule('BAT Rule 4: Lagna Match', 2, 'bat', false, 'பேட்டிங் விதி 4: மேட்ச் லக்னம் ராசி/நட்சத்திர அதிபதி இருக்கும் வீட்டில் இருந்தால் (+2)');
-            }
-        }
-        else if (playerStarLord && P[playerStarLord] && P[matchStarLord] === P[playerStarLord]) {
-            addRule('BAT Rule 4: Conjunction (Star Lord)', 4, 'bat', false, 'பேட்டிங் விதி 4: சேர்க்கை விதி (நட்சத்திர அதிபதி)');
-            applyBonuses(playerStarLord, 4, 'bat');
-            if (matchLagnaSign === P[matchStarLord]) {
-                addRule('BAT Rule 4: Lagna Match', 2, 'bat', false, 'பேட்டிங் விதி 4: மேட்ச் லக்னம் ராசி/நட்சத்திர அதிபதி இருக்கும் வீட்டில் இருந்தால் (+2)');
-            }
+            this.bowling.score += score;
+            this.bowling.logs.push(logEntry);
+            if (isSpecial) this.bowling.isSpecial = true;
         }
     }
 
-    // PART B: Match Rasi Lord (SURE FLOP for Batting)
-    if (P[matchRasiLord]) {
-        const mrLord = P[matchRasiLord];
-        const prLord = playerRasiLord && P[playerRasiLord];
-        const psLord = playerStarLord && P[playerStarLord];
-
-        if ((prLord && mrLord === prLord) || (psLord && mrLord === psLord)) {
-            // setSureFlop('BAT Rule 4: Match Rasi Conjunction', 'பேட்டிங் விதி 4: மேட்ச் ராசி அதிபதி சேர்க்கை (Sure Flop)', 'bat');
-
+    applyBonuses(planet, score, type = 'both') {
+        if (isExalted(planet, this.P[planet]) || isOwnSign(planet, this.P[planet])) {
+            this.addRule(`${planet} Aatchi/Ucham Bonus`, score, type);
         }
     }
 
-    // Rule 5: SAME HOUSE RULE (Updated)
+    setSureFlop(name, nameTamil = '', type = 'both') {
+        if (type === 'both' || type === 'bat') this.sureFlopBat = true;
+        if (type === 'both' || type === 'bowl') this.sureFlopBowl = true;
+        this.addRule(name, 0, type, true, nameTamil);
+    }
+}
 
-    // 5A: Match Star Lord (Batting & Bowling: +4 Points)
-    const ownedByMatchStarLord = OWN_SIGNS[matchStarLord] || [];
-
-    // Robust Helper to check sign match
-    const isSignInList = (signIdentifier, signList) => {
-        if (!signIdentifier) return false;
-        // If signIdentifier is Name (String)
-        if (typeof signIdentifier === 'string' && signList.includes(signIdentifier)) return true;
-        // If signIdentifier is Object with name/id (unlikely in this client struct but safe)
-        if (typeof signIdentifier === 'object' && signIdentifier.name && signList.includes(signIdentifier.name)) return true;
-        return false;
-    };
-
-    const playerRasiLordSignName = P[playerRasiLord] || ''; // Position of Rasi Lord
-    const playerStarLordSignName = P[playerStarLord] || ''; // Position of Star Lord
-    // Check if Player Rasi ID and Player Star Lord's Sign ID are in Owned Signs
-    // Note: In client, player.rashi is likely sign ID/Name? Assuming ID or Name consistent with OWN_SIGNS.
-    // Based on previous code: ownedByMatchStarLord.includes(player.rashi)
-
-    // UPDATED Rule 5A: Both Rasi Lord AND Star Lord must be in Match Star Lord's House
-    // (Consistently using Rasi Lord Position instead of Moon Sign)
-    console.log('DEBUG Rule 5A:', { matchStarLord, ownedByMatchStarLord, playerRasiLordSignName, playerStarLordSignName });
-
-    if (
-        isSignInList(playerRasiLordSignName, ownedByMatchStarLord) &&
-        isSignInList(playerStarLordSignName, ownedByMatchStarLord)
-    ) {
-        // Batting
-        addRule('BAT Rule 5: Same House (Star Lord)', 4, 'bat', false, 'பேட்டிங் விதி 5: ஒரே ராசி (நட்சத்திர அதிபதி)');
-        if (isExalted(playerRasiLord, player.rashi) || isOwnSign(playerRasiLord, player.rashi)) {
-            addRule('BAT Rule 5: Bonus', 2, 'bat', false, 'பேட்டிங் விதி 5: போனஸ் (+2)');
+/** General Rules Index (Redex Method) **/
+const GENERAL_RULES = [
+    // Rule 1: Zig-Zag
+    (ctx) => {
+        if (ctx.matchRasiLord === ctx.playerStarLord && ctx.matchStarLord === ctx.playerRasiLord) {
+            ctx.addRule('BAT Rule 1: Zig-Zag', 12, 'bat', false, 'பேட்டிங் விதி 1: ஜிக்-ஜாக்');
+            ctx.addRule('BOWL Rule 1: Zig-Zag', 12, 'bowl', false, 'பவுலிங் விதி 1: ஜிக்-ஜாக்');
+            ctx.applyBonuses(ctx.playerRasiLord, 4);
         }
-        // Bowling
-        addRule('BOWL Rule 5: Same House (Star Lord)', 4, 'bowl', false, 'பவுலிங் விதி 5: ஒரே ராசி (நட்சத்திர அதிபதி)');
-        if (isExalted(playerRasiLord, player.rashi) || isOwnSign(playerRasiLord, player.rashi)) {
-            addRule('BOWL Rule 5: Bonus', 2, 'bowl', false, 'பவுலிங் விதி 5: போனஸ் (+2)');
+    },
+    // Rule 2: Direct
+    (ctx) => {
+        if (ctx.matchRasiLord === ctx.playerRasiLord && ctx.matchStarLord === ctx.playerStarLord) {
+            ctx.addRule('BAT Rule 2: Direct', 6, 'bat', false, 'பேட்டிங் விதி 2: நேரடி விதி');
+            ctx.applyBonuses(ctx.playerRasiLord, 4, 'bat');
+            ctx.setSureFlop('BOWL Rule 2: Same Rasi & Star', 'பவுலிங் விதி 2: ஒரே ராசி & நட்சத்திரம்', 'bowl');
         }
-    }
-
-    // 5B: Match Rasi Lord (Bowling: +6 Points, Batting: SURE FLOP)
-    // 5B: Match Rasi Lord (Bowling: +6 Points, Batting: SURE FLOP)
-    const ownedByMatchRasiLord = OWN_SIGNS[matchRasiLord] || [];
-
-    // Robust Helper to check sign match (Moved to Top)
-    // const isSignInList = ... 
-
-    // const playerRasiLordSignName = ... (Moved to Top)
-    // const playerStarLordSignName = ... (Moved to Top)
-
-    console.log('DEBUG Rule 5:', {
-        matchRasiLord,
-        ownedByMatchRasiLord,
-        playerRasiLord,
-        playerRasiLordSignName,
-        playerStarLord,
-        playerStarLordSignName
-    });
-
-    if (
-        isSignInList(playerRasiLordSignName, ownedByMatchRasiLord) &&
-        isSignInList(playerStarLordSignName, ownedByMatchRasiLord)
-    ) {
-        // Batting -> SURE FLOP
-        setSureFlop('BAT Rule 5: Match Rasi Same House', 'பேட்டிங் விதி 5: மேட்ச் ராசி அதிபதி வீட்டில் ஒரே ராசி (Sure Flop)', 'bat');
-
-        // Bowling -> Positive (+6)
-        addRule('BOWL Rule 5: Same House (Rasi Lord)', 6, 'bowl', false, 'பவுலிங் விதி 5: மேட்ச் ராசி அதிபதி வீட்டில் ஒரே ராசி (+6)');
-        if (isExalted(playerRasiLord, player.rashi) || isOwnSign(playerRasiLord, player.rashi)) {
-            addRule('BOWL Rule 5: Bonus', 2, 'bowl', false, 'பவுலிங் விதி 5: போனஸ் (+2)');
-        }
-    }
-
-    // Rule 6: PLAYER RASI ATHIPATHI HOME
-    if (player.rashi && M[matchRasiLord] === player.rashi && M[matchStarLord] === player.rashi) {
-        addRule('BAT Rule 6: Player Rasi Home', 6, 'bat', false, 'பேட்டிங் விதி 6: ராசி அதிபதி வீடு');
-        applyBonuses(playerRasiLord, 4, 'bat');
-    }
-
-    // Rule 7: RAHU/KETU PLAYER RULE
-    if (player.nakshatraLord === 'Rahu' || player.nakshatraLord === 'Ketu') {
-        const matchStarSigns = OWN_SIGNS[matchStarLord] || [];
-        if (matchStarSigns.includes(player.rashi)) {
-            addRule('BAT Rule 7: Rahu/Ketu Player', 4, 'bat', false, 'பேட்டிங் விதி 7: ராகு/கேது விதி');
-            applyBonuses(playerRasiLord, 4, 'bat');
-        }
-    }
-
-    // Rule 8: LAGNA RULE (BATTING)
-    if (matchLagnaLord && playerRasiLord && matchLagnaLord === playerRasiLord) {
-        addRule('BAT Rule 8: Lagna', 2, 'bat', false, 'பேட்டிங் விதி 8: லக்ன விதி');
-        if (isExalted(playerRasiLord, player.rashi) || isOwnSign(playerRasiLord, player.rashi)) addRule('BAT Rule 8: Bonus', 2, 'bat', false, 'பேட்டிங் விதி 8: போனஸ்');
-    }
-
-    // Rule 9: DOUBLE LORD CONJUNCTION – POWER RULE (+12)
-    // Match Rasi & Nakshatra Lords Conjunction Rule
-    // Condition: Match Rasi Athipathi AND Match Nakshatra Athipathi
-    // 👉 Two Planets Conjoined (Inainthu) -> IN PLAYER CHART
-    // 👉 In a house owned by Player Rasi Athipathi OR Player Nakshatra Athipathi
-
-    // NOTE: User requested "Player chart il inaiya vendum". 
-    // So we check P[matchRasiLord] and P[matchStarLord].
-
-    if (matchRasiLord && matchStarLord && playerRasiLord && playerStarLord) {
-        // Get Player Lords' Owned Signs
-        const pRasiLordSigns = OWN_SIGNS[playerRasiLord] || [];
-        const pStarLordSigns = OWN_SIGNS[playerStarLord] || [];
-        const allowedSigns = [...pRasiLordSigns, ...pStarLordSigns];
-
-        // Get Positions of Match Lords in PLAYER'S CHART (P)
-        const matchRasiLordPosInPlayer = P[matchRasiLord];
-        const matchStarLordPosInPlayer = P[matchStarLord];
-
-        // CHECK 1: Conjunction (Must be in same sign IN PLAYER CHART)
-        // Note: P[Name] returns the Sign Name (String) in client code structure.
-        const isConjoinedInPlayerChart = matchRasiLordPosInPlayer === matchStarLordPosInPlayer;
-
-        // CHECK 2: That sign must be in Allowed Signs
-        const isInPlayerLordHouse = isSignInList(matchRasiLordPosInPlayer, allowedSigns);
-
-        console.log('DEBUG Rule 9 (Player Chart):', {
-            matchRasiLord,
-            matchStarLord,
-            posInPlayer: [matchRasiLordPosInPlayer, matchStarLordPosInPlayer],
-            isConjoinedInPlayerChart,
-            isInPlayerLordHouse,
-            allowedSigns
-        });
-
-        if (isConjoinedInPlayerChart && isInPlayerLordHouse) {
-            addRule('BAT Rule 9: Double Lord Conjunction (Player Chart)', 12, 'bat', true, 'பேட்டிங் விதி 9: மேட்ச் ராசி & நட்சத்திர அதிபதி ஜாதகத்தில் சேர்க்கை (+12)');
-            addRule('BOWL Rule 9: Double Lord Conjunction (Player Chart)', 12, 'bowl', true, 'பவுலிங் விதி 9: மேட்ச் ராசி & நட்சத்திர அதிபதி ஜாதகத்தில் சேர்க்கை (+12)');
-        }
-    }
-
-    /* ================= GENERAL BOWLING RULES ================= */
-
-    // BOWL Rule 1: ZIG-ZAG
-    if (matchRasiLord === playerStarLord && matchStarLord === playerRasiLord) {
-        addRule('BOWL Rule 1: Zig-Zag', 12, 'bowl', false, 'பவுலிங் விதி 1: ஜிக்-ஜாக்');
-        applyBonuses(playerRasiLord, 4, 'bowl');
-    }
-
-    // BOWL Rule 2: DIRECT (NEGATIVE)
-    if (matchRasiLord === playerRasiLord && matchStarLord === playerStarLord) {
-        setSureFlop('BOWL Rule 2: Same Rasi & Star', 'பவுலிங் விதி 2: ஒரே ராசி & நட்சத்திரம்', 'bowl');
-    }
-
-    // BOWL Rule 3: STAR RULE
-    if (matchStarLord === playerRasiLord || matchStarLord === playerStarLord) {
-        addRule('BOWL Rule 3: Star', 3, 'bowl', false, 'பவுலிங் விதி 3: நட்சத்திர விதி');
-        if (isExalted(matchStarLord, P[matchStarLord]) || isOwnSign(matchStarLord, P[matchStarLord])) addRule('BOWL Rule 3: Bonus', 6, 'bowl', false, 'பவுலிங் விதி 3: போனஸ்');
-    }
-
-
-    // BOWL Rule 4: CONJUNCTION (Modified)
-    // Same logic as Batting
-    // BOWL Rule 4: CONJUNCTION (Modified)
-    // Same logic as Batting
-    // BOWL Rule 4: CONJUNCTION (Match Star Lord)
-    if (P[matchStarLord]) {
-        if (playerRasiLord && P[playerRasiLord] && P[matchStarLord] === P[playerRasiLord]) {
-            addRule('BOWL Rule 4: Conjunction Star (Rasi Lord)', 4, 'bowl', false, 'பவுலிங் விதி 4: சேர்க்கை விதி (நட்சத்திர அதிபதி)');
-            applyBonuses(playerRasiLord, 4, 'bowl');
-            if (matchLagnaSign === P[matchStarLord]) {
-                addRule('BOWL Rule 4: Lagna Match', 2, 'bowl', false, 'பவுலிங் விதி 4: மேட்ச் லக்னம் ராசி/நட்சத்திர அதிபதி இருக்கும் வீட்டில் இருந்தால் (+2)');
+    },
+    // Rule 3: Star
+    (ctx) => {
+        if (ctx.matchStarLord === ctx.playerRasiLord || ctx.matchStarLord === ctx.playerStarLord) {
+            ctx.addRule('BAT Rule 3: Star', 4, 'bat', false, 'பேட்டிங் விதி 3: நட்சத்திர விதி');
+            ctx.applyBonuses(ctx.matchStarLord, 4, 'bat');
+            ctx.addRule('BOWL Rule 3: Star', 3, 'bowl', false, 'பவுலிங் விதி 3: நட்சத்திர விதி');
+            if (isExalted(ctx.matchStarLord, ctx.P[ctx.matchStarLord]) || isOwnSign(ctx.matchStarLord, ctx.P[ctx.matchStarLord])) {
+                ctx.addRule('BOWL Rule 3: Bonus', 6, 'bowl', false, 'பவுலிங் விதி 3: போனஸ்');
             }
         }
-        else if (playerStarLord && P[playerStarLord] && P[matchStarLord] === P[playerStarLord]) {
-            addRule('BOWL Rule 4: Conjunction Star (Star Lord)', 4, 'bowl', false, 'பவுலிங் விதி 4: சேர்க்கை விதி (நட்சத்திர அதிபதி)');
-            applyBonuses(playerStarLord, 4, 'bowl');
-            if (matchLagnaSign === P[matchStarLord]) {
-                addRule('BOWL Rule 4: Lagna Match', 2, 'bowl', false, 'பவுலிங் விதி 4: மேட்ச் லக்னம் ராசி/நட்சத்திர அதிபதி இருக்கும் வீட்டில் இருந்தால் (+2)');
+    },
+    // Rule 4: Conjunction
+    (ctx) => {
+        const pRasiLordPos = ctx.P[ctx.playerRasiLord];
+        const pStarLordPos = ctx.P[ctx.playerStarLord];
+        const mStarLordPos = ctx.P[ctx.matchStarLord];
+        const mRasiLordPos = ctx.P[ctx.matchRasiLord];
+
+        if (mStarLordPos) {
+            if (pRasiLordPos && mStarLordPos === pRasiLordPos) {
+                ctx.addRule('BAT Rule 4: Conjunction (Rasi Lord)', 4, 'bat', false, 'பேட்டிங் விதி 4: சேர்க்கை விதி (ராசி அதிபதி)');
+                ctx.addRule('BOWL Rule 4: Conjunction Star (Rasi Lord)', 4, 'bowl', false, 'பவுலிங் விதி 4: சேர்க்கை விதி (நட்சத்திர அதிபதி)');
+                ctx.applyBonuses(ctx.playerRasiLord, 4);
+                if (ctx.matchLagnaSign === mStarLordPos) ctx.addRule('Lagna Match Bonus', 2);
+            } else if (pStarLordPos && mStarLordPos === pStarLordPos) {
+                ctx.addRule('BAT Rule 4: Conjunction (Star Lord)', 4, 'bat', false, 'பேட்டிங் விதி 4: சேர்க்கை விதி (நட்சத்திர அதிபதி)');
+                ctx.addRule('BOWL Rule 4: Conjunction Star (Star Lord)', 4, 'bowl', false, 'பவுலிங் விதி 4: சேர்க்கை விதி (நட்சத்திர அதிபதி)');
+                ctx.applyBonuses(ctx.playerStarLord, 4);
+                if (ctx.matchLagnaSign === mStarLordPos) ctx.addRule('Lagna Match Bonus', 2);
             }
         }
-    }
-
-    // BOWL Rule 4: CONJUNCTION (Match Rasi Lord)
-    if (P[matchRasiLord]) {
-        if (playerRasiLord && P[playerRasiLord] && P[matchRasiLord] === P[playerRasiLord]) {
-            addRule('BOWL Rule 4: Conjunction Rasi (Rasi Lord)', 4, 'bowl', false, 'பவுலிங் விதி 4: மேட்ச் ராசி அதிபதி சேர்க்கை');
-            applyBonuses(playerRasiLord, 4, 'bowl');
-            if (matchLagnaSign === P[matchRasiLord]) {
-                addRule('BOWL Rule 4: Lagna Match (Rasi)', 2, 'bowl', false, 'பவுலிங் விதி 4: மேட்ச் லக்னம் ராசி அதிபதி இருக்கும் வீட்டில் இருந்தால் (+2)');
+        if (mRasiLordPos) {
+            if (pRasiLordPos && mRasiLordPos === pRasiLordPos) {
+                ctx.addRule('BOWL Rule 4: Conjunction Rasi (Rasi Lord)', 4, 'bowl', false, 'பவுலிங் விதி 4: மேட்ச் ராசி அதிபதி சேர்க்கை');
+                ctx.applyBonuses(ctx.playerRasiLord, 4, 'bowl');
+            } else if (pStarLordPos && mRasiLordPos === pStarLordPos) {
+                ctx.addRule('BOWL Rule 4: Conjunction Rasi (Star Lord)', 4, 'bowl', false, 'பவுலிங் விதி 4: மேட்ச் ராசி அதிபதி சேர்க்கை');
+                ctx.applyBonuses(ctx.playerStarLord, 4, 'bowl');
             }
         }
-        else if (playerStarLord && P[playerStarLord] && P[matchRasiLord] === P[playerStarLord]) {
-            addRule('BOWL Rule 4: Conjunction Rasi (Star Lord)', 4, 'bowl', false, 'பவுலிங் விதி 4: மேட்ச் ராசி அதிபதி சேர்க்கை');
-            applyBonuses(playerStarLord, 4, 'bowl');
-            if (matchLagnaSign === P[matchRasiLord]) {
-                addRule('BOWL Rule 4: Lagna Match (Rasi)', 2, 'bowl', false, 'பவுலிங் விதி 4: மேட்ச் லக்னம் ராசி அதிபதி இருக்கும் வீட்டில் இருந்தால் (+2)');
+    },
+    // Rule 5: Same House
+    (ctx) => {
+        const ownedByMatchStar = OWN_SIGNS[ctx.matchStarLord] || [];
+        const ownedByMatchRasi = OWN_SIGNS[ctx.matchRasiLord] || [];
+        const pRasiLordPos = ctx.P[ctx.playerRasiLord];
+        const pStarLordPos = ctx.P[ctx.playerStarLord];
+
+        if (isSignInList(pRasiLordPos, ownedByMatchStar) && isSignInList(pStarLordPos, ownedByMatchStar)) {
+            ctx.addRule('Rule 5: Same House (Star Lord)', 4, 'both', false, 'விதி 5: ஒரே ராசி (நட்சத்திர அதிபதி)');
+            if (isExalted(ctx.playerRasiLord, ctx.playerRasi) || isOwnSign(ctx.playerRasiLord, ctx.playerRasi)) ctx.addRule('Rule 5: Bonus', 2);
+        }
+        if (isSignInList(pRasiLordPos, ownedByMatchRasi) && isSignInList(pStarLordPos, ownedByMatchRasi)) {
+            ctx.setSureFlop('BAT Rule 5: Match Rasi Same House', 'பேட்டிங் விதி 5: மேட்ச் ராசி அதிபதி வீட்டில் ஒரே ராசி (Sure Flop)', 'bat');
+            ctx.addRule('BOWL Rule 5: Same House (Rasi Lord)', 6, 'bowl', false, 'பவுலிங் விதி 5: மேட்ச் ராசி அதிபதி வீட்டில் ஒரே ராசி (+6)');
+        }
+    },
+    // Rule 6: Player Rasi Home
+    (ctx) => {
+        if (ctx.playerRasi && ctx.M[ctx.matchRasiLord] === ctx.playerRasi && ctx.M[ctx.matchStarLord] === ctx.playerRasi) {
+            ctx.addRule('BAT Rule 6: Player Rasi Home', 6, 'bat', false, 'பேட்டிங் விதி 6: ராசி அதிபதி வீடு');
+            ctx.addRule('BOWL Rule 6: Player Rasi Home', 4, 'bowl', false, 'பவுலிங் விதி 6: ராசி அதிபதி வீடு');
+            ctx.applyBonuses(ctx.playerRasiLord, 4, 'bat');
+        }
+    },
+    // Rule 7: Rahu/Ketu
+    (ctx) => {
+        if (['Rahu', 'Ketu'].includes(ctx.playerStarLord)) {
+            const matchStarSigns = OWN_SIGNS[ctx.matchStarLord] || [];
+            if (matchStarSigns.includes(ctx.playerRasi)) {
+                ctx.addRule('Rule 7: Rahu/Ketu Player', 4, 'both', false, 'விதி 7: ராகு/கேது விதி');
+                ctx.applyBonuses(ctx.playerRasiLord, 4);
             }
         }
-    }
+    },
+    // Rule 8: Lagna
+    (ctx) => {
+        if (ctx.matchLagnaLord && ctx.playerRasiLord && ctx.matchLagnaLord === ctx.playerRasiLord) {
+            ctx.addRule('BAT Rule 8: Lagna', 2, 'bat', false, 'பேட்டிங் விதி 8: லக்ன விதி');
+            ctx.addRule('BOWL Rule 8: Lagna', 4, 'bowl', false, 'பவுலிங் விதி 8: லக்ன விதி');
+            ctx.applyBonuses(ctx.playerRasiLord, 4);
+            const planetsInLagna = Object.keys(ctx.P).filter(p => ctx.P[p] === ctx.matchLagnaSign);
+            if (planetsInLagna.some(p => isExalted(p, ctx.P[p]) || isOwnSign(p, ctx.P[p]))) ctx.addRule('BOWL Rule 8: Planet Bonus', 4, 'bowl');
+        }
+    },
+    // Rule 9: Double Lord Conjunction
+    (ctx) => {
+        const mRasiPos = ctx.P[ctx.matchRasiLord];
+        const mStarPos = ctx.P[ctx.matchStarLord];
 
-    // BOWL Rule 5: SAME HOUSE
-    const ownedByMatchLords = [...(OWN_SIGNS[matchRasiLord] || []), ...(OWN_SIGNS[matchStarLord] || [])];
-    if (ownedByMatchLords.includes(player.rashi) && ownedByMatchLords.includes(P[playerStarLord])) {
-        addRule('BOWL Rule 5: Same House', 4, 'bowl', false, 'பவுலிங் விதி 5: ஒரே ராசி');
-        if (isExalted(playerRasiLord, player.rashi) || isOwnSign(playerRasiLord, player.rashi)) addRule('BOWL Rule 5: Bonus', 2, 'bowl', false, 'பவுலிங் விதி 5: போனஸ்');
-    }
-
-    // BOWL Rule 6: PLAYER RASI HOME
-    if (player.rashi && M[matchRasiLord] === player.rashi && M[matchStarLord] === player.rashi) {
-        addRule('BOWL Rule 6: Player Rasi Home', 4, 'bowl', false, 'பவுலிங் விதி 6: ராசி அதிபதி வீடு');
-        if (isExalted(playerRasiLord, player.rashi) || isOwnSign(playerRasiLord, player.rashi)) addRule('BOWL Rule 6: Bonus', 2, 'bowl', false, 'பவுலிங் விதி 6: போனஸ்');
-    }
-
-    // BOWL Rule 7: RAHU/KETU RULE
-    if (player.nakshatraLord === 'Rahu' || player.nakshatraLord === 'Ketu') {
-        const matchStarSigns = OWN_SIGNS[matchStarLord] || [];
-        if (matchStarSigns.includes(player.rashi)) {
-            addRule('BOWL Rule 7: Rahu/Ketu', 4, 'bowl', false, 'பவுலிங் விதி 7: ராகு/கேது விதி');
-            applyBonuses(playerRasiLord, 4, 'bowl');
+        if (mRasiPos && mStarPos && mRasiPos === mStarPos) {
+            ctx.addRule('Rule 9: Double Lord Conjunction', 12, 'both', true, 'விதி 9: மேட்ச் ராசி & நட்சத்திர அதிபதி ஜாதகத்தில் சேர்க்கை (+12)');
         }
     }
+];
 
-    // BOWL Rule 8: LAGNA RULE
-    if (matchLagnaLord && playerRasiLord && matchLagnaLord === playerRasiLord) {
-        addRule('BOWL Rule 8: Lagna', 4, 'bowl', false, 'பவுலிங் விதி 8: லக்ன விதி');
-        applyBonuses(playerRasiLord, 4, 'bowl');
-        // Any planet in that house is Aatchi/Ucham
-        const planetsInLagna = Object.keys(P).filter(p => P[p] === matchLagnaSign);
-        if (planetsInLagna.some(p => isExalted(p, P[p]) || isOwnSign(p, P[p]))) {
-            addRule('BOWL Rule 8: Planet Bonus', 4, 'bowl', false, 'பவுலிங் விதி 8: கிரக போனஸ்');
+/** Match Star Specific Rules **/
+const NAKSHATRA_RULES = {
+    'Ashwini': (ctx) => {
+        if (isExalted('Mars', ctx.P['Mars'])) ctx.addRule('Aswini: Mars Exalted', 8, 'both', false, 'அசுவினி: செவ்வாய் உச்சம்');
+        else if (getDignity('Mars', ctx.P['Mars']) === 'Debilitated') ctx.addRule('Aswini: Mars Debilitated', -12, 'both', false, 'அசுவினி: செவ்வாய் நீசம்');
+        if (ctx.P['Mars'] && ctx.P['Venus'] && ctx.P['Mars'] === ctx.P['Venus']) ctx.addRule('Aswini: Mars + Venus Conjunction', 10, 'both', false, 'அசுவினி: செவ்வாய் + சுக்கிரன் சேர்க்கை');
+    },
+    'Aswini': (ctx) => NAKSHATRA_RULES['Ashwini'](ctx),
+    'Bharani': (ctx) => {
+        const isVenusOrMercuryLord = ['Venus', 'Mercury'].includes(ctx.playerRasiLord) || ['Venus', 'Mercury'].includes(ctx.playerStarLord);
+        if (isVenusOrMercuryLord && ctx.P['Venus'] && ctx.P['Mercury'] && ctx.P['Venus'] === ctx.P['Mercury']) {
+            ctx.setSureFlop('Bharani: Venus + Mercury Conjunction (Batting Sure Flop)', 'பரணி: சுக்கிரன் + புதன் சேர்க்கை (பேட்டிங் வீழ்ச்சி)', 'bat');
+            ctx.addRule('Bharani: Venus + Mercury Conjunction (+12)', 12, 'bowl', true, 'பரணி: சுக்கிரன் + புதன் சேர்க்கை (+12)');
         }
-    }
-
-    // BOWL Rule 9: MATCH SIGN LORD RULE
-    if (matchRasiLord === playerRasiLord) {
-        addRule('BOWL Rule 9: Match Sign Lord', 3, 'bowl', false, 'பவுலிங் விதி 9: ராசி அதிபதி விதி');
-        if (isExalted(playerRasiLord, player.rashi) || isOwnSign(playerRasiLord, player.rashi)) addRule('BOWL Rule 9: Bonus', 8, 'bowl', false, 'பவுலிங் விதி 9: போனஸ்');
-    }
-
-    /* ================= MATCH STAR SPECIFIC RULES ================= */
-
-    switch (matchStar) {
-        // 1. ASWINI
-        case 'Ashwini':
-        case 'Aswini':
-            if (isExalted('Mars', P['Mars'])) addRule('Aswini: Mars Exalted', 8, 'both', false, 'அசுவினி: செவ்வாய் உச்சம்');
-            else if (isDebilitated('Mars', P['Mars'])) addRule('Aswini: Mars Debilitated', -12, 'both', false, 'அசுவினி: செவ்வாய் நீசம்');
-            if (areInSameSign(['Mars', 'Venus'])) addRule('Aswini: Mars + Venus Conjunction', 10, 'both', false, 'அசுவினி: செவ்வாய் + சுக்கிரன் சேர்க்கை');
-            break;
-
-        // 2. BHARANI
-        case 'Bharani':
-            {
-                const isVenusOrMercuryLord = ['Venus', 'Mercury'].includes(playerRasiLord) || ['Venus', 'Mercury'].includes(playerStarLord);
-                if (isVenusOrMercuryLord && areInSameSign(['Venus', 'Mercury'])) {
-                    setSureFlop('Bharani: Venus + Mercury Conjunction (Batting Sure Flop)', 'பரணி: சுக்கிரன் + புதன் சேர்க்கை (பேட்டிங் வீழ்ச்சி)', 'bat');
-                    addRule('Bharani: Venus + Mercury Conjunction (+12)', 12, 'bowl', true, 'பரணி: சுக்கிரன் + புதன் சேர்க்கை (+12)');
-                }
+    },
+    'Rohini': (ctx) => {
+        if (getDignity('Moon', ctx.P['Moon']) === 'Debilitated') ctx.addRule('Rohini: Moon Debilitated', 8, 'both', false, 'ரோகிணி: சந்திரன் நீசம்');
+        if (['Shatabhisha', 'Sathayam'].includes(ctx.playerStar) && ctx.P['Saturn'] && ctx.P['Rahu'] && ctx.P['Saturn'] === ctx.P['Rahu']) {
+            ctx.addRule('Rohini: Player Sathayam & Saturn+Rahu Conjunction', 12, 'both', true, 'ரோகிணி: சதயம் நட்சத்திரம் & சனி+ராகு சேர்க்கை');
+        }
+    },
+    'Mrigashira': (ctx) => {
+        if (ctx.playerRasiLord === 'Mars' || ctx.playerStarLord === 'Mars') {
+            ctx.addRule('Mrigashira: Mars Lordship', 6, 'both', false, 'மிருகசீரிஷம்: செவ்வாய் ஆதிக்கம்');
+            if (isOwnSign('Mars', ctx.P['Mars']) || isExalted('Mars', ctx.P['Mars'])) ctx.addRule('Mrigashira: Mars Strong Bonus', 6);
+        }
+    },
+    'Mrigashirsha': (ctx) => NAKSHATRA_RULES['Mrigashira'](ctx),
+    'Ardra': (ctx) => {
+        if (ctx.playerRasiLord === 'Mars' || ctx.playerStarLord === 'Mars') ctx.addRule('Thiruvathirai: Mars Rasi/Star Lord', 4);
+        if (isOwnSign('Mars', ctx.P['Mars']) || isExalted('Mars', ctx.P['Mars'])) ctx.addRule('Thiruvathirai: Mars Own/Exalted', 10);
+    },
+    'Thiruvathirai': (ctx) => NAKSHATRA_RULES['Ardra'](ctx),
+    'Ashlesha': (ctx) => {
+        const isVenusOrMercuryLord = ['Venus', 'Mercury'].includes(ctx.playerRasiLord) || ['Venus', 'Mercury'].includes(ctx.playerStarLord);
+        if (isVenusOrMercuryLord && ctx.P['Venus'] && ctx.P['Mercury'] && ctx.P['Venus'] === ctx.P['Mercury']) {
+            ctx.setSureFlop('Ayilyam: Venus + Mercury Conjunction (Batting Sure Flop)', 'ஆயில்யம்: சுக்கிரன் + புதன் சேர்க்கை (பேட்டிங் வீழ்ச்சி)', 'bat');
+            ctx.addRule('Ayilyam: Venus + Mercury Conjunction (+12)', 12, 'bowl', true, 'ஆயில்யம்: சுக்கிரன் + புதன் சேர்க்கை (+12)');
+        }
+    },
+    'Ayilyam': (ctx) => NAKSHATRA_RULES['Ashlesha'](ctx),
+    'Magha': (ctx) => {
+        if (ctx.playerRasiLord === 'Mercury' && ctx.playerStarLord === 'Mars') ctx.addRule('Magam: Rasi Lord Mercury & Star Lord Mars', 12, 'both', true, 'மகம்: ராசி அதிபதி புதன் & நட்சத்திர அதிபதி செவ்வாய் (+12)');
+    },
+    'Magam': (ctx) => NAKSHATRA_RULES['Magha'](ctx),
+    'Purva Phalguni': (ctx) => {
+        if (ctx.playerRasiLord === 'Saturn' && ctx.playerStarLord === 'Mars') ctx.addRule('Pooram: Rasi Lord Saturn & Star Lord Mars', 12, 'bat', true, 'பூரம்: ராசி அதிபதி சனி & நட்சத்திர அதிபதி செவ்வாய்');
+        if (ctx.playerRasiLord === 'Jupiter' && ctx.playerStarLord === 'Mercury') ctx.addRule('Pooram: Rasi Lord Jupiter & Star Lord Mercury', 12, 'bowl', true, 'பூரம்: ராசி அதிபதி குரு & நட்சத்திர அதிபதி புதன்');
+    },
+    'Pooram': (ctx) => NAKSHATRA_RULES['Purva Phalguni'](ctx),
+    'Uttara Phalguni': (ctx) => {
+        if (['Virgo', 'Kanya'].includes(ctx.M['Moon'])) {
+            if (ctx.playerRasiLord === 'Saturn' && ctx.playerStarLord === 'Rahu') ctx.addRule('Uthiram (Kanya): Rasi Lord Saturn & Star Lord Rahu', 12, 'both', true, 'உத்திரம் (கன்னி): ராசி அதிபதி சனி & நட்சத்திர அதிபதி ராகு');
+        }
+    },
+    'Uthiram': (ctx) => NAKSHATRA_RULES['Uttara Phalguni'](ctx),
+    'Chitra': (ctx) => {
+        const moonPos = ctx.M['Moon'];
+        if (['Virgo', 'Kanya'].includes(moonPos)) {
+            if (ctx.playerRasiLord === 'Mercury' && ctx.P['Mercury'] && ctx.P['Sun'] && ctx.P['Mercury'] === ctx.P['Sun']) {
+                if (ctx.P['Venus'] === ctx.P['Mercury'] && ctx.P['Jupiter'] === ctx.P['Mercury']) ctx.addRule('Chithirai (Virgo): Merc+Sun+Ven+Jup', 12);
+                else if (ctx.P['Jupiter'] === ctx.P['Mercury']) ctx.addRule('Chithirai (Virgo): Merc+Sun+Jup', 8);
+                else ctx.addRule('Chithirai (Virgo): Merc+Sun', 6);
             }
-            break;
+        } else if (['Libra', 'Thula'].includes(moonPos)) {
+            if (ctx.playerRasiLord === 'Moon' && ctx.playerStarLord === 'Saturn') ctx.addRule('Chithirai (Libra): Rasi Lord Moon & Star Lord Saturn', 12, 'both', true, 'சித்திரை (துலாம்): ராசி அதிபதி சந்திரன் & நட்சத்திர அதிபதி சனி');
+        }
+    },
+    'Chithirai': (ctx) => NAKSHATRA_RULES['Chitra'](ctx),
+    'Anuradha': (ctx) => {
+        if (ctx.playerRasiLord === 'Jupiter') {
+            ctx.addRule('Anusham: Rasi Lord Jupiter', 5);
+            if (isOwnSign('Jupiter', ctx.P['Jupiter']) || isExalted('Jupiter', ctx.P['Jupiter'])) ctx.addRule('Anusham: Jupiter Own/Exalted', 10);
+        }
+    },
+    'Anusham': (ctx) => NAKSHATRA_RULES['Anuradha'](ctx),
+    'Jyeshtha': (ctx) => {
+        const isVenusOrMercuryLord = ['Venus', 'Mercury'].includes(ctx.playerRasiLord) || ['Venus', 'Mercury'].includes(ctx.playerStarLord);
+        if (isVenusOrMercuryLord && ctx.P['Mercury'] && ctx.P['Venus'] && ctx.P['Mercury'] === ctx.P['Venus']) {
+            ctx.setSureFlop('Kettai: Mercury + Venus Conjunction (Batting Sure Flop)', 'கேட்டை: புதன் + சுக்கிரன் சேர்க்கை (பேட்டிங் வீழ்ச்சி)', 'bat');
+            ctx.addRule('Kettai: Mercury + Venus Conjunction (+12)', 12, 'bowl', true, 'கேட்டை: புதன் + சுக்கிரன் சேர்க்கை (+12)');
+        }
+    },
+    'Kettai': (ctx) => NAKSHATRA_RULES['Jyeshtha'](ctx),
+    'Mula': (ctx) => {
+        if (ctx.playerRasiLord === 'Saturn' && ctx.playerStarLord === 'Mars') ctx.addRule('Moolam: Rasi Lord Saturn & Star Lord Mars', 12, 'bat', true, 'மூலம்: ராசி அதிபதி சனி & நட்சத்திர அதிபதி செவ்வாய்');
+        else if (ctx.playerRasiLord === 'Mars' && ctx.playerStarLord === 'Saturn') ctx.addRule('Moolam: Rasi Lord Mars & Star Lord Saturn', 12, 'bowl', true, 'மூலம்: ராசி அதிபதி செவ்வாய் & நட்சத்திர அதிபதி சனி');
+        else if (ctx.playerRasiLord === 'Mars') {
+            ctx.addRule('Moolam: Rasi Lord Mars (Batting 0)', 0, 'bat');
+            ctx.addRule('Moolam: Rasi Lord Mars (Bowling) (+4)', 4, 'bowl', true);
+            if (isOwnSign('Mars', ctx.P['Mars']) || isExalted('Mars', ctx.P['Mars'])) ctx.addRule('Moolam: Mars Ucham/Aatchi Bonus (+6)', 6, 'bowl', true);
+        }
+    },
+    'Moolam': (ctx) => NAKSHATRA_RULES['Mula'](ctx),
+    'Purva Ashadha': (ctx) => {
+        const isVenusOrMercuryLord = ['Venus', 'Mercury'].includes(ctx.playerRasiLord) || ['Venus', 'Mercury'].includes(ctx.playerStarLord);
+        if (isVenusOrMercuryLord && ctx.P['Venus'] && ctx.P['Mercury'] && ctx.P['Venus'] === ctx.P['Mercury']) {
+            ctx.setSureFlop('Pooradam: Venus + Mercury Conjunction (Batting Sure Flop)', 'பூராடம்: சுக்கிரன் + புதன் சேர்க்கை (பேட்டிங் வீழ்ச்சி)', 'bat');
+            ctx.addRule('Pooradam: Venus + Mercury Conjunction (+12)', 12, 'bowl', true, 'பூராடம்: சுக்கிரன் + புதன் சேர்க்கை (+12)');
+        }
+    },
+    'Pooradam': (ctx) => NAKSHATRA_RULES['Purva Ashadha'](ctx),
+    'Uttara Ashadha': (ctx) => {
+        if (['Capricorn', 'Makara'].includes(ctx.M['Moon'])) {
+            if (ctx.playerRasiLord === 'Moon') ctx.addRule('Uthiradam (Makara): Rasi Lord Moon', 12, 'both', true, 'உத்திராடம் (மகரம்): ராசி அதிபதி சந்திரன்');
+        }
+    },
+    'Uthiradam': (ctx) => NAKSHATRA_RULES['Uttara Ashadha'](ctx),
+    'Shravana': (ctx) => {
+        if (ctx.playerRasiLord === 'Mars' && ctx.P['Mars'] === 'Cancer') ctx.addRule('Thiruvonam: Mars in Moon House (Bowling)', 6, 'bowl');
+        if (ctx.playerRasiLord === 'Saturn' && ctx.playerStarLord === 'Rahu') ctx.addRule('Thiruvonam: Rasi Lord Saturn & Star Lord Rahu', 12, 'both', true, 'திருவோணம்: ராசி அதிபதி சனி & நட்சத்திர அதிபதி ராகு');
+    },
+    'Thiruvonam': (ctx) => NAKSHATRA_RULES['Shravana'](ctx),
+    'Dhanishta': (ctx) => {
+        if (['Capricorn', 'Makara'].includes(ctx.M['Moon']) && ctx.playerRasiLord === 'Saturn') ctx.addRule('Avittam (Capricorn): Rasi Lord Saturn', 4);
+    },
+    'Avittam': (ctx) => NAKSHATRA_RULES['Dhanishta'](ctx),
+    'Shatabhisha': (ctx) => {
+        if (ctx.P['Moon'] && ctx.P['Jupiter'] && ctx.P['Moon'] === ctx.P['Jupiter'] && ctx.P['Moon'] === 'Cancer') {
+            ctx.setSureFlop('Sathayam: Moon + Jupiter in Cancer (Sure Flop)', 'சதயம்: சந்திரன் + குரு கடகத்தில் சேர்க்கை (Sure Flop)');
+        } else if (ctx.playerRasiLord === 'Moon') {
+            ctx.addRule('Sathayam: Rasi Lord Moon (+12)', 12, 'both', true, 'சதயம்: ராசி அதிபதி சந்திரன் (+12)');
+        }
+    },
+    'Sathayam': (ctx) => NAKSHATRA_RULES['Shatabhisha'](ctx)
+};
 
-        // 3. ROHINI
-        case 'Rohini':
-            if (isDebilitated('Moon', P['Moon'])) addRule('Rohini: Moon Debilitated', 8, 'both', false, 'ரோகிணி: சந்திரன் நீசம்');
-            if ((playerStar === 'Shatabhisha' || playerStar === 'Sathayam') && areInSameSign(['Saturn', 'Rahu'])) {
-                addRule('Rohini: Player Sathayam & Saturn+Rahu Conjunction', 12, 'both', true, 'ரோகிணி: சதயம் நட்சத்திரம் & சனி+ராகு சேர்க்கை');
-            }
-            break;
+/** Main Function **/
+export function getPrediction(player, match, transit) {
+    const ctx = new RuleContext(player, match, transit);
 
-        // 4. THIRUVATHIRAI
-        case 'Ardra':
-        case 'Thiruvathirai':
-            if (playerRasiLord === 'Mars' || playerStarLord === 'Mars') addRule('Thiruvathirai: Mars Rasi/Star Lord', 4, 'both', false, 'திருவாதிரை: செவ்வாய் ராசி/நட்சத்திர அதிபதி');
-            if (isOwnSign('Mars', P['Mars']) || isExalted('Mars', P['Mars'])) addRule('Thiruvathirai: Mars Own/Exalted', 10, 'both', false, 'திருவாதிரை: செவ்வாய் ஆட்சி/உச்சம்');
-            break;
+    // Execute General Rules
+    GENERAL_RULES.forEach(rule => rule(ctx));
 
-        // 5. AYILYAM
-        case 'Ashlesha':
-        case 'Ayilyam':
-            {
-                const isVenusOrMercuryLord = ['Venus', 'Mercury'].includes(playerRasiLord) || ['Venus', 'Mercury'].includes(playerStarLord);
-                if (isVenusOrMercuryLord && areInSameSign(['Venus', 'Mercury'])) {
-                    setSureFlop('Ayilyam: Venus + Mercury Conjunction (Batting Sure Flop)', 'ஆயில்யம்: சுக்கிரன் + புதன் சேர்க்கை (பேட்டிங் வீழ்ச்சி)', 'bat');
-                    addRule('Ayilyam: Venus + Mercury Conjunction (+12)', 12, 'bowl', true, 'ஆயில்யம்: சுக்கிரன் + புதன் சேர்க்கை (+12)');
-                }
-            }
-            break;
+    // Execute Nakshatra Specific Rules
+    const nakRule = NAKSHATRA_RULES[ctx.matchStar];
+    if (nakRule) nakRule(ctx);
 
-        // 6. MAGAM
-        case 'Magha':
-        case 'Magam':
-            if (playerRasiLord === 'Mercury' && playerStarLord === 'Mars') addRule('Magam: Rasi Lord Mercury & Star Lord Mars (+12) 👉 Show Special Player', 12, 'both', true, 'மகம்: ராசி அதிபதி புதன் & நட்சத்திர அதிபதி செவ்வாய் (+12) 👉 சிறப்பு வீரர்');
-            break;
+    // Handle Sure Flops
+    if (ctx.sureFlopBat) { ctx.batting.score = 0; ctx.batting.status = 'SURE FLOP'; }
+    if (ctx.sureFlopBowl) { ctx.bowling.score = 0; ctx.bowling.status = 'SURE FLOP'; }
 
-        // 7. POORAM
-        case 'Purva Phalguni':
-        case 'Pooram':
-            if (playerRasiLord === 'Saturn' && playerStarLord === 'Mars') addRule('Pooram: Rasi Lord Saturn & Star Lord Mars', 12, 'bat', true, 'பூரம்: ராசி அதிபதி சனி & நட்சத்திர அதிபதி செவ்வாய்');
-            if (playerRasiLord === 'Jupiter' && playerStarLord === 'Mercury') addRule('Pooram: Rasi Lord Jupiter & Star Lord Mercury', 12, 'bowl', true, 'பூரம்: ராசி அதிபதி குரு & நட்சத்திர அதிபதி புதன்');
-            break;
-
-        // 8. UTHIRAM
-        case 'Uttara Phalguni':
-        case 'Uthiram':
-            if (M['Moon'] === 'Virgo' || M['Moon'] === 'Kanya') {
-                if (playerRasiLord === 'Saturn' && playerStarLord === 'Rahu') addRule('Uthiram (Kanya): Rasi Lord Saturn & Star Lord Rahu (+12) 👉 Show Special Player', 12, 'both', true, 'உத்திரம் (கன்னி): ராசி அதிபதி சனி & நட்சத்திர அதிபதி ராகு (+12) 👉 சிறப்பு வீரர்');
-            }
-            break;
-
-        // 9. CHITHIRAI
-        case 'Chitra':
-        case 'Chithirai':
-            if (M['Moon'] === 'Virgo' || M['Moon'] === 'Kanya') {
-                if (playerRasiLord === 'Mercury' && areInSameSign(['Mercury', 'Sun'])) {
-                    if (areInSameSign(['Mercury', 'Sun', 'Venus', 'Jupiter'])) addRule('Chithirai (Virgo): Merc+Sun+Ven+Jup', 12, 'both', false, 'சித்திரை (கன்னி): புதன்+சூரியன்+சுக்கிரன்+குரு');
-                    else if (areInSameSign(['Mercury', 'Sun', 'Jupiter'])) addRule('Chithirai (Virgo): Merc+Sun+Jup', 8, 'both', false, 'சித்திரை (கன்னி): புதன்+சூரியன்+குரு');
-                    else addRule('Chithirai (Virgo): Merc+Sun', 6, 'both', false, 'சித்திரை (கன்னி): புதன்+சூரியன்');
-                }
-            } else if (M['Moon'] === 'Libra' || M['Moon'] === 'Thula') {
-                if (playerRasiLord === 'Moon' && playerStarLord === 'Saturn') addRule('Chithirai (Libra): Rasi Lord Moon & Star Lord Saturn (+12) ⭐ Show SPECIAL PLAYER', 12, 'both', true, 'சித்திரை (துலாம்): ராசி அதிபதி சந்திரன் & நட்சத்திர அதிபதி சனி (+12) ⭐ சிறப்பு வீரர்');
-            }
-            break;
-
-        // 10. ANUSHAM
-        case 'Anuradha':
-        case 'Anusham':
-            if (playerRasiLord === 'Jupiter') {
-                addRule('Anusham: Rasi Lord Jupiter', 5, 'both', false, 'அனுஷம்: ராசி அதிபதி குரு');
-                if (isOwnSign('Jupiter', P['Jupiter']) || isExalted('Jupiter', P['Jupiter'])) addRule('Anusham: Jupiter Own/Exalted', 10, 'both', false, 'அனுஷம்: குரு ஆட்சி/உச்சம்');
-            }
-            break;
-
-        // 11. KETTAI
-        case 'Jyeshtha':
-        case 'Kettai':
-            {
-                const isVenusOrMercuryLord = ['Venus', 'Mercury'].includes(playerRasiLord) || ['Venus', 'Mercury'].includes(playerStarLord);
-                if (isVenusOrMercuryLord && areInSameSign(['Mercury', 'Venus'])) {
-                    setSureFlop('Kettai: Mercury + Venus Conjunction (Batting Sure Flop)', 'கேட்டை: புதன் + சுக்கிரன் சேர்க்கை (பேட்டிங் வீழ்ச்சி)', 'bat');
-                    addRule('Kettai: Mercury + Venus Conjunction (+12)', 12, 'bowl', true, 'கேட்டை: புதன் + சுக்கிரன் சேர்க்கை (+12)');
-                }
-            }
-            break;
-
-        // 12. MOOLAM
-        case 'Mula':
-        case 'Moolam':
-            // Case 1: Batting Special
-            if (playerRasiLord === 'Saturn' && playerStarLord === 'Mars') {
-                addRule('Moolam: Rasi Lord Saturn & Star Lord Mars (Batting) (+12) 👉 Show Special Player', 12, 'bat', true, 'மூலம்: ராசி அதிபதி சனி & நட்சத்திர அதிபதி செவ்வாய் (பேட்டிங்) (+12) 👉 சிறப்பு வீரர்');
-            }
-
-            // Case 2: Bowling Special
-            else if (playerRasiLord === 'Mars' && playerStarLord === 'Saturn') {
-                addRule('Moolam: Rasi Lord Mars & Star Lord Saturn (Bowling) (+12) 👉 Show Special Player', 12, 'bowl', true, 'மூலம்: ராசி அதிபதி செவ்வாய் & நட்சத்திர அதிபதி சனி (பவுலிங்) (+12) 👉 சிறப்பு வீரர்');
-            }
-
-            // Case 3: Neutral/Partial Case (NEW CHANGE)
-            // Player Rasi Athipathi = Chevvai (Mars)
-            else if (playerRasiLord === 'Mars') {
-                // Batting 0 Point (Neutral)
-                addRule('Moolam: Rasi Lord Mars (Batting 0)', 0, 'bat', false, 'மூலம்: ராசி அதிபதி செவ்வாய் (பேட்டிங் 0)');
-
-                // Bowling +4 Points
-                addRule('Moolam: Rasi Lord Mars (Bowling) (+4)', 4, 'bowl', true, 'மூலம்: ராசி அதிபதி செவ்வாய் (பவுலிங்) (+4)');
-
-                // If Aatchi / Ucham -> +6 Points (User Request)
-                if (isOwnSign('Mars', P['Mars']) || isExalted('Mars', P['Mars'])) {
-                    addRule('Moolam: Mars Ucham/Aatchi Bonus (+6)', 6, 'bowl', true, 'மூலம்: செவ்வாய் உச்சம்/ஆட்சி போனஸ் (+6)');
-                }
-            }
-            break;
-
-        // 13. POORADAM
-        case 'Purva Ashadha':
-        case 'Pooradam':
-            // "Pooradam Match: Guru - Sukkiran (Venus)"
-            // Condition: Venus and Mercury (Sukkiran and Puthan) joined in same house
-            // Rule: Player Rasi/Star Lord is Venus OR Mercury AND Venus+Mercury Conjoined -> Bat Flop / Bowl Special
-            const isVenusOrMercuryLord = ['Venus', 'Mercury'].includes(playerRasiLord) || ['Venus', 'Mercury'].includes(playerStarLord);
-
-            if (isVenusOrMercuryLord && areInSameSign(['Venus', 'Mercury'])) {
-                // BAT: Sure Flop
-                setSureFlop('Pooradam: Venus + Mercury Conjunction (Batting Sure Flop)', 'பூராடம்: சுக்கிரன் + புதன் சேர்க்கை (பேட்டிங் வீழ்ச்சி)', 'bat');
-
-                // BOWL: +12 Special
-                addRule('Pooradam: Venus + Mercury Conjunction (+12)', 12, 'bowl', true, 'பூராடம்: சுக்கிரன் + புதன் சேர்க்கை (+12)');
-            }
-            break;
-
-        // 14. UTHIRADAM
-        case 'Uttara Ashadha':
-        case 'Uthiradam':
-            if (M['Moon'] === 'Capricorn' || M['Moon'] === 'Makara') {
-                if (playerRasiLord === 'Moon') addRule('Uthiradam (Makara): Rasi Lord Moon (+12) 👉 Show Special Player', 12, 'both', true, 'உத்திராடம் (மகரம்): ராசி அதிபதி சந்திரன் (+12) 👉 சிறப்பு வீரர்');
-            }
-            break;
-
-        // 15. THIRUVONAM
-        case 'Shravana':
-        case 'Thiruvonam':
-            if (playerRasiLord === 'Mars' && getPlanet(player.chart, 'Mars')?.sign === 'Cancer') addRule('Thiruvonam: Mars in Moon House (Bowling) (+6)', 6, 'bowl', false, 'திருவோணம்: செவ்வாய் சந்திரன் வீட்டில் (பவுலிங்) (+6)');
-            if (playerRasiLord === 'Saturn' && playerStarLord === 'Rahu') addRule('Thiruvonam: Rasi Lord Saturn & Star Lord Rahu (+12) 👉 Show Special Player', 12, 'both', true, 'திருவோணம்: ராசி அதிபதி சனி & நட்சத்திர அதிபதி ராகு (+12) 👉 சிறப்பு வீரர்');
-            break;
-
-        // 16. AVITTAM
-        case 'Dhanishta':
-        case 'Avittam':
-            if ((M['Moon'] === 'Capricorn' || M['Moon'] === 'Makara') && playerRasiLord === 'Saturn') addRule('Avittam (Capricorn): Rasi Lord Saturn', 4, 'both', false, 'அவிட்டம் (மகரம்): ராசி அதிபதி சனி');
-            break;
-
-        // 17. SATHAYAM
-        // 17. SATHAYAM
-        case 'Shatabhisha':
-        case 'Sathayam':
-            // Rule 2: DIRECT RULE (NEGATIVE) - BOWLING Specifics for Sathayam
-
-            // Case 2: SURE FLOP (NEW UPDATE)
-            // Moon (Chandran) AND Guru (Jupiter) 👉 Both present / joined / active (as per chart)
-            // "Sathayam + Moon + Guru together → ❌ Sure Flop"
-            if (areInSameSign(['Moon', 'Jupiter']) && P['Moon'] === 'Cancer') {
-                setSureFlop('Sathayam: Moon + Jupiter in Cancer (Sure Flop)', 'சதயம்: சந்திரன் + குரு கடகத்தில் சேர்க்கை (Sure Flop)');
-            }
-            // Case 1: GAME CHANGER
-            // Player Rasi Athipathi = Chandran (Moon)
-            // "Sathayam + Moon only → 🔥 +12 Game Changer"
-            else if (playerRasiLord === 'Moon') {
-                addRule('Sathayam: Rasi Lord Moon (+12) 👉 GAME CHANGER 👉 Must Show Special Player', 12, 'both', true, 'சதயம்: ராசி அதிபதி சந்திரன் (+12) 👉 கேம் சேஞ்சர் 👉 சிறப்பு வீரர்');
-            }
-            break;
-    }
-
-    if (sureFlopBat) {
-        batting.score = 0;
-        batting.status = "SURE FLOP";
-    }
-    if (sureFlopBowl) {
-        bowling.score = 0;
-        bowling.status = "SURE FLOP";
-    }
-
-    return { batting, bowling };
+    return { batting: ctx.batting, bowling: ctx.bowling };
 }
 
 export function evaluateBatsman(player, match, transit = {}) {
