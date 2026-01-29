@@ -6,7 +6,7 @@ const LoadingSpinner = () => {
         <div className="loading-container">
             <div className="logo-wrapper">
                 <img
-                    src="/logo.png"
+                    src="/sb_astro_logo.jpg"
                     alt="S&B Entertainment"
                     className="loading-logo"
                 />
