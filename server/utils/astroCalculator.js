@@ -196,28 +196,89 @@ const {
 } = require('vedic-astrology-api/lib/utils/common');
 
 
-// Rewritten Calculation using vedic-astrology-api
-const calculatePlanetaryPositions = (year, month, day, hour, minute, latitude, longitude, timezone) => {
+// Rewritten Calculation using vedic-astrology-api + Custom Ayanamsa/Lagna Logic
+const calculatePlanetaryPositions = (year, month, day, hour, minute, latitude, longitude, timezone, ayanamsaType = 'Lahiri') => {
     // 1. Create Date Object (package utility handles TZ)
     const date = createDate(year, month, day, hour, minute, timezone);
 
-    // 2. Get Positions & Ayanamsa from Package
+    // 2. Get Positions & Base Ayanamsa (Lahiri) from Package
     // Package returns { positions: { Sun: { longitude: ... } }, ayanamsa: ... }
-    const { positions: rawPositions, ayanamsa } = calcPlanetsPackage(date, latitude, longitude);
+    const { positions: rawPositions, ayanamsa: lahiriAyanamsa } = calcPlanetsPackage(date, latitude, longitude);
 
-    // 3. Get Ascendant from Package
-    const ascendantRaw = calcAscendantPackage(date, latitude, longitude);
+    // 3. Determine Effective Ayanamsa
+    let effectiveAyanamsa = lahiriAyanamsa;
+    if (ayanamsaType === 'KP' || ayanamsaType === 'KP Straight') {
+        // KP Ayanamsa is approx 6 minutes (0.1 degree) less than Lahiri
+        // Correction factor: Subtract approx 0.09
+        effectiveAyanamsa = lahiriAyanamsa - 0.095;
+        console.log(`[Ayanamsa] Using KP (${effectiveAyanamsa.toFixed(4)}) instead of Lahiri (${lahiriAyanamsa.toFixed(4)})`);
+    }
 
-    // 4. Transform to simple Key-Value format expected by app
+    // 4. Calculate Rigorous Ascendant (Placidus Method - Intersection)
+    // Formula: tan(Asc) = - (sin(RAMC) * cos(Obl) + tan(Lat) * sin(Obl)) / cos(RAMC) (Standard)
+    // Or simpler: atan2(cos(RAMC), -sin(RAMC)*cos(Obl) - tan(Lat)*sin(Obl))
+    // We calculate Tropical Ascendant first, then subtract Effective Ayanamsa.
+
+    // 4a. Calculate Local Sidereal Time (LST) / RAMC
+    const jd = (date.getTime() / 86400000) + 2440587.5;
+    const t = (jd - 2451545.0) / 36525.0;
+    const gmst = (280.46061837 + 360.98564736629 * (jd - 2451545.0)) % 360; // GMST in degrees
+    const lst = (gmst + parseFloat(longitude)) % 360; // LST in degrees
+    const ramcRad = (lst * Math.PI) / 180;
+
+    // 4b. True Obliquity of Ecliptic
+    const meanObliquity = 23.4392911; // J2000
+    const obliquityRad = (meanObliquity * Math.PI) / 180;
+    const latRad = (parseFloat(latitude) * Math.PI) / 180;
+
+    // 4c. Calculate Ascendant
+    // atan2(y, x) -> y = cos(RAMC), x = -sin(RAMC)*cos(Obl) - tan(Lat)*sin(Obl)
+    // Note: Formula depends on reference. Let's use standard.
+    // Asc = atan2(cos(RAMC), -sin(RAMC)*cos(E) - tan(Lat)*sin(E))
+    const ascRad = Math.atan2(
+        Math.cos(ramcRad),
+        -Math.sin(ramcRad) * Math.cos(obliquityRad) - Math.tan(latRad) * Math.sin(obliquityRad)
+    );
+    let tropicalAscendant = (ascRad * 180) / Math.PI;
+    if (tropicalAscendant < 0) tropicalAscendant += 360;
+
+    // 4d. Apply Ayanamsa to get Sidereal Ascendant
+    let ascendant = (tropicalAscendant - effectiveAyanamsa) % 360;
+    if (ascendant < 0) ascendant += 360;
+
+    // 5. Transform to simple Key-Value format & Apply Ayanamsa Correction to Planets
     const planets = {};
     const planetKeys = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu', 'Ketu'];
 
+    // Calculate Ayanamsa Difference (if non-Lahiri)
+    const ayanamsaDiff = lahiriAyanamsa - effectiveAyanamsa; // e.g. 24.0 - 23.9 = 0.1 (Add 0.1 to Lahiri Longitude? No.)
+    // Logic: Tropical - Lahiri = LahiriLng. Tropical - KP = KPLng. 
+    // KPLng = Tropical - (Lahiri - Diff) = (Tropical - Lahiri) + Diff = LahiriLng + Diff.
+    // Wait. KP Ayanamsa Value is usually SMALLER than Lahiri? 
+    // Lahiri (Chitra) ~ 24 deg. KP ~ 23 deg 54 min.
+    // So KP Ayanamsa < Lahiri.
+    // Sidereal = Tropical - Ayanamsa.
+    // KP Sidereal = Tropical - KP_Ayanamsa
+    // Lahiri Sidereal = Tropical - Lahiri_Ayanamsa
+    // KP_Sidereal - Lahiri_Sidereal = Lahiri_Ayanamsa - KP_Ayanamsa.
+    // Since Lahiri > KP, difference is POSITIVE.
+    // So KP positions should be slightly AHEAD (Higher degrees) than Lahiri.
+
+    // Let's re-verify:
+    // KP New Ayanamsa is usually *very* close to Lahiri. 
+    // Krishnamurti adopted Lahiri initially but applied corrections.
+    // The difference is usually ~6-10 arcminutes.
+
     planetKeys.forEach(key => {
         if (rawPositions[key]) {
-            // Package usually returns object with longitude
+            // Package usually returns object with longitude (Lahiri)
             const p = rawPositions[key];
-            const lng = (typeof p === 'object' && p.longitude !== undefined) ? p.longitude : p;
-            planets[key] = parseFloat(lng) % 360;
+            const lahiriLng = (typeof p === 'object' && p.longitude !== undefined) ? p.longitude : p;
+
+            // Adjust for Target Ayanamsa
+            // If KP, we ADD the difference (since we subtracted a smaller Ayanamsa)
+            let finalLng = parseFloat(lahiriLng) + ayanamsaDiff;
+            planets[key] = finalLng % 360;
         }
     });
 
@@ -226,20 +287,17 @@ const calculatePlanetaryPositions = (year, month, day, hour, minute, latitude, l
         planets.Ketu = (planets.Rahu + 180) % 360;
     }
 
-    let ascendant = parseFloat(ascendantRaw) % 360;
-    if (ascendant < 0) ascendant += 360;
-
     // Apply strict normalization to planets
     Object.keys(planets).forEach(k => {
         if (planets[k] < 0) planets[k] += 360;
     });
 
-    console.log(`[VedicAPI] Calculated for ${year}-${month}-${day}: Saturn=${planets.Saturn?.toFixed(2)}, Asc=${ascendant.toFixed(2)}`);
+    console.log(`[VedicAPI] Calculated for ${year}-${month}-${day}: Asc=${ascendant.toFixed(2)} (${ayanamsaType})`);
 
     return {
         planets,
         ascendant,
-        ayanamsaVal: ayanamsa
+        ayanamsaVal: effectiveAyanamsa
     };
 };
 

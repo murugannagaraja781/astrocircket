@@ -93,13 +93,14 @@ const calculateSunTimes = (latitude, longitude, year, month, day) => {
 
 exports.getBirthChart = async (req, res) => {
     try {
-        const { day, hour, latitude, longitude, minute, month, timezone, year } = req.body;
+        const { day, hour, latitude, longitude, minute, month, timezone, year, ayanamsa } = req.body;
 
         // Calculate planetary positions locally
         const { planets, ascendant } = calculatePlanetaryPositions(
             parseInt(year), parseInt(month), parseInt(day),
             parseInt(hour), parseInt(minute),
-            parseFloat(latitude), parseFloat(longitude), parseFloat(timezone)
+            parseFloat(latitude), parseFloat(longitude), parseFloat(timezone),
+            ayanamsa // Pass Ayanamsa preference
         );
 
         const pad = (n) => n.toString().padStart(2, '0');

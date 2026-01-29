@@ -15,7 +15,8 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
         location: 'Mumbai, India', // Default
         lat: 19.0760,
         long: 72.8777,
-        timezone: 5.5
+        timezone: 5.5,
+        ayanamsa: localStorage.getItem('preferredAyanamsa') || 'Lahiri'
     });
     const [loading, setLoading] = useState(false);
     const [viewChartLoading, setViewChartLoading] = useState(false);
@@ -109,7 +110,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
 
     const handleCityChange = (event, newValue) => {
         if (newValue && typeof newValue === 'object') {
-             const newTz = calculateTimezone(newValue.long);
+            const newTz = calculateTimezone(newValue.long);
             setMatchDetails(prev => ({
                 ...prev,
                 location: newValue.label,
@@ -118,7 +119,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                 timezone: newTz
             }));
         } else if (typeof newValue === 'string') {
-             handleChange('location', newValue);
+            handleChange('location', newValue);
         }
     };
 
@@ -138,7 +139,8 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                 minute: parseInt(minute),
                 latitude: matchDetails.lat,
                 longitude: matchDetails.long,
-                timezone: matchDetails.timezone
+                timezone: matchDetails.timezone,
+                ayanamsa: matchDetails.ayanamsa || 'Lahiri'
             };
 
             // Fetch Match Chart
@@ -180,7 +182,8 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                 minute: parseInt(minute),
                 latitude: matchDetails.lat,
                 longitude: matchDetails.long,
-                timezone: matchDetails.timezone
+                timezone: matchDetails.timezone,
+                ayanamsa: matchDetails.ayanamsa || 'Lahiri'
             };
 
             const baseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
@@ -207,7 +210,19 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
         const asc = chartData.ascendant || {};
         const ascSign = asc.tamil || "Not Found";
         const ascLord = asc.lordTamil || asc.lord || "-";
-        summary.push({ label: "லக்னம்", sign: ascSign, lord: ascLord });
+
+        // Get Lagna Nakshatra Name Tamil/English
+        const ascNakName = asc.nakshatra?.tamil || asc.nakshatra?.name || "-";
+        const ascNakLord = asc.nakshatra?.lord || getNakshatraLordHelper(asc.nakshatra?.name);
+
+        let ascNakLordTamil = ascNakLord;
+        const tamilLordsMap = {
+            'Ketu': 'கேது', 'Venus': 'சுக்கிரன்', 'Sun': 'சூரியன்', 'Moon': 'சந்திரன்',
+            'Mars': 'செவ்வாய்', 'Rahu': 'ராகு', 'Jupiter': 'குரு', 'Saturn': 'சனி', 'Mercury': 'புதன்'
+        };
+        if (tamilLordsMap[ascNakLord]) ascNakLordTamil = tamilLordsMap[ascNakLord];
+
+        summary.push({ label: "லக்னம் (Lagna)", sign: `${ascSign} | ${ascNakName}`, lord: `${ascLord} | ${ascNakLordTamil || '-'}` });
 
         // 2. Moon (Rasi)
         const moon = chartData.moonSign || {};
@@ -393,7 +408,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                     </Box>
 
                     {/* Lat/Long/TZ - Compact Row */}
-                    <Box sx={{ display: 'flex', gap: 1, width: '100%', mt: 0.5 }}>
+                    <Box sx={{ display: 'flex', gap: 1, width: '100%', mt: 0.5, flexWrap: 'wrap' }}>
                         <TextField
                             label="Lat"
                             type="number"
@@ -402,7 +417,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                             onChange={(e) => handleChange('lat', parseFloat(e.target.value))}
                             InputLabelProps={{ shrink: true }}
                             inputProps={{ step: 0.01 }}
-                            sx={{ width: '90px', '& .MuiInputBase-root': { borderRadius: '10px' } }}
+                            sx={{ width: '80px', '& .MuiInputBase-root': { borderRadius: '10px' } }}
                         />
                         <TextField
                             label="Long"
@@ -412,18 +427,39 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                             onChange={(e) => handleChange('long', parseFloat(e.target.value))}
                             InputLabelProps={{ shrink: true }}
                             inputProps={{ step: 0.01 }}
-                            sx={{ width: '90px', '& .MuiInputBase-root': { borderRadius: '10px' } }}
+                            sx={{ width: '80px', '& .MuiInputBase-root': { borderRadius: '10px' } }}
                         />
                         <TextField
-                            label="Timezone"
+                            label="TZ"
                             type="number"
                             size="small"
                             value={matchDetails.timezone}
                             onChange={(e) => handleChange('timezone', parseFloat(e.target.value))}
                             InputLabelProps={{ shrink: true }}
                             inputProps={{ step: 0.5 }}
-                            sx={{ width: '80px', '& .MuiInputBase-root': { borderRadius: '10px' } }}
+                            sx={{ width: '60px', '& .MuiInputBase-root': { borderRadius: '10px' } }}
                         />
+                        <TextField
+                            select
+                            label="Ayanamsa"
+                            size="small"
+                            value={matchDetails.ayanamsa || 'Lahiri'}
+                            onChange={(e) => {
+                                handleChange('ayanamsa', e.target.value);
+                                localStorage.setItem('preferredAyanamsa', e.target.value);
+                            }}
+                            SelectProps={{
+                                native: true,
+                            }}
+                            sx={{
+                                width: '110px',
+                                '& .MuiInputBase-root': { borderRadius: '10px', bgcolor: '#fff' }
+                            }}
+                        >
+                            <option value="Lahiri">Lahiri</option>
+                            <option value="KP">KP</option>
+                            <option value="KP Straight">KP Straight</option>
+                        </TextField>
                     </Box>
                 </Box>
 
@@ -507,10 +543,16 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                                 லக்னம் (Asc)
                                             </TableCell>
                                             <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                                {matchChartResult.ascendant?.tamil || matchChartResult.ascendant?.english || '-'}
+                                                {matchChartResult.ascendant?.tamil || matchChartResult.ascendant?.english || '-'} <br />
+                                                <span style={{ fontSize: '0.7rem', color: '#666' }}>
+                                                    ({matchChartResult.ascendant?.nakshatra?.tamil || matchChartResult.ascendant?.nakshatra?.name || '-'})
+                                                </span>
                                             </TableCell>
                                             <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
-                                                {matchChartResult.ascendant?.lordTamil || matchChartResult.ascendant?.lord || '-'}
+                                                {matchChartResult.ascendant?.lordTamil || matchChartResult.ascendant?.lord || '-'} <br />
+                                                <span style={{ fontSize: '0.7rem', color: '#888' }}>
+                                                    (Star Lord: {getNakshatraLordHelper(matchChartResult.ascendant?.nakshatra?.name) || '-'})
+                                                </span>
                                             </TableCell>
                                         </TableRow>
 
@@ -582,9 +624,9 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                 <DialogContent dividers sx={{ p: 3, display: 'flex', justifyContent: 'center', bgcolor: '#FFFBF5' }}>
                     {chartData ? (
                         <Box sx={{ width: '100%', maxWidth: '600px' }}>
-                             <RasiChart data={chartData} />
+                            <RasiChart data={chartData} />
 
-                             <Box sx={{ mt: 3 }}>
+                            <Box sx={{ mt: 3 }}>
                                 <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '12px', border: '1px solid rgba(255, 111, 0, 0.2)' }}>
                                     <Table size="small">
                                         <TableHead sx={{ bgcolor: 'rgba(255, 193, 7, 0.15)' }}>
@@ -605,18 +647,18 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                         </TableBody>
                                     </Table>
                                 </TableContainer>
-                             </Box>
+                            </Box>
 
-                             {/* Raw Data Tables */}
-                             {chartData.moonNakshatra && renderRawDataTable("Moon Nakshatra Details", chartData.moonNakshatra)}
+                            {/* Raw Data Tables */}
+                            {chartData.moonNakshatra && renderRawDataTable("Moon Nakshatra Details", chartData.moonNakshatra)}
 
 
 
-                             <Box sx={{ mt: 2, textAlign: 'center' }}>
+                            <Box sx={{ mt: 2, textAlign: 'center' }}>
                                 <Typography variant="caption" color="text.secondary">
                                     Chart for {matchDetails.date} at {matchDetails.time}
                                 </Typography>
-                             </Box>
+                            </Box>
                         </Box>
                     ) : (
                         <CircularProgress />

@@ -1,0 +1,7 @@
+Starting script...
+Connecting to: shinkansen.proxy.rlwy.net:18869
+MongoDB Connected successfully
+Fetching all players...
+Total Players Found: 0
+No players found in the database.
+Connection closed

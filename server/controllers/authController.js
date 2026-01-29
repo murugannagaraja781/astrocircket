@@ -94,12 +94,19 @@ const register = async (req, res) => {
 // Login
 const login = async (req, res) => {
     try {
+        console.log('Login Request Received:', req.body.username); // DEBUG
         const { username, password } = req.body;
         const user = await User.findOne({ username });
-        if (!user) return res.status(400).json({ msg: 'Invalid Credentials' });
+        if (!user) {
+            console.log('Login Failed: User not found', username); // DEBUG
+            return res.status(400).json({ msg: 'Invalid Credentials' });
+        }
 
         const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(400).json({ msg: 'Invalid Credentials' });
+        if (!isMatch) {
+            console.log('Login Failed: Password mismatch', username); // DEBUG
+            return res.status(400).json({ msg: 'Invalid Credentials' });
+        }
 
         if (!user.isApproved) return res.status(403).json({ msg: 'Account not approved yet' });
         if (user.isBlocked) return res.status(403).json({ msg: 'Account is blocked' });
