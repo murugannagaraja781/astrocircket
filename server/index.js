@@ -52,6 +52,16 @@ app.use('/api/players', require('./routes/players'));
 app.use('/api/groups', groupRoutes);
 app.use('/api/prediction', require('./routes/prediction'));
 
+// Serve Static Assets (Frontend)
+const clientBuildPath = path.join(__dirname, '../client/dist');
+if (fs.existsSync(clientBuildPath)) {
+    app.use(express.static(clientBuildPath));
+    app.get('*', (req, res) => {
+        if (req.url.startsWith('/api/')) return res.status(404).json({ msg: 'API route not found' });
+        res.sendFile(path.join(clientBuildPath, 'index.html'));
+    });
+}
+
 // Global Error Handler (MUST be after routes)
 app.use((err, req, res, next) => {
     console.error('Server Error:', err.stack);
