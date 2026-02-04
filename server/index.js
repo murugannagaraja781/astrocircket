@@ -56,7 +56,7 @@ app.use('/api/prediction', require('./routes/prediction'));
 const clientBuildPath = path.join(__dirname, '../client/dist');
 if (fs.existsSync(clientBuildPath)) {
     app.use(express.static(clientBuildPath));
-    app.get('(.*)', (req, res) => {
+    app.get(/.*/, (req, res) => {
         if (req.url.startsWith('/api/')) return res.status(404).json({ msg: 'API route not found' });
         res.sendFile(path.join(clientBuildPath, 'index.html'));
     });
