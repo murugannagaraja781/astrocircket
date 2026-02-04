@@ -14,7 +14,8 @@ import {
     Container, AppBar, Toolbar, Avatar, Chip, Grid, Card, CardContent, Button,
     CircularProgress, Tabs, Tab, Divider, useMediaQuery, useTheme,
     Dialog, DialogTitle, DialogContent, DialogActions, Tooltip, Switch, Checkbox, Slide,
-    Breadcrumbs, Link
+    Breadcrumbs, Link, Popover, List, ListItem, ListItemIcon, ListItemText, ListItemButton,
+    InputBase
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -32,6 +33,12 @@ import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import FolderIcon from '@mui/icons-material/Folder';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import GroupsIcon from '@mui/icons-material/Groups';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import FilterListIcon from '@mui/icons-material/FilterList';
 import ErrorBoundary from '../components/ErrorBoundary';
 
 // --- COLOR PALETTE (YELLOW + ORANGE PURE APP THEME) ---
@@ -1106,6 +1113,184 @@ const RuleApplyingDialog = ({ open, completedRules }) => {
     );
 };
 
+// --- TEAM SELECTOR WITH SEARCH & GROUP TREE ---
+const TeamSelector = ({ label, value, onChange, groups = [], placeholder = "Select Team" }) => {
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [expandedGroups, setExpandedGroups] = useState(new Set(['T20', 'ODI', 'General'])); // All open by default
+
+    const handleClick = (event) => setAnchorEl(event.currentTarget);
+    const handleClose = () => {
+        setAnchorEl(null);
+        setSearchTerm('');
+    };
+
+    const toggleGroup = (type) => {
+        const newSet = new Set(expandedGroups);
+        if (newSet.has(type)) newSet.delete(type);
+        else newSet.add(type);
+        setExpandedGroups(newSet);
+    };
+
+    const selectedTeam = groups.find(g => g._id === value);
+    const open = Boolean(anchorEl);
+
+    // Filter and Categorize
+    const filteredGroups = groups.filter(g =>
+        g.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        g.leagueType?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const categories = {
+        'T20': filteredGroups.filter(g => g.leagueType === 'T20'),
+        'ODI': filteredGroups.filter(g => g.leagueType === 'ODI'),
+        'General': filteredGroups.filter(g => g.leagueType !== 'T20' && g.leagueType !== 'ODI')
+    };
+
+    return (
+        <Box sx={{ width: '100%' }}>
+            <Box
+                onClick={handleClick}
+                sx={{
+                    p: 1.5,
+                    borderRadius: '12px',
+                    bgcolor: 'rgba(255, 193, 7, 0.08)',
+                    border: '2px solid',
+                    borderColor: open ? '#FF6F00' : '#FFC107',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    transition: 'all 0.2s',
+                    '&:hover': { bgcolor: 'rgba(255, 193, 7, 0.12)', borderColor: '#FF6F00' }
+                }}
+            >
+                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Typography variant="caption" sx={{ color: '#FF6F00', fontWeight: 'bold', mb: -0.5 }}>{label}</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: '900', color: selectedTeam ? '#111' : '#666', fontSize: '1rem' }}>
+                        {selectedTeam ? selectedTeam.name : placeholder}
+                    </Typography>
+                </Box>
+                <KeyboardArrowDownIcon sx={{ color: '#FF6F00', transform: open ? 'rotate(180deg)' : 'none', transition: '0.2s' }} />
+            </Box>
+
+            <Popover
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                PaperProps={{
+                    sx: {
+                        width: anchorEl ? anchorEl.clientWidth : 300,
+                        maxHeight: 450,
+                        borderRadius: '12px',
+                        mt: 1,
+                        boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+                        border: '1px solid rgba(0,0,0,0.08)',
+                        overflow: 'hidden',
+                        display: 'flex',
+                        flexDirection: 'column'
+                    }
+                }}
+            >
+                {/* Search Header */}
+                <Box sx={{ p: 1.5, bgcolor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                    <Paper
+                        elevation={0}
+                        sx={{
+                            p: '2px 8px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            bgcolor: 'white',
+                            border: '1px solid #cbd5e1',
+                            borderRadius: '8px'
+                        }}
+                    >
+                        <SearchIcon sx={{ color: '#94a3b8', fontSize: 20 }} />
+                        <InputBase
+                            placeholder="Search team or league..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            fullWidth
+                            sx={{ ml: 1, fontSize: '0.875rem' }}
+                            autoFocus
+                        />
+                    </Paper>
+                </Box>
+
+                {/* Tree List */}
+                <List sx={{ p: 0, overflowY: 'auto', flexGrow: 1 }}>
+                    {Object.entries(categories).map(([type, list]) => {
+                        if (list.length === 0 && searchTerm) return null;
+                        const isExpanded = expandedGroups.has(type);
+                        const icon = type === 'T20' ? <SportsCricketIcon sx={{ color: '#FF6F00' }} /> :
+                            type === 'ODI' ? <EmojiEventsIcon sx={{ color: '#FF6F00' }} /> :
+                                <GroupsIcon sx={{ color: '#FF6F00' }} />;
+
+                        return (
+                            <React.Fragment key={type}>
+                                <ListItemButton
+                                    onClick={() => toggleGroup(type)}
+                                    sx={{
+                                        bgcolor: 'rgba(255,193,7,0.05)',
+                                        borderBottom: '1px solid rgba(0,0,0,0.03)',
+                                        py: 1
+                                    }}
+                                >
+                                    <ListItemIcon sx={{ minWidth: 36 }}>{icon}</ListItemIcon>
+                                    <ListItemText
+                                        primary={`${type} Leagues`}
+                                        primaryTypographyProps={{ fontWeight: '800', fontSize: '0.85rem', color: '#FF6F00' }}
+                                    />
+                                    {isExpanded ? <ExpandLessIcon sx={{ fontSize: 18 }} /> : <ExpandMoreIcon sx={{ fontSize: 18 }} />}
+                                </ListItemButton>
+
+                                <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+                                    <List component="div" disablePadding>
+                                        {list.length > 0 ? list.map((team) => (
+                                            <ListItemButton
+                                                key={team._id}
+                                                onClick={() => {
+                                                    onChange(team._id);
+                                                    handleClose();
+                                                }}
+                                                selected={value === team._id}
+                                                sx={{
+                                                    pl: 6,
+                                                    py: 1,
+                                                    '&.Mui-selected': { bgcolor: 'rgba(255, 111, 0, 0.08)', borderLeft: '3px solid #FF6F00' },
+                                                    '&.Mui-selected:hover': { bgcolor: 'rgba(255, 111, 0, 0.12)' }
+                                                }}
+                                            >
+                                                <ListItemText
+                                                    primary={team.name}
+                                                    primaryTypographyProps={{
+                                                        fontSize: '0.9rem',
+                                                        fontWeight: value === team._id ? 'bold' : '500',
+                                                        color: value === team._id ? '#FF6F00' : '#333'
+                                                    }}
+                                                />
+                                            </ListItemButton>
+                                        )) : (
+                                            <ListItem sx={{ pl: 6, py: 1 }}>
+                                                <ListItemText
+                                                    primary="No teams in this category"
+                                                    primaryTypographyProps={{ fontSize: '0.8rem', fontStyle: 'italic', color: '#999' }}
+                                                />
+                                            </ListItem>
+                                        )}
+                                    </List>
+                                </Collapse>
+                            </React.Fragment>
+                        );
+                    })}
+                </List>
+            </Popover>
+        </Box>
+    );
+};
+
 const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false }) => {
     const dispatch = useDispatch();
     const results = useSelector(state => state.predictions.matchResults);
@@ -1189,8 +1374,15 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
         setMatchChart(chart);
         if (details) setMatchDetails(details);
 
-        const allPlayers = (groups && Array.isArray(groups)) ? groups.flatMap(g => g.players || []) : [];
-        const teamB_Ids = (groups && Array.isArray(groups)) ? (groups.find(g => g._id === teamB)?.players?.map(p => p.id) || []) : [];
+        const grpA = (groups && Array.isArray(groups)) ? groups.find(g => g._id === teamA) : null;
+        const grpB = (groups && Array.isArray(groups)) ? groups.find(g => g._id === teamB) : null;
+
+        const playersA = grpA?.players || [];
+        const playersB = grpB?.players || [];
+
+        // Filter: only predict for players in these two teams
+        const allPlayers = [...playersA, ...playersB];
+        const teamB_Ids = playersB.map(p => p.id);
 
         dispatch(calculatePredictions({
             players: allPlayers,
@@ -1641,22 +1833,15 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                     </Typography>
 
                     {/* Team A */}
-                    <FormControl fullWidth sx={{ maxWidth: 280 }}>
-                        <InputLabel sx={{ fontWeight: 'bold', fontSize: '1rem' }}>TEAM A</InputLabel>
-                        <Select
-                            value={teamA}
+                    <Box sx={{ width: '100%', maxWidth: 300 }}>
+                        <TeamSelector
                             label="TEAM A"
-                            onChange={(e) => setTeamA(e.target.value)}
-                            sx={{
-                                '& .MuiSelect-select': { fontWeight: 'bold', color: '#FF6F00', fontSize: '1.1rem', py: 2 },
-                                borderRadius: '14px',
-                                bgcolor: 'rgba(255, 193, 7, 0.08)',
-                                border: '2px solid #FFC107'
-                            }}
-                        >
-                            {groups.map(g => <MenuItem key={g._id} value={g._id} sx={{ fontSize: '1rem' }}>{g.name}</MenuItem>)}
-                        </Select>
-                    </FormControl>
+                            value={teamA}
+                            onChange={(val) => setTeamA(val)}
+                            groups={groups}
+                            placeholder="Search Team A"
+                        />
+                    </Box>
 
                     {/* VS Badge */}
                     <Box sx={{
@@ -1669,22 +1854,15 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                     </Box>
 
                     {/* Team B */}
-                    <FormControl fullWidth sx={{ maxWidth: 280 }}>
-                        <InputLabel sx={{ fontWeight: 'bold', fontSize: '1rem' }}>TEAM B</InputLabel>
-                        <Select
-                            value={teamB}
+                    <Box sx={{ width: '100%', maxWidth: 300 }}>
+                        <TeamSelector
                             label="TEAM B"
-                            onChange={(e) => setTeamB(e.target.value)}
-                            sx={{
-                                '& .MuiSelect-select': { fontWeight: 'bold', color: '#FF6F00', fontSize: '1.1rem', py: 2 },
-                                borderRadius: '14px',
-                                bgcolor: 'rgba(255, 193, 7, 0.08)',
-                                border: '2px solid #FFC107'
-                            }}
-                        >
-                            {groups.map(g => <MenuItem key={g._id} value={g._id} sx={{ fontSize: '1rem' }}>{g.name}</MenuItem>)}
-                        </Select>
-                    </FormControl>
+                            value={teamB}
+                            onChange={(val) => setTeamB(val)}
+                            groups={groups}
+                            placeholder="Search Team B"
+                        />
+                    </Box>
 
                     <Typography variant="caption" sx={{ color: visionPro.textSecondary, mt: 2 }}>
                         Select both teams to view players
@@ -1712,21 +1890,15 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                 boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
             }}>
                 {/* TEAM A */}
-                <FormControl size="small" sx={{ flex: 1, maxWidth: { xs: 130, sm: 180 } }}>
-                    <InputLabel sx={{ fontWeight: 'bold' }}>TEAM A</InputLabel>
-                    <Select
-                        value={teamA}
+                <Box sx={{ flex: 1, maxWidth: { xs: 150, sm: 220 } }}>
+                    <TeamSelector
                         label="TEAM A"
-                        onChange={(e) => setTeamA(e.target.value)}
-                        sx={{
-                            '& .MuiSelect-select': { fontWeight: 'bold', color: '#FF6F00', fontSize: { xs: '0.8rem', sm: '1rem' } },
-                            borderRadius: '10px',
-                            bgcolor: 'rgba(255, 193, 7, 0.05)'
-                        }}
-                    >
-                        {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
-                    </Select>
-                </FormControl>
+                        value={teamA}
+                        onChange={(val) => setTeamA(val)}
+                        groups={groups}
+                        placeholder="Team A"
+                    />
+                </Box>
 
                 {/* VS Badge */}
                 <Box sx={{
@@ -1741,21 +1913,15 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                 </Box>
 
                 {/* TEAM B */}
-                <FormControl size="small" sx={{ flex: 1, maxWidth: { xs: 130, sm: 180 } }}>
-                    <InputLabel sx={{ fontWeight: 'bold' }}>TEAM B</InputLabel>
-                    <Select
-                        value={teamB}
+                <Box sx={{ flex: 1, maxWidth: { xs: 150, sm: 220 } }}>
+                    <TeamSelector
                         label="TEAM B"
-                        onChange={(e) => setTeamB(e.target.value)}
-                        sx={{
-                            '& .MuiSelect-select': { fontWeight: 'bold', color: '#FF6F00', fontSize: { xs: '0.8rem', sm: '1rem' } },
-                            borderRadius: '10px',
-                            bgcolor: 'rgba(255, 193, 7, 0.05)'
-                        }}
-                    >
-                        {groups.map(g => <MenuItem key={g._id} value={g._id}>{g.name}</MenuItem>)}
-                    </Select>
-                </FormControl>
+                        value={teamB}
+                        onChange={(val) => setTeamB(val)}
+                        groups={groups}
+                        placeholder="Team B"
+                    />
+                </Box>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Button

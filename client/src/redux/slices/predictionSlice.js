@@ -27,7 +27,8 @@ const predictionSlice = createSlice({
                 if (!playerChart) return;
 
                 let mChartToUse = mChartOriginal;
-                const pid = player._id || player.id;
+                // Normalize ID: UserDashboard uses p.id, so we must use it here for mapping consistency
+                const pid = player.id || player._id;
 
                 // Team B Inning Swap Logic
                 const isTeamB = teamB_Ids.includes(pid);
@@ -46,10 +47,10 @@ const predictionSlice = createSlice({
 
                 predictions[pid] = { bat, bowl };
 
-                // Aggregate Logic (Mirroring UserDashboard)
+                // Aggregate Logic: Only count players who are actually in Team A or Team B list
                 if (bat && bowl) {
                     const contrib = Math.max(bat.score, bowl.score);
-                    if (!isTeamB) { // Assuming non-teamB is Team A
+                    if (!isTeamB) {
                         scoreA += contrib; batA += bat.score; bowlA += bowl.score; countA++;
                     } else {
                         scoreB += contrib; batB += bat.score; bowlB += bowl.score; countB++;

@@ -34,11 +34,11 @@ const getGroups = async (req, res) => {
 // Create or Update Group (Add players)
 const addPlayersToGroup = async (req, res) => {
     try {
-        const { groupName, playerIds } = req.body;
+        const { groupName, playerIds, leagueType } = req.body;
 
         let group = await Group.findOne({ name: groupName });
         if (!group) {
-            group = new Group({ name: groupName, players: [] });
+            group = new Group({ name: groupName, players: [], leagueType: leagueType || 'General' });
         }
 
         // Add unique players
@@ -86,14 +86,30 @@ const clearGroup = async (req, res) => {
 // Create New Group
 const createGroup = async (req, res) => {
     try {
-        const { name, description } = req.body;
+        const { name, description, leagueType } = req.body;
         if (!name) return res.status(400).json({ msg: 'Name is required' });
 
         const existing = await Group.findOne({ name });
         if (existing) return res.status(400).json({ msg: 'Group already exists' });
 
-        const group = new Group({ name, description, players: [] });
+        const group = new Group({ name, description, leagueType: leagueType || 'General', players: [] });
         await group.save();
+        res.json(group);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+};
+
+// Update Group Type
+const updateGroupType = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { leagueType } = req.body;
+
+        const group = await Group.findByIdAndUpdate(id, { leagueType }, { new: true });
+        if (!group) return res.status(404).json({ msg: 'Group not found' });
+
         res.json(group);
     } catch (err) {
         console.error(err);
@@ -113,4 +129,4 @@ const deleteGroup = async (req, res) => {
     }
 };
 
-module.exports = { getGroups, addPlayersToGroup, removePlayerFromGroup, clearGroup, createGroup, deleteGroup };
+module.exports = { getGroups, addPlayersToGroup, removePlayerFromGroup, clearGroup, createGroup, deleteGroup, updateGroupType };

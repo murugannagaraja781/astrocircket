@@ -929,7 +929,7 @@ const UsersManager = () => {
     // Confirm Dialog State
     const [confirmDialog, setConfirmDialog] = useState({ open: false, title: '', message: '', action: null });
     const convertConfirmAction = (title, message, action) => {
-         setConfirmDialog({ open: true, title, message, action: () => action() });
+        setConfirmDialog({ open: true, title, message, action: () => action() });
     };
     const handleConfirmClose = () => setConfirmDialog({ ...confirmDialog, open: false });
     const handleConfirmExecute = async () => {
@@ -973,7 +973,7 @@ const UsersManager = () => {
 
     const deleteUser = async (id) => {
         try {
-             await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/auth/users/${id}`, {
+            await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/auth/users/${id}`, {
                 headers: { 'x-auth-token': token }
             });
             fetchUsers();
@@ -992,8 +992,8 @@ const UsersManager = () => {
             fetchUsers();
             showSnackbar('User Status Updated', 'success');
         } catch (err) {
-             console.error(err);
-             showSnackbar('Failed to update user status', 'error');
+            console.error(err);
+            showSnackbar('Failed to update user status', 'error');
         }
     };
 
@@ -1010,7 +1010,7 @@ const UsersManager = () => {
             </Box>
             <Paper>
                 <List>
-                     <ListItem sx={{ bgcolor: 'rgba(255, 255, 255, 0.05)', fontWeight: 'bold' }}>
+                    <ListItem sx={{ bgcolor: 'rgba(255, 255, 255, 0.05)', fontWeight: 'bold' }}>
                         <Grid container>
                             <Grid item xs={3}>Username</Grid>
                             <Grid item xs={2}>Role</Grid>
@@ -1054,7 +1054,7 @@ const UsersManager = () => {
                 </List>
             </Paper>
 
-             <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+            <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
                 <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }} variant="filled">
                     {snackbar.message}
                 </Alert>
@@ -1200,7 +1200,7 @@ const PlayersManager = () => {
         if (!confirm('Are you sure you want to delete this player?')) return;
         try {
             await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/players/${id}`, {
-                 headers: { 'x-auth-token': token }
+                headers: { 'x-auth-token': token }
             });
             showSnackbar('Player deleted successfully', 'success');
             fetchPlayers();
@@ -1221,8 +1221,8 @@ const PlayersManager = () => {
     // Generate Preview Logic
     const handleGeneratePreview = async () => {
         if (!playerForm.dob || !playerForm.birthTime || !playerForm.latitude || !playerForm.longitude) {
-           showSnackbar("Please fill Date, Time, and Place/Coordinates", "error");
-           return;
+            showSnackbar("Please fill Date, Time, and Place/Coordinates", "error");
+            return;
         }
         setGeneratingChart(true);
         try {
@@ -1248,7 +1248,7 @@ const PlayersManager = () => {
     const handleSavePlayer = async () => {
         setSavingPlayer(true);
         try {
-             if (!selectedPlayer) {
+            if (!selectedPlayer) {
                 // ADD PLAYER
                 const formData = new FormData();
                 Object.keys(playerForm).forEach(key => {
@@ -1286,8 +1286,8 @@ const PlayersManager = () => {
                 showSnackbar('Player Updated Successfully', 'success');
             }
 
-             setOpenEdit(false);
-             fetchPlayers();
+            setOpenEdit(false);
+            fetchPlayers();
         } catch (err) {
             console.error(err); showSnackbar(err.response?.data?.message || "Operation failed", 'error');
         } finally {
@@ -1301,7 +1301,7 @@ const PlayersManager = () => {
         const formData = new FormData();
         formData.append('file', selectedFile);
         try {
-             await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/players/upload`, formData, {
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/players/upload`, formData, {
                 headers: { 'x-auth-token': token }
             });
             setUploadStatus('Success!'); setOpenUpload(false); fetchPlayers();
@@ -1336,8 +1336,8 @@ const PlayersManager = () => {
 
         const lonNum = parseFloat(long);
         if (isNaN(lonNum)) {
-             console.error("Invalid longitude for calculation:", long);
-             return null;
+            console.error("Invalid longitude for calculation:", long);
+            return null;
         }
 
         // Step 1: calculate raw offset
@@ -1356,7 +1356,7 @@ const PlayersManager = () => {
 
     const handlePlaceInputChange = (e, val) => {
         setPlaceInputValue(val);
-        setPlayerForm(prev => ({...prev, birthPlace: val}));
+        setPlayerForm(prev => ({ ...prev, birthPlace: val }));
         if (searchTimeout.current) clearTimeout(searchTimeout.current);
         searchTimeout.current = setTimeout(() => fetchPlaces(val), 800);
     };
@@ -1378,7 +1378,7 @@ const PlayersManager = () => {
                         console.log('Setting Timezone:', tz);
                         setPlayerForm(prev => ({ ...prev, timezone: tz, manualTimezone: false }));
                     } else {
-                         console.warn('Could not calculate timezone.');
+                        console.warn('Could not calculate timezone.');
                     }
                 } catch (error) {
                     console.error("Error updating timezone:", error);
@@ -1420,7 +1420,7 @@ const PlayersManager = () => {
                         timezone: tz !== null ? tz : prev.timezone,
                         manualTimezone: tz !== null ? false : prev.manualTimezone
                     }));
-                     setTimezoneLoading(false);
+                    setTimezoneLoading(false);
 
                 } else {
                     console.warn('No match found for manual entry');
@@ -1430,8 +1430,8 @@ const PlayersManager = () => {
                 console.error('Auto-resolve error:', err);
             } finally {
                 setPlaceLoading(false);
-                 // Ensure timezone loading is off if we missed the inner finally
-                 setTimezoneLoading(false);
+                // Ensure timezone loading is off if we missed the inner finally
+                setTimezoneLoading(false);
             }
         }
     };
@@ -1448,15 +1448,15 @@ const PlayersManager = () => {
 
                 {/* Search & Actions */}
                 <Box sx={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 1, width: isMobile ? '100%' : 'auto' }}>
-                     <TextField size="small" label="Search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} fullWidth={isMobile} />
-                     <TextField size="small" label="Place" value={filterPlace} onChange={(e) => setFilterPlace(e.target.value)} fullWidth={isMobile} />
-                     <Button variant="contained" onClick={handleSearch} fullWidth={isMobile}>Search</Button>
+                    <TextField size="small" label="Search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} fullWidth={isMobile} />
+                    <TextField size="small" label="Place" value={filterPlace} onChange={(e) => setFilterPlace(e.target.value)} fullWidth={isMobile} />
+                    <Button variant="contained" onClick={handleSearch} fullWidth={isMobile}>Search</Button>
                 </Box>
             </Box>
             <Box sx={{ display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap' }}>
-                 {selectedItems.length > 0 && <Button variant="contained" color="secondary" onClick={handleOpenGroupDialog} size="small">Add to Team ({selectedItems.length})</Button>}
-                 <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddClick} size="small">Add</Button>
-                 <Button variant="outlined" onClick={() => setOpenUpload(true)} size="small">Upload</Button>
+                {selectedItems.length > 0 && <Button variant="contained" color="secondary" onClick={handleOpenGroupDialog} size="small">Add to Team ({selectedItems.length})</Button>}
+                <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddClick} size="small">Add</Button>
+                <Button variant="outlined" onClick={() => setOpenUpload(true)} size="small">Upload</Button>
             </Box>
 
             <TableContainer component={Paper} sx={{ maxHeight: '75vh', overflow: 'auto', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.08)' }}>
@@ -1466,7 +1466,7 @@ const PlayersManager = () => {
                             <TableCell padding="checkbox">
                                 <Typography variant="subtitle2">Chk</Typography>
                             </TableCell>
-{/* ID Header Removed */}
+                            {/* ID Header Removed */}
                             <TableCell>Name</TableCell>
                             {!isMobile && <TableCell>Place</TableCell>}
                             <TableCell>Action</TableCell>
@@ -1478,7 +1478,7 @@ const PlayersManager = () => {
                                 <TableCell padding="checkbox">
                                     <input type="checkbox" checked={selectedItems.some(item => item._id === p._id)} onChange={() => handleSelect(p)} style={{ width: 18, height: 18, cursor: 'pointer' }} />
                                 </TableCell>
-{/* ID Cell Removed */}
+                                {/* ID Cell Removed */}
                                 <TableCell>
                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                                         <Avatar
@@ -1557,7 +1557,7 @@ const PlayersManager = () => {
                             </Box>
                         </Box>
 
-                        <TextField label="Name" value={playerForm.name || ''} onChange={(e) => setPlayerForm({...playerForm, name: e.target.value})} fullWidth size="small" />
+                        <TextField label="Name" value={playerForm.name || ''} onChange={(e) => setPlayerForm({ ...playerForm, name: e.target.value })} fullWidth size="small" />
                         <Autocomplete
                             freeSolo
                             options={placeOptions}
@@ -1582,8 +1582,8 @@ const PlayersManager = () => {
                                 label="Timezone (Auto)"
                                 value={playerForm.timezone || ''}
                                 onChange={(e) => {
-                                     const val = e.target.value;
-                                     setPlayerForm(prev => ({...prev, timezone: val}));
+                                    const val = e.target.value;
+                                    setPlayerForm(prev => ({ ...prev, timezone: val }));
                                 }}
                                 InputProps={{
                                     readOnly: !playerForm.manualTimezone,
@@ -1592,7 +1592,7 @@ const PlayersManager = () => {
                                             {timezoneLoading ? (
                                                 <CircularProgress size={20} />
                                             ) : (
-                                                 <IconButton
+                                                <IconButton
                                                     size="small"
                                                     onClick={async (e) => {
                                                         e.stopPropagation(); // Prevent bubbling issues
@@ -1636,7 +1636,7 @@ const PlayersManager = () => {
                                 control={
                                     <Checkbox
                                         checked={!!playerForm.manualTimezone}
-                                        onChange={(e) => setPlayerForm({...playerForm, manualTimezone: e.target.checked})}
+                                        onChange={(e) => setPlayerForm({ ...playerForm, manualTimezone: e.target.checked })}
                                         size="small"
                                     />
                                 }
@@ -1647,7 +1647,7 @@ const PlayersManager = () => {
                             <TextField
                                 label="Latitude"
                                 value={playerForm.latitude || ''}
-                                onChange={(e) => setPlayerForm({...playerForm, latitude: e.target.value})}
+                                onChange={(e) => setPlayerForm({ ...playerForm, latitude: e.target.value })}
                                 fullWidth
                                 size="small"
                                 type="number"
@@ -1657,7 +1657,7 @@ const PlayersManager = () => {
                             <TextField
                                 label="Longitude"
                                 value={playerForm.longitude || ''}
-                                onChange={(e) => setPlayerForm({...playerForm, longitude: e.target.value})}
+                                onChange={(e) => setPlayerForm({ ...playerForm, longitude: e.target.value })}
                                 fullWidth
                                 size="small"
                                 type="number"
@@ -1669,7 +1669,7 @@ const PlayersManager = () => {
                             label="Date of Birth"
                             type="date"
                             value={playerForm.dob || ''}
-                            onChange={(e) => setPlayerForm({...playerForm, dob: e.target.value})}
+                            onChange={(e) => setPlayerForm({ ...playerForm, dob: e.target.value })}
                             fullWidth
                             size="small"
                             InputLabelProps={{ shrink: true }}
@@ -1678,7 +1678,7 @@ const PlayersManager = () => {
                             label="Birth Time"
                             type="time"
                             value={playerForm.birthTime || ''}
-                            onChange={(e) => setPlayerForm({...playerForm, birthTime: e.target.value})}
+                            onChange={(e) => setPlayerForm({ ...playerForm, birthTime: e.target.value })}
                             fullWidth
                             size="small"
                             InputLabelProps={{ shrink: true }}
@@ -1704,7 +1704,7 @@ const PlayersManager = () => {
                             </Box>
                         </Box>
 
-                         {/* MANUAL STATUS ENTRY */}
+                        {/* MANUAL STATUS ENTRY */}
                         <Box sx={{ mt: 1 }}>
                             <Typography variant="caption" sx={{ mb: 0.5, display: 'block', color: '#A0AEC0' }}>Manual Status (e.g. Good, Avg)</Typography>
                             <TextField
@@ -1727,11 +1727,11 @@ const PlayersManager = () => {
                                             borderWidth: playerForm.manualStatus ? '2px' : '1px'
                                         },
                                         backgroundColor: (() => {
-                                             const status = (playerForm.manualStatus || '').toLowerCase();
-                                             // Slight bg tint
-                                             if (status.includes('good')) return 'rgba(76, 175, 80, 0.1)';
-                                             if (status.includes('flop')) return 'rgba(244, 67, 54, 0.1)';
-                                             return 'transparent';
+                                            const status = (playerForm.manualStatus || '').toLowerCase();
+                                            // Slight bg tint
+                                            if (status.includes('good')) return 'rgba(76, 175, 80, 0.1)';
+                                            if (status.includes('flop')) return 'rgba(244, 67, 54, 0.1)';
+                                            return 'transparent';
                                         })()
                                     }
                                 }}
@@ -1745,7 +1745,7 @@ const PlayersManager = () => {
                             <Box sx={{ mt: 3, p: 2, border: '1px solid rgba(0,0,0,0.1)', borderRadius: 2, bgcolor: '#fff' }}>
                                 <Typography variant="subtitle2" gutterBottom>Rasi Chart Verification</Typography>
                                 <Box sx={{ height: 300, width: '100%', display: 'flex', justifyContent: 'center' }}>
-                                     <RasiChart data={previewChart} style={{ width: '100%', height: '100%' }} />
+                                    <RasiChart data={previewChart} style={{ width: '100%', height: '100%' }} />
                                 </Box>
                                 {previewChart.nakshatra && (
                                     <Typography variant="body1" align="center" sx={{ mt: 2, fontWeight: 'bold', color: 'primary.main' }}>
@@ -1801,7 +1801,7 @@ const PlayersManager = () => {
                             Select File (JSON/Excel)
                             <input type="file" hidden accept=".json,.xlsx,.xls,.csv" onChange={(e) => setSelectedFile(e.target.files[0])} />
                         </Button>
-                        <Button variant="text" onClick={downloadSampleTemplate} sx={{ mt: 1 }} startIcon={<span style={{fontSize: '1.2rem'}}>📥</span>}>
+                        <Button variant="text" onClick={downloadSampleTemplate} sx={{ mt: 1 }} startIcon={<span style={{ fontSize: '1.2rem' }}>📥</span>}>
                             Download Sample (CSV/Excel)
                         </Button>
                         {selectedFile && <Typography>{selectedFile.name}</Typography>}
@@ -1821,7 +1821,7 @@ const PlayersManager = () => {
                 </Alert>
             </Snackbar>
 
-             {/* Group Dialog (Minimal for now) */}
+            {/* Group Dialog (Minimal for now) */}
             <Dialog open={openGroupDialog} onClose={() => setOpenGroupDialog(false)} fullWidth maxWidth="xs">
                 <DialogTitle>Add to Team</DialogTitle>
                 <DialogContent>
@@ -1896,7 +1896,7 @@ const PlayersManager = () => {
                     </Box>
                 </DialogContent>
                 <DialogActions>
-                     <Button onClick={() => setOpenGroupDialog(false)}>Cancel</Button>
+                    <Button onClick={() => setOpenGroupDialog(false)}>Cancel</Button>
                 </DialogActions>
             </Dialog>
 
@@ -1917,7 +1917,7 @@ const PlayersManager = () => {
                             {/* Rasi Chart */}
                             <Box sx={{ p: 1, backgroundColor: '#fff', borderRadius: 2, boxShadow: 1 }}>
                                 {selectedPlayerForChart.birthChart ? (
-                                     <RasiChart data={selectedPlayerForChart.birthChart} style={{ width: '100%' }} />
+                                    <RasiChart data={selectedPlayerForChart.birthChart} style={{ width: '100%' }} />
                                 ) : (
                                     <Typography color="error">Birth Chart Data Not Available</Typography>
                                 )}
@@ -1945,7 +1945,24 @@ const GroupsManager = () => {
     // Create State
     const [openCreate, setOpenCreate] = useState(false);
     const [newGroupName, setNewGroupName] = useState('');
+    const [newLeagueType, setNewLeagueType] = useState('General'); // Default to General or T20?
     const [creatingGroup, setCreatingGroup] = useState(false);
+
+    // Add Player to Group State
+    const [playerSearchTerm, setPlayerSearchTerm] = useState('');
+    const [allPlayersList, setAllPlayersList] = useState([]);
+    const [searchingPlayers, setSearchingPlayers] = useState(false);
+    const [selectedExistingPlayer, setSelectedExistingPlayer] = useState(null);
+    const [savingPlayer, setSavingPlayer] = useState(false);
+
+    // Collapsible Sections State
+    const [expandedSections, setExpandedSections] = useState(new Set(['T20'])); // T20 open by default
+    const toggleSection = (title) => {
+        const newSet = new Set(expandedSections);
+        if (newSet.has(title)) newSet.delete(title);
+        else newSet.add(title);
+        setExpandedSections(newSet);
+    };
 
     // State for managing players in a group
     const [openManage, setOpenManage] = useState(false);
@@ -1959,7 +1976,7 @@ const GroupsManager = () => {
     // Confirmation Dialog State
     const [confirmDialog, setConfirmDialog] = useState({ open: false, title: '', message: '', action: null });
     const convertConfirmAction = (title, message, action) => {
-         setConfirmDialog({ open: true, title, message, action: () => action() });
+        setConfirmDialog({ open: true, title, message, action: () => action() });
     };
     const handleConfirmClose = () => setConfirmDialog({ ...confirmDialog, open: false });
     const handleConfirmExecute = async () => {
@@ -1993,7 +2010,7 @@ const GroupsManager = () => {
         setCreatingGroup(true);
         try {
             await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/create`,
-                { name: newGroupName },
+                { name: newGroupName, leagueType: newLeagueType },
                 { headers: { 'x-auth-token': token } }
             );
             showSnackbar('Group created successfully', 'success');
@@ -2008,10 +2025,9 @@ const GroupsManager = () => {
     };
 
     const handleDeleteGroup = async (id) => {
-        // Confirm handled by UI Dialog
         try {
             await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/groups/${id}`, {
-                 headers: { 'x-auth-token': token }
+                headers: { 'x-auth-token': token }
             });
             fetchGroups();
         } catch (err) {
@@ -2019,11 +2035,24 @@ const GroupsManager = () => {
         }
     };
 
+    const handleMoveGroup = async (id, leagueType) => {
+        try {
+            await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/groups/update-type/${id}`,
+                { leagueType },
+                { headers: { 'x-auth-token': token } }
+            );
+            showSnackbar(`Moved to ${leagueType}`, 'success');
+            fetchGroups();
+        } catch (err) {
+            console.error(err);
+            showSnackbar('Failed to move group', 'error');
+        }
+    };
+
     const handleClearGroup = async (groupName) => {
-        // Confirm handled by UI Dialog
         try {
             await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/clear`, { groupName }, {
-                 headers: { 'x-auth-token': token }
+                headers: { 'x-auth-token': token }
             });
             fetchGroups();
             showSnackbar('Group cleared', 'success');
@@ -2034,19 +2063,16 @@ const GroupsManager = () => {
     };
 
     const handleRemovePlayer = async (groupName, playerId) => {
-         // Confirm handled by UI Dialog
-         try {
-             await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/remove`, {
-                 groupName,
-                 playerId
-             }, { headers: { 'x-auth-token': token } });
-             fetchGroups();
-             // selectedGroup will update via fetchGroups logic or we can locally update for speed,
-             // but fetchGroups is safer for sync.
-         } catch (err) {
-             console.error(err);
-             showSnackbar('Failed to remove player', 'error');
-         }
+        try {
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/remove`, {
+                groupName,
+                playerId
+            }, { headers: { 'x-auth-token': token } });
+            fetchGroups();
+        } catch (err) {
+            console.error(err);
+            showSnackbar('Failed to remove player', 'error');
+        }
     };
 
     const openManageDialog = (group) => {
@@ -2054,10 +2080,8 @@ const GroupsManager = () => {
         setOpenManage(true);
     };
 
-    // Edit Player State (Duplicated from PlayersManager for isolation)
     const [openEdit, setOpenEdit] = useState(false);
     const [editingPlayer, setEditingPlayer] = useState(null);
-    const [playerConfig, setPlayerConfig] = useState(null); // Reuse if possible or mock
 
     const handleEditClick = (player) => {
         setEditingPlayer(player);
@@ -2066,23 +2090,267 @@ const GroupsManager = () => {
 
     const handleSaveEdit = async () => {
         if (!editingPlayer) return;
+        setSavingPlayer(true);
         try {
-            // Basic update - for full update we need the full form logic or a shared component
-             await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/players/${editingPlayer._id}`, editingPlayer, {
-                headers: { 'x-auth-token': token }
-            });
+            if (editingPlayer._id) {
+                // UPDATE
+                await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/players/${editingPlayer._id}`, editingPlayer, {
+                    headers: { 'x-auth-token': token }
+                });
+                showSnackbar('Player updated successfully', 'success');
+            } else {
+                // CREATE AND ADD TO GROUP
+                const newPlayerData = {
+                    ...editingPlayer,
+                    role: editingPlayer.role || 'BAT',
+                    profile: 'default.png',
+                    latitude: editingPlayer.latitude || 13.0827,
+                    longitude: editingPlayer.longitude || 80.2707,
+                    timezone: editingPlayer.timezone || 5.5
+                };
+
+                const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/players/add`, newPlayerData, {
+                    headers: { 'x-auth-token': token }
+                });
+
+                const newPlayer = res.data;
+
+                // Add to current group
+                await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/add`, {
+                    groupName: selectedGroup.name,
+                    playerIds: [newPlayer.id]
+                }, { headers: { 'x-auth-token': token } });
+
+                showSnackbar(`Created and added ${newPlayer.name}`, 'success');
+            }
             setOpenEdit(false);
-            fetchGroups(); // Refresh groups to show updated details
-            showSnackbar('Player updated successfully', 'success');
+            fetchGroups();
         } catch (err) {
             console.error(err);
-            showSnackbar('Failed to update player', 'error');
+            showSnackbar(err.response?.data?.message || 'Failed to save player', 'error');
+        } finally {
+            setSavingPlayer(false);
         }
     };
 
+    const searchAllPlayers = async (query) => {
+        if (!query || query.length < 2) return;
+        setSearchingPlayers(true);
+        try {
+            const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/players`, {
+                params: { search: query, limit: 10 },
+                headers: { 'x-auth-token': token }
+            });
+            setAllPlayersList(res.data.players || []);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setSearchingPlayers(false);
+        }
+    };
+
+    const handleAddExistingToGroup = async () => {
+        if (!selectedExistingPlayer || !selectedGroup) return;
+        try {
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/add`, {
+                groupName: selectedGroup.name,
+                playerIds: [selectedExistingPlayer.id]
+            }, { headers: { 'x-auth-token': token } });
+
+            showSnackbar(`Added ${selectedExistingPlayer.name} to ${selectedGroup.name}`, 'success');
+            setSelectedExistingPlayer(null);
+            setPlayerSearchTerm('');
+            fetchGroups();
+        } catch (err) {
+            console.error(err);
+            showSnackbar('Failed to add player', 'error');
+        }
+    };
+
+    const renderGroupList = (title, list) => {
+        const isExpanded = expandedSections.has(title);
+        return (
+            <Box sx={{ mb: 4 }}>
+                <Paper
+                    elevation={0}
+                    onClick={() => toggleSection(title)}
+                    sx={{
+                        p: 2,
+                        mb: isExpanded ? 2 : 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        cursor: 'pointer',
+                        borderRadius: '12px',
+                        border: '1px solid rgba(0,0,0,0.06)',
+                        bgcolor: isExpanded ? 'rgba(37, 99, 235, 0.04)' : 'white',
+                        transition: 'all 0.2s ease',
+                        '&:hover': { bgcolor: 'rgba(37, 99, 235, 0.08)' }
+                    }}
+                >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                        <Typography variant="h6" fontWeight="700" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            {title === 'T20' ? '🏏' : title === 'ODI' ? '🏆' : '📁'} {title} Teams
+                        </Typography>
+                        <Chip
+                            label={`${list.length} Teams`}
+                            size="small"
+                            variant="outlined"
+                            sx={{ fontWeight: 600, fontSize: '0.75rem' }}
+                        />
+                    </Box>
+                    <IconButton size="small">
+                        {isExpanded ? <KeyboardArrowDownIcon /> : <KeyboardArrowDownIcon sx={{ transform: 'rotate(-90deg)' }} />}
+                    </IconButton>
+                </Paper>
+
+                {isExpanded && (
+                    <Grid container spacing={2} sx={{ mt: 1 }}>
+                        {list.map(g => (
+                            <Grid item xs={12} sm={6} md={4} key={g._id}>
+                                <Paper
+                                    elevation={0}
+                                    sx={{
+                                        p: 0,
+                                        borderRadius: '16px',
+                                        border: '1px solid rgba(0,0,0,0.06)',
+                                        boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+                                        overflow: 'hidden',
+                                        transition: 'all 0.2s ease',
+                                        '&:hover': {
+                                            boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
+                                            transform: 'translateY(-2px)'
+                                        }
+                                    }}
+                                >
+                                    <Box sx={{
+                                        p: 2,
+                                        background: g.leagueType === 'T20' ? 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)' :
+                                            g.leagueType === 'ODI' ? 'linear-gradient(135deg, #166534 0%, #22c55e 100%)' :
+                                                'linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%)',
+                                        color: 'white'
+                                    }}>
+                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <Typography variant="h6" fontWeight="700">{g.name}</Typography>
+                                            <Chip
+                                                label={`${g.players.length} Players`}
+                                                size="small"
+                                                sx={{
+                                                    bgcolor: 'rgba(255,255,255,0.2)',
+                                                    color: 'white',
+                                                    fontWeight: 600,
+                                                    fontSize: '0.75rem'
+                                                }}
+                                            />
+                                        </Box>
+                                    </Box>
+
+                                    <Box sx={{ p: 2 }}>
+                                        <Box sx={{ display: 'flex', mb: 2 }}>
+                                            {g.players.slice(0, 5).map((p, idx) => (
+                                                <Avatar
+                                                    key={p.id}
+                                                    src={p.profile?.startsWith('http') ? p.profile : `${import.meta.env.VITE_BACKEND_URL}/uploads/${p.profile}`}
+                                                    sx={{
+                                                        width: 32,
+                                                        height: 32,
+                                                        ml: idx > 0 ? -1 : 0,
+                                                        border: '2px solid white',
+                                                        fontSize: 12
+                                                    }}
+                                                >
+                                                    {p.name?.[0]}
+                                                </Avatar>
+                                            ))}
+                                            {g.players.length > 5 && (
+                                                <Avatar sx={{
+                                                    width: 32,
+                                                    height: 32,
+                                                    ml: -1,
+                                                    bgcolor: '#e5e7eb',
+                                                    color: '#6b7280',
+                                                    fontSize: 10,
+                                                    fontWeight: 700,
+                                                    border: '2px solid white'
+                                                }}>
+                                                    +{g.players.length - 5}
+                                                </Avatar>
+                                            )}
+                                            {g.players.length === 0 && (
+                                                <Typography variant="caption" color="#9ca3af">No players yet</Typography>
+                                            )}
+                                        </Box>
+
+                                        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                                            <Button
+                                                variant="contained"
+                                                size="small"
+                                                onClick={() => openManageDialog(g)}
+                                                sx={{
+                                                    borderRadius: '8px',
+                                                    textTransform: 'none',
+                                                    fontWeight: 600,
+                                                    flex: 1,
+                                                    background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
+                                                }}
+                                            >
+                                                Manage
+                                            </Button>
+
+                                            {/* Move Buttons */}
+                                            <Tooltip title={g.leagueType === 'T20' ? "Move to ODI" : "Move to T20"}>
+                                                <IconButton
+                                                    size="small"
+                                                    onClick={() => handleMoveGroup(g._id, g.leagueType === 'T20' ? 'ODI' : 'T20')}
+                                                    sx={{
+                                                        color: '#6366f1',
+                                                        bgcolor: 'rgba(99, 102, 241, 0.1)',
+                                                        '&:hover': { bgcolor: 'rgba(99, 102, 241, 0.2)' }
+                                                    }}
+                                                >
+                                                    <AddIcon sx={{ transform: 'rotate(45deg)' }} />
+                                                </IconButton>
+                                            </Tooltip>
+
+                                            <IconButton
+                                                size="small"
+                                                onClick={() => convertConfirmAction('Clear Group', `Clear all players from ${g.name}?`, () => handleClearGroup(g.name))}
+                                                sx={{
+                                                    color: '#f59e0b',
+                                                    bgcolor: 'rgba(245, 158, 11, 0.1)',
+                                                    '&:hover': { bgcolor: 'rgba(245, 158, 11, 0.2)' }
+                                                }}
+                                            >
+                                                <DeleteIcon fontSize="small" />
+                                            </IconButton>
+                                            <IconButton
+                                                size="small"
+                                                onClick={() => convertConfirmAction('Delete Group', 'Are you sure you want to delete this group?', () => handleDeleteGroup(g._id))}
+                                                sx={{
+                                                    color: '#ef4444',
+                                                    bgcolor: 'rgba(239, 68, 68, 0.1)',
+                                                    '&:hover': { bgcolor: 'rgba(239, 68, 68, 0.2)' }
+                                                }}
+                                            >
+                                                <DeleteIcon fontSize="small" />
+                                            </IconButton>
+                                        </Box>
+                                    </Box>
+                                </Paper>
+                            </Grid>
+                        ))}
+                    </Grid>
+                )}
+            </Box>
+        );
+    };
+
+    const t20Groups = groups.filter(g => g.leagueType === 'T20');
+    const odiGroups = groups.filter(g => g.leagueType === 'ODI');
+    const generalGroups = groups.filter(g => g.leagueType !== 'T20' && g.leagueType !== 'ODI');
+
     return (
         <Box sx={{ pb: 4 }}>
-            {/* Header with gradient accent */}
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -2090,13 +2358,16 @@ const GroupsManager = () => {
                 mb: 3
             }}>
                 <Box>
-                    <Typography variant="h5" fontWeight="800" color="#111827">Active Teams</Typography>
-                    <Typography variant="body2" color="#6b7280">{groups.length} teams created</Typography>
+                    <Typography variant="h5" fontWeight="800" color="#111827">Manage Leagues</Typography>
+                    <Typography variant="body2" color="#6b7280">{groups.length} total teams</Typography>
                 </Box>
                 <Button
                     variant="contained"
                     startIcon={<AddIcon />}
-                    onClick={() => setOpenCreate(true)}
+                    onClick={() => {
+                        setNewLeagueType('T20');
+                        setOpenCreate(true);
+                    }}
                     sx={{
                         background: 'linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%)',
                         borderRadius: '12px',
@@ -2112,155 +2383,52 @@ const GroupsManager = () => {
                 </Button>
             </Box>
 
-            {/* Team Cards Grid */}
-            <Grid container spacing={2}>
-                {groups.map(g => (
-                    <Grid item xs={12} sm={6} md={4} key={g._id}>
-                        <Paper
-                            elevation={0}
-                            sx={{
-                                p: 0,
-                                borderRadius: '16px',
-                                border: '1px solid rgba(0,0,0,0.06)',
-                                boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
-                                overflow: 'hidden',
-                                transition: 'all 0.2s ease',
-                                '&:hover': {
-                                    boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
-                                    transform: 'translateY(-2px)'
-                                }
-                            }}
-                        >
-                            {/* Card Header with gradient */}
-                            <Box sx={{
-                                p: 2,
-                                background: 'linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%)',
-                                color: 'white'
-                            }}>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <Typography variant="h6" fontWeight="700">{g.name}</Typography>
-                                    <Chip
-                                        label={`${g.players.length} Players`}
-                                        size="small"
-                                        sx={{
-                                            bgcolor: 'rgba(255,255,255,0.2)',
-                                            color: 'white',
-                                            fontWeight: 600,
-                                            fontSize: '0.75rem'
-                                        }}
-                                    />
-                                </Box>
-                            </Box>
+            {/* Categorized Lists */}
+            {renderGroupList('T20', t20Groups)}
+            {renderGroupList('ODI', odiGroups)}
+            {generalGroups.length > 0 && renderGroupList('General', generalGroups)}
 
-                            {/* Card Body */}
-                            <Box sx={{ p: 2 }}>
-                                {/* Player Avatars Preview */}
-                                <Box sx={{ display: 'flex', mb: 2 }}>
-                                    {g.players.slice(0, 5).map((p, idx) => (
-                                        <Avatar
-                                            key={p.id}
-                                            src={p.profile?.startsWith('http') ? p.profile : `${import.meta.env.VITE_BACKEND_URL}/uploads/${p.profile}`}
-                                            sx={{
-                                                width: 32,
-                                                height: 32,
-                                                ml: idx > 0 ? -1 : 0,
-                                                border: '2px solid white',
-                                                fontSize: 12
-                                            }}
-                                        >
-                                            {p.name?.[0]}
-                                        </Avatar>
-                                    ))}
-                                    {g.players.length > 5 && (
-                                        <Avatar sx={{
-                                            width: 32,
-                                            height: 32,
-                                            ml: -1,
-                                            bgcolor: '#e5e7eb',
-                                            color: '#6b7280',
-                                            fontSize: 10,
-                                            fontWeight: 700,
-                                            border: '2px solid white'
-                                        }}>
-                                            +{g.players.length - 5}
-                                        </Avatar>
-                                    )}
-                                    {g.players.length === 0 && (
-                                        <Typography variant="caption" color="#9ca3af">No players yet</Typography>
-                                    )}
-                                </Box>
-
-                                {/* Action Buttons */}
-                                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                                    <Button
-                                        variant="contained"
-                                        size="small"
-                                        onClick={() => openManageDialog(g)}
-                                        sx={{
-                                            borderRadius: '8px',
-                                            textTransform: 'none',
-                                            fontWeight: 600,
-                                            flex: 1,
-                                            background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
-                                        }}
-                                    >
-                                        Manage
-                                    </Button>
-                                    <IconButton
-                                        size="small"
-                                        onClick={() => convertConfirmAction('Clear Group', `Clear all players from ${g.name}?`, () => handleClearGroup(g.name))}
-                                        sx={{
-                                            color: '#f59e0b',
-                                            bgcolor: 'rgba(245, 158, 11, 0.1)',
-                                            '&:hover': { bgcolor: 'rgba(245, 158, 11, 0.2)' }
-                                        }}
-                                    >
-                                        <DeleteIcon fontSize="small" />
-                                    </IconButton>
-                                    <IconButton
-                                        size="small"
-                                        onClick={() => convertConfirmAction('Delete Group', 'Are you sure you want to delete this group?', () => handleDeleteGroup(g._id))}
-                                        sx={{
-                                            color: '#ef4444',
-                                            bgcolor: 'rgba(239, 68, 68, 0.1)',
-                                            '&:hover': { bgcolor: 'rgba(239, 68, 68, 0.2)' }
-                                        }}
-                                    >
-                                        <DeleteIcon fontSize="small" />
-                                    </IconButton>
-                                </Box>
-                            </Box>
-                        </Paper>
-                    </Grid>
-                ))}
-                {groups.length === 0 && (
-                    <Grid item xs={12}>
-                        <Typography>No active groups found. Create a new group.</Typography>
-                    </Grid>
-                )}
-            </Grid>
+            {groups.length === 0 && (
+                <Box sx={{ textAlign: 'center', py: 8 }}>
+                    <Typography color="textSecondary">No active groups found. Create a new league team.</Typography>
+                </Box>
+            )}
 
             {/* Create Group Dialog */}
             <Dialog open={openCreate} onClose={() => setOpenCreate(false)}>
-                <DialogTitle>Create New Group</DialogTitle>
+                <DialogTitle>Create New League Team</DialogTitle>
                 <DialogContent>
-                    <Autocomplete
-                        freeSolo
-                        options={CRICKET_TEAMS}
-                        value={newGroupName}
-                        onInputChange={(event, newInputValue) => setNewGroupName(newInputValue)}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                autoFocus
-                                margin="dense"
-                                label="Group/Team Name"
-                                fullWidth
-                                variant="outlined"
-                                helperText="Select a standard team or type a custom name"
-                            />
-                        )}
-                    />
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
+                        <TextField
+                            select
+                            label="League Type"
+                            value={newLeagueType}
+                            onChange={(e) => setNewLeagueType(e.target.value)}
+                            fullWidth
+                            SelectProps={{ native: true }}
+                        >
+                            <option value="T20">T20 League</option>
+                            <option value="ODI">ODI League</option>
+                            <option value="General">General</option>
+                        </TextField>
+
+                        <Autocomplete
+                            freeSolo
+                            options={CRICKET_TEAMS}
+                            value={newGroupName}
+                            onInputChange={(event, newInputValue) => setNewGroupName(newInputValue)}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    autoFocus
+                                    label="Group/Team Name"
+                                    fullWidth
+                                    variant="outlined"
+                                    helperText="Select a standard team or type a custom name"
+                                />
+                            )}
+                        />
+                    </Box>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpenCreate(false)} disabled={creatingGroup}>Cancel</Button>
@@ -2277,8 +2445,67 @@ const GroupsManager = () => {
 
             {/* Manage Players Dialog */}
             <Dialog open={openManage} onClose={() => setOpenManage(false)} fullWidth maxWidth="md">
-                <DialogTitle>Manage Group: {selectedGroup?.name}</DialogTitle>
+                <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Box>Manage Team: {selectedGroup?.name} <Chip label={selectedGroup?.leagueType} size="small" sx={{ ml: 1 }} /></Box>
+                    <Button
+                        variant="contained"
+                        size="small"
+                        startIcon={<AddIcon />}
+                        onClick={() => {
+                            setEditingPlayer({
+                                name: '',
+                                birthPlace: 'Chennai, India',
+                                dob: '',
+                                birthTime: '',
+                                latitude: 13.0827,
+                                longitude: 80.2707,
+                                timezone: 5.5,
+                                role: 'BAT'
+                            });
+                            setOpenEdit(true);
+                        }}
+                    >
+                        Create New Player
+                    </Button>
+                </DialogTitle>
                 <DialogContent dividers>
+                    {/* Add Existing Player Section */}
+                    <Box sx={{ mb: 3, p: 2, bgcolor: 'rgba(0,0,0,0.02)', borderRadius: 2, display: 'flex', gap: 2, alignItems: 'flex-start' }}>
+                        <Autocomplete
+                            fullWidth
+                            size="small"
+                            options={allPlayersList}
+                            getOptionLabel={(option) => `${option.name} (${option.id})`}
+                            onInputChange={(e, val) => searchAllPlayers(val)}
+                            onChange={(e, val) => setSelectedExistingPlayer(val)}
+                            loading={searchingPlayers}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Search system players to add..."
+                                    variant="outlined"
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        endAdornment: (
+                                            <React.Fragment>
+                                                {searchingPlayers ? <CircularProgress color="inherit" size={20} /> : null}
+                                                {params.InputProps.endAdornment}
+                                            </React.Fragment>
+                                        ),
+                                    }}
+                                />
+                            )}
+                        />
+                        <Button
+                            variant="contained"
+                            disabled={!selectedExistingPlayer}
+                            onClick={handleAddExistingToGroup}
+                            sx={{ whiteSpace: 'nowrap' }}
+                        >
+                            Add to Team
+                        </Button>
+                    </Box>
+
                     {selectedGroup && selectedGroup.players.length > 0 ? (
                         <TableContainer component={Paper} elevation={0} variant="outlined" sx={{ maxHeight: '400px', overflow: 'auto' }}>
                             <Table size="small">
@@ -2318,9 +2545,9 @@ const GroupsManager = () => {
                 </DialogActions>
             </Dialog>
 
-             {/* Edit Player Dialog (Simplified for Group Actions) */}
+            {/* Edit/Create Player Dialog */}
             <Dialog open={openEdit} onClose={() => setOpenEdit(false)} fullWidth maxWidth="sm">
-                <DialogTitle>Edit Player Details</DialogTitle>
+                <DialogTitle>{editingPlayer?._id ? 'Edit Player' : 'Create New Player'}</DialogTitle>
                 <DialogContent>
                     {editingPlayer && (
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
@@ -2329,36 +2556,89 @@ const GroupsManager = () => {
                                 value={editingPlayer.name}
                                 onChange={(e) => setEditingPlayer({ ...editingPlayer, name: e.target.value })}
                                 fullWidth
+                                size="small"
                             />
                             <TextField
                                 label="Birth Place"
                                 value={editingPlayer.birthPlace}
                                 onChange={(e) => setEditingPlayer({ ...editingPlayer, birthPlace: e.target.value })}
                                 fullWidth
+                                size="small"
                             />
-                            {/* Add Date/Time fields if needed, kept simple for now as requested */}
-                             <TextField
-                                label="Date of Birth"
-                                type="date"
-                                value={editingPlayer.dob ? editingPlayer.dob.split('T')[0] : ''}
-                                onChange={(e) => setEditingPlayer({ ...editingPlayer, dob: e.target.value })}
-                                fullWidth
-                                InputLabelProps={{ shrink: true }}
-                            />
-                             <TextField
-                                label="Birth Time"
-                                type="time"
-                                value={editingPlayer.birthTime || ''}
-                                onChange={(e) => setEditingPlayer({ ...editingPlayer, birthTime: e.target.value })}
-                                fullWidth
-                                InputLabelProps={{ shrink: true }}
-                            />
+                            <Box sx={{ display: 'flex', gap: 2 }}>
+                                <TextField
+                                    label="Latitude"
+                                    type="number"
+                                    value={editingPlayer.latitude || ''}
+                                    onChange={(e) => setEditingPlayer({ ...editingPlayer, latitude: e.target.value })}
+                                    fullWidth
+                                    size="small"
+                                />
+                                <TextField
+                                    label="Longitude"
+                                    type="number"
+                                    value={editingPlayer.longitude || ''}
+                                    onChange={(e) => setEditingPlayer({ ...editingPlayer, longitude: e.target.value })}
+                                    fullWidth
+                                    size="small"
+                                />
+                            </Box>
+                            <Box sx={{ display: 'flex', gap: 2 }}>
+                                <TextField
+                                    label="Date of Birth"
+                                    type="date"
+                                    value={editingPlayer.dob ? editingPlayer.dob.split('T')[0] : ''}
+                                    onChange={(e) => setEditingPlayer({ ...editingPlayer, dob: e.target.value })}
+                                    fullWidth
+                                    size="small"
+                                    InputLabelProps={{ shrink: true }}
+                                />
+                                <TextField
+                                    label="Birth Time"
+                                    type="time"
+                                    value={editingPlayer.birthTime || ''}
+                                    onChange={(e) => setEditingPlayer({ ...editingPlayer, birthTime: e.target.value })}
+                                    fullWidth
+                                    size="small"
+                                    InputLabelProps={{ shrink: true }}
+                                />
+                            </Box>
+                            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                                <TextField
+                                    label="Timezone"
+                                    type="number"
+                                    value={editingPlayer.timezone || ''}
+                                    onChange={(e) => setEditingPlayer({ ...editingPlayer, timezone: e.target.value })}
+                                    fullWidth
+                                    size="small"
+                                />
+                                <TextField
+                                    select
+                                    label="Role"
+                                    value={editingPlayer.role || 'BAT'}
+                                    onChange={(e) => setEditingPlayer({ ...editingPlayer, role: e.target.value })}
+                                    fullWidth
+                                    size="small"
+                                    SelectProps={{ native: true }}
+                                >
+                                    <option value="BAT">BAT</option>
+                                    <option value="BOWL">BOWL</option>
+                                    <option value="ALL">ALL</option>
+                                </TextField>
+                            </Box>
                         </Box>
                     )}
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setOpenEdit(false)}>Cancel</Button>
-                    <Button onClick={handleSaveEdit} variant="contained" color="primary">Save Changes</Button>
+                    <Button onClick={() => setOpenEdit(false)} disabled={savingPlayer}>Cancel</Button>
+                    <Button
+                        onClick={handleSaveEdit}
+                        variant="contained"
+                        color="primary"
+                        disabled={savingPlayer || !editingPlayer?.name}
+                    >
+                        {savingPlayer ? 'Saving...' : editingPlayer?._id ? 'Save Changes' : 'Create & Add'}
+                    </Button>
                 </DialogActions>
             </Dialog>
 
@@ -2368,7 +2648,6 @@ const GroupsManager = () => {
                 </Alert>
             </Snackbar>
 
-            {/* Confirmation Dialog */}
             <Dialog open={confirmDialog.open} onClose={handleConfirmClose}>
                 <DialogTitle>{confirmDialog.title}</DialogTitle>
                 <DialogContent>
@@ -2523,14 +2802,14 @@ const AdminDashboard = () => {
                 })}
             </List>
             <Box sx={{ mt: 'auto' }}>
-                 <List>
+                <List>
                     <ListItem disablePadding>
                         <ListItemButton onClick={logout} sx={{ borderRadius: '15px', '&:hover': { bgcolor: 'rgba(255,0,0,0.1)' } }}>
                             <ListItemIcon sx={{
-                                     minWidth: 40, color: '#F56565',
-                                     bgcolor: 'rgba(245, 101, 101, 0.1)', borderRadius: '10px',
-                                     width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 1.5
-                                 }}>
+                                minWidth: 40, color: '#F56565',
+                                bgcolor: 'rgba(245, 101, 101, 0.1)', borderRadius: '10px',
+                                width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 1.5
+                            }}>
                                 <LogoutIcon fontSize="small" />
                             </ListItemIcon>
                             <ListItemText primary="Logout" primaryTypographyProps={{ color: '#F56565', fontWeight: 'bold', fontSize: '0.875rem' }} />
@@ -2652,7 +2931,7 @@ const AdminDashboard = () => {
                             borderRadius: '20px',
                             border: '1px solid rgba(255, 255, 255, 0.1)',
                             overflow: 'hidden'
-                         }}>
+                        }}>
                             {drawer}
                         </Box>
                     </Drawer>
