@@ -2744,18 +2744,16 @@ const AdminDashboard = () => {
                     }
                 }}
             >
-                <Typography
-                    variant="h5"
-                    fontWeight="900"
-                    sx={{
-                        color: 'white',
-                        letterSpacing: '1px',
-                        textShadow: '2px 2px 0 #d97706, -2px -2px 0 #d97706, 2px -2px 0 #d97706, -2px 2px 0 #d97706, 2px 0 0 #d97706, -2px 0 0 #d97706, 0 2px 0 #d97706, 0 -2px 0 #d97706',
-                        WebkitTextStroke: '1px #d97706',
+                <img
+                    src="/sb_astro_logo.jpg"
+                    alt="S&B Astro"
+                    style={{
+                        height: '50px',
+                        maxWidth: '100%',
+                        objectFit: 'contain',
+                        borderRadius: '8px'
                     }}
-                >
-                    S&B Astro
-                </Typography>
+                />
             </Box>
             <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)', mb: 2 }} />
             <List>
