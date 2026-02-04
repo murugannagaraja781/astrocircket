@@ -12,6 +12,8 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
     const [matchDetails, setMatchDetails] = useState({
         date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
         time: '19:30',
+        battingTime: '',
+        bowlingTime: '',
         location: 'Mumbai, India', // Default
         lat: 19.0760,
         long: 72.8777,
@@ -142,6 +144,18 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                 timezone: matchDetails.timezone,
                 ayanamsa: matchDetails.ayanamsa || 'Lahiri'
             };
+
+            // Add Batting/Bowling times if present
+            if (matchDetails.battingTime) {
+                const [bh, bm] = matchDetails.battingTime.split(':');
+                payload.battingHour = parseInt(bh);
+                payload.battingMinute = parseInt(bm);
+            }
+            if (matchDetails.bowlingTime) {
+                const [bwh, bwm] = matchDetails.bowlingTime.split(':');
+                payload.bowlingHour = parseInt(bwh);
+                payload.bowlingMinute = parseInt(bwm);
+            }
 
             // Fetch Match Chart
             const baseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
@@ -355,6 +369,50 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                     fontWeight: 'bold',
                                     bgcolor: '#fff',
                                     border: '2px solid #FFCC80'
+                                },
+                                '& .MuiInputLabel-root': { fontWeight: 'bold', color: '#E65100' }
+                            }}
+                        />
+                    </Box>
+
+                    {/* Batting Time (Optional) */}
+                    <Box sx={{ width: '120px', flexShrink: 0 }}>
+                        <TextField
+                            label="Batting Time"
+                            type="time"
+                            size="small"
+                            fullWidth
+                            value={matchDetails.battingTime}
+                            onChange={(e) => handleChange('battingTime', e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                            sx={{
+                                '& .MuiInputBase-root': {
+                                    borderRadius: '12px',
+                                    fontWeight: 'bold',
+                                    bgcolor: '#fff',
+                                    border: '1px solid #FFCC80'
+                                },
+                                '& .MuiInputLabel-root': { fontWeight: 'bold', color: '#E65100' }
+                            }}
+                        />
+                    </Box>
+
+                    {/* Bowling Time (Optional) */}
+                    <Box sx={{ width: '120px', flexShrink: 0 }}>
+                        <TextField
+                            label="Bowling Time"
+                            type="time"
+                            size="small"
+                            fullWidth
+                            value={matchDetails.bowlingTime}
+                            onChange={(e) => handleChange('bowlingTime', e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                            sx={{
+                                '& .MuiInputBase-root': {
+                                    borderRadius: '12px',
+                                    fontWeight: 'bold',
+                                    bgcolor: '#fff',
+                                    border: '1px solid #FFCC80'
                                 },
                                 '& .MuiInputLabel-root': { fontWeight: 'bold', color: '#E65100' }
                             }}

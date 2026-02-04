@@ -1,9 +1,12 @@
 import React, { useContext, useState, useEffect, useMemo, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
 import RasiChart from '../components/RasiChart';
 import MatchPredictionControl from '../components/MatchPredictionControl';
-import { runPrediction } from '../utils/predictionAdapter'; // Helper imported
+import { runPrediction } from '../utils/predictionAdapter';
+import { setPlayers } from '../redux/slices/playerSlice';
+import { calculatePredictions, clearPredictions, clearMatchChart } from '../redux/slices/predictionSlice';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     Paper, Typography, Box, TextField, InputAdornment, TablePagination,
@@ -27,6 +30,9 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import ErrorBoundary from '../components/ErrorBoundary';
 
 // --- COLOR PALETTE (YELLOW + ORANGE PURE APP THEME) ---
 const visionPro = {
@@ -61,6 +67,62 @@ const getFlag = (player) => {
     if (place.includes('West Indies')) return '🌴';
     if (place.includes('Afghanistan')) return '🇦🇫';
     return '🏳️';
+};
+
+// Rule Verification Checklist Component
+const RuleChecklist = ({ logs, role }) => {
+    const allRules = [
+        { id: 1, name: "Zig-Zag", tamil: "ஜிக்-ஜாக்" },
+        { id: 2, name: "Direct", tamil: "நேரடி விதி" },
+        { id: 3, name: "Star", tamil: "நட்சத்திர விதி" },
+        { id: 4, name: "Conjunction", tamil: "சேர்க்கை விதி" },
+        { id: 5, name: "Same House", tamil: "ஒரே ராசி" },
+        { id: 6, name: "Match Rasi Home", tamil: "ராசி அதிபதி வீடு" },
+        { id: 7, name: "Rahu/Ketu Player", tamil: "ராகு/கேது விதி" },
+        { id: 8, name: "Lagna", tamil: "லக்ன விதி" },
+        { id: 9, name: "Double Lord", tamil: "மேட்ச் ராசி" },
+    ];
+
+    return (
+        <Box sx={{ mt: 1, mb: 2, border: '1px solid #333', borderRadius: 1, p: 1.5, bgcolor: '#000' }}>
+            <Typography variant="overline" sx={{ color: '#aaa', mb: 1, display: 'block', letterSpacing: 1 }}>
+                {role} Rule Analysis Checklist
+            </Typography>
+            <Grid container spacing={1}>
+                {allRules.map(rule => {
+                    const ruleIdEn = `Rule ${rule.id}:`;
+                    const ruleIdTa = `விதி ${rule.id}:`;
+
+                    const logMatch = logs?.find(l =>
+                        (typeof l === 'string' && (l.includes(ruleIdEn) || l.includes(ruleIdTa))) ||
+                        (typeof l === 'object' && (l.en?.includes(ruleIdEn) || l.ta?.includes(ruleIdTa)))
+                    );
+
+                    const isApplied = !!logMatch;
+                    const logStr = logMatch ? (typeof logMatch === 'object' ? logMatch.en : logMatch) : '';
+                    const scoreText = logStr.match(/\(([+-]?\d+)\)/)?.[1] || '';
+
+                    return (
+                        <Grid item xs={12} sm={6} key={rule.id}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', opacity: isApplied ? 1 : 0.4 }}>
+                                {isApplied ? (
+                                    <CheckCircleIcon sx={{ fontSize: 16, color: '#10B981', mr: 1 }} />
+                                ) : (
+                                    <CancelIcon sx={{ fontSize: 16, color: '#EF4444', mr: 1 }} />
+                                )}
+                                <Typography sx={{ fontSize: '0.75rem', color: isApplied ? '#10B981' : '#888', flex: 1 }}>
+                                    {rule.id}. {rule.tamil} ({rule.name})
+                                </Typography>
+                                {isApplied && (
+                                    <Chip label={scoreText ? `${scoreText}` : 'OK'} size="small" sx={{ height: 16, fontSize: '0.6rem', bgcolor: '#10B981', color: '#fff' }} />
+                                )}
+                            </Box>
+                        </Grid>
+                    );
+                })}
+            </Grid>
+        </Box>
+    );
 };
 
 // --- SUB-COMPONENTS ---
@@ -125,13 +187,13 @@ const getNakshatraLordHelper = (nakshatraName) => {
 const PlanetaryTable = ({ planets, hideHeader = false }) => {
     // If planets is undefined or not an array, show empty state
     if (!planets || !Array.isArray(planets) || planets.length === 0) {
-         return (
+        return (
             <Box sx={{ p: 2, textAlign: 'center' }}>
                 <Typography color="text.secondary">
                     No Planetary Data Available (தரவு இல்லை)
                 </Typography>
             </Box>
-         );
+        );
     }
 
     return (
@@ -248,9 +310,6 @@ const PlanetaryTable = ({ planets, hideHeader = false }) => {
 };
 
 const planetTamilMap = {
-    'sun': 'சூரியன்', 'moon': 'சந்திரன்', 'mars': 'செவ்வாய்', 'mercury': 'புதன்',
-    'jupiter': 'குரு', 'venus': 'சுக்கிரன்', 'saturn': 'சனி', 'rahu': 'ராகு', 'ketu': 'கேது',
-    'asc': 'லக்னம்', 'lagna': 'லக்னம்', 'uranus': 'யுரேனஸ்', 'neptune': 'நெப்டியூன்', 'pluto': 'புளூட்டோ',
     'Sun': 'சூரியன்', 'Moon': 'சந்திரன்', 'Mars': 'செவ்வாய்', 'Mercury': 'புதன்',
     'Jupiter': 'குரு', 'Venus': 'சுக்கிரன்', 'Saturn': 'சனி', 'Rahu': 'ராகு', 'Ketu': 'கேது',
     'Asc': 'லக்னம்', 'Lagna': 'லக்னம்'
@@ -301,7 +360,7 @@ const QuickSummaryTable = ({ data, hideHeader = false }) => {
         const chart = input.data || input;
         if (chart.formattedPlanets && chart.formattedPlanets.length > 0) return chart.formattedPlanets;
         if (chart.planets && typeof chart.planets === 'object') {
-             return Object.entries(chart.planets).map(([k, v]) => ({ name: k, ...v }));
+            return Object.entries(chart.planets).map(([k, v]) => ({ name: k, ...v }));
         }
 
         return [];
@@ -351,21 +410,22 @@ const QuickSummaryTable = ({ data, hideHeader = false }) => {
                                 <TableCell sx={{ color: visionPro.text }}>
                                     {signTamilMap[signKey] || signKey || '-'}
                                 </TableCell>
-                            <TableCell sx={{ color: visionPro.textSecondary }}>
-                                {p.nakshatraTamil || p.nakshatraName || p.nakshatra || p.Nakshatra || p.star || '-'}
-                            </TableCell>
-                            <TableCell>
-                                <Chip
-                                    label={p.pada || p.Pada || p.Charan || p.charan || '-'}
-                                    size="small"
-                                    sx={{ bgcolor: visionPro.primary, color: '#fff', fontWeight: '900' }}
-                                />
-                            </TableCell>
-                            <TableCell sx={{ color: visionPro.primary, fontWeight: '800' }}>
-                                {p.degreeFormatted || p.degree || p.Ansh || p.ansh || (p.Degree ? Number(p.Degree).toFixed(2) + '°' : '-')}
-                            </TableCell>
-                        </TableRow>
-                    )})}
+                                <TableCell sx={{ color: visionPro.textSecondary }}>
+                                    {p.nakshatraTamil || p.nakshatraName || p.nakshatra || p.Nakshatra || p.star || '-'}
+                                </TableCell>
+                                <TableCell>
+                                    <Chip
+                                        label={p.pada || p.Pada || p.Charan || p.charan || '-'}
+                                        size="small"
+                                        sx={{ bgcolor: visionPro.primary, color: '#fff', fontWeight: '900' }}
+                                    />
+                                </TableCell>
+                                <TableCell sx={{ color: visionPro.primary, fontWeight: '800' }}>
+                                    {p.degreeFormatted || p.degree || p.Ansh || p.ansh || (p.Degree ? Number(p.Degree).toFixed(2) + '°' : '-')}
+                                </TableCell>
+                            </TableRow>
+                        )
+                    })}
                 </TableBody>
             </Table>
         </TableContainer>
@@ -394,7 +454,7 @@ const PanchangamGrid = ({ panchangam, birthData, hideHeader = false }) => {
             borderColor: hideHeader ? 'rgba(255, 255, 255, 0.1)' : visionPro.border,
             color: hideHeader ? 'white' : visionPro.text
         }}>
-             <CardContent>
+            <CardContent>
                 <Box sx={{
                     display: 'flex',
                     alignItems: 'center',
@@ -441,14 +501,28 @@ const PanchangamGrid = ({ panchangam, birthData, hideHeader = false }) => {
 // 3. Player Detail Panel (Collapsible)
 const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = false }) => {
     const [tabIndex, setTabIndex] = useState(initialTab);
+    const dispatch = useDispatch();
+
+    // Redux State
+    const playerPredictions = useSelector(state => state.predictions.playerPredictions);
+    const pid = player._id || player.id;
 
     // Normalize Data (Handle wrappers)
-    const chartData = player.birthChart?.data || player.birthChart;
-    const matchData = matchChart?.data || matchChart;
+    const chartData = useMemo(() => player.birthChart?.data || player.birthChart, [player.birthChart]);
+    const matchData = useMemo(() => matchChart?.data || matchChart, [matchChart]);
 
-    // Run Advanced Prediction if Match Chart is available
-    const batsmanPred = useMemo(() => matchData ? runPrediction(chartData, matchData, "BAT") : null, [chartData, matchData]);
-    const bowlerPred = useMemo(() => matchData ? runPrediction(chartData, matchData, "BOWL") : null, [chartData, matchData]);
+    // Local Prediction Calculation as fallback
+    const batsmanPred = useMemo(() => {
+        if (playerPredictions[pid]?.bat) return playerPredictions[pid].bat;
+        if (chartData && matchData) return runPrediction(chartData, matchData, "BAT");
+        return null;
+    }, [playerPredictions, pid, chartData, matchData]);
+
+    const bowlerPred = useMemo(() => {
+        if (playerPredictions[pid]?.bowl) return playerPredictions[pid].bowl;
+        if (chartData && matchData) return runPrediction(chartData, matchData, "BOWL");
+        return null;
+    }, [playerPredictions, pid, chartData, matchData]);
 
     return (
         <Box sx={{
@@ -459,11 +533,11 @@ const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = fa
         }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                 <Box>
-                     <Typography variant="h6" color="primary" fontWeight="bold">
-                        {player.tamilName} ({player.englishName})
+                    <Typography variant="h6" color="primary" fontWeight="bold">
+                        {player.tamilName || player.name} ({player.englishName || player.name})
                     </Typography>
                     <Typography variant="caption" display="block">
-                        Born: {player.birthData?.date || '-'} at {player.birthData?.time || '-'} | Place: {player.birthData?.place || '-'}
+                        Born: {player.birthData?.date || player.dob || '-'} at {player.birthData?.time || player.birthTime || '-'} | Place: {player.birthData?.place || player.birthPlace || '-'}
                     </Typography>
                 </Box>
                 {/* Prediction Results */}
@@ -479,46 +553,74 @@ const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = fa
             {matchData && (
                 <Grid container spacing={2} sx={{ mb: 2 }}>
                     <Grid item xs={12} md={6}>
-                       <Paper sx={{
-                           p: 2,
-                           borderLeft: 5,
-                           borderColor: batsmanPred?.verdict === 'EXCELLENT' ? 'success.main' : 'warning.main',
-                           bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
-                           color: hideHeader ? 'white' : 'inherit'
-                       }}>
+                        <Paper sx={{
+                            p: 2,
+                            borderLeft: 5,
+                            borderColor: batsmanPred?.verdict === 'EXCELLENT' ? 'success.main' : 'warning.main',
+                            bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
+                            color: hideHeader ? 'white' : 'inherit'
+                        }}>
                             <Typography variant="subtitle1" fontWeight="bold">Batting Analysis</Typography>
-                             <Typography variant="h5" color={batsmanPred?.verdict === 'EXCELLENT' ? 'success.main' : 'text.primary'}>
+                            <Typography variant="h5" color={batsmanPred?.verdict === 'EXCELLENT' ? 'success.main' : 'text.primary'}>
                                 {batsmanPred?.verdict} ({batsmanPred?.score})
                             </Typography>
                             <Typography variant="body2" color="text.secondary" gutterBottom>{batsmanPred?.message}</Typography>
                             <Divider sx={{ my: 1 }} />
-                            {batsmanPred?.logs?.map((log, i) => (
-                                <Typography key={i} variant="caption" display="block" sx={{ color: 'green' }}>
-                                    ✓ {typeof log === 'object' ? `${log.en} / ${log.ta}` : log}
+                            <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 0.5, fontSize: '0.75rem' }}>Active Rules:</Typography>
+                            {batsmanPred?.logs?.length > 0 ? (
+                                batsmanPred.logs.map((log, i) => (
+                                    <Box key={i} sx={{ mb: 0.5, p: 0.5, bgcolor: 'rgba(76, 175, 80, 0.1)', borderRadius: 1 }}>
+                                        <Typography variant="body2" sx={{ color: 'green', fontWeight: 'bold', fontSize: '0.75rem' }}>
+                                            ✓ {typeof log === 'object' ? log.en : log}
+                                        </Typography>
+                                        {typeof log === 'object' && log.ta && (
+                                            <Typography variant="caption" display="block" sx={{ color: '#666', fontSize: '0.7rem' }}>
+                                                {log.ta}
+                                            </Typography>
+                                        )}
+                                    </Box>
+                                ))
+                            ) : (
+                                <Typography variant="caption" display="block" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
+                                    No batting rules triggered for this match.
                                 </Typography>
-                            ))}
-                       </Paper>
+                            )}
+                        </Paper>
                     </Grid>
                     <Grid item xs={12} md={6}>
-                       <Paper sx={{
-                           p: 2,
-                           borderLeft: 5,
-                           borderColor: bowlerPred?.verdict === 'EXCELLENT' ? 'success.main' : 'warning.main',
-                           bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
-                           color: hideHeader ? 'white' : 'inherit'
-                       }}>
+                        <Paper sx={{
+                            p: 2,
+                            borderLeft: 5,
+                            borderColor: bowlerPred?.verdict === 'EXCELLENT' ? 'success.main' : 'warning.main',
+                            bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
+                            color: hideHeader ? 'white' : 'inherit'
+                        }}>
                             <Typography variant="subtitle1" fontWeight="bold">Bowling Analysis</Typography>
-                             <Typography variant="h5" color={bowlerPred?.verdict === 'EXCELLENT' ? 'success.main' : 'text.primary'}>
+                            <Typography variant="h5" color={bowlerPred?.verdict === 'EXCELLENT' ? 'success.main' : 'text.primary'}>
                                 {bowlerPred?.verdict} ({bowlerPred?.score})
                             </Typography>
-                             <Typography variant="body2" color="text.secondary" gutterBottom>{bowlerPred?.message}</Typography>
-                             <Divider sx={{ my: 1 }} />
-                             {bowlerPred?.logs?.map((log, i) => (
-                                <Typography key={i} variant="caption" display="block" sx={{ color: 'green' }}>
-                                    ✓ {typeof log === 'object' ? `${log.en} / ${log.ta}` : log}
+                            <Typography variant="body2" color="text.secondary" gutterBottom>{bowlerPred?.message}</Typography>
+                            <Divider sx={{ my: 1 }} />
+                            <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 0.5, fontSize: '0.75rem' }}>Active Rules:</Typography>
+                            {bowlerPred?.logs?.length > 0 ? (
+                                bowlerPred.logs.map((log, i) => (
+                                    <Box key={i} sx={{ mb: 0.5, p: 0.5, bgcolor: 'rgba(76, 175, 80, 0.1)', borderRadius: 1 }}>
+                                        <Typography variant="body2" sx={{ color: 'green', fontWeight: 'bold', fontSize: '0.75rem' }}>
+                                            ✓ {typeof log === 'object' ? log.en : log}
+                                        </Typography>
+                                        {typeof log === 'object' && log.ta && (
+                                            <Typography variant="caption" display="block" sx={{ color: '#666', fontSize: '0.7rem' }}>
+                                                {log.ta}
+                                            </Typography>
+                                        )}
+                                    </Box>
+                                ))
+                            ) : (
+                                <Typography variant="caption" display="block" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
+                                    No bowling rules triggered for this match.
                                 </Typography>
-                            ))}
-                       </Paper>
+                            )}
+                        </Paper>
                     </Grid>
                 </Grid>
             )}
@@ -552,14 +654,20 @@ const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = fa
                 >
                     🔍 Debug JSON
                 </Button>
-                <Box id={`debug-${player.id || player._id}`} sx={{ display: 'none', p: 1, bgcolor: '#111', color: '#0f0', fontSize: 10, overflow: 'auto', maxHeight: 200, borderRadius: 1 }}>
+                <Box id={`debug-${player.id || player._id}`} sx={{ display: 'none', p: 1, bgcolor: '#111', color: '#0f0', fontSize: 10, overflow: 'auto', maxHeight: 400, borderRadius: 1 }}>
+                    <Typography variant="body2" sx={{ color: '#0f0', mb: 1, fontWeight: 'bold' }}>--- RULE DIAGNOSTICS ---</Typography>
+
+                    <RuleChecklist logs={batsmanPred?.logs} role="BATTING" />
+                    <RuleChecklist logs={bowlerPred?.logs} role="BOWLING" />
+
+                    <Typography variant="body2" sx={{ color: '#0f0', mb: 1, fontWeight: 'bold' }}>--- RAW DATA ---</Typography>
                     <pre>
-{JSON.stringify({
-    playerChart: chartData,
-    matchChart: matchData,
-    batPrediction: batsmanPred,
-    bowlPrediction: bowlerPred
-}, null, 2)}
+                        {JSON.stringify({
+                            playerChart: chartData,
+                            matchChart: matchData,
+                            batPrediction: batsmanPred,
+                            bowlPrediction: bowlerPred
+                        }, null, 2)}
                     </pre>
                 </Box>
             </Box>
@@ -572,7 +680,9 @@ const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = fa
                             data={chartData}
                             planetsData={(() => {
                                 if (!chartData) return null;
-                                const pList = chartData.formattedPlanets || (chartData.planets && Array.isArray(chartData.planets) ? chartData.planets : []);
+                                const pList = Array.isArray(chartData.formattedPlanets)
+                                    ? chartData.formattedPlanets
+                                    : (chartData.planets && Array.isArray(chartData.planets) ? chartData.planets : []);
                                 const styleMap = {};
                                 pList.forEach(p => {
                                     const name = p.name || p.planetName;
@@ -590,8 +700,8 @@ const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = fa
                                 return styleMap;
                             })()}
                         />
-                         {/* Summary Table mimicking Match Prediction Control */}
-                         <Box sx={{ mt: 3 }}>
+                        {/* Summary Table mimicking Match Prediction Control */}
+                        <Box sx={{ mt: 3 }}>
                             <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '12px', border: '1px solid rgba(255, 111, 0, 0.2)' }}>
                                 <Table size="small">
                                     <TableHead sx={{ bgcolor: 'rgba(255, 193, 7, 0.15)' }}>
@@ -624,7 +734,7 @@ const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = fa
 
                                             return summary.map((row, index) => (
                                                 <TableRow key={index}>
-                                                    <TableCell sx={{ fontWeight: 'bold', color: '#000' }}>{row.label}</TableCell>
+                                                    <TableCell sx={{ fontWeight: 'bold', color: visionPro.primary }}>{row.label}</TableCell>
                                                     <TableCell sx={{ color: '#000' }}>{row.sign}</TableCell>
                                                     <TableCell sx={{ color: '#000' }}>{row.lord}</TableCell>
                                                 </TableRow>
@@ -635,10 +745,10 @@ const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = fa
                             </TableContainer>
                         </Box>
 
-                         {/* PLANETARY DETAILS LIST (Dignity Colors) */}
-                         <Box sx={{ mt: 3 }}>
+                        {/* PLANETARY DETAILS LIST (Dignity Colors) */}
+                        <Box sx={{ mt: 3 }}>
                             <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 1, color: '#FF6F00' }}>
-                                 கிரக விவரங்கள் (Planetary Details)
+                                கிரக விவரங்கள் (Planetary Details)
                             </Typography>
                             <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '12px', border: '1px solid rgba(255, 111, 0, 0.2)' }}>
                                 <Table size="small">
@@ -782,7 +892,7 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewCha
                                     <span style={{ fontSize: '1rem' }}>✏️</span>
                                 </IconButton>
                             </Box>
-{/* ID Removed */}
+                            {/* ID Removed */}
 
                         </Box>
                     </Box>
@@ -793,47 +903,47 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewCha
                             <LocationOnIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
                             <Typography variant="body2">{player.birthPlace || 'Unknown'}</Typography>
                         </Box>
-                         <Typography variant="caption" color="text.secondary" sx={{ ml: 2.3 }}>
+                        <Typography variant="caption" color="text.secondary" sx={{ ml: 2.3 }}>
                             {player.dob} {player.birthTime ? `| ${player.birthTime}` : ''}
                         </Typography>
                     </Box>
                 </TableCell>
                 <TableCell>
-                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                         <PublicIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
                         <Typography variant="body2">{player.timezone || '-'}</Typography>
                     </Box>
                 </TableCell>
 
-            <TableCell>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                     {/* 3 Icons for Chart, Planets, Panchangam */}
-                     <Button
-                        variant="outlined"
-                        size="small"
-                        onClick={(e) => { e.stopPropagation(); onViewChart(player, 0); }}
-                        sx={{
-                            color: '#FF6F00',
-                            borderColor: '#FF6F00',
-                            fontWeight: 'bold',
-                            fontSize: '0.7rem',
-                            padding: '2px 8px',
-                            minWidth: 'auto',
-                            textTransform: 'none',
-                            '&:hover': { bgcolor: 'rgba(255, 111, 0, 0.1)', borderColor: '#FF6F00' }
-                        }}
-                     >
-                        Rasi Details
-                     </Button>
+                <TableCell>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        {/* 3 Icons for Chart, Planets, Panchangam */}
+                        <Button
+                            variant="outlined"
+                            size="small"
+                            onClick={(e) => { e.stopPropagation(); onViewChart(player, 0); }}
+                            sx={{
+                                color: '#FF6F00',
+                                borderColor: '#FF6F00',
+                                fontWeight: 'bold',
+                                fontSize: '0.7rem',
+                                padding: '2px 8px',
+                                minWidth: 'auto',
+                                textTransform: 'none',
+                                '&:hover': { bgcolor: 'rgba(255, 111, 0, 0.1)', borderColor: '#FF6F00' }
+                            }}
+                        >
+                            Rasi Details
+                        </Button>
 
-                    {matchChart && isSelected && (
-                         <Box sx={{ display: 'flex', gap: 1, ml: 2 }}>
-                             <PredictionChip type="Bat" score={batResult?.score} report={batResult?.report} />
-                             <PredictionChip type="Bowl" score={bowlResult?.score} report={bowlResult?.report} />
-                         </Box>
-                    )}
-                </Box>
-             </TableCell>
+                        {matchChart && isSelected && (
+                            <Box sx={{ display: 'flex', gap: 1, ml: 2 }}>
+                                <PredictionChip type="Bat" score={batResult?.score} report={batResult?.report} />
+                                <PredictionChip type="Bowl" score={bowlResult?.score} report={bowlResult?.report} />
+                            </Box>
+                        )}
+                    </Box>
+                </TableCell>
             </TableRow>
 
         </>
@@ -949,7 +1059,7 @@ const RuleApplyingDialog = ({ open, completedRules }) => {
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mt: 1 }}>
                     {TAMIL_RULE_LIST.map((rule, index) => {
                         const isCompleted = completedRules.includes(rule.id);
-                        const isCurrent = !isCompleted && (index === 0 || completedRules.includes(TAMIL_RULE_LIST[index-1].id));
+                        const isCurrent = !isCompleted && (index === 0 || completedRules.includes(TAMIL_RULE_LIST[index - 1].id));
 
                         return (
                             <Box
@@ -997,11 +1107,14 @@ const RuleApplyingDialog = ({ open, completedRules }) => {
 };
 
 const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false }) => {
+    const dispatch = useDispatch();
+    const results = useSelector(state => state.predictions.matchResults);
+    const playerPredictions = useSelector(state => state.predictions.playerPredictions);
+
     const [teamA, setTeamA] = useState('');
     const [teamB, setTeamB] = useState('');
     const [selectedPlayers, setSelectedPlayers] = useState([]);
     const [matchChart, setMatchChart] = useState(null);
-    const [results, setResults] = useState(null);
     const [filterA, setFilterA] = useState(false);
     const [filterB, setFilterB] = useState(false);
     const [matchDetails, setMatchDetails] = useState({
@@ -1025,7 +1138,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
             setTeamA('');
             setTeamB('');
             setMatchChart(null);
-            setResults(null);
+            dispatch(clearPredictions());
             setRuleDialogOpen(false);
             setCompletedRules([]);
         }
@@ -1042,17 +1155,17 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
     useEffect(() => {
         const newSelected = [];
         if (teamA) {
-            const grp = groups.find(g => g._id === teamA);
-            if (grp) newSelected.push(...grp.players.map(p => p.id));
+            const grp = Array.isArray(groups) ? groups.find(g => g._id === teamA) : null;
+            if (grp && Array.isArray(grp.players)) newSelected.push(...grp.players.map(p => p?.id).filter(Boolean));
         }
         if (teamB) {
-            const grp = groups.find(g => g._id === teamB);
-            if (grp) newSelected.push(...grp.players.map(p => p.id));
+            const grp = Array.isArray(groups) ? groups.find(g => g._id === teamB) : null;
+            if (grp && Array.isArray(grp.players)) newSelected.push(...grp.players.map(p => p?.id).filter(Boolean));
         }
         // Unique IDs
         setSelectedPlayers([...new Set(newSelected)]);
         setMatchChart(null);
-        setResults(null);
+        dispatch(clearPredictions());
     }, [teamA, teamB, groups]);
 
     const handleMatchReady = async (chart, details) => {
@@ -1075,66 +1188,15 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
         // 3. Process Actual Prediction
         setMatchChart(chart);
         if (details) setMatchDetails(details);
-        const resDetails = {};
-        let scoreA = 0;
-        let scoreB = 0;
-        let countA = 0;
-        let countB = 0;
-        // Separated Scores
-        let batA = 0;
-        let bowlA = 0;
-        let batB = 0;
-        let bowlB = 0;
 
-        const allPlayers = groups.flatMap(g => g.players);
+        const allPlayers = (groups && Array.isArray(groups)) ? groups.flatMap(g => g.players || []) : [];
+        const teamB_Ids = (groups && Array.isArray(groups)) ? (groups.find(g => g._id === teamB)?.players?.map(p => p.id) || []) : [];
 
-        selectedPlayers.forEach(pid => {
-            const p = allPlayers.find(ap => ap.id === pid);
-            if (p && (p.birthChart?.data || p.birthChart)) {
-                const pChart = p.birthChart.data || p.birthChart;
-                const mChart = chart.data || chart;
-
-                const bat = runPrediction(pChart, mChart, "BAT");
-                const bowl = runPrediction(pChart, mChart, "BOWL");
-
-                if (bat && bowl) {
-                    // Save Result
-                    resDetails[pid] = { bat, bowl };
-
-                    // Add to team totals (Using MAX of Bat/Bowl as contribution for Main Score)
-                    const contribution = Math.max(bat.score, bowl.score);
-
-                    const isTeamA = groups.find(g => g._id === teamA)?.players?.some(tp => tp.id === pid);
-                    const isTeamB = groups.find(g => g._id === teamB)?.players?.some(tp => tp.id === pid);
-
-                    if (isTeamA) {
-                        scoreA += contribution;
-                        batA += bat.score;
-                        bowlA += bowl.score;
-                        countA++;
-                    }
-                    else if (isTeamB) {
-                        scoreB += contribution;
-                        batB += bat.score;
-                        bowlB += bowl.score;
-                        countB++;
-                    }
-                }
-            }
-        });
-
-        // Calculate Average Score (to normalize if team sizes differ)
-        const avgA = countA > 0 ? (scoreA / countA).toFixed(1) : 0;
-        const avgB = countB > 0 ? (scoreB / countB).toFixed(1) : 0;
-
-        setResults({
-            details: resDetails,
-            scoreA: avgA,
-            scoreB: avgB,
-            totalA: scoreA,
-            totalB: scoreB,
-            batA, bowlA, batB, bowlB
-        });
+        dispatch(calculatePredictions({
+            players: allPlayers,
+            matchChart: chart,
+            teamB_Ids
+        }));
 
         // 4. Close Rule Dialog
         setRuleDialogOpen(false);
@@ -1150,14 +1212,15 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
     };
 
     const renderPlayerList = (teamId, teamName, filterActive, setFilterActive) => {
-        const grp = groups.find(g => g._id === teamId);
+        const grp = Array.isArray(groups) ? groups.find(g => g._id === teamId) : null;
         if (!grp) return null;
 
-        const myScore = teamId === teamA ? results?.totalA : results?.totalB;
-        const myBat = teamId === teamA ? results?.batA : results?.batB;
-        const myBowl = teamId === teamA ? results?.bowlA : results?.bowlB;
+        // Guard against missing properties in results
+        const myScore = teamId === teamA ? (results?.totalA ?? 0) : (results?.totalB ?? 0);
+        const myBat = teamId === teamA ? (results?.batA ?? 0) : (results?.batB ?? 0);
+        const myBowl = teamId === teamA ? (results?.bowlA ?? 0) : (results?.bowlB ?? 0);
 
-        const opponentScore = teamId === teamA ? results?.totalB : results?.totalA;
+        const opponentScore = teamId === teamA ? (results?.totalB ?? 0) : (results?.totalA ?? 0);
         const isWinner = results && Number(myScore) > Number(opponentScore);
 
         return (
@@ -1221,7 +1284,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                     <Box sx={{ flexGrow: 1, overflowY: 'auto', minHeight: 0 }}>
                         {/* Select All + Filter Button */}
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, pl: 1, gap: 1 }}>
-                             <Checkbox
+                            <Checkbox
                                 size="small"
                                 indeterminate={
                                     grp.players.some(p => selectedPlayers.includes(p.id)) &&
@@ -1259,13 +1322,13 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                         </Box>
 
                         {/* Player List - sorted by selection when filter is active */}
-                        {[...grp.players]
+                        {[...(grp.players || [])]
                             .filter(p => !filterActive || selectedPlayers.includes(p.id))
                             .sort((a, b) => {
                                 // 1. Matched Rules First (Score > 0)
-                                if (results?.details) {
-                                    const aScore = Math.max(results.details[a.id]?.bat?.score || 0, results.details[a.id]?.bowl?.score || 0);
-                                    const bScore = Math.max(results.details[b.id]?.bat?.score || 0, results.details[b.id]?.bowl?.score || 0);
+                                if (playerPredictions) {
+                                    const aScore = Math.max(playerPredictions[a.id]?.bat?.score || 0, playerPredictions[a.id]?.bowl?.score || 0);
+                                    const bScore = Math.max(playerPredictions[b.id]?.bat?.score || 0, playerPredictions[b.id]?.bowl?.score || 0);
                                     if (aScore > 0 && bScore === 0) return -1;
                                     if (aScore === 0 && bScore > 0) return 1;
                                     if (aScore !== bScore) return bScore - aScore; // Highest score first
@@ -1281,220 +1344,239 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                 return 0;
                             })
                             .map(p => {
-                            const isSel = selectedPlayers.includes(p.id);
-                            const res = results?.details?.[p.id];
-                            const isSpecial = res?.bat?.isSpecial || res?.bowl?.isSpecial;
-                            const dimmed = filterActive && !isSel;
-                            return (
-                                <Paper key={p.id} elevation={0} sx={{
-                                    p: 1.5, mb: 1,
-                                    border: '2px solid',
-                                    borderColor: isSpecial ? '#8A2BE2' : (isSel ? '#FF6F00' : 'rgba(0,0,0,0.08)'),
-                                    bgcolor: isSpecial ? 'rgba(138, 43, 226, 0.15)' : (isSel ? 'rgba(255, 111, 0, 0.08)' : 'white'),
-                                    borderRadius: '12px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 1.5,
-                                    opacity: dimmed ? 0.4 : 1,
-                                    transition: 'all 0.2s ease',
-                                    boxShadow: isSpecial ? '0 2px 8px rgba(138, 43, 226, 0.3)' : (isSel ? '0 2px 8px rgba(255, 111, 0, 0.2)' : '0 1px 3px rgba(0,0,0,0.05)')
-                                }} onClick={() => results ? toggleRules(p.id) : togglePlayer(p.id)}>
-                                    <Checkbox
-                                        checked={isSel}
-                                        size="small"
-                                        sx={{ p: 0 }}
-                                        onClick={(e) => { e.stopPropagation(); togglePlayer(p.id); }}
-                                    />
-                                    {/* Avatar Hidden on Mobile as per request */}
-                                    {/* <Avatar src={p.profile} sx={{ width: 40, height: 40, fontSize: 14 }}>{p.name[0]}</Avatar> */}
-                                    <Box sx={{ flexGrow: 1, ml: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 0.5 }}>
-                                        <Typography variant="subtitle2" fontWeight="bold" lineHeight={1.1} fontSize="0.85rem">{p.name}</Typography>
+                                const isSel = selectedPlayers.includes(p.id);
+                                const res = playerPredictions?.[p.id];
+                                const isSpecial = res?.bat?.isSpecial || res?.bowl?.isSpecial;
+                                const dimmed = filterActive && !isSel;
+                                return (
+                                    <Paper key={p.id} elevation={0} sx={{
+                                        p: 1.5, mb: 1,
+                                        border: '2px solid',
+                                        borderColor: isSpecial ? '#8A2BE2' : (isSel ? '#FF6F00' : 'rgba(0,0,0,0.08)'),
+                                        bgcolor: isSpecial ? 'rgba(138, 43, 226, 0.15)' : (isSel ? 'rgba(255, 111, 0, 0.08)' : 'white'),
+                                        borderRadius: '12px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 1.5,
+                                        opacity: dimmed ? 0.4 : 1,
+                                        transition: 'all 0.2s ease',
+                                        boxShadow: isSpecial ? '0 2px 8px rgba(138, 43, 226, 0.3)' : (isSel ? '0 2px 8px rgba(255, 111, 0, 0.2)' : '0 1px 3px rgba(0,0,0,0.05)')
+                                    }} onClick={() => results ? toggleRules(p.id) : togglePlayer(p.id)}>
+                                        <Checkbox
+                                            checked={isSel}
+                                            size="small"
+                                            sx={{ p: 0 }}
+                                            onClick={(e) => { e.stopPropagation(); togglePlayer(p.id); }}
+                                        />
+                                        {/* Avatar Hidden on Mobile as per request */}
+                                        {/* <Avatar src={p.profile} sx={{ width: 40, height: 40, fontSize: 14 }}>{p.name[0]}</Avatar> */}
+                                        <Box sx={{ flexGrow: 1, ml: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 0.5 }}>
+                                            <Typography variant="subtitle2" fontWeight="bold" lineHeight={1.1} fontSize="0.85rem">
+                                                {/* Role Icon */}
+                                                <span style={{ marginRight: '4px', fontSize: '0.9rem' }}>
+                                                    {p.role === 'Batsman' ? '🏏' :
+                                                        p.role === 'Bowler' ? '🥎' :
+                                                            p.role === 'All Rounder' ? '⚔️' :
+                                                                p.role === 'WK-Batsman' ? '🧤' : '👤'}
+                                                </span>
+                                                {p.name}
+                                            </Typography>
 
-                                        {/* Prediction Chips (Moved Below Name) */}
-                                        {res && (
-                                            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mt: 0.2 }}>
-                                                <Chip label={`B:${res.bat.score}`} size="small" sx={{ height: 18, fontSize: '0.65rem', px: 0.5, bgcolor: res.bat.score >= 1 ? '#e6fffa' : '#f3f4f6', color: res.bat.score >= 1 ? '#059669' : '#374151', border: '1px solid', borderColor: res.bat.score >= 1 ? '#10b981' : '#d1d5db' }}  />
-                                                <Chip label={`Bw:${res.bowl.score}`} size="small" sx={{ height: 18, fontSize: '0.65rem', px: 0.5, bgcolor: res.bowl.score >= 1 ? '#e6fffa' : '#f3f4f6', color: res.bowl.score >= 1 ? '#059669' : '#374151', border: '1px solid', borderColor: res.bowl.score >= 1 ? '#10b981' : '#d1d5db'  }} />
-                                            </Box>
-                                        )}
-                                    </Box>
-
-                                    {/* RULES DISPLAY (Mobile) */}
-                                    {res && expandedRules[p.id] && (
-                                        <Box sx={{ mt: 1, p: 1, bgcolor: '#f8fafc', borderRadius: 1, border: '1px solid #e2e8f0' }}>
-                                            <Typography variant="caption" fontWeight="bold" display="block" color="#000" sx={{ mb: 0.5 }}>Target Success List:</Typography>
-                                            {[...(res.bat.logs || []), ...(res.bowl.logs || [])].map((log, i) => (
-                                                <Typography key={i} variant="caption" display="block" color="#000" sx={{ fontSize: '0.7rem', mb: 0.5 }}>
-                                                    • {typeof log === 'object' ? `${log.en} / ${log.ta}` : log}
-                                                </Typography>
-                                            ))}
-                                            {(!res.bat.logs?.length && !res.bowl.logs?.length) && (
-                                                <Typography variant="caption" color="#000">No specific rules matched.</Typography>
+                                            {/* Prediction Chips (Moved Below Name) */}
+                                            {res && (
+                                                <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mt: 0.2 }}>
+                                                    <Chip label={`B:${res.bat.score}`} size="small" sx={{ height: 18, fontSize: '0.65rem', px: 0.5, bgcolor: res.bat.score >= 1 ? '#e6fffa' : '#f3f4f6', color: res.bat.score >= 1 ? '#059669' : '#374151', border: '1px solid', borderColor: res.bat.score >= 1 ? '#10b981' : '#d1d5db' }} />
+                                                    <Chip label={`Bw:${res.bowl.score}`} size="small" sx={{ height: 18, fontSize: '0.65rem', px: 0.5, bgcolor: res.bowl.score >= 1 ? '#e6fffa' : '#f3f4f6', color: res.bowl.score >= 1 ? '#059669' : '#374151', border: '1px solid', borderColor: res.bowl.score >= 1 ? '#10b981' : '#d1d5db' }} />
+                                                </Box>
                                             )}
                                         </Box>
-                                    )}
-                                </Paper>
-                            );
-                        })}
+
+                                        {/* RULES DISPLAY (Mobile) */}
+                                        {res && expandedRules[p.id] && (
+                                            <Box sx={{ mt: 1, p: 1, bgcolor: '#f8fafc', borderRadius: 1, border: '1px solid #e2e8f0' }}>
+                                                <Typography variant="caption" fontWeight="bold" display="block" color="#000" sx={{ mb: 0.5 }}>Target Success List:</Typography>
+                                                {[...(res?.bat?.report || []), ...(res?.bowl?.report || [])].map((log, i) => (
+                                                    <Typography key={i} variant="caption" display="block" color="#000" sx={{ fontSize: '0.75rem', mb: 0.5, fontFamily: 'monospace' }}>
+                                                        • {typeof log === 'object' && log !== null ?
+                                                            (<span><b>{log.ta}</b> <span style={{ color: '#2E7D32' }}>{log.en?.match(/\([+-]?\d+\)/)?.[0] || ""}</span></span>)
+                                                            : log}
+                                                    </Typography>
+                                                ))}
+                                                {(!res.bat.report?.length && !res.bowl.report?.length) && (
+                                                    <Typography variant="caption" color="#000">No specific rules matched.</Typography>
+                                                )}
+                                            </Box>
+                                        )}
+                                    </Paper>
+                                );
+                            })}
                     </Box>
                 ) : (
-                /* --- DESKTOP VIEW (TABLE) --- */
-                <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, overflow: 'hidden' }}>
-                    {/* Filter Button for Desktop */}
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1, flexShrink: 0 }}>
-                        <Button
-                            size="small"
-                            variant={filterActive ? "contained" : "outlined"}
-                            onClick={() => setFilterActive(!filterActive)}
-                            sx={{
-                                fontSize: '0.7rem',
-                                px: 2,
-                                py: 0.5,
-                                borderRadius: '20px',
-                                bgcolor: filterActive ? '#FF6F00' : 'transparent',
-                                borderColor: '#FFC107',
-                                color: filterActive ? 'white' : '#FF6F00',
-                                '&:hover': { bgcolor: filterActive ? '#E65100' : 'rgba(255, 193, 7, 0.1)' }
-                            }}
-                        >
-                            {filterActive ? '✓ Filtered' : 'Filter Selected'}
-                        </Button>
-                    </Box>
-                    <TableContainer sx={{ flexGrow: 1, overflow: 'auto', minHeight: 0, maxHeight: 'calc(100vh - 240px)' }}>
-                    <Table size="small" stickyHeader>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell padding="checkbox" sx={{ bgcolor: 'white' }}>
-                                    <Checkbox
-                                        size="small"
-                                        indeterminate={
-                                            grp.players.some(p => selectedPlayers.includes(p.id)) &&
-                                            !grp.players.every(p => selectedPlayers.includes(p.id))
-                                        }
-                                        checked={grp.players.every(p => selectedPlayers.includes(p.id))}
-                                        onChange={() => {
-                                            const allIds = grp.players.map(p => p.id);
-                                            const allSelected = allIds.every(id => selectedPlayers.includes(id));
-                                            if (allSelected) {
-                                                setSelectedPlayers(prev => prev.filter(id => !allIds.includes(id)));
-                                            } else {
-                                                setSelectedPlayers(prev => [...new Set([...prev, ...allIds])]);
-                                            }
-                                        }}
-                                    />
-                                </TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', bgcolor: 'white', color: '#FF6F00' }}>Name</TableCell>
-{/* ID Column Header Removed */}
-                                {/* <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#FF6F00' }}>DOB / Time</TableCell> */}
-                                {/* <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#FF6F00' }}>Place</TableCell> */}
-                                {results && <TableCell sx={{ fontWeight: 'bold', bgcolor: 'white', color: '#FF6F00' }}>Pred.</TableCell>}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {[...grp.players]
-                                .filter(p => !filterActive || selectedPlayers.includes(p.id))
-                                .sort((a, b) => {
-                                    // 1. Matched Rules First (Score > 0)
-                                    if (results?.details) {
-                                        const aScore = Math.max(results.details[a.id]?.bat?.score || 0, results.details[a.id]?.bowl?.score || 0);
-                                        const bScore = Math.max(results.details[b.id]?.bat?.score || 0, results.details[b.id]?.bowl?.score || 0);
-                                        if (aScore > 0 && bScore === 0) return -1;
-                                        if (aScore === 0 && bScore > 0) return 1;
-                                        if (aScore !== bScore) return bScore - aScore; // Highest score first
-                                    }
-
-                                    // 2. Selected First (if filter active)
-                                    if (filterActive) {
-                                        const aSelected = selectedPlayers.includes(a.id);
-                                        const bSelected = selectedPlayers.includes(b.id);
-                                        if (aSelected && !bSelected) return -1;
-                                        if (!aSelected && bSelected) return 1;
-                                    }
-                                    return 0;
-                                })
-                                .map(p => {
-                                const isSel = selectedPlayers.includes(p.id);
-                                const res = results?.details?.[p.id];
-                                const dimmed = filterActive && !isSel;
-                                 const isSpecial = res?.bat?.isSpecial || res?.bowl?.isSpecial;
-                                 return (
-                                 <React.Fragment key={p.id}>
-                                     <TableRow
-                                         hover
-                                         onClick={() => results ? toggleRules(p.id) : togglePlayer(p.id)}
-                                         sx={{
-                                             cursor: 'pointer',
-                                             bgcolor: isSpecial ? 'rgba(138, 43, 226, 0.15)' : (isSel ? 'rgba(255, 111, 0, 0.08)' : 'inherit'),
-                                             borderLeft: isSpecial ? '4px solid #8A2BE2' : 'none',
-                                             opacity: dimmed ? 0.4 : 1,
-                                             transition: 'all 0.2s ease'
-                                         }}
-                                     >
-                                        <TableCell padding="checkbox">
+                    /* --- DESKTOP VIEW (TABLE) --- */
+                    <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, overflow: 'hidden' }}>
+                        {/* Filter Button for Desktop */}
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1, flexShrink: 0 }}>
+                            <Button
+                                size="small"
+                                variant={filterActive ? "contained" : "outlined"}
+                                onClick={() => setFilterActive(!filterActive)}
+                                sx={{
+                                    fontSize: '0.7rem',
+                                    px: 2,
+                                    py: 0.5,
+                                    borderRadius: '20px',
+                                    bgcolor: filterActive ? '#FF6F00' : 'transparent',
+                                    borderColor: '#FFC107',
+                                    color: filterActive ? 'white' : '#FF6F00',
+                                    '&:hover': { bgcolor: filterActive ? '#E65100' : 'rgba(255, 193, 7, 0.1)' }
+                                }}
+                            >
+                                {filterActive ? '✓ Filtered' : 'Filter Selected'}
+                            </Button>
+                        </Box>
+                        <TableContainer sx={{ flexGrow: 1, overflow: 'auto', minHeight: 0, maxHeight: 'calc(100vh - 240px)' }}>
+                            <Table size="small" stickyHeader>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell padding="checkbox" sx={{ bgcolor: 'white' }}>
                                             <Checkbox
-                                                checked={isSel}
                                                 size="small"
-                                                onClick={(e) => { e.stopPropagation(); togglePlayer(p.id); }}
+                                                indeterminate={
+                                                    grp.players.some(p => selectedPlayers.includes(p.id)) &&
+                                                    !grp.players.every(p => selectedPlayers.includes(p.id))
+                                                }
+                                                checked={grp.players.every(p => selectedPlayers.includes(p.id))}
+                                                onChange={() => {
+                                                    const allIds = grp.players.map(p => p.id);
+                                                    const allSelected = allIds.every(id => selectedPlayers.includes(id));
+                                                    if (allSelected) {
+                                                        setSelectedPlayers(prev => prev.filter(id => !allIds.includes(id)));
+                                                    } else {
+                                                        setSelectedPlayers(prev => [...new Set([...prev, ...allIds])]);
+                                                    }
+                                                }}
                                             />
                                         </TableCell>
-                                        <TableCell>
-                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                <Avatar src={p.profile} sx={{ width: 24, height: 24, fontSize: 10 }}>{p.name[0]}</Avatar>
-                                                <Typography variant="body2" fontWeight={isSel ? 'bold' : 'normal'}>
-                                                    {p.name}
-                                                </Typography>
-                                            </Box>
-                                        </TableCell>
-{/* ID Cell Removed */}
-                                        {/* <TableCell>
+                                        <TableCell sx={{ fontWeight: 'bold', bgcolor: 'white', color: '#FF6F00' }}>Name</TableCell>
+                                        {/* ID Column Header Removed */}
+                                        {/* <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#FF6F00' }}>DOB / Time</TableCell> */}
+                                        {/* <TableCell sx={{ fontWeight: 'bold', bgcolor: 'transparent', color: '#FF6F00' }}>Place</TableCell> */}
+                                        {results && <TableCell sx={{ fontWeight: 'bold', bgcolor: 'white', color: '#FF6F00' }}>Pred.</TableCell>}
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {[...(grp.players || [])]
+                                        .filter(p => !filterActive || selectedPlayers.includes(p.id))
+                                        .sort((a, b) => {
+                                            // 1. Matched Rules First (Score > 0)
+                                            if (playerPredictions) {
+                                                const aScore = Math.max(playerPredictions[a.id]?.bat?.score || 0, playerPredictions[a.id]?.bowl?.score || 0);
+                                                const bScore = Math.max(playerPredictions[b.id]?.bat?.score || 0, playerPredictions[b.id]?.bowl?.score || 0);
+                                                if (aScore > 0 && bScore === 0) return -1;
+                                                if (aScore === 0 && bScore > 0) return 1;
+                                                if (aScore !== bScore) return bScore - aScore; // Highest score first
+                                            }
+
+                                            // 2. Selected First (if filter active)
+                                            if (filterActive) {
+                                                const aSelected = selectedPlayers.includes(a.id);
+                                                const bSelected = selectedPlayers.includes(b.id);
+                                                if (aSelected && !bSelected) return -1;
+                                                if (!aSelected && bSelected) return 1;
+                                            }
+                                            return 0;
+                                        })
+                                        .map(p => {
+                                            const isSel = selectedPlayers.includes(p.id);
+                                            const res = playerPredictions?.[p.id];
+                                            const dimmed = filterActive && !isSel;
+                                            const isSpecial = res?.bat?.isSpecial || res?.bowl?.isSpecial;
+                                            return (
+                                                <React.Fragment key={p.id}>
+                                                    <TableRow
+                                                        hover
+                                                        onClick={() => results ? toggleRules(p.id) : togglePlayer(p.id)}
+                                                        sx={{
+                                                            cursor: 'pointer',
+                                                            bgcolor: isSpecial ? 'rgba(138, 43, 226, 0.15)' : (isSel ? 'rgba(255, 111, 0, 0.08)' : 'inherit'),
+                                                            borderLeft: isSpecial ? '4px solid #8A2BE2' : 'none',
+                                                            opacity: dimmed ? 0.4 : 1,
+                                                            transition: 'all 0.2s ease'
+                                                        }}
+                                                    >
+                                                        <TableCell padding="checkbox">
+                                                            <Checkbox
+                                                                checked={isSel}
+                                                                size="small"
+                                                                onClick={(e) => { e.stopPropagation(); togglePlayer(p.id); }}
+                                                            />
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                                <Avatar src={p.profile} sx={{ width: 24, height: 24, fontSize: 10 }}>{p.name[0]}</Avatar>
+                                                                <Typography variant="body2" fontWeight={isSel ? 'bold' : 'normal'}>
+                                                                    <span style={{ marginRight: '6px', fontSize: '1rem' }} title={p.role}>
+                                                                        {p.role === 'Batsman' ? '🏏' :
+                                                                            p.role === 'Bowler' ? '🥎' :
+                                                                                p.role === 'All Rounder' ? '⚔️' :
+                                                                                    p.role === 'WK-Batsman' ? '🧤' : '👤'}
+                                                                    </span>
+                                                                    {p.name}
+                                                                </Typography>
+                                                            </Box>
+                                                        </TableCell>
+                                                        {/* ID Cell Removed */}
+                                                        {/* <TableCell>
                                              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                                 <Typography variant="caption" sx={{ fontWeight: 'bold' }}>{p.dob}</Typography>
                                                 <Typography variant="caption" color="text.secondary">{p.birthTime}</Typography>
                                              </Box>
                                         </TableCell> */}
-                                        {/* <TableCell>
+                                                        {/* <TableCell>
                                             <Typography variant="caption" color="text.secondary" sx={{ maxWidth: 80, display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                                 {p.birthPlace}
                                             </Typography>
                                         </TableCell> */}
-                                        {results && (
-                                            <TableCell>
-                                                {res ? (
-                                                     <Box sx={{ display: 'flex', gap: 0.5 }}>
-                                                        <Chip label={`B:${res.bat.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bat.score >= 1 ? 'success' : 'default'} />
-                                                        <Chip label={`Bo:${res.bowl.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bowl.score >= 1 ? 'success' : 'default'} />
-                                                    </Box>
-                                                ) : <Typography variant="caption">-</Typography>}
-                                            </TableCell>
-                                        )}
-                                    </TableRow>
-                                    {/* RULES ROW (Desktop) */}
-                                    {res && expandedRules[p.id] && (
-                                        <TableRow>
-                                            <TableCell colSpan={4} sx={{ p: 0, borderBottom: 'none' }}>
-                                                 <Box sx={{ p: 2, bgcolor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
-                                                    <Typography variant="subtitle2" fontWeight="bold" color="#000" gutterBottom>Target Success List:</Typography>
-                                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                                                         {[...(res.bat.logs || []), ...(res.bowl.logs || [])].map((log, i) => (
-                                                            <Typography key={i} variant="body2" color="#000" sx={{ fontSize: '0.8rem' }}>
-                                                                • {typeof log === 'object' ? `${log.en} / ${log.ta}` : log}
-                                                            </Typography>
-                                                        ))}
-                                                        {(!res.bat.logs?.length && !res.bowl.logs?.length) && (
-                                                            <Typography variant="body2" color="#000">No specific rules matched.</Typography>
+                                                        {results && (
+                                                            <TableCell>
+                                                                {res ? (
+                                                                    <Box sx={{ display: 'flex', gap: 0.5 }}>
+                                                                        <Chip label={`B:${res.bat.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bat.score >= 1 ? 'success' : 'default'} />
+                                                                        <Chip label={`Bo:${res.bowl.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bowl.score >= 1 ? 'success' : 'default'} />
+                                                                    </Box>
+                                                                ) : <Typography variant="caption">-</Typography>}
+                                                            </TableCell>
                                                         )}
-                                                    </Box>
-                                                 </Box>
-                                            </TableCell>
-                                        </TableRow>
-                                    )}
-                                    </React.Fragment>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                </Box>
+                                                    </TableRow>
+                                                    {/* RULES ROW (Desktop) */}
+                                                    {res && expandedRules[p.id] && (
+                                                        <TableRow>
+                                                            <TableCell colSpan={4} sx={{ p: 0, borderBottom: 'none' }}>
+                                                                <Box sx={{ p: 2, bgcolor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                                                                    <Typography variant="subtitle2" fontWeight="bold" color="#000" gutterBottom>Target Success List:</Typography>
+                                                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                                                                        {[...(res.bat.report || []), ...(res.bowl.report || [])].map((log, i) => (
+                                                                            <Typography key={i} variant="body2" color="#000" sx={{ fontSize: '0.85rem', fontFamily: 'Robo' }}>
+                                                                                • {typeof log === 'object' ?
+                                                                                    (<span><b>{log.ta}</b> <span style={{ color: '#E65100', fontWeight: 'bold' }}>{log.en?.match(/\([+-]?\d+\)/)?.[0] || ""}</span> <span style={{ color: '#666', fontSize: '0.75rem' }}>({log.en?.split('(')?.[0] || ""})</span></span>)
+                                                                                    : log}
+                                                                            </Typography>
+                                                                        ))}
+                                                                        {(!res.bat.report?.length && !res.bowl.report?.length) && (
+                                                                            <Typography variant="body2" color="#000">No specific rules matched.</Typography>
+                                                                        )}
+                                                                    </Box>
+                                                                </Box>
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    )}
+                                                </React.Fragment>
+                                            );
+                                        })}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Box>
                 )}
             </Paper>
         );
@@ -1530,7 +1612,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
 
             {/* BREADCRUMBS: Match Details -> Team Selection */}
             <Box sx={{ px: 2, py: 1.5, bgcolor: '#fff', borderBottom: '1px solid rgba(0,0,0,0.08)', display: isFullView ? 'none' : 'block' }}>
-                 <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
+                <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
                     <Typography color="inherit" sx={{ display: 'flex', alignItems: 'center', fontSize: '0.9rem' }}>
                         Match Details
                     </Typography>
@@ -1676,7 +1758,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                 </FormControl>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                     <Button
+                    <Button
                         variant="contained"
                         size="small"
                         onClick={() => wizardPredictionRef.current?.runPrediction()}
@@ -1690,12 +1772,12 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                             '&:hover': { bgcolor: '#E65100' },
                             display: isFullView ? 'inline-flex' : 'none'
                         }}
-                     >
+                    >
                         Predict
-                     </Button>
-                     <IconButton onClick={() => setIsFullView(!isFullView)} color="primary" sx={{ p:0.5 }}>
+                    </Button>
+                    <IconButton onClick={() => setIsFullView(!isFullView)} color="primary" sx={{ p: 0.5 }}>
                         {isFullView ? <FullscreenExitIcon /> : <FullscreenIcon />}
-                     </IconButton>
+                    </IconButton>
                 </Box>
             </Box>
 
@@ -1712,11 +1794,11 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                     <>
                         {/* TEAM A - LEFT */}
                         <Box sx={{ flex: 1, overflow: 'auto' }}>
-                            {renderPlayerList(teamA, groups.find(g => g._id === teamA)?.name, filterA, setFilterA)}
+                            {renderPlayerList(teamA, groups.find(g => g._id === teamA)?.name || 'Team A', filterA, setFilterA)}
                         </Box>
                         {/* TEAM B - RIGHT */}
                         <Box sx={{ flex: 1, overflow: 'auto' }}>
-                            {renderPlayerList(teamB, groups.find(g => g._id === teamB)?.name, filterB, setFilterB)}
+                            {renderPlayerList(teamB, groups.find(g => g._id === teamB)?.name || 'Team B', filterB, setFilterB)}
                         </Box>
                     </>
                 ) : (
@@ -1791,7 +1873,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {Object.entries(matchChart.planets || {}).map(([planet, data]) => (
+                                    {matchChart && Object.entries(matchChart.planets || {}).map(([planet, data]) => (
                                         <tr key={planet} style={{ borderBottom: '1px solid #e2e8f0' }}>
                                             <td style={{ padding: 8, fontWeight: 'bold' }}>{planet}</td>
                                             <td style={{ padding: 8 }}>{data.signTamil} ({data.sign})</td>
@@ -1828,7 +1910,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                 <RasiChart
                                     data={(() => {
                                         // Transform planets data to houses format
-                                        if (!matchChart.planets) return {};
+                                        if (!matchChart || !matchChart.planets) return {};
 
                                         // Sign name to number mapping
                                         const signToNum = {
@@ -1918,7 +2000,7 @@ const PlayerMobileCard = ({ player, matchChart, isSelected, onSelect, onEdit, on
                     />
 
                     {/* Avatar */}
-                     <Avatar
+                    <Avatar
                         src={player.profile}
                         sx={{
                             width: 48, height: 48,
@@ -1961,7 +2043,7 @@ const PlayerMobileCard = ({ player, matchChart, isSelected, onSelect, onEdit, on
 
                 {/* Actions Row */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2, pt: 2, borderTop: '1px solid', borderColor: 'divider' }}>
-                     <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
                         <Button
                             size="small"
                             startIcon={<span style={{ fontSize: 14 }}>✏️</span>}
@@ -1978,16 +2060,16 @@ const PlayerMobileCard = ({ player, matchChart, isSelected, onSelect, onEdit, on
                         >
                             Chart
                         </Button>
-                     </Box>
+                    </Box>
 
-                     {/* Prediction / Rasi Chip */}
+                    {/* Prediction / Rasi Chip */}
                     {matchChart && isSelected ? (
                         <Box sx={{ display: 'flex', gap: 1 }}>
                             <Chip label={`Bat:${batResult?.score || 0}`} size="small" color={batResult?.score > 0 ? "success" : "default"} variant="outlined" sx={{ height: 20, fontSize: '0.65rem' }} />
                             <Chip label={`Bowl:${bowlResult?.score || 0}`} size="small" color={bowlResult?.score > 0 ? "success" : "default"} variant="outlined" sx={{ height: 20, fontSize: '0.65rem' }} />
                         </Box>
                     ) : (
-                         <Chip
+                        <Chip
                             label={`Rasi: ${rasi}`}
                             size="small"
                             color={rasi !== '-' ? "primary" : "default"}
@@ -2012,9 +2094,9 @@ const UserDashboard = ({ hideHeader = false }) => {
     const { logout, token } = useContext(AuthContext);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const dispatch = useDispatch();
+    const players = useSelector(state => state.players.list);
 
-
-    const [players, setPlayers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(25);
@@ -2108,7 +2190,7 @@ const UserDashboard = ({ hideHeader = false }) => {
             });
 
             // Refresh list (or update locally)
-            setPlayers(prev => prev.map(p => p.id === editingPlayer.id ? { ...p, ...editForm } : p));
+            dispatch(setPlayers(players.map(p => p.id === editingPlayer.id ? { ...p, ...editForm } : p)));
             setEditDialogOpen(false);
             // Optionally show success snackbar
         } catch (err) {
@@ -2131,32 +2213,32 @@ const UserDashboard = ({ hideHeader = false }) => {
         incrementView();
 
         const fetchData = async () => {
-             try {
+            try {
                 // Use token from Context first, then localStorage
                 const authToken = token || localStorage.getItem('x-auth-token');
-                if(!authToken) return;
+                if (!authToken) return;
 
                 // 1. Fetch Players
                 const res = await axios.get(`${baseUrl}/api/players?page=${page + 1}&limit=${rowsPerPage}`, {
                     headers: { 'x-auth-token': authToken }
                 });
 
-                // Handle new paginated response structure
-                if (res.data.players) {
-                    setPlayers(res.data.players);
-                } else {
-                     setPlayers(res.data);
-                }
+                // Handle new paginated response structure robustly
+                const playersData = (res.data && Array.isArray(res.data.players))
+                    ? res.data.players
+                    : (Array.isArray(res.data) ? res.data : []);
 
-                if (res.data.totalPlayers) {
-                     setTotalPlayers(res.data.totalPlayers);
+                dispatch(setPlayers(playersData));
+
+                if (res.data && res.data.totalPlayers) {
+                    setTotalPlayers(res.data.totalPlayers);
                 }
 
                 // 2. Fetch Groups (Teams)
                 const groupRes = await axios.get(`${baseUrl}/api/groups`, {
                     headers: { 'x-auth-token': authToken }
                 });
-                setGroups(groupRes.data);
+                setGroups(Array.isArray(groupRes.data) ? groupRes.data : []);
 
             } catch (err) {
                 console.error("Load Error", err);
@@ -2328,10 +2410,10 @@ const UserDashboard = ({ hideHeader = false }) => {
             border: `1px solid ${hideHeader ? 'rgba(255, 255, 255, 0.1)' : visionPro.border}`,
             boxShadow: hideHeader ? 'none' : '0 10px 30px rgba(0, 0, 0, 0.3)'
         }} elevation={0}>
-             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                 <Typography variant="h6" sx={{ color: hideHeader ? visionPro.secondary : visionPro.primary, fontWeight: 800, display: 'flex', alignItems: 'center' }}>
                     <span className="mr-2">🏏</span>
-                   Active Teams ({groups.length})
+                    Active Teams ({groups.length})
                 </Typography>
                 <Box>
                     <Button
@@ -2402,7 +2484,7 @@ const UserDashboard = ({ hideHeader = false }) => {
                     ))}
                     {groups.length === 0 && (
                         <Grid item xs={12}>
-                             <Typography color="text.secondary" align="center">No teams created yet.</Typography>
+                            <Typography color="text.secondary" align="center">No teams created yet.</Typography>
                         </Grid>
                     )}
                 </Grid>
@@ -2420,13 +2502,18 @@ const UserDashboard = ({ hideHeader = false }) => {
         const lowerSearch = searchTerm.toLowerCase().trim();
         if (!lowerSearch) return players;
 
-        return players.filter(p => {
-            // Flatten generic data for search
-            const basicMatch = (
-                p.name?.toLowerCase().includes(lowerSearch) ||
-                p.birthPlace?.toLowerCase().includes(lowerSearch) ||
-                p.id?.toString().includes(lowerSearch)
-            );
+        return (players || []).filter(p => {
+            const name = p.name || '';
+            const englishName = p.englishName || '';
+            const birthPlace = p.birthPlace || '';
+            const role = p.role || '';
+            const group = p.group || '';
+
+            const basicMatch = name.toLowerCase().includes(lowerSearch) ||
+                englishName.toLowerCase().includes(lowerSearch) ||
+                birthPlace.toLowerCase().includes(lowerSearch) ||
+                role.toLowerCase().includes(lowerSearch) ||
+                group.toLowerCase().includes(lowerSearch);
 
             // Deep search into chart data if exists
             let chartMatch = false;
@@ -2465,21 +2552,22 @@ const UserDashboard = ({ hideHeader = false }) => {
                 ? 'none'
                 : `radial-gradient(circle at 50% 50%, rgba(255, 193, 7, 0.05) 0%, transparent 50%), radial-gradient(circle at 10% 10%, rgba(255, 152, 0, 0.05) 0%, transparent 40%)`,
         }}>
-             {/* Header */}
+            {/* Header */}
             {!hideHeader && (
                 <AppBar position="sticky" sx={{
                     bgcolor: visionPro.secondary,
                     backgroundImage: visionPro.gradientPrimary,
                     backdropFilter: 'blur(10px)',
                     borderBottom: `1px solid ${visionPro.border}`,
-                    boxShadow: '0 4px 20px rgba(255, 111, 0, 0.25)'
+                    boxShadow: '0 4px 20px rgba(255, 111, 0, 0.25)',
+                    zIndex: 1100
                 }}>
                     <Toolbar sx={{ justifyContent: 'space-between' }}>
                         {/* Left Side Logo */}
                         <Box sx={{
                             display: 'flex',
                             alignItems: 'center',
-                            color:'white',
+                            color: 'white',
                             gap: 2
                         }}>
                             <img
@@ -2494,7 +2582,7 @@ const UserDashboard = ({ hideHeader = false }) => {
                                 }}
                                 className="header-logo"
                             />
-                            <h2 style={{color:'white', margin: 0, fontSize: '1.5rem'}}><b>S&B Astro</b></h2>
+                            <h2 style={{ color: 'white', margin: 0, fontSize: '1.5rem' }}><b>S&B Astro</b></h2>
                         </Box>
 
                         {/* Logout Button */}
@@ -2562,207 +2650,207 @@ const UserDashboard = ({ hideHeader = false }) => {
                         {/* PLAYERS VIEW - Search Bar + Player Table */}
                         {currentView === 'players' && (
                             <>
-                {/* Search Bar */}
-                <Paper sx={{
-                    p: 2,
-                    mb: 4,
-                    borderRadius: '24px',
-                    bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : visionPro.paper,
-                    backdropFilter: 'blur(20px)',
-                    border: `1px solid ${hideHeader ? 'rgba(255, 255, 255, 0.1)' : visionPro.border}`,
-                    boxShadow: hideHeader ? 'none' : '0 10px 30px rgba(0, 0, 0, 0.08)'
-                }} elevation={0}>
-                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                         {/* Selection Info */}
-                        {selectedPlayerIds.length > 0 && (
-                            <Chip label={`${selectedPlayerIds.length} Selected`} color="primary" onDelete={() => setSelectedPlayerIds([])} />
-                        )}
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            placeholder="Search by Name, City, ID, Rasi, or Nakshatra..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <SearchIcon sx={{ color: hideHeader ? '#718096' : visionPro.primary }} />
-                                    </InputAdornment>
-                                ),
-                                sx: {
-                                    borderRadius: '16px',
-                                    bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : visionPro.background,
-                                    color: visionPro.text,
-                                    '& fieldset': { borderColor: visionPro.border },
-                                    '&:hover fieldset': { borderColor: visionPro.primary },
-                                    '&.Mui-focused fieldset': { borderColor: visionPro.primary },
-                                }
-                            }}
-                        />
-                        <Button
-                            variant="contained"
-                            disabled={!showPrediction && selectedPlayerIds.length === 0}
-                            startIcon={<SportsCricketIcon />}
-                            onClick={() => {
-                                setShowPrediction(!showPrediction);
-                                if(showPrediction) setMatchChart(null);
-                            }}
-                            sx={{
-                                borderRadius: '12px',
-                                textTransform: 'none',
-                                px: 3,
-                                fontWeight: '900',
-                                color: '#fff',
-                                bgcolor: visionPro.secondary,
-                                '&:hover': {
-                                    bgcolor: '#E65100',
-                                    transform: 'scale(1.02)'
-                                },
-                                '&:active': { transform: 'scale(0.98)' },
-                                transition: 'all 0.2s ease',
-                                boxShadow: '0 4px 12px rgba(255, 111, 0, 0.35)'
-                            }}
-                        >
-                            {showPrediction ? "Close Prediction" : "Predict Match"}
-                        </Button>
-                    </Box>
-                </Paper>
-
-                {/* Match Prediction Control */}
-                <Collapse in={showPrediction}>
-                    <MatchPredictionControl ref={dashboardPredictionRef} onPredictionComplete={handlePredictionReady} token={token} />
-                </Collapse>
-
-                {/* Content Area */}
-                {renderTeams()}
-                <Paper sx={{
-                    borderRadius: 2,
-                    overflow: 'hidden',
-                    boxShadow: hideHeader ? 'none' : 2,
-                    bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
-                    backdropFilter: hideHeader ? 'blur(10px)' : 'none',
-                    border: hideHeader ? '1px solid rgba(255, 255, 255, 0.1)' : 'none'
-                }}>
-                    {loading ? (
-                        <Box sx={{ p: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                            <CircularProgress size={40} thickness={4} />
-                            <Typography variant="body2" color="text.secondary">Loading Astronomy Data...</Typography>
-                        </Box>
-                    ) : (
-                        <>
-                            {isMobile ? (
-                                <Box sx={{
+                                {/* Search Bar */}
+                                <Paper sx={{
                                     p: 2,
-                                    bgcolor: hideHeader ? 'transparent' : '#f8fafc',
-                                    maxHeight: 'calc(100vh - 350px)',
-                                    overflowY: 'auto'
-                                }}>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, justifyContent: 'space-between' }}>
-                                         <Typography variant="subtitle2" color="text.secondary">
-                                            {paginatedPlayers.length} Players Found
-                                         </Typography>
-                                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                            <Checkbox
-                                                checked={players.length > 0 && selectedPlayerIds.length === players.length}
-                                                indeterminate={selectedPlayerIds.length > 0 && selectedPlayerIds.length < players.length}
-                                                onChange={handleSelectAllClick}
-                                                size="small"
-                                            />
-                                            <Typography variant="caption" fontWeight="bold">Select All</Typography>
-                                         </Box>
-                                    </Box>
-
-                                    {paginatedPlayers.length > 0 ? (
-                                        paginatedPlayers.map(player => (
-                                            <PlayerMobileCard
-                                                key={player._id || player.id}
-                                                player={player}
-                                                matchChart={matchChart}
-                                                isSelected={isSelected(player.id)}
-                                                onSelect={handleSelectClick}
-                                                onEdit={handleEditClick}
-                                                onViewChart={(p) => {
-                                                    setChartPopupPlayer(p);
-                                                    setChartPopupOpen(true);
-                                                }}
-                                                hideHeader={hideHeader}
-                                            />
-                                        ))
-                                    ) : (
-                                        <Typography align="center" color="text.secondary" sx={{ py: 4 }}>
-                                            No players found
-                                        </Typography>
-                                    )}
-                                </Box>
-                            ) : (
-                            <TableContainer sx={{ maxHeight: 'calc(100vh - 450px)', overflow: 'auto' }}>
-                                <Table stickyHeader>
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell padding="checkbox" sx={{ bgcolor: visionPro.accent, borderBottom: `1px solid ${visionPro.border}` }}>
-                                                <Checkbox
-                                                    color="primary"
-                                                    indeterminate={selectedPlayerIds.length > 0 && selectedPlayerIds.length < players.length}
-                                                    checked={players.length > 0 && selectedPlayerIds.length === players.length}
-                                                    onChange={handleSelectAllClick}
-                                                    inputProps={{
-                                                        'aria-label': 'select all players',
-                                                    }}
-                                                />
-                                            </TableCell>
-                                            <TableCell width="50" sx={{ bgcolor: visionPro.accent, color: visionPro.text, borderBottom: `1px solid ${visionPro.border}` }} />
-                                            <TableCell sx={{ bgcolor: visionPro.accent, color: visionPro.text, fontWeight: 'bold', borderBottom: `1px solid ${visionPro.border}` }}>PLAYER PROFILE</TableCell>
-                                            <TableCell sx={{ bgcolor: visionPro.accent, color: visionPro.text, fontWeight: 'bold', borderBottom: `1px solid ${visionPro.border}` }}>BIRTH PLACE</TableCell>
-                                            <TableCell sx={{ bgcolor: visionPro.accent, color: visionPro.text, fontWeight: 'bold', borderBottom: `1px solid ${visionPro.border}` }}>TIMEZONE</TableCell>
-                                            <TableCell sx={{ bgcolor: visionPro.accent, color: visionPro.text, fontWeight: 'bold', borderBottom: `1px solid ${visionPro.border}` }}>
-                                                {matchChart ? "PREDICTION RESULT (BAT / BOWL)" : "CHART SUMMARY"}
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {paginatedPlayers.length > 0 ? (
-                                            paginatedPlayers.map((player) => {
-                                                const isItemSelected = isSelected(player.id);
-                                                return (
-                                                    <PlayerRow
-                                                        key={player._id || player.id}
-                                                        player={player}
-                                                        matchChart={matchChart}
-                                                        isSelected={isItemSelected}
-                                                        onSelect={handleSelectClick}
-                                                        onEdit={handleEditClick}
-                                                        onViewChart={(p, tabIndex = 0) => {
-                                                            setChartPopupPlayer(p);
-                                                            setChartPopupTab(tabIndex);
-                                                            setChartPopupOpen(true);
-                                                        }}
-                                                        hideHeader={hideHeader}
-                                                    />
-                                                );
-                                            })
-                                        ) : (
-                                            <TableRow>
-                                                <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
-                                                    <Typography color="text.secondary">No players found matching "{searchTerm}"</Typography>
-                                                </TableCell>
-                                            </TableRow>
+                                    mb: 4,
+                                    borderRadius: '24px',
+                                    bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : visionPro.paper,
+                                    backdropFilter: 'blur(20px)',
+                                    border: `1px solid ${hideHeader ? 'rgba(255, 255, 255, 0.1)' : visionPro.border}`,
+                                    boxShadow: hideHeader ? 'none' : '0 10px 30px rgba(0, 0, 0, 0.08)'
+                                }} elevation={0}>
+                                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                                        {/* Selection Info */}
+                                        {selectedPlayerIds.length > 0 && (
+                                            <Chip label={`${selectedPlayerIds.length} Selected`} color="primary" onDelete={() => setSelectedPlayerIds([])} />
                                         )}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                            )}
-                            <TablePagination
-                                rowsPerPageOptions={[11, 25, 50, 100]}
-                                component="div"
-                                count={totalPlayers}
-                                rowsPerPage={rowsPerPage}
-                                page={page}
-                                onPageChange={handleChangePage}
-                                onRowsPerPageChange={handleChangeRowsPerPage}
-                            />
-                        </>
-                    )}
-                </Paper>
+                                        <TextField
+                                            fullWidth
+                                            variant="outlined"
+                                            placeholder="Search by Name, City, ID, Rasi, or Nakshatra..."
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                            InputProps={{
+                                                startAdornment: (
+                                                    <InputAdornment position="start">
+                                                        <SearchIcon sx={{ color: hideHeader ? '#718096' : visionPro.primary }} />
+                                                    </InputAdornment>
+                                                ),
+                                                sx: {
+                                                    borderRadius: '16px',
+                                                    bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : visionPro.background,
+                                                    color: visionPro.text,
+                                                    '& fieldset': { borderColor: visionPro.border },
+                                                    '&:hover fieldset': { borderColor: visionPro.primary },
+                                                    '&.Mui-focused fieldset': { borderColor: visionPro.primary },
+                                                }
+                                            }}
+                                        />
+                                        <Button
+                                            variant="contained"
+                                            disabled={!showPrediction && selectedPlayerIds.length === 0}
+                                            startIcon={<SportsCricketIcon />}
+                                            onClick={() => {
+                                                setShowPrediction(!showPrediction);
+                                                if (showPrediction) setMatchChart(null);
+                                            }}
+                                            sx={{
+                                                borderRadius: '12px',
+                                                textTransform: 'none',
+                                                px: 3,
+                                                fontWeight: '900',
+                                                color: '#fff',
+                                                bgcolor: visionPro.secondary,
+                                                '&:hover': {
+                                                    bgcolor: '#E65100',
+                                                    transform: 'scale(1.02)'
+                                                },
+                                                '&:active': { transform: 'scale(0.98)' },
+                                                transition: 'all 0.2s ease',
+                                                boxShadow: '0 4px 12px rgba(255, 111, 0, 0.35)'
+                                            }}
+                                        >
+                                            {showPrediction ? "Close Prediction" : "Predict Match"}
+                                        </Button>
+                                    </Box>
+                                </Paper>
+
+                                {/* Match Prediction Control */}
+                                <Collapse in={showPrediction}>
+                                    <MatchPredictionControl ref={dashboardPredictionRef} onPredictionComplete={handlePredictionReady} token={token} />
+                                </Collapse>
+
+                                {/* Content Area */}
+                                {renderTeams()}
+                                <Paper sx={{
+                                    borderRadius: 2,
+                                    overflow: 'hidden',
+                                    boxShadow: hideHeader ? 'none' : 2,
+                                    bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'white',
+                                    backdropFilter: hideHeader ? 'blur(10px)' : 'none',
+                                    border: hideHeader ? '1px solid rgba(255, 255, 255, 0.1)' : 'none'
+                                }}>
+                                    {loading ? (
+                                        <Box sx={{ p: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                                            <CircularProgress size={40} thickness={4} />
+                                            <Typography variant="body2" color="text.secondary">Loading Astronomy Data...</Typography>
+                                        </Box>
+                                    ) : (
+                                        <>
+                                            {isMobile ? (
+                                                <Box sx={{
+                                                    p: 2,
+                                                    bgcolor: hideHeader ? 'transparent' : '#f8fafc',
+                                                    maxHeight: 'calc(100vh - 350px)',
+                                                    overflowY: 'auto'
+                                                }}>
+                                                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, justifyContent: 'space-between' }}>
+                                                        <Typography variant="subtitle2" color="text.secondary">
+                                                            {paginatedPlayers.length} Players Found
+                                                        </Typography>
+                                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                            <Checkbox
+                                                                checked={players.length > 0 && selectedPlayerIds.length === players.length}
+                                                                indeterminate={selectedPlayerIds.length > 0 && selectedPlayerIds.length < players.length}
+                                                                onChange={handleSelectAllClick}
+                                                                size="small"
+                                                            />
+                                                            <Typography variant="caption" fontWeight="bold">Select All</Typography>
+                                                        </Box>
+                                                    </Box>
+
+                                                    {paginatedPlayers.length > 0 ? (
+                                                        paginatedPlayers.map(player => (
+                                                            <PlayerMobileCard
+                                                                key={player._id || player.id}
+                                                                player={player}
+                                                                matchChart={matchChart}
+                                                                isSelected={isSelected(player.id)}
+                                                                onSelect={handleSelectClick}
+                                                                onEdit={handleEditClick}
+                                                                onViewChart={(p) => {
+                                                                    setChartPopupPlayer(p);
+                                                                    setChartPopupOpen(true);
+                                                                }}
+                                                                hideHeader={hideHeader}
+                                                            />
+                                                        ))
+                                                    ) : (
+                                                        <Typography align="center" color="text.secondary" sx={{ py: 4 }}>
+                                                            No players found
+                                                        </Typography>
+                                                    )}
+                                                </Box>
+                                            ) : (
+                                                <TableContainer sx={{ maxHeight: 'calc(100vh - 450px)', overflow: 'auto' }}>
+                                                    <Table stickyHeader>
+                                                        <TableHead>
+                                                            <TableRow>
+                                                                <TableCell padding="checkbox" sx={{ bgcolor: visionPro.accent, borderBottom: `1px solid ${visionPro.border}` }}>
+                                                                    <Checkbox
+                                                                        color="primary"
+                                                                        indeterminate={selectedPlayerIds.length > 0 && selectedPlayerIds.length < players.length}
+                                                                        checked={players.length > 0 && selectedPlayerIds.length === players.length}
+                                                                        onChange={handleSelectAllClick}
+                                                                        inputProps={{
+                                                                            'aria-label': 'select all players',
+                                                                        }}
+                                                                    />
+                                                                </TableCell>
+                                                                <TableCell width="50" sx={{ bgcolor: visionPro.accent, color: visionPro.text, borderBottom: `1px solid ${visionPro.border}` }} />
+                                                                <TableCell sx={{ bgcolor: visionPro.accent, color: visionPro.text, fontWeight: 'bold', borderBottom: `1px solid ${visionPro.border}` }}>PLAYER PROFILE</TableCell>
+                                                                <TableCell sx={{ bgcolor: visionPro.accent, color: visionPro.text, fontWeight: 'bold', borderBottom: `1px solid ${visionPro.border}` }}>BIRTH PLACE</TableCell>
+                                                                <TableCell sx={{ bgcolor: visionPro.accent, color: visionPro.text, fontWeight: 'bold', borderBottom: `1px solid ${visionPro.border}` }}>TIMEZONE</TableCell>
+                                                                <TableCell sx={{ bgcolor: visionPro.accent, color: visionPro.text, fontWeight: 'bold', borderBottom: `1px solid ${visionPro.border}` }}>
+                                                                    {matchChart ? "PREDICTION RESULT (BAT / BOWL)" : "CHART SUMMARY"}
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        </TableHead>
+                                                        <TableBody>
+                                                            {paginatedPlayers.length > 0 ? (
+                                                                paginatedPlayers.map((player) => {
+                                                                    const isItemSelected = isSelected(player.id);
+                                                                    return (
+                                                                        <PlayerRow
+                                                                            key={player._id || player.id}
+                                                                            player={player}
+                                                                            matchChart={matchChart}
+                                                                            isSelected={isItemSelected}
+                                                                            onSelect={handleSelectClick}
+                                                                            onEdit={handleEditClick}
+                                                                            onViewChart={(p, tabIndex = 0) => {
+                                                                                setChartPopupPlayer(p);
+                                                                                setChartPopupTab(tabIndex);
+                                                                                setChartPopupOpen(true);
+                                                                            }}
+                                                                            hideHeader={hideHeader}
+                                                                        />
+                                                                    );
+                                                                })
+                                                            ) : (
+                                                                <TableRow>
+                                                                    <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
+                                                                        <Typography color="text.secondary">No players found matching "{searchTerm}"</Typography>
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                            )}
+                                                        </TableBody>
+                                                    </Table>
+                                                </TableContainer>
+                                            )}
+                                            <TablePagination
+                                                rowsPerPageOptions={[11, 25, 50, 100]}
+                                                component="div"
+                                                count={totalPlayers}
+                                                rowsPerPage={rowsPerPage}
+                                                page={page}
+                                                onPageChange={handleChangePage}
+                                                onRowsPerPageChange={handleChangeRowsPerPage}
+                                            />
+                                        </>
+                                    )}
+                                </Paper>
                             </>
                         )}
                     </>
@@ -2777,7 +2865,17 @@ const UserDashboard = ({ hideHeader = false }) => {
                     initialTab={chartPopupTab}
                     hideHeader={hideHeader}
                 />
-                <MatchWizardDialog open={matchWizardOpen} onClose={() => setMatchWizardOpen(false)} groups={groups} token={token} hideHeader={hideHeader} />
+                {(groups && Array.isArray(groups) && groups.length > 0) && (
+                    <ErrorBoundary name="MatchWizardDialog">
+                        <MatchWizardDialog
+                            open={matchWizardOpen}
+                            onClose={() => setMatchWizardOpen(false)}
+                            groups={groups}
+                            token={token}
+                            hideHeader={hideHeader}
+                        />
+                    </ErrorBoundary>
+                )}
 
 
             </Container>

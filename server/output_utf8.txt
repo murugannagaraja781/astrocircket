@@ -1,0 +1,14 @@
+﻿--- Testing Regular Match (Rohini - Moon) ---
+[VedicAPI] Calculated for 2024-5-15: Asc=90.25 (Lahiri)
+Match Star: Check script
+Batting Rules: []
+Bowling Rules: [
+  'BOWL Rule 4: Conjunction Rasi (Rasi Lord) (+4)',
+  'Venus Aatchi/Ucham Bonus (+4)'
+]
+
+--- Testing Rahu/Ketu Match (Ardra - Rahu) ---
+[VedicAPI] Calculated for 2024-6-21: Asc=124.13 (Lahiri)
+Match Star: Check script
+Batting Rules: [ 'Rule 9: Double Lord Conjunction (+12)' ]
+Bowling Rules: [ 'Rule 9: Double Lord Conjunction (+12)' ]

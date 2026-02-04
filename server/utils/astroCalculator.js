@@ -205,13 +205,16 @@ const calculatePlanetaryPositions = (year, month, day, hour, minute, latitude, l
     // Package returns { positions: { Sun: { longitude: ... } }, ayanamsa: ... }
     const { positions: rawPositions, ayanamsa: lahiriAyanamsa } = calcPlanetsPackage(date, latitude, longitude);
 
+    // Safety fallback for Ayanamsa
+    const safeLahiriAyanamsa = typeof lahiriAyanamsa === 'number' ? lahiriAyanamsa : 24.12;
+
     // 3. Determine Effective Ayanamsa
-    let effectiveAyanamsa = lahiriAyanamsa;
+    let effectiveAyanamsa = safeLahiriAyanamsa;
     if (ayanamsaType === 'KP' || ayanamsaType === 'KP Straight') {
         // KP Ayanamsa is approx 6 minutes (0.1 degree) less than Lahiri
         // Correction factor: Subtract approx 0.09
-        effectiveAyanamsa = lahiriAyanamsa - 0.095;
-        console.log(`[Ayanamsa] Using KP (${effectiveAyanamsa.toFixed(4)}) instead of Lahiri (${lahiriAyanamsa.toFixed(4)})`);
+        effectiveAyanamsa = safeLahiriAyanamsa - 0.095;
+        console.log(`[Ayanamsa] Using KP (${effectiveAyanamsa.toFixed(4)}) instead of Lahiri (${safeLahiriAyanamsa.toFixed(4)})`);
     }
 
     // 4. Calculate Rigorous Ascendant (Placidus Method - Intersection)
@@ -251,7 +254,7 @@ const calculatePlanetaryPositions = (year, month, day, hour, minute, latitude, l
     const planetKeys = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu', 'Ketu'];
 
     // Calculate Ayanamsa Difference (if non-Lahiri)
-    const ayanamsaDiff = lahiriAyanamsa - effectiveAyanamsa; // e.g. 24.0 - 23.9 = 0.1 (Add 0.1 to Lahiri Longitude? No.)
+    const ayanamsaDiff = safeLahiriAyanamsa - effectiveAyanamsa; // e.g. 24.0 - 23.9 = 0.1 (Add 0.1 to Lahiri Longitude? No.)
     // Logic: Tropical - Lahiri = LahiriLng. Tropical - KP = KPLng. 
     // KPLng = Tropical - (Lahiri - Diff) = (Tropical - Lahiri) + Diff = LahiriLng + Diff.
     // Wait. KP Ayanamsa Value is usually SMALLER than Lahiri? 
@@ -270,7 +273,7 @@ const calculatePlanetaryPositions = (year, month, day, hour, minute, latitude, l
     // The difference is usually ~6-10 arcminutes.
 
     planetKeys.forEach(key => {
-        if (rawPositions[key]) {
+        if (rawPositions && rawPositions[key]) {
             // Package usually returns object with longitude (Lahiri)
             const p = rawPositions[key];
             const lahiriLng = (typeof p === 'object' && p.longitude !== undefined) ? p.longitude : p;

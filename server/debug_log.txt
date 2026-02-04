@@ -5,3 +5,10 @@ Fetching all players...
 Total Players Found: 0
 No players found in the database.
 Connection closed
+Starting script...
+Connecting to: cluster0.tp2gekn.mongodb.net/circket
+MongoDB Connected successfully
+Fetching all players...
+Total Players Found: 351
+Player details written to players_dump.json
+Connection closed

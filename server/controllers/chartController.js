@@ -93,7 +93,7 @@ const calculateSunTimes = (latitude, longitude, year, month, day) => {
 
 exports.getBirthChart = async (req, res) => {
     try {
-        const { day, hour, latitude, longitude, minute, month, timezone, year, ayanamsa } = req.body;
+        const { day, hour, latitude, longitude, minute, month, timezone, year, ayanamsa, battingHour, battingMinute, bowlingHour, bowlingMinute } = req.body;
 
         // Calculate planetary positions locally
         const { planets, ascendant } = calculatePlanetaryPositions(
@@ -102,6 +102,38 @@ exports.getBirthChart = async (req, res) => {
             parseFloat(latitude), parseFloat(longitude), parseFloat(timezone),
             ayanamsa // Pass Ayanamsa preference
         );
+
+        // Optional: Calculate Batting Lagna
+        let battingLagnaData = null;
+        if (battingHour !== undefined && battingMinute !== undefined && battingHour !== "" && battingMinute !== "") {
+            const { ascendant: batAsc } = calculatePlanetaryPositions(
+                parseInt(year), parseInt(month), parseInt(day),
+                parseInt(battingHour), parseInt(battingMinute),
+                parseFloat(latitude), parseFloat(longitude), parseFloat(timezone),
+                ayanamsa
+            );
+            const batSign = calculateSign(batAsc);
+            battingLagnaData = {
+                sign: batSign.name,
+                lord: batSign.lord
+            };
+        }
+
+        // Optional: Calculate Bowling Lagna
+        let bowlingLagnaData = null;
+        if (bowlingHour !== undefined && bowlingMinute !== undefined && bowlingHour !== "" && bowlingMinute !== "") {
+            const { ascendant: bowlAsc } = calculatePlanetaryPositions(
+                parseInt(year), parseInt(month), parseInt(day),
+                parseInt(bowlingHour), parseInt(bowlingMinute),
+                parseFloat(latitude), parseFloat(longitude), parseFloat(timezone),
+                ayanamsa
+            );
+            const bowlSign = calculateSign(bowlAsc);
+            bowlingLagnaData = {
+                sign: bowlSign.name,
+                lord: bowlSign.lord
+            };
+        }
 
         const pad = (n) => n.toString().padStart(2, '0');
         const userProvidedTimestamp = `${year}-${pad(month)}-${pad(day)}T${pad(hour)}:${pad(minute)}:00.000Z`;
@@ -115,6 +147,10 @@ exports.getBirthChart = async (req, res) => {
                 ...calculateSign(ascendant),
                 nakshatra: calculateNakshatra(ascendant)
             },
+            battingLagnaSign: battingLagnaData?.sign,
+            battingLagnaLord: battingLagnaData?.lord,
+            bowlingLagnaSign: bowlingLagnaData?.sign,
+            bowlingLagnaLord: bowlingLagnaData?.lord,
             moonSign: calculateSign(planets.Moon),
             nakshatra: calculateNakshatra(planets.Moon),
             planets: {}

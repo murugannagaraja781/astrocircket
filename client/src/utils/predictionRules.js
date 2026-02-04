@@ -22,15 +22,15 @@ const signLords = {
 
 // Nakshatra to Lord Mapping
 const nakshatraLords = {
-    'Ashwini': 'Ketu', 'Magha': 'Ketu', 'Mula': 'Ketu', 'Moola': 'Ketu',
-    'Bharani': 'Venus', 'Purva Phalguni': 'Venus', 'Purva Ashadha': 'Venus',
-    'Krittika': 'Sun', 'Uttara Phalguni': 'Sun', 'Uttara Ashadha': 'Sun',
-    'Rohini': 'Moon', 'Hasta': 'Moon', 'Shravana': 'Moon',
-    'Mrigashira': 'Mars', 'Chitra': 'Mars', 'Dhanishta': 'Mars',
-    'Ardra': 'Rahu', 'Swati': 'Rahu', 'Shatabhisha': 'Rahu',
-    'Punarvasu': 'Jupiter', 'Vishakha': 'Jupiter', 'Purva Bhadrapada': 'Jupiter',
-    'Pushya': 'Saturn', 'Anuradha': 'Saturn', 'Uttara Bhadrapada': 'Saturn',
-    'Ashlesha': 'Mercury', 'Jyeshtha': 'Mercury', 'Revati': 'Mercury'
+    'Ashwini': 'Ketu', 'Aswini': 'Ketu', 'Magha': 'Ketu', 'Magam': 'Ketu', 'Mula': 'Ketu', 'Moola': 'Ketu',
+    'Bharani': 'Venus', 'Purva Phalguni': 'Venus', 'Pooram': 'Venus', 'Purva Ashadha': 'Venus', 'Pooradam': 'Venus',
+    'Krittika': 'Sun', 'Uttara Phalguni': 'Sun', 'Uthiram': 'Sun', 'Uttara Ashadha': 'Sun', 'Uthiradam': 'Sun',
+    'Rohini': 'Moon', 'Hasta': 'Moon', 'Hastam': 'Moon', 'Shravana': 'Moon', 'Thiruvonam': 'Moon',
+    'Mrigashira': 'Mars', 'Mrigashirsha': 'Mars', 'Chitra': 'Mars', 'Chithirai': 'Mars', 'Dhanishta': 'Mars', 'Avittam': 'Mars',
+    'Ardra': 'Rahu', 'Thiruvathirai': 'Rahu', 'Thiruvadhirai': 'Rahu', 'Swati': 'Rahu', 'Shatabhisha': 'Rahu', 'Sathayam': 'Rahu',
+    'Punarvasu': 'Jupiter', 'Vishakha': 'Jupiter', 'Purva Bhadrapada': 'Jupiter', 'Poorattadhi': 'Jupiter',
+    'Pushya': 'Saturn', 'Pushyam': 'Saturn', 'Anuradha': 'Saturn', 'Anusham': 'Saturn', 'Uttara Bhadrapada': 'Saturn', 'Uthirattadhi': 'Saturn',
+    'Ashlesha': 'Mercury', 'Ayilyam': 'Mercury', 'Jyeshtha': 'Mercury', 'Kettai': 'Mercury', 'Revati': 'Mercury'
 };
 
 // Exalted Signs (உச்சம்)
@@ -139,10 +139,17 @@ export const evaluateBatsman = (playerChart, matchChart) => {
     let playerStarLord = getStarLord(pMoon.nakshatra);
     let playerStar = pMoon.nakshatra;
 
+    // --- Role Based Zeroing ---
+    // If player is a Bowler, Batting Score is 0
+    if (playerChart.role === 'Bowler') {
+        return { score: 0, label: "Flop", report: [{ en: "Player is a Bowler (Batting 0)", ta: "இவர் ஒரு பந்துவீச்சாளர்" }] };
+    }
+
     // Match Data
     let matchStar = mMoon.nakshatra;
     let matchRasiLord = getSignLord(mMoon.sign);
     let matchStarLord = getStarLord(matchStar);
+
 
     /* RAHU / KETU STAR LORD OVERRIDES (Match) per Part 2 */
     if (matchStarLord === 'Rahu' || matchStarLord === 'Ketu') {
@@ -159,6 +166,8 @@ export const evaluateBatsman = (playerChart, matchChart) => {
     if (playerStarLord === 'Rahu' || playerStarLord === 'Ketu') {
         playerStarLord = playerRasiLord;
     }
+
+    const isRahuKetuMatchStar = (getStarLord(matchStar) === 'Rahu' || getStarLord(matchStar) === 'Ketu');
 
     const matchLagnaLord = getSignLord(mLagna?.sign);
 
@@ -191,7 +200,7 @@ export const evaluateBatsman = (playerChart, matchChart) => {
     /* ================= GENERAL BATTING RULES ================= */
 
     // Rule 1: ZIG-ZAG RULE
-    if (matchRasiLord === playerStarLord && matchStarLord === playerRasiLord) {
+    if (!isRahuKetuMatchStar && matchRasiLord === playerStarLord && matchStarLord === playerRasiLord) {
         addRule('BAT Rule 1: Zig-Zag', 12, 'bat', false, 'பேட்டிங் விதி 1: ஜிக்-ஜாக்');
         applyBonuses(playerRasiLord, 4);
     }
@@ -216,13 +225,13 @@ export const evaluateBatsman = (playerChart, matchChart) => {
     }
 
     // Rule 5: SAME HOUSE RULE
-    if (OWN_SIGNS[matchStarLord]?.includes(pMoon?.sign) && OWN_SIGNS[matchStarLord]?.includes(getPlanet(playerChart, playerStarLord)?.sign)) {
+    if (!isRahuKetuMatchStar && OWN_SIGNS[matchStarLord]?.includes(pMoon?.sign) && OWN_SIGNS[matchStarLord]?.includes(getPlanet(playerChart, playerStarLord)?.sign)) {
         addRule('BAT Rule 5: Same House', 4, 'bat', false, 'பேட்டிங் விதி 5: ஒரே ராசி');
         if (isExalted(playerRasiLord, pMoon?.sign) || isOwnSign(playerRasiLord, pMoon?.sign)) addRule('BAT Rule 5: Bonus', 2, 'bat', false, 'பேட்டிங் விதி 5: போனஸ்');
     }
 
     // Rule 6: PLAYER RASI ATHIPATHI HOME
-    if (getPlanet(matchChart, matchRasiLord)?.sign === pMoon?.sign && getPlanet(matchChart, matchStarLord)?.sign === pMoon?.sign) {
+    if (!isRahuKetuMatchStar && getPlanet(matchChart, matchRasiLord)?.sign === pMoon?.sign && getPlanet(matchChart, matchStarLord)?.sign === pMoon?.sign) {
         addRule('BAT Rule 6: Player Rasi Home', 6, 'bat', false, 'பேட்டிங் விதி 6: ராசி அதிபதி வீடு');
         applyBonuses(playerRasiLord, 4);
     }
@@ -239,6 +248,15 @@ export const evaluateBatsman = (playerChart, matchChart) => {
     if (matchLagnaLord === playerRasiLord) {
         addRule('BAT Rule 8: Lagna', 2, 'bat', false, 'பேட்டிங் விதி 8: லக்ன விதி');
         if (isExalted(playerRasiLord, pMoon?.sign) || isOwnSign(playerRasiLord, pMoon?.sign)) addRule('BAT Rule 8: Bonus', 2, 'bat', false, 'பேட்டிங் விதி 8: போனஸ்');
+    }
+
+    // Rule 9: DOUBLE LORD CONJUNCTION
+    if (!isRahuKetuMatchStar) {
+        const mRasiPos = getPlanet(playerChart, matchRasiLord)?.sign;
+        const mStarPos = getPlanet(playerChart, matchStarLord)?.sign;
+        if (mRasiPos && mStarPos && mRasiPos === mStarPos) {
+            addRule('Rule 9: Double Lord Conjunction', 12, 'bat', false, 'விதி 9: இரட்டை அதிபதி சேர்க்கை');
+        }
     }
 
     /* ================= GENERAL BOWLING RULES ================= */
@@ -266,14 +284,22 @@ export const evaluateBatsman = (playerChart, matchChart) => {
             if ((playerStar === 'Shatabhisha' || playerStar === 'Sathayam') && areInSameSign(playerChart, 'Saturn', 'Rahu')) {
                 addRule('Rohini: Player Sathayam & Saturn+Rahu Conjunction', 12, 'both', true, 'ரோகிணி: சதயம் நட்சத்திரம் & சனி+ராகு சேர்க்கை');
             }
-            break;
-
-        // 4. THIRUVATHIRAI
+            break;        // 4. THIRUVATHIRAI (Ardra)
         case 'Ardra':
         case 'Thiruvathirai':
-            if (playerRasiLord === 'Mars' || playerStarLord === 'Mars') addRule('Thiruvathirai: Mars Rasi/Star Lord', 4, 'both', false, 'திருவாதிரை: செவ்வாய் ராசி/நட்சத்திர அதிபதி');
-            if (isOwnSign('Mars', getPlanet(playerChart, 'Mars')?.sign) || isExalted('Mars', getPlanet(playerChart, 'Mars')?.sign)) addRule('Thiruvathirai: Mars Own/Exalted', 10, 'both', false, 'திருவாதிரை: செவ்வாய் ஆட்சி/உச்சம்');
+        case 'Thiruvadhirai':
+            const marsSign = getPlanet(playerChart, 'Mars')?.sign;
+            if (marsSign) {
+                if (isDebilitated('Mars', marsSign)) {
+                    setSureFlop('Ardra: Mars Neecham (Batting)', 'திருவாதிரை: செவ்வாய் நீசம் (பேட்டிங்)');
+                } else if (isExalted('Mars', marsSign) || isOwnSign('Mars', marsSign)) {
+                    addRule('Ardra: Mars Aatchi/Ucham', 0, 'bat', false, 'திருவாதிரை: செவ்வாய் ஆட்சி/உச்சம்');
+                } else if (playerRasiLord === 'Mars' || playerStarLord === 'Mars') {
+                    addRule('Ardra: Mars Lord', 0, 'bat', false, 'திருவாதிரை: செவ்வாய் அதிபதி');
+                }
+            }
             break;
+
 
         // 5. AYILYAM
         case 'Ashlesha':
@@ -407,6 +433,12 @@ export const evaluateBowler = (playerChart, matchChart) => {
     let matchRasiLord = getSignLord(mMoon.sign);
     let matchStarLord = getStarLord(matchStar);
 
+    // --- Role Based Zeroing ---
+    // If player is a Batsman, Bowling Score is 0
+    if (playerChart.role === 'Batsman' || playerChart.role === 'WK-Batsman') {
+        return { score: 0, label: "Flop", report: [{ en: "Player is a Batsman (Bowling 0)", ta: "இவர் ஒரு பேட்ஸ்மேன்" }] };
+    }
+
     /* RAHU / KETU STAR LORD OVERRIDES (Match) */
     if (matchStarLord === 'Rahu' || matchStarLord === 'Ketu') {
         matchStarLord = matchRasiLord;
@@ -416,12 +448,23 @@ export const evaluateBowler = (playerChart, matchChart) => {
 
     if (playerStarLord === 'Rahu' || playerStarLord === 'Ketu') playerStarLord = playerRasiLord;
 
+    const isRahuKetuMatchStar = (getStarLord(matchStar) === 'Rahu' || getStarLord(matchStar) === 'Ketu');
+
     const matchLagnaLord = getSignLord(mLagna?.sign);
 
     const addRule = (name, pts, type = "both", isSpecial = false, nameTamil = "") => {
         score += pts;
         const ruleText = `${name} (${pts > 0 ? "+" : ""}${pts})`;
         const ruleTextTamil = nameTamil ? `${nameTamil} (${pts > 0 ? "+" : ""}${pts})` : ruleText;
+        report.push({ en: ruleText, ta: ruleTextTamil });
+    };
+
+    let globalNegative = false;
+    const setSureFlop = (name, nameTamil = "") => {
+        score = 0;
+        globalNegative = true;
+        const ruleText = `${name} (SURE FLOP)`;
+        const ruleTextTamil = nameTamil ? `${nameTamil} (Sure Flop)` : ruleText;
         report.push({ en: ruleText, ta: ruleTextTamil });
     };
 
@@ -441,7 +484,7 @@ export const evaluateBowler = (playerChart, matchChart) => {
     /* ================= GENERAL BOWLING RULES ================= */
 
     // BOWL Rule 1: ZIG-ZAG
-    if (matchRasiLord === playerStarLord && matchStarLord === playerRasiLord) {
+    if (!isRahuKetuMatchStar && matchRasiLord === playerStarLord && matchStarLord === playerRasiLord) {
         addRule('BOWL Rule 1: Zig-Zag', 12, 'bowl', false, 'பவுலிங் விதி 1: ஜிக்-ஜாக்');
         applyBonuses(playerRasiLord, 4);
     }
@@ -469,7 +512,7 @@ export const evaluateBowler = (playerChart, matchChart) => {
     // BOWL Rule 5: SAME HOUSE
     const mOwned = [...(OWN_SIGNS[matchRasiLord] || []), ...(OWN_SIGNS[matchStarLord] || [])];
     const pStarLordSign = getPlanet(playerChart, playerStarLord)?.sign;
-    if (mOwned.includes(pMoon.sign) && mOwned.includes(pStarLordSign)) {
+    if (!isRahuKetuMatchStar && mOwned.includes(pMoon.sign) && mOwned.includes(pStarLordSign)) {
         addRule('BOWL Rule 5: Same House', 4, 'bowl', false, 'பவுலிங் விதி 5: ஒரே ராசி');
         applyBonuses(playerRasiLord, 2);
     }
@@ -477,7 +520,7 @@ export const evaluateBowler = (playerChart, matchChart) => {
     // BOWL Rule 6: PLAYER RASI HOME
     const mRasiLObj = getPlanet(matchChart, matchRasiLord);
     const mStarLObj = getPlanet(matchChart, matchStarLord);
-    if (mRasiLObj && mStarLObj && mRasiLObj.sign === pMoon.sign && mStarLObj.sign === pMoon.sign) {
+    if (!isRahuKetuMatchStar && mRasiLObj && mStarLObj && mRasiLObj.sign === pMoon.sign && mStarLObj.sign === pMoon.sign) {
         addRule('BOWL Rule 6: Player Rasi Home', 4, 'bowl', false, 'பவுலிங் விதி 6: ராசி அதிபதி வீடு');
         applyBonuses(playerRasiLord, 2);
     }
@@ -508,11 +551,41 @@ export const evaluateBowler = (playerChart, matchChart) => {
         applyBonuses(playerRasiLord, 8);
     }
 
+    // Rule 9: DOUBLE LORD CONJUNCTION
+    if (!isRahuKetuMatchStar) {
+        const mRasiPos = getPlanet(playerChart, matchRasiLord)?.sign;
+        const mStarPos = getPlanet(playerChart, matchStarLord)?.sign;
+        if (mRasiPos && mStarPos && mRasiPos === mStarPos) {
+            addRule('Rule 9: Double Lord Conjunction', 12, 'bowl', false, 'விதி 9: இரட்டை அதிபதி சேர்க்கை');
+        }
+    }
+
+    // --- Nakshatra Specific Rules for Bowling ---
+    switch (matchStar) {
+        case 'Ardra':
+        case 'Thiruvathirai':
+        case 'Thiruvadhirai':
+            const marsSign = getPlanet(playerChart, 'Mars')?.sign;
+            if (marsSign) {
+                if (isDebilitated('Mars', marsSign)) {
+                    setSureFlop('Ardra: Mars Neecham', 'திருவாதிரை: செவ்வாய் நீசம்');
+                } else if (isExalted('Mars', marsSign) || isOwnSign('Mars', marsSign)) {
+                    addRule('Ardra: Mars Aatchi/Ucham', 10, 'bowl', true, 'திருவாதிரை: செவ்வாய் ஆட்சி/உச்சம்');
+                } else if (playerRasiLord === 'Mars' || playerStarLord === 'Mars') {
+                    addRule('Ardra: Mars Lord', 4, 'bowl', false, 'திருவாதிரை: செவ்வாய் அதிபதி');
+                }
+            }
+            break;
+    }
+
+    if (globalNegative) score = 0;
+
     // Recalculate Label
     let label = "Flop";
     if (score >= 4) label = "Good";
     if (score >= 8) label = "Excellent";
-    if (score <= -4) label = "Sure Flop";
+    if (globalNegative) label = "SURE FLOP";
+    else if (score <= -4) label = "SURE FLOP";
 
     return { score, label, report };
 };

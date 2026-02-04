@@ -313,7 +313,8 @@ const updatePlayer = async (req, res) => {
 
         // Check if chart-affecting fields changed to re-fetch chart
         const chartAffecting = ['dob', 'birthPlace', 'latitude', 'longitude', 'timezone', 'birthTime'];
-        const needsChartUpdate = chartAffecting.some(field => field in updates);
+        // FORCE UPDATE: To fix stale data (Zampa Bug)
+        const needsChartUpdate = true; // chartAffecting.some(field => field in updates);
 
         if (needsChartUpdate) {
             // We need the full data to fetch chart (merging old and new)

@@ -45,7 +45,7 @@ const planetShortTamilMap = {
     'Jupiter': 'குரு', 'Venus': 'சுக்', 'Saturn': 'சனி', 'Rahu': 'ராகு', 'Ketu': 'கேது',
     'Asc': 'ல', 'Lagna': 'ல',
     'Jup': 'குரு', 'Mar': 'செவ்', 'Ven': 'சுக்', 'Sat': 'சனி', 'Mer': 'பு',
-    'Mon': 'சந்', 'Rah': 'ராகு', 'Ket': 'கேது', 'Sun': 'சூ'
+    'Mon': 'சந்', 'Rah': 'ராகு', 'Ket': 'கேது'
 };
 
 
@@ -98,12 +98,7 @@ const RasiChart = ({ data, style = {}, planetsData = null }) => {
 
 
     const chartData = (data && Object.keys(data).length > 0) ? data : { houses: DEFAULT_DATA, birthData: {}, moonNakshatra: {} };
-    // DEBUG LOG
-    console.log("RasiChart Props Data:", data);
-    console.log("RasiChart Processed chartData:", chartData);
-
     const housesData = chartData.houses || chartData;
-    console.log("RasiChart housesData:", housesData);
 
     const birthData = chartData.birthData || {};
     const nakshatraData = chartData.moonNakshatra || {};
@@ -134,7 +129,7 @@ const RasiChart = ({ data, style = {}, planetsData = null }) => {
         let lord = signLords[signId];
 
         if (!housesData) {
-             return { planets: [], signNumber: signId, isAscendantSign: false, signTamil, lord };
+            return { planets: [], signNumber: signId, isAscendantSign: false, signTamil, lord };
         }
 
         const houses = Object.values(housesData);
@@ -310,12 +305,12 @@ const RasiChart = ({ data, style = {}, planetsData = null }) => {
                                                 <div style={{ fontSize: '10px', color: '#B91C1C' }}>{formattedDate}</div>
                                                 <div style={{ fontSize: '10px', color: '#B91C1C', marginBottom: '4px' }}>{timeStr}</div>
 
-                                                <div style={{textAlign: 'center', borderTop: '1px solid #B91C1C', borderBottom: '1px solid #B91C1C', margin: '2px 0', padding: '2px 0', width: '90%'}}>
+                                                <div style={{ textAlign: 'center', borderTop: '1px solid #B91C1C', borderBottom: '1px solid #B91C1C', margin: '2px 0', padding: '2px 0', width: '90%' }}>
                                                     <span style={{ fontSize: '14px', fontStyle: 'italic', fontWeight: 'bold', color: '#B91C1C', letterSpacing: '1px' }}>RASI</span>
                                                 </div>
 
                                                 {/* Rasi & Nakshatra */}
-                                                 {(chartData.moonSign || chartData.moonNakshatra) && (
+                                                {(chartData.moonSign || chartData.moonNakshatra) && (
                                                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1px' }}>
                                                         {chartData.moonSign && (
                                                             <div style={{ fontSize: '11px', color: '#1F2937' }}>

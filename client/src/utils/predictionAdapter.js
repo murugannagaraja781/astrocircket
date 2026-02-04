@@ -66,44 +66,29 @@ const normalizeChart = (chart) => {
 
     // Planet Positions Map (PlanetName -> SignName)
     // Normalize keys to TitleCase (e.g. 'Mars') to match RuleEngine 'P["Mars"]'.
-    // Normalize values to TitleCase (e.g. 'Aries') for Dignity checks.
+    // Robust Planet Positions Extraction
     const planetPositions = {};
-
-    // Robust Data Extraction: Handle 'planets' (Object) or 'formattedPlanets' (Array)
-    let sourcePlanets = {};
-
-    // 1. Try formattedPlanets FIRST (UI uses this, so it takes precedence)
-    if (Array.isArray(chart.formattedPlanets) && chart.formattedPlanets.length > 0) {
-        chart.formattedPlanets.forEach(p => {
-            if (p.name) sourcePlanets[p.name] = p; // Map by Name
-        });
-    }
-
-    // 2. If formattedPlanets yielded nothing, Fallback to 'planets' Object (Auto-calc)
-    if (Object.keys(sourcePlanets).length === 0 && planets && Object.keys(planets).length > 0) {
-        sourcePlanets = planets;
-    }
+    const sourcePlanets = (Array.isArray(chart.formattedPlanets) && chart.formattedPlanets.length > 0)
+        ? chart.formattedPlanets.reduce((acc, p) => { if (p.name) acc[p.name] = p; return acc; }, {})
+        : (planets && Object.keys(planets).length > 0) ? planets : {};
 
     Object.keys(sourcePlanets).forEach(key => {
-        // Key should be Title Case for RuleEngine lookup (e.g. P['Mars'])
         let normalizedKey = toTitleCase(key);
-
-        // Handle array index case or numeric keys
         const val = sourcePlanets[key];
 
-        // If Key is numeric (Array index), check if value has 'name' property
-        if (!isNaN(key) && val.name) {
-            normalizedKey = toTitleCase(val.name);
-        }
+        // Handle numeric keys (array index)
+        if (!isNaN(key) && val.name) normalizedKey = toTitleCase(val.name);
 
-        // If the value is an object with 'sign', use it. If string, use directly.
-        const signRaw = (typeof val === 'object') ? (val.sign || val.signName || val.currentSign) : val;
-
+        const signRaw = (typeof val === 'object') ? (val.sign || val.signName || val.currentSign || val.signTamil) : val;
         if (signRaw && normalizedKey) {
-            // Sign Value must be TitleCase for Exalted/Debilitated/Own Sign checks
             planetPositions[normalizedKey] = toTitleCase(signRaw);
         }
     });
+
+    // Robust Lagna / Ascendant extraction
+    const ascSign = chart.ascendant?.name || chart.ascendant?.sign?.name || chart.ascendantSign || "Unknown";
+    const normalizedAscSign = toTitleCase(ascSign);
+    const ascLord = chart.ascendant?.lord || chart.ascendant?.sign?.lord || chart.ascendantLord || signLords[normalizedAscSign] || "Unknown";
 
     return {
         rashi: toTitleCase(rashi), // Ensure TitleCase
@@ -111,7 +96,14 @@ const normalizeChart = (chart) => {
         rashiLord,
         nakshatraLord,
         planetPositions,
-        moonNakshatraLord: nakshatraLord // for transit.moonNakshatraLord usage
+        ascendantSign: normalizedAscSign,
+        ascendantLord: toTitleCase(ascLord),
+        battingLagnaSign: toTitleCase(chart.battingLagnaSign) || normalizedAscSign,
+        battingLagnaLord: toTitleCase(chart.battingLagnaLord) || toTitleCase(ascLord),
+        bowlingLagnaSign: toTitleCase(chart.bowlingLagnaSign) || normalizedAscSign,
+        bowlingLagnaLord: toTitleCase(chart.bowlingLagnaLord) || toTitleCase(ascLord),
+        moonNakshatraLord: nakshatraLord, // for transit.moonNakshatraLord usage
+        role: chart.role // Pass through Role
     };
 };
 
@@ -138,6 +130,7 @@ export const runPrediction = (playerChart, matchChart, role = "BAT") => {
     return {
         score: engineOutput.score,
         logs: engineOutput.logs,
+        report: engineOutput.logs, // Map logs to report for UI compatibility
         verdict: finalResult.verdict,
         verdictTamil: finalResult.verdictTamil,
         message: finalResult.message,
