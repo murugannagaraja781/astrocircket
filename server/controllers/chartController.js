@@ -1,5 +1,5 @@
 const { calculateSign, calculateNakshatra, calculateDignity, formatDegree, calculatePlanetaryPositions, NAKSHATRAS } = require('../utils/astroCalculator');
-const { generateKPTimeline } = require('../utils/kpCalculations');
+const { generateKPTimeline } = require('../utils/kp_calculations');
 
 // Panchangam calculation helpers
 const TITHIS = [
