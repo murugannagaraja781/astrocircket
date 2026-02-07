@@ -188,12 +188,12 @@ const formatDegree = (vals) => {
     return `${deg}° ${mins}'`;
 };
 
-// Import from vedic-astrology-api
+// Import from local robust helper (avoiding fragile deep package links)
 const {
     calculatePlanetaryPositions: calcPlanetsPackage,
     calculateAscendant: calcAscendantPackage,
     createDate
-} = require('vedic-astrology-api/lib/utils/common');
+} = require('./vedicHelper');
 
 
 // Rewritten Calculation using vedic-astrology-api + Custom Ayanamsa/Lagna Logic
