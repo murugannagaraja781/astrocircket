@@ -42,8 +42,8 @@ const predictionSlice = createSlice({
                     mChartToUse.bowlingLagnaLord = tempBatLord;
                 }
 
-                const bat = runPrediction(playerChart, mChartToUse, "BAT");
-                const bowl = runPrediction(playerChart, mChartToUse, "BOWL");
+                const bat = runPrediction({ ...playerChart, role: player.role }, mChartToUse, "BAT");
+                const bowl = runPrediction({ ...playerChart, role: player.role }, mChartToUse, "BOWL");
 
                 predictions[pid] = { bat, bowl };
 

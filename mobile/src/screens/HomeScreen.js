@@ -114,7 +114,10 @@ const HomeScreen = ({ navigation }) => {
                     <Text style={{ color: '#f59e0b', fontWeight: 'bold' }}>28D01H</Text>
                 </View>
                 {/* AI Robot Icon Mock */}
-                <IconButton icon="atom" iconColor="#6366f1" size={30} />
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <IconButton icon="chart-timeline-variant" iconColor="#f59e0b" size={28} onPress={() => navigation.navigate('KPDetail')} />
+                    <IconButton icon="atom" iconColor="#6366f1" size={30} />
+                </View>
             </View>
 
             {/* Toggle Switch */}

@@ -1,4 +1,5 @@
 const { calculateSign, calculateNakshatra, calculateDignity, formatDegree, calculatePlanetaryPositions, NAKSHATRAS } = require('../utils/astroCalculator');
+const { generateKPTimeline } = require('../utils/kpCalculations');
 
 // Panchangam calculation helpers
 const TITHIS = [
@@ -263,5 +264,37 @@ exports.getBirthChart = async (req, res) => {
     } catch (err) {
         console.error('Local Chart Calculation Error:', err.message);
         res.status(500).json({ error: 'Chart calculation failed', message: err.message });
+    }
+};
+
+exports.getKPTimeline = async (req, res) => {
+    try {
+        const { year, month, day, hour, minute, latitude, longitude, timezone, ayanamsa } = req.body;
+
+        // 1. Get initial planetary positions to retrieve actual Ayanamsa value
+        const { ayanamsaVal } = calculatePlanetaryPositions(
+            parseInt(year), parseInt(month), parseInt(day),
+            parseInt(hour), parseInt(minute),
+            parseFloat(latitude), parseFloat(longitude), parseFloat(timezone),
+            ayanamsa
+        );
+
+        // 2. Generate Timeline
+        const startTime = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}T${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:00`;
+        const timeline = generateKPTimeline(
+            startTime,
+            parseFloat(latitude),
+            parseFloat(longitude),
+            parseFloat(timezone),
+            ayanamsaVal
+        );
+
+        res.json({
+            timeline,
+            ayanamsaVal
+        });
+    } catch (err) {
+        console.error('KP Timeline Error:', err.message);
+        res.status(500).json({ error: 'Failed to generate KP timeline', message: err.message });
     }
 };
