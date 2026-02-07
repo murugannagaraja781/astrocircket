@@ -76,6 +76,17 @@ const getFlag = (player) => {
     return '🏳️';
 };
 
+// Role Icon Helper
+const getRoleIcon = (role) => {
+    if (!role) return '👤';
+    const r = role.toLowerCase();
+    if (r === 'batsman' || r === 'batter' || r === 'bat') return '🏏'; // Bat
+    if (r === 'bowler' || r === 'bowl') return '🥎'; // Ball
+    if (r === 'all rounder' || r === 'all-rounder' || r === 'all') return '⚔️'; // Swords
+    if (r === 'wk-batsman' || r === 'wicketkeeper' || r === 'wk') return '🧤'; // Gloves
+    return '👤';
+};
+
 // Rule Verification Checklist Component
 const RuleChecklist = ({ logs, role }) => {
     const allRules = [
@@ -518,18 +529,19 @@ const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = fa
     const chartData = useMemo(() => player.birthChart?.data || player.birthChart, [player.birthChart]);
     const matchData = useMemo(() => matchChart?.data || matchChart, [matchChart]);
 
+
     // Local Prediction Calculation as fallback
     const batsmanPred = useMemo(() => {
         if (playerPredictions[pid]?.bat) return playerPredictions[pid].bat;
-        if (chartData && matchData) return runPrediction(chartData, matchData, "BAT");
+        if (chartData && matchData) return runPrediction({ ...chartData, role: player.role }, matchData, "BAT");
         return null;
-    }, [playerPredictions, pid, chartData, matchData]);
+    }, [playerPredictions, pid, chartData, matchData, player.role]);
 
     const bowlerPred = useMemo(() => {
         if (playerPredictions[pid]?.bowl) return playerPredictions[pid].bowl;
-        if (chartData && matchData) return runPrediction(chartData, matchData, "BOWL");
+        if (chartData && matchData) return runPrediction({ ...chartData, role: player.role }, matchData, "BOWL");
         return null;
-    }, [playerPredictions, pid, chartData, matchData]);
+    }, [playerPredictions, pid, chartData, matchData, player.role]);
 
     return (
         <Box sx={{
@@ -824,8 +836,8 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewCha
     let bowlResult = null;
 
     if (matchChart && chart) {
-        batResult = runPrediction(chart, matchChart.data || matchChart, "BAT");
-        bowlResult = runPrediction(chart, matchChart.data || matchChart, "BOWL");
+        batResult = runPrediction({ ...chart, role: player.role }, matchChart.data || matchChart, "BAT");
+        bowlResult = runPrediction({ ...chart, role: player.role }, matchChart.data || matchChart, "BOWL");
     }
 
     const isSpecialPlayer = batResult?.isSpecial || bowlResult?.isSpecial;
@@ -1517,7 +1529,17 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                         {[...(grp.players || [])]
                             .filter(p => !filterActive || selectedPlayers.includes(p.id))
                             .sort((a, b) => {
-                                // 1. Matched Rules First (Score > 0)
+                                // 1. Role Order (Batsman -> All Rounder -> Bowler)
+                                const rolePriority = {
+                                    'Batsman': 1, 'WK-Batsman': 1, 'BAT': 1, 'WK': 1,
+                                    'All Rounder': 2, 'ALL': 2,
+                                    'Bowler': 3, 'BOWL': 3
+                                };
+                                const roleA = rolePriority[a.role] || (a.role && rolePriority[a.role.toUpperCase()]) || 4;
+                                const roleB = rolePriority[b.role] || (b.role && rolePriority[b.role.toUpperCase()]) || 4;
+                                if (roleA !== roleB) return roleA - roleB; // Sort by Role first
+
+                                // 2. Matched Rules First (Score > 0)
                                 if (playerPredictions) {
                                     const aScore = Math.max(playerPredictions[a.id]?.bat?.score || 0, playerPredictions[a.id]?.bowl?.score || 0);
                                     const bScore = Math.max(playerPredictions[b.id]?.bat?.score || 0, playerPredictions[b.id]?.bowl?.score || 0);
@@ -1565,12 +1587,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                         <Box sx={{ flexGrow: 1, ml: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 0.5 }}>
                                             <Typography variant="subtitle2" fontWeight="bold" lineHeight={1.1} fontSize="0.85rem">
                                                 {/* Role Icon */}
-                                                <span style={{ marginRight: '4px', fontSize: '0.9rem' }}>
-                                                    {p.role === 'Batsman' ? '🏏' :
-                                                        p.role === 'Bowler' ? '🥎' :
-                                                            p.role === 'All Rounder' ? '⚔️' :
-                                                                p.role === 'WK-Batsman' ? '🧤' : '👤'}
-                                                </span>
+                                                {getRoleIcon(p.role)}
                                                 {p.name}
                                             </Typography>
 
@@ -1660,7 +1677,17 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                     {[...(grp.players || [])]
                                         .filter(p => !filterActive || selectedPlayers.includes(p.id))
                                         .sort((a, b) => {
-                                            // 1. Matched Rules First (Score > 0)
+                                            // 1. Role Order (Batsman -> All Rounder -> Bowler)
+                                            const rolePriority = {
+                                                'Batsman': 1, 'WK-Batsman': 1, 'BAT': 1, 'WK': 1,
+                                                'All Rounder': 2, 'ALL': 2,
+                                                'Bowler': 3, 'BOWL': 3
+                                            };
+                                            const roleA = rolePriority[a.role] || (a.role && rolePriority[a.role.toUpperCase()]) || 4;
+                                            const roleB = rolePriority[b.role] || (b.role && rolePriority[b.role.toUpperCase()]) || 4;
+                                            if (roleA !== roleB) return roleA - roleB; // Sort by Role first
+
+                                            // 2. Matched Rules First (Score > 0)
                                             if (playerPredictions) {
                                                 const aScore = Math.max(playerPredictions[a.id]?.bat?.score || 0, playerPredictions[a.id]?.bowl?.score || 0);
                                                 const bScore = Math.max(playerPredictions[b.id]?.bat?.score || 0, playerPredictions[b.id]?.bowl?.score || 0);
@@ -1708,10 +1735,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                                                 <Avatar src={p.profile} sx={{ width: 24, height: 24, fontSize: 10 }}>{p.name[0]}</Avatar>
                                                                 <Typography variant="body2" fontWeight={isSel ? 'bold' : 'normal'}>
                                                                     <span style={{ marginRight: '6px', fontSize: '1rem' }} title={p.role}>
-                                                                        {p.role === 'Batsman' ? '🏏' :
-                                                                            p.role === 'Bowler' ? '🥎' :
-                                                                                p.role === 'All Rounder' ? '⚔️' :
-                                                                                    p.role === 'WK-Batsman' ? '🧤' : '👤'}
+                                                                        {getRoleIcon(p.role)}
                                                                     </span>
                                                                     {p.name}
                                                                 </Typography>
@@ -2143,8 +2167,8 @@ const PlayerMobileCard = ({ player, matchChart, isSelected, onSelect, onEdit, on
     let batResult = null;
     let bowlResult = null;
     if (matchChart && chart && isSelected) {
-        batResult = runPrediction(chart, matchChart.data || matchChart, "BAT");
-        bowlResult = runPrediction(chart, matchChart.data || matchChart, "BOWL");
+        batResult = runPrediction({ ...chart, role: player.role }, matchChart.data || matchChart, "BAT");
+        bowlResult = runPrediction({ ...chart, role: player.role }, matchChart.data || matchChart, "BOWL");
     }
 
     return (

@@ -6,7 +6,8 @@ import {
     ListItem, ListItemButton, ListItemIcon, ListItemText, Container, Grid, Paper, Button,
     Dialog, DialogTitle, DialogContent, DialogActions, TextField, Autocomplete, CircularProgress,
     useTheme, useMediaQuery, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination,
-    Snackbar, Alert, Checkbox, FormControlLabel, Chip, Avatar, Tooltip
+    Snackbar, Alert, Checkbox, FormControlLabel, Chip, Avatar, Tooltip,
+    Radio, RadioGroup, FormControl, FormLabel
 } from '@mui/material';
 import { CRICKET_TEAMS } from '../utils/teams';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -343,6 +344,7 @@ import DescriptionIcon from '@mui/icons-material/Description'; // New Icon for V
 import GavelIcon from '@mui/icons-material/Gavel'; // Rules Icon
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'; // Chevron for Quick Actions
 import StickyNote2Icon from '@mui/icons-material/StickyNote2'; // Notes Icon
+import TimelineIcon from '@mui/icons-material/Timeline'; // KP Timeline Icon
 import RasiChart from '../components/RasiChart';
 import PlanetaryTable from '../components/PlanetaryTable';
 import AuthContext from '../context/AuthContext';
@@ -400,7 +402,7 @@ const RulesView = () => {
                         <TableBody>
                             <TableRow>
                                 <TableCell sx={tableCellStyle}>பேட்டிங் பொது விதிகள் (Batting Rules)</TableCell>
-                                <TableCell align="center" sx={tableCellStyle}>8</TableCell>
+                                <TableCell align="center" sx={tableCellStyle}>9</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell sx={tableCellStyle}>பவுலிங் பொது விதிகள் (Bowling Rules)</TableCell>
@@ -408,11 +410,11 @@ const RulesView = () => {
                             </TableRow>
                             <TableRow>
                                 <TableCell sx={tableCellStyle}>நட்சத்திர சிறப்பு விதிகள் (Nakshatra Rules)</TableCell>
-                                <TableCell align="center" sx={tableCellStyle}>17 நட்சத்திரங்கள்</TableCell>
+                                <TableCell align="center" sx={tableCellStyle}>18 நட்சத்திரங்கள்</TableCell>
                             </TableRow>
                             <TableRow sx={{ bgcolor: '#f0fdf4' }}>
                                 <TableCell sx={{ ...tableCellStyle, fontWeight: 700 }}>மொத்தம் (Total)</TableCell>
-                                <TableCell align="center" sx={{ ...tableCellStyle, fontWeight: 700 }}>~34 விதிகள்</TableCell>
+                                <TableCell align="center" sx={{ ...tableCellStyle, fontWeight: 700 }}>~36 விதிகள்</TableCell>
                             </TableRow>
                         </TableBody>
                     </Table>
@@ -422,7 +424,7 @@ const RulesView = () => {
             {/* Batting Rules */}
             <Paper sx={sectionStyle}>
                 <Typography variant="h6" sx={headerStyle}>
-                    🏏 பேட்டிங் விதிகள் (Batting Rules 1-8)
+                    🏏 பேட்டிங் விதிகள் (Batting Rules 1-9)
                 </Typography>
                 <TableContainer>
                     <Table size="small">
@@ -443,6 +445,7 @@ const RulesView = () => {
                                 { rule: 'BAT Rule 6', tamil: 'ராசி அதிபதி வீடு', points: '+6' },
                                 { rule: 'BAT Rule 7', tamil: 'ராகு/கேது விதி', points: '+4' },
                                 { rule: 'BAT Rule 8', tamil: 'லக்ன விதி', points: '+2' },
+                                { rule: 'BAT Rule 9', tamil: 'ராசி & நட்சத்திர அதிபதி சேர்க்கை', points: '+12' },
                             ].map((row, idx) => (
                                 <TableRow key={idx} sx={{ '&:nth-of-type(odd)': { bgcolor: '#f8fafc' } }}>
                                     <TableCell sx={tableCellStyle}>{row.rule}</TableCell>
@@ -472,14 +475,14 @@ const RulesView = () => {
                         <TableBody>
                             {[
                                 { rule: 'BOWL Rule 1', tamil: 'ஜிக்-ஜாக் விதி', points: '+12' },
-                                { rule: 'BOWL Rule 2', tamil: 'நேரடி விதி (எதிர்மறை)', points: '-12', negative: true },
+                                { rule: 'BOWL Rule 2', tamil: 'நேரடி விதி (எதிர்மறை)', points: 'SURE FLOP', negative: true },
                                 { rule: 'BOWL Rule 3', tamil: 'நட்சத்திர விதி', points: '+3' },
                                 { rule: 'BOWL Rule 4', tamil: 'சேர்க்கை விதி', points: '+4' },
                                 { rule: 'BOWL Rule 5', tamil: 'ஒரே ராசி விதி', points: '+4' },
                                 { rule: 'BOWL Rule 6', tamil: 'ராசி அதிபதி வீடு', points: '+4' },
                                 { rule: 'BOWL Rule 7', tamil: 'ராகு/கேது விதி', points: '+4' },
                                 { rule: 'BOWL Rule 8', tamil: 'லக்ன விதி', points: '+4' },
-                                { rule: 'BOWL Rule 9', tamil: 'ராசி அதிபதி விதி', points: '+3' },
+                                { rule: 'BOWL Rule 9', tamil: 'ராசி & நட்சத்திர அதிபதி சேர்க்கை', points: '+12' },
                             ].map((row, idx) => (
                                 <TableRow key={idx} sx={{ '&:nth-of-type(odd)': { bgcolor: '#f8fafc' } }}>
                                     <TableCell sx={tableCellStyle}>{row.rule}</TableCell>
@@ -495,7 +498,7 @@ const RulesView = () => {
             {/* Nakshatra Specific Rules */}
             <Paper sx={sectionStyle}>
                 <Typography variant="h6" sx={headerStyle}>
-                    ⭐ நட்சத்திர சிறப்பு விதிகள் (Nakshatra Specific Rules - 17 Stars)
+                    ⭐ நட்சத்திர சிறப்பு விதிகள் (Nakshatra Specific Rules - 18 Stars)
                 </Typography>
                 <TableContainer sx={{ maxHeight: 500 }}>
                     <Table size="small" stickyHeader>
@@ -509,22 +512,23 @@ const RulesView = () => {
                         <TableBody>
                             {[
                                 { num: 1, star: 'அசுவினி (Ashwini)', condition: 'செவ்வாய் உச்சம் (+8), செவ்வாய்+சுக்கிரன் சேர்க்கை (+10)' },
-                                { num: 2, star: 'பரணி (Bharani)', condition: 'சுக்கிரன்+புதன் சேர்க்கை = SURE FLOP ❌' },
+                                { num: 2, star: 'பரணி (Bharani)', condition: 'சுக்கிரன்+புதன் சேர்க்கை = SURE FLOP (Bat) ❌ / +12 (Bowl)' },
                                 { num: 3, star: 'ரோகிணி (Rohini)', condition: 'சந்திரன் நீசம் (+8), சதயம்+சனி+ராகு (+12)' },
-                                { num: 4, star: 'திருவாதிரை (Ardra)', condition: 'செவ்வாய் ராசி/நட்சத்திர அதிபதி (+4), செவ்வாய் ஆட்சி/உச்சம் (+10)' },
-                                { num: 5, star: 'ஆயில்யம் (Ashlesha)', condition: 'சுக்கிரன்+புதன் சேர்க்கை = SURE FLOP ❌' },
-                                { num: 6, star: 'மகம் (Magha)', condition: 'புதன் ராசி + செவ்வாய் நட்சத்திரம் (+12) ⭐ சிறப்பு வீரர்' },
-                                { num: 7, star: 'பூரம் (Purva Phalguni)', condition: 'சனி+செவ்வாய் (+12 பேட்டிங்), குரு+புதன் (+12 பவுலிங்)' },
-                                { num: 8, star: 'உத்திரம் (Uttara Phalguni)', condition: 'கன்னி ராசி + சனி+ராகு (+12) ⭐ சிறப்பு வீரர்' },
-                                { num: 9, star: 'சித்திரை (Chitra)', condition: 'கன்னி: புதன்+சூரியன் (+6-12), துலாம்: சந்திரன்+சனி (+12)' },
-                                { num: 10, star: 'அனுஷம் (Anuradha)', condition: 'குரு ராசி (+5), குரு ஆட்சி/உச்சம் (+10)' },
-                                { num: 11, star: 'கேட்டை (Jyeshtha)', condition: 'புதன்+சுக்கிரன் சேர்க்கை (-12) ⚠️' },
-                                { num: 12, star: 'மூலம் (Mula)', condition: 'சனி+செவ்வாய் (+12 பேட்டிங்), செவ்வாய்+சனி (+12 பவுலிங்)' },
-                                { num: 13, star: 'பூராடம் (Purva Ashadha)', condition: 'சுக்கிரன்+புதன் சேர்க்கை = SURE FLOP ❌' },
-                                { num: 14, star: 'உத்திராடம் (Uttara Ashadha)', condition: 'மகரம்: சந்திரன் ராசி (+12) ⭐ சிறப்பு வீரர்' },
-                                { num: 15, star: 'திருவோணம் (Shravana)', condition: 'செவ்வாய் கடகத்தில் (+6), சனி+ராகு (+12)' },
-                                { num: 16, star: 'அவிட்டம் (Dhanishta)', condition: 'மகரம்: சனி ராசி (+4)' },
-                                { num: 17, star: 'சதயம் (Shatabhisha)', condition: 'சந்திரன் ராசி (+12) ⭐ GAME CHANGER 🏆' },
+                                { num: 4, star: 'மிருகசீரிடம் (Mrigashira)', condition: 'செவ்வாய் ராசி/நட்சத்திர அதிபதி (+6), செவ்வாய் ஆட்சி/உச்சம் (+6)' },
+                                { num: 5, star: 'திருவாதிரை (Ardra)', condition: 'செவ்வாய் ஆட்சி/உச்சம் (+10 Bowl), செவ்வாய் நீசம் = SURE FLOP ❌' },
+                                { num: 6, star: 'ஆயில்யம் (Ashlesha)', condition: 'சுக்கிரன்+புதன் சேர்க்கை = SURE FLOP (Bat) ❌ / +12 (Bowl)' },
+                                { num: 7, star: 'மகம் (Magha)', condition: 'புதன் ராசி + செவ்வாய் நட்சத்திரம் (+12) ⭐ சிறப்பு வீரர்' },
+                                { num: 8, star: 'பூரம் (Purva Phalguni)', condition: 'சனி+செவ்வாய் (+12 பேட்டிங்), குரு+புதன் (+12 பவுலிங்)' },
+                                { num: 9, star: 'உத்திரம் (Uttara Phalguni)', condition: 'கன்னி ராசி + சனி+ராகு (+12) ⭐ சிறப்பு வீரர்' },
+                                { num: 10, star: 'சித்திரை (Chitra)', condition: 'கன்னி: புதன்+சூரியன் (+6-12), துலாம்: சந்திரன்+சனி (+12)' },
+                                { num: 11, star: 'அனுஷம் (Anuradha)', condition: 'குரு ராசி (+5), குரு ஆட்சி/உச்சம் (+10)' },
+                                { num: 12, star: 'கேட்டை (Jyeshtha)', condition: 'புதன்+சுக்கிரன் சேர்க்கை = SURE FLOP (Bat) ❌ / +12 (Bowl)' },
+                                { num: 13, star: 'மூலம் (Mula)', condition: 'சனி+செவ்வாய் (+12 பேட்டிங்), செவ்வாய்+சனி (+12 பவுலிங்)' },
+                                { num: 14, star: 'பூராடம் (Purva Ashadha)', condition: 'சுக்கிரன்+புதன் சேர்க்கை = SURE FLOP (Bat) ❌ / +12 (Bowl)' },
+                                { num: 15, star: 'உத்திராடம் (Uttara Ashadha)', condition: 'மகரம்: சந்திரன் ராசி (+12) ⭐ சிறப்பு வீரர்' },
+                                { num: 16, star: 'திருவோணம் (Shravana)', condition: 'செவ்வாய் கடகத்தில் (+6), சனி+ராகu (+12)' },
+                                { num: 17, star: 'அவிட்டம் (Dhanishta)', condition: 'மகரம்: சனி ராசி (+4)' },
+                                { num: 18, star: 'சதயம் (Shatabhisha)', condition: 'சந்திரன் ராசி (+12) ⭐ GAME CHANGER 🏆' },
                             ].map((row, idx) => (
                                 <TableRow key={idx} sx={{ '&:nth-of-type(odd)': { bgcolor: '#f8fafc' } }}>
                                     <TableCell sx={tableCellStyle}>{row.num}</TableCell>
@@ -613,7 +617,272 @@ const RulesView = () => {
                     </Grid>
                 </Grid>
             </Paper>
+        </Box>
+    );
+};
 
+// KP Sub Timeline View
+const KPView = () => {
+    const { token } = useContext(AuthContext);
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const [loading, setLoading] = useState(false);
+    const [timeline, setTimeline] = useState([]);
+    const [viewLevel, setViewLevel] = useState('Sub'); // 'Sign', 'Nakshatra', 'Sub'
+
+    // Inputs
+    const now = new Date();
+    const [form, setForm] = useState({
+        year: now.getFullYear(),
+        month: now.getMonth() + 1,
+        day: now.getDate(),
+        hour: now.getHours(),
+        minute: now.getMinutes(),
+        lat: '13.0827',
+        lon: '80.2707',
+        tz: '5.5',
+        ayanamsa: 'Lahiri'
+    });
+
+    const fetchTimeline = async () => {
+        setLoading(true);
+        try {
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/charts/kp-timeline`, {
+                year: parseInt(form.year),
+                month: parseInt(form.month),
+                day: parseInt(form.day),
+                hour: parseInt(form.hour),
+                minute: parseInt(form.minute),
+                latitude: parseFloat(form.lat),
+                longitude: parseFloat(form.lon),
+                timezone: parseFloat(form.tz),
+                ayanamsa: form.ayanamsa
+            }, { headers: { 'x-auth-token': token } });
+            setTimeline(res.data.timeline.filter(row => row.durationSeconds >= 5));
+        } catch (err) {
+            console.error(err);
+            alert('Failed to fetch KP timeline');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const getDisplayTimeline = () => {
+        if (!timeline.length) return [];
+        if (viewLevel === 'Sub') return timeline;
+
+        const merged = [];
+        let current = { ...timeline[0] };
+
+        for (let i = 1; i < timeline.length; i++) {
+            const next = timeline[i];
+            let shouldMerge = false;
+            if (viewLevel === 'Sign') {
+                shouldMerge = next.sign === current.sign;
+            } else if (viewLevel === 'Nakshatra') {
+                shouldMerge = next.nakshatra === current.nakshatra;
+            }
+
+            if (shouldMerge) {
+                current.to = next.to;
+                current.durationSeconds += next.durationSeconds;
+            } else {
+                merged.push(current);
+                current = { ...next };
+            }
+        }
+        merged.push(current);
+        return merged;
+    };
+
+    const displayTimeline = getDisplayTimeline();
+
+    const SIGN_LORDS = {
+        'Aries': 'Mars', 'Taurus': 'Venus', 'Gemini': 'Mercury', 'Cancer': 'Moon',
+        'Leo': 'Sun', 'Virgo': 'Mercury', 'Libra': 'Venus', 'Scorpio': 'Mars',
+        'Sagittarius': 'Jupiter', 'Capricorn': 'Saturn', 'Aquarius': 'Saturn', 'Pisces': 'Jupiter'
+    };
+
+    const NAK_LORDS = {
+        'Ashwini': 'Ketu', 'Bharani': 'Venus', 'Krittika': 'Sun',
+        'Rohini': 'Moon', 'Mrigashirsha': 'Mars', 'Ardra': 'Rahu',
+        'Punarvasu': 'Jupiter', 'Pushya': 'Saturn', 'Ashlesha': 'Mercury',
+        'Magha': 'Ketu', 'Purva Phalguni': 'Venus', 'Uttara Phalguni': 'Sun',
+        'Hasta': 'Moon', 'Chitra': 'Mars', 'Swati': 'Rahu',
+        'Vishakha': 'Jupiter', 'Anuradha': 'Saturn', 'Jyeshtha': 'Mercury',
+        'Mula': 'Ketu', 'Purva Ashadha': 'Venus', 'Uttara Ashadha': 'Sun',
+        'Shravana': 'Moon', 'Dhanishta': 'Mars', 'Shatabhisha': 'Rahu',
+        'Purva Bhadrapada': 'Jupiter', 'Uttara Bhadrapada': 'Saturn', 'Revati': 'Mercury'
+    };
+
+    const TAMIL_MAPS = {
+        Signs: {
+            'Aries': 'மேஷம்', 'Taurus': 'ரிஷபம்', 'Gemini': 'மிதுனம்', 'Cancer': 'கடகம்',
+            'Leo': 'சிம்மம்', 'Virgo': 'கன்னி', 'Libra': 'துலாம்', 'Scorpio': 'விருச்சிகம்',
+            'Sagittarius': 'தனுசு', 'Capricorn': 'மகரம்', 'Aquarius': 'கும்பம்', 'Pisces': 'மீனம்'
+        },
+        Nakshatras: {
+            'Ashwini': 'அஸ்வினி', 'Bharani': 'பரணி', 'Krittika': 'கார்த்திகை', 'Rohini': 'ரோகிணி',
+            'Mrigashirsha': 'மிருகசீரிஷம்', 'Ardra': 'திருவாதிரை', 'Punarvasu': 'புனர்பூசம்', 'Pushya': 'பூசம்',
+            'Ashlesha': 'ஆயில்யம்', 'Magha': 'மகம்', 'Purva Phalguni': 'பூரம்', 'Uttara Phalguni': 'உத்திரம்',
+            'Hasta': 'ஹஸ்தம்', 'Chitra': 'சித்திரை', 'Swati': 'சுவாதி', 'Vishakha': 'விசாகம்',
+            'Anuradha': 'அனுஷம்', 'Jyeshtha': 'கேட்டை', 'Mula': 'மூலம்', 'Purva Ashadha': 'பூராடம்',
+            'Uttara Ashadha': 'உத்திராடம்', 'Shravana': 'திருவோணம்', 'Dhanishta': 'அவிட்டம்', 'Shatabhisha': 'சதயம்',
+            'Purva Bhadrapada': 'பூரட்டாதி', 'Uttara Bhadrapada': 'உத்திரட்டாதி', 'Revati': 'ரேவதி'
+        },
+        Planets: {
+            'Sun': 'சூரியன்', 'Moon': 'சந்திரன்', 'Mars': 'செவ்வாய்', 'Mercury': 'புதன்',
+            'Jupiter': 'குரு', 'Venus': 'சுக்கிரன்', 'Saturn': 'சனி', 'Rahu': 'ராகு', 'Ketu': 'கேது'
+        }
+    };
+
+    return (
+        <Box sx={{ p: 2 }}>
+            <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="h5" fontWeight="800" sx={{ color: 'primary.main', display: 'flex', alignItems: 'center', gap: 1 }}>
+                    🌌 KP Astrology (கே.பி ஜோதிடம்)
+                </Typography>
+            </Box>
+
+            <Paper sx={{ p: 3, mb: 3, borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} md={3}>
+                        <TextField
+                            fullWidth
+                            label="Date"
+                            type="date"
+                            value={`${form.year}-${String(form.month).padStart(2, '0')}-${String(form.day).padStart(2, '0')}`}
+                            onChange={(e) => {
+                                const [y, m, d] = e.target.value.split('-');
+                                setForm({ ...form, year: y, month: m, day: d });
+                            }}
+                            InputLabelProps={{ shrink: true }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={2}>
+                        <TextField
+                            fullWidth
+                            label="Time"
+                            type="time"
+                            value={`${String(form.hour).padStart(2, '0')}:${String(form.minute).padStart(2, '0')}`}
+                            onChange={(e) => {
+                                const [h, min] = e.target.value.split(':');
+                                setForm({ ...form, hour: h, minute: min });
+                            }}
+                            InputLabelProps={{ shrink: true }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={2}>
+                        <TextField
+                            fullWidth
+                            label="Lat"
+                            value={form.lat}
+                            onChange={(e) => setForm({ ...form, lat: e.target.value })}
+                            placeholder="13.0827"
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={2}>
+                        <TextField
+                            fullWidth
+                            label="Lon"
+                            value={form.lon}
+                            onChange={(e) => setForm({ ...form, lon: e.target.value })}
+                            placeholder="80.2707"
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={1.5}>
+                        <TextField
+                            fullWidth
+                            label="TZ"
+                            value={form.tz}
+                            onChange={(e) => setForm({ ...form, tz: e.target.value })}
+                            placeholder="5.5"
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={1.5}>
+                        <TextField
+                            select
+                            fullWidth
+                            label="Ayanamsa"
+                            value={form.ayanamsa}
+                            onChange={(e) => setForm({ ...form, ayanamsa: e.target.value })}
+                            SelectProps={{ native: true }}
+                        >
+                            <option value="Lahiri">Lahiri</option>
+                            <option value="KP">KP</option>
+                            <option value="KP Straight">KP Straight</option>
+                        </TextField>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Button
+                            variant="contained"
+                            fullWidth
+                            size="large"
+                            onClick={fetchTimeline}
+                            disabled={loading}
+                            startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <TimelineIcon />}
+                            sx={{ borderRadius: '12px', py: 1.5, fontWeight: 700 }}
+                        >
+                            {loading ? 'Calculating...' : 'Calculate 24h Timeline (கணக்கிடு)'}
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Paper>
+
+            <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Typography variant="subtitle2" fontWeight="700">Display Level (காண்பிக்கும் நிலை):</Typography>
+                <RadioGroup row value={viewLevel} onChange={(e) => setViewLevel(e.target.value)}>
+                    <FormControlLabel value="Sign" control={<Radio size="small" />} label="Sign (ராசி)" />
+                    <FormControlLabel value="Nakshatra" control={<Radio size="small" />} label="Nakshatra (நட்சத்திரம்)" />
+                    <FormControlLabel value="Sub" control={<Radio size="small" />} label="Sub Lord (உப அதிபதி)" />
+                </RadioGroup>
+            </Box>
+
+            {displayTimeline.length > 0 && (
+                <TableContainer component={Paper} sx={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
+                    <Table stickyHeader>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell sx={{ bgcolor: '#1e293b', color: 'white', fontWeight: 700 }}>FROM TIME</TableCell>
+                                <TableCell sx={{ bgcolor: '#1e293b', color: 'white', fontWeight: 700 }}>TO TIME</TableCell>
+                                <TableCell sx={{ bgcolor: '#1e293b', color: 'white', fontWeight: 700 }}>SIGN (ராசி)</TableCell>
+                                <TableCell sx={{ bgcolor: '#1e293b', color: 'white', fontWeight: 700 }}>NAKSHATRA (நட்சத்திரம்)</TableCell>
+                                <TableCell sx={{ bgcolor: '#1e293b', color: 'white', fontWeight: 700 }}>LORD (நாதன்)</TableCell>
+                                <TableCell sx={{ bgcolor: '#1e293b', color: 'white', fontWeight: 700 }}>SUB LORD (உப அதிபதி)</TableCell>
+                                <TableCell sx={{ bgcolor: '#1e293b', color: 'white', fontWeight: 700 }}>DURATION</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {displayTimeline.map((row, idx) => (
+                                <TableRow key={idx} hover sx={{ '&:nth-of-type(even)': { bgcolor: '#f8fafc' } }}>
+                                    <TableCell sx={{ fontWeight: 600 }}>{new Date(row.from).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</TableCell>
+                                    <TableCell sx={{ color: 'text.secondary', fontSize: '13px' }}>{new Date(row.to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</TableCell>
+                                    <TableCell sx={{ fontWeight: viewLevel === 'Sign' ? 800 : 400, color: viewLevel === 'Sign' ? 'primary.main' : 'inherit' }}>
+                                        {TAMIL_MAPS.Signs[row.sign] || row.sign}
+                                    </TableCell>
+                                    <TableCell sx={{ fontWeight: viewLevel === 'Nakshatra' ? 800 : 400, color: viewLevel === 'Nakshatra' ? 'primary.main' : 'inherit' }}>
+                                        {TAMIL_MAPS.Nakshatras[row.nakshatra] || row.nakshatra}
+                                    </TableCell>
+                                    <TableCell sx={{ fontWeight: 700, color: 'secondary.main' }}>
+                                        {TAMIL_MAPS.Planets[SIGN_LORDS[row.sign]] || '-'}/{TAMIL_MAPS.Planets[NAK_LORDS[row.nakshatra]] || '-'}
+                                    </TableCell>
+                                    <TableCell>
+                                        <Chip
+                                            label={TAMIL_MAPS.Planets[row.subLord] || row.subLord}
+                                            size="small"
+                                            color={viewLevel === 'Sub' ? 'primary' : 'default'}
+                                            sx={{ fontWeight: 700, borderRadius: '8px' }}
+                                        />
+                                    </TableCell>
+                                    <TableCell sx={{ color: 'info.main', fontWeight: 700, fontSize: '13px' }}>
+                                        {Math.floor(row.durationSeconds / 60)}m {row.durationSeconds % 60}s
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            )}
         </Box>
     );
 };
@@ -2724,6 +2993,7 @@ const AdminDashboard = () => {
         { id: 'groups', label: 'Groups', icon: <GroupIcon /> },
         { id: 'clientDashboard', label: 'Client Dashboard', icon: <DashboardIcon /> },
         { id: 'rules', label: 'Rules', icon: <GavelIcon /> },
+        { id: 'kpAstrology', label: 'KP Astrology', icon: <TimelineIcon /> },
     ];
 
     const drawer = (
@@ -2826,6 +3096,7 @@ const AdminDashboard = () => {
             case 'groups': return <GroupsManager />;
             case 'clientDashboard': return <UserDashboard hideHeader={true} />;
             case 'rules': return <RulesView />;
+            case 'kpAstrology': return <KPView />;
             default: return <DashboardHome onNavigate={setCurrentView} />;
         }
     };

@@ -119,10 +119,37 @@ export const runPrediction = (playerChart, matchChart, role = "BAT") => {
     let engineOutput;
     const isBowling = role === "BOWL";
 
-    if (isBowling) {
-        engineOutput = evaluateBowler(player, match, transit);
-    } else {
-        engineOutput = evaluateBatsman(player, match, transit);
+    // --- ROLE BASED FILTERING ---
+    const pRole = (player.role || '').toUpperCase();
+
+    // If player is a pure BATSMAN (or WK), they get 0 for Bowling
+    // 'BAT' is standard, also checking variations just in case
+    const isBatsman = pRole === 'BAT' || pRole === 'BATSMAN' || pRole === 'WK' || pRole === 'WK-BATSMAN';
+
+    if (isBowling && isBatsman) {
+        engineOutput = {
+            score: 0,
+            logs: ["Role Mismatch: Batsman cannot bowl (Score: 0)"],
+            status: "FLOP",
+            isSpecial: false
+        };
+    }
+    // If player is a pure BOWLER, they get 0 for Batting
+    else if (!isBowling && (pRole === 'BOWL' || pRole === 'BOWLER')) {
+        engineOutput = {
+            score: 0,
+            logs: ["Role Mismatch: Bowler cannot bat (Score: 0)"],
+            status: "FLOP",
+            isSpecial: false
+        };
+    }
+    else {
+        // Normal Evaluation for All Rounders, WK-Batsman, or matching roles
+        if (isBowling) {
+            engineOutput = evaluateBowler(player, match, transit);
+        } else {
+            engineOutput = evaluateBatsman(player, match, transit);
+        }
     }
 
     const finalResult = getFinalResult(engineOutput.score, isBowling);
