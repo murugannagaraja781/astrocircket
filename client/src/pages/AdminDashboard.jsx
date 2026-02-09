@@ -1,5 +1,5 @@
 
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useMemo, useCallback } from 'react';
 import axios from 'axios';
 import { Country, State, City } from 'country-state-city';
 import ct from 'countries-and-timezones';
@@ -412,11 +412,11 @@ const RulesView = () => {
                             </TableRow>
                             <TableRow>
                                 <TableCell sx={tableCellStyle}>நட்சத்திர சிறப்பு விதிகள் (Nakshatra Rules)</TableCell>
-                                <TableCell align="center" sx={tableCellStyle}>18 நட்சத்திரங்கள்</TableCell>
+                                <TableCell align="center" sx={tableCellStyle}>27 நட்சத்திரங்கள்</TableCell>
                             </TableRow>
                             <TableRow sx={{ bgcolor: '#f0fdf4' }}>
                                 <TableCell sx={{ ...tableCellStyle, fontWeight: 700 }}>மொத்தம் (Total)</TableCell>
-                                <TableCell align="center" sx={{ ...tableCellStyle, fontWeight: 700 }}>~36 விதிகள்</TableCell>
+                                <TableCell align="center" sx={{ ...tableCellStyle, fontWeight: 700 }}>~45 விதிகள்</TableCell>
                             </TableRow>
                         </TableBody>
                     </Table>
@@ -515,22 +515,31 @@ const RulesView = () => {
                             {[
                                 { num: 1, star: 'அசுவினி (Ashwini)', condition: 'செவ்வாய் உச்சம் (+8), செவ்வாய்+சுக்கிரன் சேர்க்கை (+10)' },
                                 { num: 2, star: 'பரணி (Bharani)', condition: 'சுக்கிரன்+புதன் சேர்க்கை = SURE FLOP (Bat) ❌ / +12 (Bowl)' },
-                                { num: 3, star: 'ரோகிணி (Rohini)', condition: 'சந்திரன் நீசம் (+8), சதயம்+சனி+ராகு (+12)' },
-                                { num: 4, star: 'மிருகசீரிடம் (Mrigashira)', condition: 'செவ்வாய் ராசி/நட்சத்திர அதிபதி (+6), செவ்வாய் ஆட்சி/உச்சம் (+6)' },
-                                { num: 5, star: 'திருவாதிரை (Ardra)', condition: 'செவ்வாய் ஆட்சி/உச்சம் (+10 Bowl), செவ்வாய் நீசம் = SURE FLOP ❌' },
-                                { num: 6, star: 'ஆயில்யம் (Ashlesha)', condition: 'சுக்கிரன்+புதன் சேர்க்கை = SURE FLOP (Bat) ❌ / +12 (Bowl)' },
-                                { num: 7, star: 'மகம் (Magha)', condition: 'புதன் ராசி + செவ்வாய் நட்சத்திரம் (+12) ⭐ சிறப்பு வீரர்' },
-                                { num: 8, star: 'பூரம் (Purva Phalguni)', condition: 'சனி+செவ்வாய் (+12 பேட்டிங்), குரு+புதன் (+12 பவுலிங்)' },
-                                { num: 9, star: 'உத்திரம் (Uttara Phalguni)', condition: 'கன்னி ராசி + சனி+ராகு (+12) ⭐ சிறப்பு வீரர்' },
-                                { num: 10, star: 'சித்திரை (Chitra)', condition: 'கன்னி: புதன்+சூரியன் (+6-12), துலாம்: சந்திரன்+சனி (+12)' },
-                                { num: 11, star: 'அனுஷம் (Anuradha)', condition: 'குரு ராசி (+5), குரு ஆட்சி/உச்சம் (+10)' },
-                                { num: 12, star: 'கேட்டை (Jyeshtha)', condition: 'புதன்+சுக்கிரன் சேர்க்கை = SURE FLOP (Bat) ❌ / +12 (Bowl)' },
-                                { num: 13, star: 'மூலம் (Mula)', condition: 'சனி+செவ்வாய் (+12 பேட்டிங்), செவ்வாய்+சனி (+12 பவுலிங்)' },
-                                { num: 14, star: 'பூராடம் (Purva Ashadha)', condition: 'சுக்கிரன்+புதன் சேர்க்கை = SURE FLOP (Bat) ❌ / +12 (Bowl)' },
-                                { num: 15, star: 'உத்திராடம் (Uttara Ashadha)', condition: 'மகரம்: சந்திரன் ராசி (+12) ⭐ சிறப்பு வீரர்' },
-                                { num: 16, star: 'திருவோணம் (Shravana)', condition: 'செவ்வாய் கடகத்தில் (+6), சனி+ராகu (+12)' },
-                                { num: 17, star: 'அவிட்டம் (Dhanishta)', condition: 'மகரம்: சனி ராசி (+4)' },
-                                { num: 18, star: 'சதயம் (Shatabhisha)', condition: 'சந்திரன் ராசி (+12) ⭐ GAME CHANGER 🏆' },
+                                { num: 3, star: 'கார்த்திகை (Krittika)', condition: '-' },
+                                { num: 4, star: 'ரோகிணி (Rohini)', condition: 'சந்திரன் நீசம் (+8), சதயம்+சனி+ராகு (+12)' },
+                                { num: 5, star: 'மிருகசீரிடம் (Mrigashira)', condition: 'செவ்வாய் ராசி/நட்சத்திர அதிபதி (+6), செவ்வாய் ஆட்சி/உச்சம் (+6)' },
+                                { num: 6, star: 'திருவாதிரை (Ardra)', condition: 'செவ்வாய் ஆட்சி/உச்சம் (+10 Bowl), செவ்வாய் நீசம் = SURE FLOP ❌' },
+                                { num: 7, star: 'புனர்பூசம் (Punarvasu)', condition: '-' },
+                                { num: 8, star: 'பூசம் (Pushya)', condition: '-' },
+                                { num: 9, star: 'ஆயில்யம் (Ashlesha)', condition: 'சுக்கிரன்+புதன் சேர்க்கை = SURE FLOP (Bat) ❌ / +12 (Bowl)' },
+                                { num: 10, star: 'மகம் (Magha)', condition: 'புதன் ராசி + செவ்வாய் நட்சத்திரம் (+12) ⭐ சிறப்பு வீரர்' },
+                                { num: 11, star: 'பூரம் (Purva Phalguni)', condition: 'சனி+செவ்வாய் (+12 பேட்டிங்), குரு+புதன் (+12 பவுலிங்)' },
+                                { num: 12, star: 'உத்திரம் (Uttara Phalguni)', condition: 'கன்னி ராசி + சனி+ராகு (+12) ⭐ சிறப்பு வீரர்' },
+                                { num: 13, star: 'ஹஸ்தம் (Hasta)', condition: '-' },
+                                { num: 14, star: 'சித்திரை (Chitra)', condition: 'கன்னி: புதன்+சூரியன் (+6-12), துலாம்: சந்திரன்+சனி (+12)' },
+                                { num: 15, star: 'சுவாதி (Swati)', condition: '-' },
+                                { num: 16, star: 'விசாகம் (Vishakha)', condition: '-' },
+                                { num: 17, star: 'அனுஷம் (Anuradha)', condition: 'குரு ராசி (+5), குரு ஆட்சி/உச்சம் (+10)' },
+                                { num: 18, star: 'கேட்டை (Jyeshtha)', condition: 'புதன்+சுக்கிரன் சேர்க்கை = SURE FLOP (Bat) ❌ / +12 (Bowl)' },
+                                { num: 19, star: 'மூலம் (Mula)', condition: 'சனி+செவ்வாய் (+12 பேட்டிங்), செவ்வாய்+சனி (+12 பவுலிங்)' },
+                                { num: 20, star: 'பூராடம் (Purva Ashadha)', condition: 'சுக்கிரன்+புதன் சேர்க்கை = SURE FLOP (Bat) ❌ / +12 (Bowl)' },
+                                { num: 21, star: 'உத்திராடம் (Uttara Ashadha)', condition: 'மகரம்: சந்திரன் ராசி (+12) ⭐ சிறப்பு வீரர்' },
+                                { num: 22, star: 'திருவோணம் (Shravana)', condition: 'செவ்வாய் கடகத்தில் (+6), சனி+ராகு (+12)' },
+                                { num: 23, star: 'அவிட்டம் (Dhanishta)', condition: 'மகரம்: சனி ராசி (+4)' },
+                                { num: 24, star: 'சதயம் (Shatabhisha)', condition: 'சந்திரன் ராசி (+12) ⭐ GAME CHANGER 🏆' },
+                                { num: 25, star: 'பூரட்டாதி (Purva Bhadrapada)', condition: '-' },
+                                { num: 26, star: 'உத்திரட்டாதி (Uttara Bhadrapada)', condition: '-' },
+                                { num: 27, star: 'ரேவதி (Revati)', condition: '-' }
                             ].map((row, idx) => (
                                 <TableRow key={idx} sx={{ '&:nth-of-type(odd)': { bgcolor: '#f8fafc' } }}>
                                     <TableCell sx={tableCellStyle}>{row.num}</TableCell>
@@ -1579,12 +1588,50 @@ const PlayersManager = () => {
     const [timezoneLoading, setTimezoneLoading] = useState(false);
     const searchTimeout = React.useRef(null);
 
-    // Country-State-City Selection States
-    const [selectedCountry, setSelectedCountry] = useState(null);
-    const [selectedState, setSelectedState] = useState(null);
-    const [selectedCity, setSelectedCity] = useState(null);
-    const [skipState, setSkipState] = useState(false);  // Toggle to skip state and search city directly
-    const [allCitiesOfCountry, setAllCitiesOfCountry] = useState([]);  // Cache all cities for direct search
+    // Location Search State
+    const [locationOptions, setLocationOptions] = useState([]);
+    const [locationLoading, setLocationLoading] = useState(false);
+    const [allCities, setAllCities] = useState([]);
+
+    // Load cities asynchronously to avoid blocking render
+    useEffect(() => {
+        setTimeout(() => {
+            try {
+                const cities = City.getAllCities();
+                setAllCities(cities);
+            } catch (e) {
+                console.error("Failed to load cities", e);
+            }
+        }, 100);
+    }, []);
+
+    // Optimized City Search
+    const searchLocations = useCallback((query) => {
+        if (!query || query.length < 3) return [];
+        const q = query.toLowerCase();
+        const matches = [];
+
+        if (!allCities || allCities.length === 0) return [];
+
+        for (let i = 0; i < allCities.length; i++) {
+            if (allCities[i].name.toLowerCase().includes(q)) {
+                matches.push(allCities[i]);
+                if (matches.length >= 50) break;
+            }
+        }
+        return matches;
+    }, [allCities]);
+
+    const handleLocationSearch = (event, newInputValue) => {
+        if (newInputValue.length >= 3) {
+            setLocationLoading(true);
+            const results = searchLocations(newInputValue);
+            setLocationOptions(results);
+            setLocationLoading(false);
+        } else {
+            setLocationOptions([]);
+        }
+    };
 
     // State for Viewing Chart & Table
     const [openChartDialog, setOpenChartDialog] = useState(false);
@@ -1641,9 +1688,6 @@ const PlayersManager = () => {
         setPlayerForm({});
         setProfilePicFile(null);
         setPreviewChart(null); // Reset preview
-        setSelectedCountry(null); // Reset country
-        setSelectedState(null);   // Reset state
-        setSelectedCity(null);    // Reset city
         setOpenEdit(true);
     };
 
@@ -2030,186 +2074,92 @@ const PlayersManager = () => {
                         </Box>
 
                         <TextField label="Name" value={playerForm.name || ''} onChange={(e) => setPlayerForm({ ...playerForm, name: e.target.value })} fullWidth size="small" />
-                        {/* Country-State-City Cascading Dropdowns */}
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                            {/* Country Select */}
-                            <Autocomplete
-                                options={Country.getAllCountries()}
-                                getOptionLabel={(option) => option.name || ''}
-                                value={selectedCountry}
-                                onChange={(e, val) => {
-                                    setSelectedCountry(val);
-                                    setSelectedState(null);
-                                    setSelectedCity(null);
-                                    // Clear lat/long when country changes
-                                    setPlayerForm(prev => ({ ...prev, latitude: '', longitude: '', birthPlace: val ? val.name : '' }));
-                                }}
-                                renderInput={(params) =>
-                                    <TextField
-                                        {...params}
-                                        label="🌍 Country"
-                                        size="small"
-                                        fullWidth
-                                        name={`add_player_country_${fieldId}`}
-                                        id={`add_player_country_${fieldId}`}
-                                        inputProps={{ ...params.inputProps, autoComplete: 'new-password' }}
-                                    />
-                                }
-                                isOptionEqualToValue={(option, value) => option.isoCode === value?.isoCode}
-                            />
+                        {/* Optimized Information Note */}
+                        <Typography variant="caption" sx={{ color: '#64748b', mb: 1 }}>
+                            🚀 <b>Fast Search:</b> Type at least 3 letters to find any city instantly.
+                        </Typography>
 
-                            {/* State Select with Skip Option */}
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                <Autocomplete
-                                    options={selectedCountry ? State.getStatesOfCountry(selectedCountry.isoCode) : []}
-                                    getOptionLabel={(option) => option.name || ''}
-                                    value={selectedState}
-                                    onChange={(e, val) => {
-                                        setSelectedState(val);
-                                        setSelectedCity(null);
-                                        setSkipState(false);  // Reset skip when selecting state
-                                        if (val && selectedCountry) {
-                                            setPlayerForm(prev => ({ ...prev, birthPlace: `${val.name}, ${selectedCountry.name}` }));
-                                        }
-                                    }}
-                                    renderInput={(params) =>
-                                        <TextField
-                                            {...params}
-                                            label="🏛️ State/Province"
-                                            size="small"
-                                            fullWidth
-                                            name={`add_player_state_${fieldId}`}
-                                            id={`add_player_state_${fieldId}`}
-                                            inputProps={{ ...params.inputProps, autoComplete: 'new-password' }}
-                                        />
-                                    }
-                                    disabled={!selectedCountry || skipState}
-                                    isOptionEqualToValue={(option, value) => option.isoCode === value?.isoCode}
-                                    sx={{ flex: 1 }}
-                                />
-                                {/* Skip State Checkbox */}
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={skipState}
-                                            onChange={(e) => {
-                                                const checked = e.target.checked;
-                                                setSkipState(checked);
-                                                setSelectedState(null);
-                                                setSelectedCity(null);
-                                                // Load all cities of country when skip is enabled
-                                                if (checked && selectedCountry) {
-                                                    const states = State.getStatesOfCountry(selectedCountry.isoCode);
-                                                    const cities = [];
-                                                    states.forEach(state => {
-                                                        const stateCities = City.getCitiesOfState(selectedCountry.isoCode, state.isoCode);
-                                                        stateCities.forEach(city => {
-                                                            cities.push({ ...city, stateName: state.name });
-                                                        });
-                                                    });
-                                                    setAllCitiesOfCountry(cities);
-                                                    console.log(`Loaded ${cities.length} cities for ${selectedCountry.name}`);
-                                                }
-                                            }}
-                                            size="small"
-                                            disabled={!selectedCountry}
-                                        />
-                                    }
-                                    label={<Typography variant="caption">Skip</Typography>}
-                                    sx={{ ml: 0.5 }}
-                                />
-                            </Box>
+                        {/* Single Line Fast Location Search */}
+                        <Autocomplete
+                            options={locationOptions}
+                            getOptionLabel={(option) => {
+                                const country = Country.getCountryByCode(option.countryCode);
+                                const state = State.getStateByCodeAndCountry(option.stateCode, option.countryCode);
+                                return `${option.name}, ${state?.name || option.stateCode}, ${country?.name || option.countryCode}`;
+                            }}
+                            filterOptions={(x) => x} // Disable built-in filtering, we do it manually
+                            loading={locationLoading}
+                            onInputChange={handleLocationSearch}
+                            onChange={(event, val) => {
+                                if (val) {
+                                    const country = Country.getCountryByCode(val.countryCode);
+                                    const state = State.getStateByCodeAndCountry(val.stateCode, val.countryCode);
+                                    const birthPlace = `${val.name}, ${state?.name || val.stateCode}, ${country?.name || val.countryCode}`;
 
-                            {/* City Select */}
-                            <Autocomplete
-                                options={
-                                    skipState && selectedCountry
-                                        ? allCitiesOfCountry
-                                        : (selectedCountry && selectedState ? City.getCitiesOfState(selectedCountry.isoCode, selectedState.isoCode) : [])
-                                }
-                                getOptionLabel={(option) => {
-                                    if (skipState && option.stateName) {
-                                        return `${option.name} (${option.stateName})`;  // Show city with state name
-                                    }
-                                    return option.name || '';
-                                }}
-                                value={selectedCity}
-                                onChange={(e, val) => {
-                                    setSelectedCity(val);
-                                    if (val && selectedCountry) {
-                                        // Use stateName from cached city if skipState mode, otherwise use selectedState
-                                        const stateName = skipState ? (val.stateName || '') : (selectedState?.name || '');
-                                        const birthPlace = stateName
-                                            ? `${val.name}, ${stateName}, ${selectedCountry.name}`
-                                            : `${val.name}, ${selectedCountry.name}`;
-                                        const lat = parseFloat(val.latitude) || '';
-                                        const long = parseFloat(val.longitude) || '';
+                                    const lat = parseFloat(val.latitude);
+                                    const long = parseFloat(val.longitude);
 
-                                        setPlayerForm(prev => ({
-                                            ...prev,
-                                            birthPlace: birthPlace,
-                                            latitude: lat,
-                                            longitude: long
-                                        }));
-
-                                        // Get accurate timezone from country database
-                                        try {
-                                            const timezones = ct.getTimezonesForCountry(selectedCountry.isoCode);
-                                            if (timezones && timezones.length > 0) {
-                                                const primaryTz = timezones[0];
-                                                const tzOffset = primaryTz.utcOffset / 60;
-                                                console.log(`Timezone for ${selectedCountry.name}: ${tzOffset} (${primaryTz.name})`);
-                                                setPlayerForm(prev => ({ ...prev, timezone: tzOffset, manualTimezone: false }));
-                                            } else if (lat && long) {
-                                                const tz = fetchTimezone(lat, long);
-                                                if (tz !== null) {
-                                                    setPlayerForm(prev => ({ ...prev, timezone: tz, manualTimezone: false }));
-                                                }
-                                            }
-                                        } catch (err) {
-                                            console.error('Timezone lookup error:', err);
+                                    // Calculate Timezone
+                                    let tzOffset = '';
+                                    try {
+                                        // 1. Try strict lookup by country
+                                        const timezones = ct.getTimezonesForCountry(val.countryCode);
+                                        if (timezones && timezones.length > 0) {
+                                            // Simple logic: grab first. For large countries like USA/Russia this is inaccurate, 
+                                            // but 'ct' doesn't map cities to TZs directly without lat/long lookup.
+                                            // Better: Use Lat/Long lookup if available
                                             if (lat && long) {
                                                 const tz = fetchTimezone(lat, long);
-                                                if (tz !== null) {
-                                                    setPlayerForm(prev => ({ ...prev, timezone: tz, manualTimezone: false }));
-                                                }
+                                                if (tz !== null) tzOffset = tz;
+                                                else tzOffset = timezones[0].utcOffset / 60;
+                                            } else {
+                                                tzOffset = timezones[0].utcOffset / 60;
                                             }
                                         }
+                                    } catch (e) {
+                                        console.error("TZ Error", e);
                                     }
-                                }}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label={skipState ? "🔍 Search City (All)" : "🏙️ City"}
-                                        size="small"
-                                        fullWidth
-                                        placeholder={skipState ? "Type to search any city..." : ""}
-                                        name={`add_player_city_${fieldId}`}
-                                        id={`add_player_city_${fieldId}`}
-                                        inputProps={{ ...params.inputProps, autoComplete: 'new-password' }}
-                                    />
-                                )}
-                                disabled={!selectedCountry || (!skipState && !selectedState)}
-                                isOptionEqualToValue={(option, value) => option.name === value?.name}
-                                filterOptions={(options, { inputValue }) => {
-                                    // Better filtering for large lists
-                                    const filtered = options.filter(option =>
-                                        option.name.toLowerCase().includes(inputValue.toLowerCase())
-                                    );
-                                    return filtered.slice(0, 100);  // Limit to 100 for performance
-                                }}
-                            />
 
-                            {/* Fallback: Manual Place Entry */}
-                            <TextField
-                                label="📍 Birth Place (Auto-filled)"
-                                value={playerForm.birthPlace || ''}
-                                onChange={(e) => setPlayerForm(prev => ({ ...prev, birthPlace: e.target.value }))}
-                                size="small"
-                                fullWidth
-                                helperText="Auto-filled from City selection, or type manually"
-                            />
-                        </Box>
+                                    setPlayerForm(prev => ({
+                                        ...prev,
+                                        birthPlace: birthPlace,
+                                        latitude: lat,
+                                        longitude: long,
+                                        timezone: tzOffset,
+                                        manualTimezone: false
+                                    }));
+                                }
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="📍 Search City (Type 3+ letters)"
+                                    fullWidth
+                                    size="small"
+                                    name={`add_player_location_search_${fieldId}`}
+                                    id={`add_player_location_search_${fieldId}`}
+                                    inputProps={{
+                                        ...params.inputProps,
+                                        autoComplete: 'new-password', // Force disable autofill
+                                    }}
+                                    helperText="Global City Search (High Speed Index)"
+                                />
+                            )}
+                            renderOption={(props, option) => {
+                                const country = Country.getCountryByCode(option.countryCode);
+                                const state = State.getStateByCodeAndCountry(option.stateCode, option.countryCode);
+                                return (
+                                    <li {...props} key={`${option.name}-${option.countryCode}-${option.stateCode}`}>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                            <Typography variant="body2" fontWeight="bold">{option.name}</Typography>
+                                            <Typography variant="caption" color="textSecondary">
+                                                {state?.name}, {country?.name}
+                                            </Typography>
+                                        </Box>
+                                    </li>
+                                );
+                            }}
+                        />
 
 
 
