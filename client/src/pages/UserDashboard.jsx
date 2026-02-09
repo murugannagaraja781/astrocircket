@@ -1562,20 +1562,28 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                 const isSel = selectedPlayers.includes(p.id);
                                 const res = playerPredictions?.[p.id];
                                 const isSpecial = res?.bat?.isSpecial || res?.bowl?.isSpecial;
+
+                                // Zig-Zag Check
+                                const allLogs = [...(res?.bat?.report || []), ...(res?.bowl?.report || [])];
+                                const isZigZag = allLogs.some(log =>
+                                    (typeof log === 'string' && log.includes('Zig-Zag')) ||
+                                    (typeof log === 'object' && log.en?.includes('Zig-Zag'))
+                                );
+
                                 const dimmed = filterActive && !isSel;
                                 return (
                                     <Paper key={p.id} elevation={0} sx={{
                                         p: 1.5, mb: 1,
                                         border: '2px solid',
-                                        borderColor: isSpecial ? '#8A2BE2' : (isSel ? '#FF6F00' : 'rgba(0,0,0,0.08)'),
-                                        bgcolor: isSpecial ? 'rgba(138, 43, 226, 0.15)' : (isSel ? 'rgba(255, 111, 0, 0.08)' : 'white'),
+                                        borderColor: isZigZag ? '#ff9800' : (isSpecial ? '#8A2BE2' : (isSel ? '#FF6F00' : 'rgba(0,0,0,0.08)')),
+                                        bgcolor: isZigZag ? '#ffe0b2' : (isSpecial ? 'rgba(138, 43, 226, 0.35)' : (isSel ? 'rgba(255, 111, 0, 0.08)' : 'white')),
                                         borderRadius: '12px',
                                         display: 'flex',
                                         alignItems: 'center',
                                         gap: 1.5,
                                         opacity: dimmed ? 0.4 : 1,
                                         transition: 'all 0.2s ease',
-                                        boxShadow: isSpecial ? '0 2px 8px rgba(138, 43, 226, 0.3)' : (isSel ? '0 2px 8px rgba(255, 111, 0, 0.2)' : '0 1px 3px rgba(0,0,0,0.05)')
+                                        boxShadow: isZigZag ? '0 2px 8px rgba(255, 152, 0, 0.3)' : (isSpecial ? '0 2px 8px rgba(138, 43, 226, 0.3)' : (isSel ? '0 2px 8px rgba(255, 111, 0, 0.2)' : '0 1px 3px rgba(0,0,0,0.05)'))
                                     }} onClick={() => results ? toggleRules(p.id) : togglePlayer(p.id)}>
                                         <Checkbox
                                             checked={isSel}
@@ -1605,13 +1613,19 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                         {res && expandedRules[p.id] && (
                                             <Box sx={{ mt: 1, p: 1, bgcolor: '#f8fafc', borderRadius: 1, border: '1px solid #e2e8f0' }}>
                                                 <Typography variant="caption" fontWeight="bold" display="block" color="#000" sx={{ mb: 0.5 }}>Target Success List:</Typography>
-                                                {[...(res?.bat?.report || []), ...(res?.bowl?.report || [])].map((log, i) => (
-                                                    <Typography key={i} variant="caption" display="block" color="#000" sx={{ fontSize: '0.75rem', mb: 0.5, fontFamily: 'monospace' }}>
-                                                        • {typeof log === 'object' && log !== null ?
-                                                            (<span><b>{log.ta}</b> <span style={{ color: '#2E7D32' }}>{log.en?.match(/\([+-]?\d+\)/)?.[0] || ""}</span></span>)
-                                                            : log}
-                                                    </Typography>
-                                                ))}
+                                                {[...(res?.bat?.report || []), ...(res?.bowl?.report || [])].map((log, i) => {
+                                                    // Zig-Zag Check
+                                                    const isZigZag = (typeof log === 'string' && log.includes('Zig-Zag')) || (typeof log === 'object' && log.en?.includes('Zig-Zag'));
+
+                                                    return (
+                                                        <Typography key={i} variant="caption" display="block" color={isZigZag ? '#FF9800' : "#000"} sx={{ fontSize: '0.75rem', mb: 0.5, fontFamily: 'monospace', fontWeight: isZigZag ? 'bold' : 'normal' }}>
+                                                            {isZigZag && '☀️ '}
+                                                            • {typeof log === 'object' && log !== null ?
+                                                                (<span><b>{log.ta}</b> <span style={{ color: '#2E7D32' }}>{log.en?.match(/\([+-]?\d+\)/)?.[0] || ""}</span></span>)
+                                                                : log}
+                                                        </Typography>
+                                                    )
+                                                })}
                                                 {(!res.bat.report?.length && !res.bowl.report?.length) && (
                                                     <Typography variant="caption" color="#000">No specific rules matched.</Typography>
                                                 )}
@@ -1711,6 +1725,14 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                             const res = playerPredictions?.[p.id];
                                             const dimmed = filterActive && !isSel;
                                             const isSpecial = res?.bat?.isSpecial || res?.bowl?.isSpecial;
+
+                                            // Zig-Zag Check
+                                            const allLogs = [...(res?.bat?.report || []), ...(res?.bowl?.report || [])];
+                                            const isZigZag = allLogs.some(log =>
+                                                (typeof log === 'string' && log.includes('Zig-Zag')) ||
+                                                (typeof log === 'object' && log.en?.includes('Zig-Zag'))
+                                            );
+
                                             return (
                                                 <React.Fragment key={p.id}>
                                                     <TableRow
@@ -1718,8 +1740,8 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                                         onClick={() => results ? toggleRules(p.id) : togglePlayer(p.id)}
                                                         sx={{
                                                             cursor: 'pointer',
-                                                            bgcolor: isSpecial ? 'rgba(138, 43, 226, 0.15)' : (isSel ? 'rgba(255, 111, 0, 0.08)' : 'inherit'),
-                                                            borderLeft: isSpecial ? '4px solid #8A2BE2' : 'none',
+                                                            bgcolor: isZigZag ? '#ffe0b2 !important' : (isSpecial ? 'rgba(138, 43, 226, 0.35)' : (isSel ? 'rgba(255, 111, 0, 0.08)' : 'inherit')),
+                                                            borderLeft: isZigZag ? '4px solid #ff9800' : (isSpecial ? '4px solid #8A2BE2' : 'none'),
                                                             opacity: dimmed ? 0.4 : 1,
                                                             transition: 'all 0.2s ease'
                                                         }}
@@ -1738,6 +1760,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                                                     <span style={{ marginRight: '6px', fontSize: '1rem' }} title={p.role}>
                                                                         {getRoleIcon(p.role)}
                                                                     </span>
+
                                                                     {p.name}
                                                                 </Typography>
                                                             </Box>
@@ -1766,27 +1789,35 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                                         )}
                                                     </TableRow>
                                                     {/* RULES ROW (Desktop) */}
-                                                    {res && expandedRules[p.id] && (
-                                                        <TableRow>
-                                                            <TableCell colSpan={4} sx={{ p: 0, borderBottom: 'none' }}>
-                                                                <Box sx={{ p: 2, bgcolor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
-                                                                    <Typography variant="subtitle2" fontWeight="bold" color="#000" gutterBottom>Target Success List:</Typography>
-                                                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                                                                        {[...(res.bat.report || []), ...(res.bowl.report || [])].map((log, i) => (
-                                                                            <Typography key={i} variant="body2" color="#000" sx={{ fontSize: '0.85rem', fontFamily: 'Robo' }}>
-                                                                                • {typeof log === 'object' ?
-                                                                                    (<span><b>{log.ta}</b> <span style={{ color: '#E65100', fontWeight: 'bold' }}>{log.en?.match(/\([+-]?\d+\)/)?.[0] || ""}</span> <span style={{ color: '#666', fontSize: '0.75rem' }}>({log.en?.split('(')?.[0] || ""})</span></span>)
-                                                                                    : log}
-                                                                            </Typography>
-                                                                        ))}
-                                                                        {(!res.bat.report?.length && !res.bowl.report?.length) && (
-                                                                            <Typography variant="body2" color="#000">No specific rules matched.</Typography>
-                                                                        )}
+                                                    {
+                                                        res && expandedRules[p.id] && (
+                                                            <TableRow>
+                                                                <TableCell colSpan={4} sx={{ p: 0, borderBottom: 'none' }}>
+                                                                    <Box sx={{ p: 2, bgcolor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                                                                        <Typography variant="subtitle2" fontWeight="bold" color="#000" gutterBottom>Target Success List:</Typography>
+                                                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                                                                            {[...(res.bat.report || []), ...(res.bowl.report || [])].map((log, i) => {
+                                                                                // Zig-Zag Check
+                                                                                const isZigZag = (typeof log === 'string' && log.includes('Zig-Zag')) || (typeof log === 'object' && log.en?.includes('Zig-Zag'));
+
+                                                                                return (
+                                                                                    <Typography key={i} variant="body2" color={isZigZag ? '#FF9800' : "#000"} sx={{ fontSize: '0.85rem', fontFamily: 'Robo', fontWeight: isZigZag ? 'bold' : 'normal' }}>
+                                                                                        {isZigZag && '☀️ '}
+                                                                                        • {typeof log === 'object' ?
+                                                                                            (<span><b>{log.ta}</b> <span style={{ color: '#E65100', fontWeight: 'bold' }}>{log.en?.match(/\([+-]?\d+\)/)?.[0] || ""}</span> <span style={{ color: '#666', fontSize: '0.75rem' }}>({log.en?.split('(')?.[0] || ""})</span></span>)
+                                                                                            : log}
+                                                                                    </Typography>
+                                                                                )
+                                                                            })}
+                                                                            {(!res.bat.report?.length && !res.bowl.report?.length) && (
+                                                                                <Typography variant="body2" color="#000">No specific rules matched.</Typography>
+                                                                            )}
+                                                                        </Box>
                                                                     </Box>
-                                                                </Box>
-                                                            </TableCell>
-                                                        </TableRow>
-                                                    )}
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        )
+                                                    }
                                                 </React.Fragment>
                                             );
                                         })}
@@ -1794,8 +1825,9 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                             </Table>
                         </TableContainer>
                     </Box>
-                )}
-            </Paper>
+                )
+                }
+            </Paper >
         );
     };
 
