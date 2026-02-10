@@ -1304,14 +1304,20 @@ const TeamSelector = ({ label, value, onChange, groups = [], placeholder = "Sele
     );
 };
 
-const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false }) => {
+const MatchWizardDialog = (props) => {
+    const { open, onClose, groups, token, hideHeader = false } = props;
     const dispatch = useDispatch();
     const results = useSelector(state => state.predictions.matchResults);
     const playerPredictions = useSelector(state => state.predictions.playerPredictions);
 
-    const [teamA, setTeamA] = useState('');
-    const [teamB, setTeamB] = useState('');
-    const [selectedPlayers, setSelectedPlayers] = useState([]);
+    const {
+        teamA, setTeamA,
+        teamB, setTeamB,
+        selectedPlayers,
+        setSelectedPlayers,
+        onSave
+    } = props;
+
     const [matchChart, setMatchChart] = useState(null);
     const [filterA, setFilterA] = useState(false);
     const [filterB, setFilterB] = useState(false);
@@ -1340,7 +1346,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
             setRuleDialogOpen(false);
             setCompletedRules([]);
         }
-    }, [open]);
+    }, [open, setTeamA, setTeamB, dispatch]);
 
     // Track expanded rules for players
     const [expandedRules, setExpandedRules] = useState({});
@@ -1364,7 +1370,7 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
         setSelectedPlayers([...new Set(newSelected)]);
         setMatchChart(null);
         dispatch(clearPredictions());
-    }, [teamA, teamB, groups]);
+    }, [teamA, teamB, groups, setSelectedPlayers, dispatch]);
 
     const handleMatchReady = async (chart, details) => {
         console.log("=== MATCH CHART JSON ===", chart);
@@ -1406,6 +1412,8 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
         // 4. Close Rule Dialog
         setRuleDialogOpen(false);
     };
+
+    // --- LIFTED SAVE PREDICTION LOGIC REMOVED FROM HERE ---
 
     // --- MOBILE RESPONSIVE HOOK ---
     const theme = useTheme();
@@ -1603,8 +1611,18 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                             {/* Prediction Chips (Moved Below Name) */}
                                             {res && (
                                                 <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mt: 0.2 }}>
-                                                    <Chip label={`B:${res.bat.score}`} size="small" sx={{ height: 18, fontSize: '0.65rem', px: 0.5, bgcolor: res.bat.score >= 1 ? '#e6fffa' : '#f3f4f6', color: res.bat.score >= 1 ? '#059669' : '#374151', border: '1px solid', borderColor: res.bat.score >= 1 ? '#10b981' : '#d1d5db' }} />
-                                                    <Chip label={`Bw:${res.bowl.score}`} size="small" sx={{ height: 18, fontSize: '0.65rem', px: 0.5, bgcolor: res.bowl.score >= 1 ? '#e6fffa' : '#f3f4f6', color: res.bowl.score >= 1 ? '#059669' : '#374151', border: '1px solid', borderColor: res.bowl.score >= 1 ? '#10b981' : '#d1d5db' }} />
+                                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                                        <Chip label={`B:${res.bat.score}`} size="small" sx={{ height: 18, fontSize: '0.65rem', px: 0.5, bgcolor: res.bat.score >= 1 ? '#e6fffa' : '#f3f4f6', color: res.bat.score >= 1 ? '#059669' : '#374151', border: '1px solid', borderColor: res.bat.score >= 1 ? '#10b981' : '#d1d5db' }} />
+                                                        {res.bat.matchedLagnas?.map(idx => (
+                                                            <Box key={idx} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#FFC107', color: '#000', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #FFA000' }}>L{idx}</Box>
+                                                        ))}
+                                                    </Box>
+                                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                                        <Chip label={`Bw:${res.bowl.score}`} size="small" sx={{ height: 18, fontSize: '0.65rem', px: 0.5, bgcolor: res.bowl.score >= 1 ? '#e6fffa' : '#f3f4f6', color: res.bowl.score >= 1 ? '#059669' : '#374151', border: '1px solid', borderColor: res.bowl.score >= 1 ? '#10b981' : '#d1d5db' }} />
+                                                        {res.bowl.matchedLagnas?.map(idx => (
+                                                            <Box key={idx} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#FFC107', color: '#000', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #FFA000' }}>L{idx}</Box>
+                                                        ))}
+                                                    </Box>
                                                 </Box>
                                             )}
                                         </Box>
@@ -1780,9 +1798,19 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                                                         {results && (
                                                             <TableCell>
                                                                 {res ? (
-                                                                    <Box sx={{ display: 'flex', gap: 0.5 }}>
-                                                                        <Chip label={`B:${res.bat.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bat.score >= 1 ? 'success' : 'default'} />
-                                                                        <Chip label={`Bo:${res.bowl.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bowl.score >= 1 ? 'success' : 'default'} />
+                                                                    <Box sx={{ display: 'flex', gap: 1, flexDirection: 'column' }}>
+                                                                        <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
+                                                                            <Chip label={`B:${res.bat.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bat.score >= 1 ? 'success' : 'default'} />
+                                                                            {res.bat.matchedLagnas?.map(idx => (
+                                                                                <Box key={idx} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#FFC107', color: '#000', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #FFA000' }}>L{idx}</Box>
+                                                                            ))}
+                                                                        </Box>
+                                                                        <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
+                                                                            <Chip label={`Bo:${res.bowl.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bowl.score >= 1 ? 'success' : 'default'} />
+                                                                            {res.bowl.matchedLagnas?.map(idx => (
+                                                                                <Box key={idx} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#FFC107', color: '#000', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #FFA000' }}>L{idx}</Box>
+                                                                            ))}
+                                                                        </Box>
                                                                     </Box>
                                                                 ) : <Typography variant="caption">-</Typography>}
                                                             </TableCell>
@@ -1981,6 +2009,24 @@ const MatchWizardDialog = ({ open, onClose, groups, token, hideHeader = false })
                 </Box>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Button
+                        variant="contained"
+                        size="small"
+                        onClick={onSave}
+                        disabled={selectedPlayers.length === 0}
+                        startIcon={<EmojiEventsIcon />}
+                        sx={{
+                            bgcolor: visionPro.secondary,
+                            color: 'white',
+                            fontWeight: 'bold',
+                            borderRadius: '10px',
+                            textTransform: 'none',
+                            '&:hover': { bgcolor: '#E65100' },
+                            display: (teamA && teamB) ? 'inline-flex' : 'none'
+                        }}
+                    >
+                        Save ({selectedPlayers.length})
+                    </Button>
                     <Button
                         variant="contained"
                         size="small"
@@ -2338,6 +2384,53 @@ const UserDashboard = ({ hideHeader = false }) => {
     const [chartPopupPlayer, setChartPopupPlayer] = useState(null);
     const [matchWizardOpen, setMatchWizardOpen] = useState(false);
     const dashboardPredictionRef = useRef(null);
+
+    // --- LIFTED MATCH & SAVE PREDICTION STATE ---
+    const [teamA, setTeamA] = useState(null);
+    const [teamB, setTeamB] = useState(null);
+    const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+    const [predictionWinner, setPredictionWinner] = useState('');
+    const [savingPrediction, setSavingPrediction] = useState(false);
+
+    const handleOpenSaveDialog = () => {
+        if (selectedPlayerIds.length === 0) {
+            alert("Please select at least one Star Player to save.");
+            return;
+        }
+        setSaveDialogOpen(true);
+    };
+
+    const handleSavePrediction = async () => {
+        if (!predictionWinner) return;
+        setSavingPrediction(true);
+        try {
+            const authToken = token || localStorage.getItem('x-auth-token');
+            const config = { headers: { 'x-auth-token': authToken } };
+
+            // Get Star Player Names from the existing players list
+            const starPlayerNames = selectedPlayerIds.map(id => {
+                const p = players.find(pl => pl.id === id);
+                return p ? p.name : id;
+            });
+
+            const payload = {
+                matchDate: new Date().toISOString().split('T')[0], // Fallback if matchDetails not in scope
+                teamA: groups.find(g => g._id === teamA)?.name || 'Team A',
+                teamB: groups.find(g => g._id === teamB)?.name || 'Team B',
+                predictedWinner: predictionWinner,
+                starPlayers: starPlayerNames
+            };
+
+            await axios.post(`${baseUrl}/api/user-predictions/save`, payload, config);
+            alert("Prediction Saved Successfully!");
+            setSaveDialogOpen(false);
+        } catch (err) {
+            console.error(err);
+            alert(err.response?.data?.msg || "Failed to save prediction.");
+        } finally {
+            setSavingPrediction(false);
+        }
+    };
 
     // View State - Controls which view is shown (home, players, prediction)
     const [currentView, setCurrentView] = useState('home');
@@ -2811,6 +2904,33 @@ const UserDashboard = ({ hideHeader = false }) => {
                         {/* Logout Button */}
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                             <Button
+                                variant="outlined"
+                                onClick={() => navigate('/my-predictions')}
+                                sx={{
+                                    borderRadius: '20px',
+                                    textTransform: 'none',
+                                    fontWeight: 'bold',
+                                    borderColor: 'rgba(255,255,255,0.7)',
+                                    color: 'white',
+                                    '&:hover': {
+                                        borderColor: 'white',
+                                        bgcolor: 'rgba(255,255,255,0.1)'
+                                    }
+                                }}
+                            >
+                                My Predictions
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={handleOpenSaveDialog}
+                                disabled={selectedPlayerIds.length === 0}
+                                startIcon={<EmojiEventsIcon />}
+                                sx={{ mr: 1, borderRadius: '20px', textTransform: 'none', fontWeight: 'bold' }}
+                            >
+                                Save Prediction ({selectedPlayers.length})
+                            </Button>
+                            <Button
                                 variant="contained"
                                 startIcon={<ExitToAppIcon />}
                                 onClick={logout}
@@ -3096,12 +3216,82 @@ const UserDashboard = ({ hideHeader = false }) => {
                             groups={groups}
                             token={token}
                             hideHeader={hideHeader}
+                            teamA={teamA}
+                            setTeamA={setTeamA}
+                            teamB={teamB}
+                            setTeamB={setTeamB}
+                            selectedPlayers={selectedPlayerIds}
+                            setSelectedPlayers={setSelectedPlayerIds}
+                            onSave={handleOpenSaveDialog}
                         />
                     </ErrorBoundary>
                 )}
 
 
             </Container>
+            {/* Save Prediction Dialog */}
+            <Dialog open={saveDialogOpen} onClose={() => setSaveDialogOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: '16px' } }}>
+                <DialogTitle sx={{ textAlign: 'center', fontWeight: 'bold', color: '#E65100', bgcolor: '#FFF3E0' }}>
+                    🏆 Who will win?
+                </DialogTitle>
+                <DialogContent sx={{ p: 4, textAlign: 'center' }}>
+                    <Typography variant="body1" sx={{ mb: 3, fontWeight: 'medium' }}>
+                        You have selected <span style={{ color: '#E65100', fontWeight: 'bold' }}>{selectedPlayerIds.length}</span> Star Players.
+                        <br />
+                        Now select the winning team to complete your prediction.
+                    </Typography>
+
+                    <Grid container spacing={2} justifyContent="center">
+                        <Grid item xs={6}>
+                            <Card
+                                sx={{
+                                    cursor: 'pointer',
+                                    border: predictionWinner === (groups.find(g => g._id === teamA)?.name || 'Team A') ? '3px solid #FF6F00' : '1px solid #ddd',
+                                    bgcolor: predictionWinner === (groups.find(g => g._id === teamA)?.name || 'Team A') ? '#FFF3E0' : 'white',
+                                    transition: 'all 0.2s',
+                                    transform: predictionWinner === (groups.find(g => g._id === teamA)?.name || 'Team A') ? 'scale(1.05)' : 'scale(1)',
+                                }}
+                                onClick={() => setPredictionWinner(groups.find(g => g._id === teamA)?.name || 'Team A')}
+                            >
+                                <CardContent sx={{ textAlign: 'center', p: 2 }}>
+                                    <Avatar sx={{ width: 56, height: 56, margin: '0 auto', mb: 1, bgcolor: '#FF6F00', fontSize: '1.5rem' }}>A</Avatar>
+                                    <Typography variant="h6" fontWeight="bold">{groups.find(g => g._id === teamA)?.name || 'Team A'}</Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Card
+                                sx={{
+                                    cursor: 'pointer',
+                                    border: predictionWinner === (groups.find(g => g._id === teamB)?.name || 'Team B') ? '3px solid #FF6F00' : '1px solid #ddd',
+                                    bgcolor: predictionWinner === (groups.find(g => g._id === teamB)?.name || 'Team B') ? '#FFF3E0' : 'white',
+                                    transition: 'all 0.2s',
+                                    transform: predictionWinner === (groups.find(g => g._id === teamB)?.name || 'Team B') ? 'scale(1.05)' : 'scale(1)',
+                                }}
+                                onClick={() => setPredictionWinner(groups.find(g => g._id === teamB)?.name || 'Team B')}
+                            >
+                                <CardContent sx={{ textAlign: 'center', p: 2 }}>
+                                    <Avatar sx={{ width: 56, height: 56, margin: '0 auto', mb: 1, bgcolor: '#FF6F00', fontSize: '1.5rem' }}>B</Avatar>
+                                    <Typography variant="h6" fontWeight="bold">{groups.find(g => g._id === teamB)?.name || 'Team B'}</Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+                <DialogActions sx={{ p: 3, justifyContent: 'center' }}>
+                    <Button onClick={() => setSaveDialogOpen(false)} sx={{ color: '#666', mr: 2 }}>Cancel</Button>
+                    <Button
+                        onClick={handleSavePrediction}
+                        variant="contained"
+                        color="secondary"
+                        size="large"
+                        disabled={!predictionWinner || savingPrediction}
+                        sx={{ px: 4, borderRadius: '12px' }}
+                    >
+                        {savingPrediction ? <CircularProgress size={24} color="inherit" /> : "Confirm & Save"}
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };

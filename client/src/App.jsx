@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminDashboard from './pages/AdminDashboard';
 import UserDashboard from './pages/UserDashboard';
+import MyPredictions from './pages/MyPredictions';
 import TestChart from './pages/TestChart';
 import { AuthProvider } from './context/AuthContext';
 import LoadingSpinner from './components/LoadingSpinner';
@@ -31,40 +32,50 @@ const PrivateRoute = ({ children, roles }) => {
 };
 
 function App() {
-  return (
-    <AuthProvider>
-        <Router>
-            <div className="App font-sans text-gray-900 bg-green-50 min-h-screen">
-                <Routes>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
+    return (
+        <AuthProvider>
+            <Router>
+                <div className="App font-sans text-gray-900 bg-green-50 min-h-screen">
+                    <Routes>
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
 
-                    {/* Protected Routes */}
-                    <Route
-                        path="/admin-dashboard"
-                        element={
-                            <PrivateRoute roles={['superadmin']}>
-                                <AdminDashboard />
-                            </PrivateRoute>
-                        }
-                    />
-                    <Route
-                        path="/dashboard"
-                        element={
-                            <PrivateRoute roles={['user', 'superadmin']}>
-                                <UserDashboard />
-                            </PrivateRoute>
-                        }
-                    />
+                        {/* Protected Routes */}
+                        <Route
+                            path="/admin-dashboard"
+                            element={
+                                <PrivateRoute roles={['superadmin']}>
+                                    <AdminDashboard />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="/dashboard"
+                            element={
+                                <PrivateRoute roles={['user', 'superadmin']}>
+                                    <UserDashboard />
+                                </PrivateRoute>
+                            }
+                        />
 
-                    {/* Default Redirect */}
-                    <Route path="/" element={<Navigate to="/login" />} />
-                    <Route path="/test-chart" element={<TestChart />} />
-                </Routes>
-            </div>
-        </Router>
-    </AuthProvider>
-  );
+                        {/* Save Prediction Route */}
+                        <Route
+                            path="/my-predictions"
+                            element={
+                                <PrivateRoute roles={['user', 'superadmin']}>
+                                    <MyPredictions />
+                                </PrivateRoute>
+                            }
+                        />
+
+                        {/* Default Redirect */}
+                        <Route path="/" element={<Navigate to="/login" />} />
+                        <Route path="/test-chart" element={<TestChart />} />
+                    </Routes>
+                </div>
+            </Router>
+        </AuthProvider>
+    );
 }
 
 export default App;

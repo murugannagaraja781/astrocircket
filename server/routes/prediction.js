@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { evaluatePrediction } = require('../utils/ruleEngine');
+const { getLagnaTimeline } = require('../utils/astroCalculator');
 const Player = require('../models/Player');
 
 /**
@@ -46,6 +47,9 @@ router.post('/evaluate', async (req, res) => {
             ? parseFloat(location.timezone)
             : 5.5; // Default IST only if missing
 
+        // Calculate Lagna Timeline (Dynamic Lagna)
+        const lagnaTimeline = getLagnaTimeline(year, month, day, hour, minute, lat, lng, tz, 4); // 4 hours duration
+
         const matchParams = {
             year,
             month,
@@ -54,10 +58,11 @@ router.post('/evaluate', async (req, res) => {
             minute,
             latitude: lat,
             longitude: lng,
-            timezone: tz
+            timezone: tz,
+            matchLagnas: lagnaTimeline
         };
 
-        console.log('Using Strict Match Params:', JSON.stringify(matchParams));
+        console.log('Using Strict Match Params with Timeline:', JSON.stringify(matchParams));
 
         // 3. Prepare Chart Data
         const chartRoot = player.birthChart.data || player.birthChart;
@@ -73,6 +78,9 @@ router.post('/evaluate', async (req, res) => {
 
         // 4. Evaluate
         const result = await evaluatePrediction(playerChart, matchParams);
+
+        // Append Timeline to response for UI
+        result.lagnaTimeline = lagnaTimeline;
 
         res.json({
             player: player.name,

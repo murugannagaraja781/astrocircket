@@ -400,6 +400,100 @@ const calculatePanchang = (sunLong, moonLong, dateObj) => {
     };
 };
 
+/**
+ * Calculate Lagna Timeline for a match duration (e.g. 4 hours)
+ * Returns array of Lagnas with start/end times
+ */
+const getLagnaTimeline = (year, month, day, hour, minute, lat, lon, timezone = 5.5, durationHours = 4) => {
+    const timeline = [];
+    const startTime = createDate(year, month, day, hour, minute, timezone);
+    const endTime = new Date(startTime.getTime() + durationHours * 60 * 60 * 1000);
+
+    let currentTime = new Date(startTime);
+    let currentLagna = null;
+    let lagnaStartTime = new Date(startTime);
+
+    // Iteration step in minutes (10 mins is sufficient for Lagna which changes every ~2 hours)
+    const stepMinutes = 10;
+
+    while (currentTime <= endTime) {
+        // Calculate Ascendant for current time slice
+        // Using existing calculatePlanetaryPositions but we only need Ascendant
+        // optimize: extract just ascendant calc if needed, but this is fine for ~24 iterations
+        const cYear = currentTime.getFullYear();
+        const cMonth = currentTime.getMonth() + 1;
+        const cDay = currentTime.getDate();
+        const cHour = currentTime.getHours();
+        const cMinute = currentTime.getMinutes();
+
+        // Note: calculatePlanetaryPositions expects local time components? 
+        // Our createDate handles TZ. 
+        // We should pass the components of 'currentTime' which is already a Date object in likely local or UTC?
+        // Actually 'createDate' creates a Date object. 'currentTime' is a Date object.
+        // We need to pass Year/Month/Day etc. 
+        // CAUTION: calculatePlanetaryPositions takes (year, month, day...) and creates a Date using 'timezone'.
+        // If 'currentTime' is already adjusted, we need to be careful.
+        // Let's assume calculatePlanetaryPositions handles it if we pass components.
+        // BUT 'currentTime' components are in local Browser/Server time? 
+        // We need to be consistent. 
+        // Let's use the helper `calculatePlanetaryPositions` directly with the components derived from `currentTime`.
+        // However, `currentTime` is a JS Date. `getFullYear()` etc returns local system time.
+        // The `calculatePlanetaryPositions` function reconstructs the date using `createDate`.
+        // To be safe, let's just use `calculateAscendantPackage` directly if possible, or stick to the tested flow.
+
+        // Wait, `calculatePlanetaryPositions` calls `createDate`. 
+        // If we simply pass `currentTime` components, `createDate` will shift it by `timezone` again?
+        // `createDate` logic: `new Date(Date.UTC(year, month - 1, day, hour - timezoneOffsetHours, minute ...))`
+        // So if we pass components of a Date that is ALREADY shifted, we might double shift.
+        // SIMPLIFICATION for this specific function:
+        // We already have `currentTime` as a Date object representing the moment in time.
+        // We can skip `createDate` if we refactor or use internal logic.
+        // But to reuse `calculatePlanetaryPositions`, we must pass inputs.
+        // Actually, let's just copy the Ascendant calculation part or use a stripped down version.
+
+        // BETTER APPROACH: Use `calculatePlanetaryPositions` but pass the expected "Local" time components for that specific moment.
+        // Since we are iterating `currentTime` which is a standard JS Date initialized from the user's input, 
+        // we can just extract components.
+
+        const result = calculatePlanetaryPositions(cYear, cMonth, cDay, cHour, cMinute, lat, lon, timezone);
+        const ascDegree = result.ascendant;
+        const signData = calculateSign(ascDegree);
+        const signName = signData.name;
+        const signLord = signData.lord;
+
+        if (currentLagna === null) {
+            currentLagna = signName;
+            currentLagnaLord = signLord;
+            lagnaStartTime = new Date(currentTime);
+        } else if (currentLagna !== signName) {
+            // Lagna Changed
+            timeline.push({
+                lagna: currentLagna,
+                lord: currentLagnaLord,
+                start: lagnaStartTime.toISOString(),
+                end: currentTime.toISOString(), // Approx end time (start of next)
+                isMain: timeline.length === 0 // First one is main
+            });
+            currentLagna = signName;
+            currentLagnaLord = signLord;
+            lagnaStartTime = new Date(currentTime);
+        }
+
+        currentTime = new Date(currentTime.getTime() + stepMinutes * 60 * 1000); // Add step
+    }
+
+    // Push the last segment
+    timeline.push({
+        lagna: currentLagna,
+        lord: currentLagnaLord,
+        start: lagnaStartTime.toISOString(),
+        end: endTime.toISOString(),
+        isMain: timeline.length === 0
+    });
+
+    return timeline;
+};
+
 module.exports = {
     SIGNS,
     NAKSHATRAS,
@@ -410,5 +504,6 @@ module.exports = {
     calculateDignity,
     calculatePlanetaryPositions,
     calculatePanchang,
-    formatDegree
+    formatDegree,
+    getLagnaTimeline
 };

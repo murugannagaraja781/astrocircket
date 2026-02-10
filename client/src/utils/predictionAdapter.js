@@ -103,7 +103,8 @@ const normalizeChart = (chart) => {
         bowlingLagnaSign: toTitleCase(chart.bowlingLagnaSign) || normalizedAscSign,
         bowlingLagnaLord: toTitleCase(chart.bowlingLagnaLord) || toTitleCase(ascLord),
         moonNakshatraLord: nakshatraLord, // for transit.moonNakshatraLord usage
-        role: chart.role // Pass through Role
+        role: chart.role, // Pass through Role
+        matchLagnas: chart.lagnaTimeline || [] // Pass Dynamic Lagna Timeline
     };
 };
 
@@ -165,6 +166,7 @@ export const runPrediction = (playerChart, matchChart, role = "BAT") => {
         color: finalResult.color,
         // Rule 2 flag for UI to show special split indicator
         isRule2Split: engineOutput.status === 'SURE FLOP' || (isBowling && engineOutput.score <= -5),
-        isSpecial: engineOutput.isSpecial
+        isSpecial: engineOutput.isSpecial,
+        matchedLagnas: engineOutput.matchedLagnas
     };
 };

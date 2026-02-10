@@ -351,7 +351,9 @@ import RasiChart from '../components/RasiChart';
 import PlanetaryTable from '../components/PlanetaryTable';
 import AuthContext from '../context/AuthContext';
 import UserDashboard from './UserDashboard';
+import MyPredictions from './MyPredictions';
 import NotesOverlay from '../components/NotesOverlay';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 
 
 // Rules View Component (Tamil)
@@ -3238,6 +3240,7 @@ const AdminDashboard = () => {
         { id: 'clientDashboard', label: 'Client Dashboard', icon: <DashboardIcon /> },
         { id: 'rules', label: 'Rules', icon: <GavelIcon /> },
         { id: 'kpAstrology', label: 'KP Astrology', icon: <TimelineIcon /> },
+        { id: 'myPredictions', label: 'My Predictions', icon: <EmojiEventsIcon /> },
     ];
 
     const drawer = (
@@ -3341,6 +3344,7 @@ const AdminDashboard = () => {
             case 'clientDashboard': return <UserDashboard hideHeader={true} />;
             case 'rules': return <RulesView />;
             case 'kpAstrology': return <KPView />;
+            case 'myPredictions': return <MyPredictions />;
             default: return <DashboardHome onNavigate={setCurrentView} />;
         }
     };

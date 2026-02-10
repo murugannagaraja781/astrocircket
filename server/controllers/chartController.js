@@ -1,4 +1,4 @@
-const { calculateSign, calculateNakshatra, calculateDignity, formatDegree, calculatePlanetaryPositions, NAKSHATRAS } = require('../utils/astroCalculator');
+const { calculateSign, calculateNakshatra, calculateDignity, formatDegree, calculatePlanetaryPositions, NAKSHATRAS, getLagnaTimeline } = require('../utils/astroCalculator');
 const { generateKPTimeline } = require('../utils/kp_calculations');
 
 // Panchangam calculation helpers
@@ -139,6 +139,13 @@ exports.getBirthChart = async (req, res) => {
         const pad = (n) => n.toString().padStart(2, '0');
         const userProvidedTimestamp = `${year}-${pad(month)}-${pad(day)}T${pad(hour)}:${pad(minute)}:00.000Z`;
 
+        // Calculate Lagna Timeline for Match Duration (e.g., 4 hours)
+        const lagnaTimeline = getLagnaTimeline(
+            parseInt(year), parseInt(month), parseInt(day),
+            parseInt(hour), parseInt(minute),
+            parseFloat(latitude), parseFloat(longitude), parseFloat(timezone)
+        );
+
         // Build chart response
         const chartData = {
             timestamp: userProvidedTimestamp,
@@ -148,6 +155,7 @@ exports.getBirthChart = async (req, res) => {
                 ...calculateSign(ascendant),
                 nakshatra: calculateNakshatra(ascendant)
             },
+            lagnaTimeline, // Add Timeline
             battingLagnaSign: battingLagnaData?.sign,
             battingLagnaLord: battingLagnaData?.lord,
             bowlingLagnaSign: bowlingLagnaData?.sign,

@@ -253,6 +253,24 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
     const [expanded, setExpanded] = useState(false); // Default collapsed
     const [chartExpanded, setChartExpanded] = useState(true); // Default open when result available
 
+    const formatLagnaTime = (isoString) => {
+        if (!isoString) return '-';
+        try {
+            // matchDetails.timezone is offset in hours (e.g., 5.5)
+            // Parse the UTC ISO string
+            const date = new Date(isoString);
+            const utcTime = date.getTime();
+            // Add the offset to get the local time represented as a UTC date
+            // Note: This creates a Date object where getUTCHours() returns the local hours
+            const localDate = new Date(utcTime + (parseFloat(matchDetails.timezone || 0) * 3600000));
+            // Extract HH:MM from the ISO string of the shifted date
+            return localDate.toISOString().split('T')[1].slice(0, 5);
+        } catch (e) {
+            console.error("Time format error", e);
+            return isoString.split('T')[1]?.slice(0, 5) || isoString;
+        }
+    };
+
     return (
         <Paper elevation={0} sx={{ p: 0, mb: { xs: 1, sm: 3 }, overflow: 'hidden', borderRadius: { xs: '10px', sm: '16px' }, border: '1px solid rgba(0,0,0,0.08)' }}>
 
@@ -279,9 +297,9 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                     </Typography>
                 </Box>
 
-                <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center', flexWrap: 'wrap' }}>
-                    {/* Date - Prominent */}
-                    <Box sx={{ width: '160px', flexShrink: 0 }}>
+                <Grid container spacing={2} alignItems="flex-start">
+                    {/* Date */}
+                    <Grid item xs={6} sm={3} md={2}>
                         <TextField
                             label="Match Date"
                             type="date"
@@ -293,18 +311,17 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                             sx={{
                                 '& .MuiInputBase-root': {
                                     borderRadius: '12px',
-                                    fontSize: '1rem',
                                     fontWeight: 'bold',
                                     bgcolor: '#fff',
-                                    border: '2px solid #FFCC80'
+                                    border: '1px solid #FFCC80'
                                 },
                                 '& .MuiInputLabel-root': { fontWeight: 'bold', color: '#E65100' }
                             }}
                         />
-                    </Box>
+                    </Grid>
 
-                    {/* Time - Prominent */}
-                    <Box sx={{ width: '120px', flexShrink: 0 }}>
+                    {/* Time */}
+                    <Grid item xs={6} sm={3} md={2}>
                         <TextField
                             label="Match Time"
                             type="time"
@@ -316,29 +333,6 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                             sx={{
                                 '& .MuiInputBase-root': {
                                     borderRadius: '12px',
-                                    fontSize: '1rem',
-                                    fontWeight: 'bold',
-                                    bgcolor: '#fff',
-                                    border: '2px solid #FFCC80'
-                                },
-                                '& .MuiInputLabel-root': { fontWeight: 'bold', color: '#E65100' }
-                            }}
-                        />
-                    </Box>
-
-                    {/* Batting Time (Optional) */}
-                    <Box sx={{ width: '120px', flexShrink: 0 }}>
-                        <TextField
-                            label="Batting Time"
-                            type="time"
-                            size="small"
-                            fullWidth
-                            value={matchDetails.battingTime}
-                            onChange={(e) => handleChange('battingTime', e.target.value)}
-                            InputLabelProps={{ shrink: true }}
-                            sx={{
-                                '& .MuiInputBase-root': {
-                                    borderRadius: '12px',
                                     fontWeight: 'bold',
                                     bgcolor: '#fff',
                                     border: '1px solid #FFCC80'
@@ -346,195 +340,109 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                 '& .MuiInputLabel-root': { fontWeight: 'bold', color: '#E65100' }
                             }}
                         />
-                    </Box>
+                    </Grid>
 
-                    {/* Bowling Time (Optional) */}
-                    <Box sx={{ width: '120px', flexShrink: 0 }}>
-                        <TextField
-                            label="Bowling Time"
-                            type="time"
-                            size="small"
-                            fullWidth
-                            value={matchDetails.bowlingTime}
-                            onChange={(e) => handleChange('bowlingTime', e.target.value)}
-                            InputLabelProps={{ shrink: true }}
-                            sx={{
-                                '& .MuiInputBase-root': {
-                                    borderRadius: '12px',
-                                    fontWeight: 'bold',
-                                    bgcolor: '#fff',
-                                    border: '1px solid #FFCC80'
-                                },
-                                '& .MuiInputLabel-root': { fontWeight: 'bold', color: '#E65100' }
-                            }}
-                        />
-                    </Box>
-
-                    {/* Single Line High Performance Location Search */}
-                    <Box sx={{ width: '100%', mt: 1, p: 2, bgcolor: '#fff', borderRadius: '12px', border: '1px solid #eee' }}>
-                        <Typography variant="caption" sx={{ fontWeight: 'bold', color: '#666', mb: 1, display: 'block' }}>📍 Select Venue Location</Typography>
-
-                        <Autocomplete
-                            options={locationOptions}
-                            loading={locationLoading}
-                            getOptionLabel={(option) => `${option.name}, ${option.stateCode}, ${option.countryCode}`}
-                            onInputChange={(event, newInputValue) => {
-                                if (!newInputValue || newInputValue.length < 3) return;
-                                setLocationLoading(true);
-                                // Simple debounce
-                                setTimeout(() => {
-                                    const q = newInputValue.toLowerCase();
-                                    const all = City.getAllCities();
-                                    const matches = [];
-                                    for (let i = 0; i < all.length; i++) {
-                                        if (all[i].name.toLowerCase().includes(q)) {
-                                            matches.push(all[i]);
-                                            if (matches.length >= 50) break;
+                    {/* Location Search & Details */}
+                    <Grid item xs={12} sm={6} md={8}>
+                        <Box sx={{ p: 1.5, bgcolor: '#fff', borderRadius: '12px', border: '1px solid #eee' }}>
+                            <Autocomplete
+                                options={locationOptions}
+                                loading={locationLoading}
+                                getOptionLabel={(option) => `${option.name}, ${option.stateCode}, ${option.countryCode}`}
+                                onInputChange={(event, newInputValue) => {
+                                    if (!newInputValue || newInputValue.length < 3) return;
+                                    setLocationLoading(true);
+                                    setTimeout(() => {
+                                        const q = newInputValue.toLowerCase();
+                                        const all = City.getAllCities();
+                                        const matches = [];
+                                        for (let i = 0; i < all.length; i++) {
+                                            if (all[i].name.toLowerCase().includes(q)) {
+                                                matches.push(all[i]);
+                                                if (matches.length >= 50) break;
+                                            }
                                         }
-                                    }
-                                    setLocationOptions(matches);
-                                    setLocationLoading(false);
-                                }, 300);
-                            }}
-                            onChange={(event, val) => {
-                                if (val) {
-                                    const country = Country.getCountryByCode(val.countryCode);
-                                    const state = State.getStateByCodeAndCountry(val.stateCode, val.countryCode);
-                                    const locationName = `${val.name}, ${state?.name || val.stateCode}, ${country?.name || val.countryCode}`;
-
-                                    const lat = parseFloat(val.latitude);
-                                    const long = parseFloat(val.longitude);
-
-                                    // Calculate Timezone
-                                    let tz = 5.5;
-                                    try {
-                                        const timezones = ct.getTimezonesForCountry(val.countryCode);
-                                        if (timezones && timezones.length > 0) {
-                                            tz = timezones[0].utcOffset / 60;
-                                        } else {
+                                        setLocationOptions(matches);
+                                        setLocationLoading(false);
+                                    }, 300);
+                                }}
+                                onChange={(event, val) => {
+                                    if (val) {
+                                        const country = Country.getCountryByCode(val.countryCode);
+                                        const state = State.getStateByCodeAndCountry(val.stateCode, val.countryCode);
+                                        const locationName = `${val.name}, ${state?.name || val.stateCode}, ${country?.name || val.countryCode}`;
+                                        const lat = parseFloat(val.latitude);
+                                        const long = parseFloat(val.longitude);
+                                        let tz = 5.5;
+                                        try {
+                                            const timezones = ct.getTimezonesForCountry(val.countryCode);
+                                            if (timezones && timezones.length > 0) {
+                                                tz = timezones[0].utcOffset / 60;
+                                            } else {
+                                                tz = calculateTimezone(long);
+                                            }
+                                        } catch (e) {
                                             tz = calculateTimezone(long);
                                         }
-                                    } catch (e) {
-                                        tz = calculateTimezone(long);
+                                        setMatchDetails(prev => ({ ...prev, location: locationName, lat, long, timezone: tz }));
                                     }
+                                }}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="� Search Venue (City)"
+                                        size="small"
+                                        fullWidth
+                                        InputProps={{
+                                            ...params.InputProps,
+                                            endAdornment: (
+                                                <React.Fragment>
+                                                    {locationLoading ? <CircularProgress color="inherit" size={20} /> : null}
+                                                    {params.InputProps.endAdornment}
+                                                </React.Fragment>
+                                            ),
+                                        }}
+                                    />
+                                )}
+                                renderOption={(props, option) => {
+                                    const country = Country.getCountryByCode(option.countryCode);
+                                    return (
+                                        <li {...props} key={`${option.name}-${option.latitude}`}>
+                                            <Box>
+                                                <Typography variant="body2" fontWeight="bold">{option.name}</Typography>
+                                                <Typography variant="caption" color="textSecondary">{option.stateCode}, {country?.name}</Typography>
+                                            </Box>
+                                        </li>
+                                    )
+                                }}
+                            />
 
-                                    setMatchDetails(prev => ({
-                                        ...prev,
-                                        location: locationName,
-                                        lat: lat,
-                                        long: long,
-                                        timezone: tz
-                                    }));
-                                }
-                            }}
-                            renderInput={(params) => (
+                            {/* Hidden/Compact Details */}
+                            <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+                                <TextField label="Lat" value={matchDetails.lat} size="small" sx={{ width: 80 }} disabled InputProps={{ style: { fontSize: '0.7rem' } }} />
+                                <TextField label="Long" value={matchDetails.long} size="small" sx={{ width: 80 }} disabled InputProps={{ style: { fontSize: '0.7rem' } }} />
+                                <TextField label="TZ" value={matchDetails.timezone} size="small" sx={{ width: 50 }} disabled InputProps={{ style: { fontSize: '0.7rem' } }} />
                                 <TextField
-                                    {...params}
-                                    label="🔍 Search City (Type 3+ letters)"
+                                    select
+                                    label="Ayanamsa"
                                     size="small"
-                                    fullWidth
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        endAdornment: (
-                                            <React.Fragment>
-                                                {locationLoading ? <CircularProgress color="inherit" size={20} /> : null}
-                                                {params.InputProps.endAdornment}
-                                            </React.Fragment>
-                                        ),
+                                    value={matchDetails.ayanamsa || 'Lahiri'}
+                                    onChange={(e) => {
+                                        handleChange('ayanamsa', e.target.value);
+                                        localStorage.setItem('preferredAyanamsa', e.target.value);
                                     }}
-                                />
-                            )}
-                            renderOption={(props, option) => {
-                                const country = Country.getCountryByCode(option.countryCode);
-                                return (
-                                    <li {...props} key={`${option.name}-${option.latitude}`}>
-                                        <Box>
-                                            <Typography variant="body2" fontWeight="bold">{option.name}</Typography>
-                                            <Typography variant="caption" color="textSecondary">
-                                                {option.stateCode}, {country?.name}
-                                            </Typography>
-                                        </Box>
-                                    </li>
-                                )
-                            }}
-                        />
-
-                        <TextField
-                            label="Selected Location (Preview)"
-                            value={matchDetails.location}
-                            size="small"
-                            fullWidth
-                            sx={{ mt: 2, bgcolor: 'rgba(255, 193, 7, 0.05)' }}
-                            InputProps={{ readOnly: true }}
-                        />
-                    </Box>
-
-                    {/* Lat/Long/TZ/Ayanamsa - Auto Size Grid */}
-                    <Grid container spacing={2} sx={{ mt: 1 }}>
-                        <Grid item xs={6} sm={3}>
-                            <TextField
-                                label="Lat"
-                                type="number"
-                                size="small"
-                                fullWidth
-                                value={matchDetails.lat}
-                                onChange={(e) => handleChange('lat', parseFloat(e.target.value))}
-                                InputLabelProps={{ shrink: true }}
-                                inputProps={{ step: 0.01 }}
-                                sx={{ '& .MuiInputBase-root': { borderRadius: '10px' } }}
-                            />
-                        </Grid>
-                        <Grid item xs={6} sm={3}>
-                            <TextField
-                                label="Long"
-                                type="number"
-                                size="small"
-                                fullWidth
-                                value={matchDetails.long}
-                                onChange={(e) => handleChange('long', parseFloat(e.target.value))}
-                                InputLabelProps={{ shrink: true }}
-                                inputProps={{ step: 0.01 }}
-                                sx={{ '& .MuiInputBase-root': { borderRadius: '10px' } }}
-                            />
-                        </Grid>
-                        <Grid item xs={6} sm={3}>
-                            <TextField
-                                label="TZ"
-                                type="number"
-                                size="small"
-                                fullWidth
-                                value={matchDetails.timezone}
-                                onChange={(e) => handleChange('timezone', parseFloat(e.target.value))}
-                                InputLabelProps={{ shrink: true }}
-                                inputProps={{ step: 0.5 }}
-                                sx={{ '& .MuiInputBase-root': { borderRadius: '10px' } }}
-                            />
-                        </Grid>
-                        <Grid item xs={6} sm={3}>
-                            <TextField
-                                select
-                                label="Ayanamsa"
-                                size="small"
-                                fullWidth
-                                value={matchDetails.ayanamsa || 'Lahiri'}
-                                onChange={(e) => {
-                                    handleChange('ayanamsa', e.target.value);
-                                    localStorage.setItem('preferredAyanamsa', e.target.value);
-                                }}
-                                SelectProps={{
-                                    native: true,
-                                }}
-                                sx={{
-                                    '& .MuiInputBase-root': { borderRadius: '10px', bgcolor: '#fff' }
-                                }}
-                            >
-                                <option value="Lahiri">Lahiri</option>
-                                <option value="KP">KP</option>
-                                <option value="KP Straight">KP Straight</option>
-                            </TextField>
-                        </Grid>
+                                    SelectProps={{ native: true }}
+                                    sx={{ width: 100 }}
+                                    InputProps={{ style: { fontSize: '0.75rem' } }}
+                                >
+                                    <option value="Lahiri">Lahiri</option>
+                                    <option value="KP">KP</option>
+                                    <option value="KP Straight">KP Straight</option>
+                                </TextField>
+                            </Box>
+                        </Box>
                     </Grid>
-                </Box>
+                </Grid>
 
                 {/* BUTTONS - Compact on Mobile */}
                 <Box sx={{ display: 'flex', gap: { xs: 1, sm: 2 }, mt: { xs: 1.5, sm: 3 }, flexWrap: 'wrap' }}>
@@ -607,68 +515,101 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                         </Box>
 
                         <Collapse in={chartExpanded}>
-                            <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '10px', border: '1px solid rgba(255, 111, 0, 0.2)' }}>
-                                <Table size="small">
-                                    <TableBody>
-                                        {/* Ascendant Row */}
-                                        <TableRow sx={{ bgcolor: 'rgba(255, 193, 7, 0.08)' }}>
-                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', width: '35%', py: 0.8, fontSize: '0.75rem' }}>
-                                                லக்னம் (Asc)
-                                            </TableCell>
-                                            <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                                {matchChartResult.ascendant?.tamil || matchChartResult.ascendant?.english || '-'} <br />
-                                                <span style={{ fontSize: '0.7rem', color: '#666' }}>
-                                                    ({matchChartResult.ascendant?.nakshatra?.tamil || matchChartResult.ascendant?.nakshatra?.name || '-'})
-                                                </span>
-                                            </TableCell>
-                                            <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
-                                                {matchChartResult.ascendant?.lordTamil || matchChartResult.ascendant?.lord || '-'} <br />
-                                                <span style={{ fontSize: '0.7rem', color: '#888' }}>
-                                                    (Star Lord: {getNakshatraLordHelper(matchChartResult.ascendant?.nakshatra?.name) || '-'})
-                                                </span>
-                                            </TableCell>
-                                        </TableRow>
+                            <Grid container spacing={2}>
+                                {/* Left Column: Match Details */}
+                                <Grid item xs={12} md={6}>
+                                    <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '10px', border: '1px solid rgba(255, 111, 0, 0.2)', height: '100%' }}>
+                                        <Table size="small">
+                                            <TableBody>
+                                                {/* Ascendant Row */}
+                                                <TableRow sx={{ bgcolor: 'rgba(255, 193, 7, 0.08)' }}>
+                                                    <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', width: '35%', py: 0.8, fontSize: '0.75rem' }}>
+                                                        லக்னம் (Asc)
+                                                    </TableCell>
+                                                    <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
+                                                        {matchChartResult.ascendant?.tamil || matchChartResult.ascendant?.english || '-'} <br />
+                                                        <span style={{ fontSize: '0.7rem', color: '#666' }}>
+                                                            ({matchChartResult.ascendant?.nakshatra?.tamil || matchChartResult.ascendant?.nakshatra?.name || '-'})
+                                                        </span>
+                                                    </TableCell>
+                                                    <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
+                                                        {matchChartResult.ascendant?.lordTamil || matchChartResult.ascendant?.lord || '-'} <br />
+                                                        <span style={{ fontSize: '0.7rem', color: '#888' }}>
+                                                            (Star Lord: {getNakshatraLordHelper(matchChartResult.ascendant?.nakshatra?.name) || '-'})
+                                                        </span>
+                                                    </TableCell>
+                                                </TableRow>
 
-                                        {/* Moon Sign Row */}
-                                        <TableRow>
-                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
-                                                சந்திரன் (Moon)
-                                            </TableCell>
-                                            <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                                {matchChartResult.moonSign?.tamil || matchChartResult.moonSign?.english || '-'}
-                                            </TableCell>
-                                            <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
-                                                {matchChartResult.moonSign?.lordTamil || matchChartResult.moonSign?.lord || '-'}
-                                            </TableCell>
-                                        </TableRow>
+                                                {/* Moon Sign Row */}
+                                                <TableRow>
+                                                    <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
+                                                        சந்திரன் (Moon)
+                                                    </TableCell>
+                                                    <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
+                                                        {matchChartResult.moonSign?.tamil || matchChartResult.moonSign?.english || '-'}
+                                                    </TableCell>
+                                                    <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
+                                                        {matchChartResult.moonSign?.lordTamil || matchChartResult.moonSign?.lord || '-'}
+                                                    </TableCell>
+                                                </TableRow>
 
-                                        {/* Nakshatra Row */}
-                                        <TableRow sx={{ bgcolor: 'rgba(255, 193, 7, 0.08)' }}>
-                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
-                                                நட்சத்திரம் (Star)
-                                            </TableCell>
-                                            <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                                {matchChartResult.moonNakshatra?.tamil || matchChartResult.moonNakshatra?.name || matchChartResult.nakshatra?.name || '-'}
-                                            </TableCell>
-                                            <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
-                                                {matchChartResult.moonNakshatra?.lordTamil || matchChartResult.moonNakshatra?.lord || getNakshatraLordHelper(matchChartResult.moonNakshatra?.name || matchChartResult.nakshatra?.name) || '-'}
-                                            </TableCell>
-                                        </TableRow>
+                                                {/* Nakshatra Row */}
+                                                <TableRow sx={{ bgcolor: 'rgba(255, 193, 7, 0.08)' }}>
+                                                    <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
+                                                        நட்சத்திரம் (Star)
+                                                    </TableCell>
+                                                    <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
+                                                        {matchChartResult.moonNakshatra?.tamil || matchChartResult.moonNakshatra?.name || matchChartResult.nakshatra?.name || '-'}
+                                                    </TableCell>
+                                                    <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
+                                                        {matchChartResult.moonNakshatra?.lordTamil || matchChartResult.moonNakshatra?.lord || getNakshatraLordHelper(matchChartResult.moonNakshatra?.name || matchChartResult.nakshatra?.name) || '-'}
+                                                    </TableCell>
+                                                </TableRow>
 
-                                        {/* Pada Row */}
-                                        <TableRow>
-                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
-                                                பாதம் (Pada)
-                                            </TableCell>
-                                            <TableCell colSpan={2} sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                                {matchChartResult.moonNakshatra?.pada || matchChartResult.nakshatra?.pada || '-'}
-                                            </TableCell>
-                                        </TableRow>
+                                                {/* Pada Row */}
+                                                <TableRow>
+                                                    <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
+                                                        பாதம் (Pada)
+                                                    </TableCell>
+                                                    <TableCell colSpan={2} sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
+                                                        {matchChartResult.moonNakshatra?.pada || matchChartResult.nakshatra?.pada || '-'}
+                                                    </TableCell>
+                                                </TableRow>
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                </Grid>
 
-
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
+                                {/* Right Column: Lagna Timeline */}
+                                <Grid item xs={12} md={6}>
+                                    {matchChartResult.lagnaTimeline && matchChartResult.lagnaTimeline.length > 0 && (
+                                        <Box sx={{ height: '100%' }}>
+                                            <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '12px', border: '1px solid rgba(255, 111, 0, 0.2)', height: '100%' }}>
+                                                <Table size="small">
+                                                    <TableHead sx={{ bgcolor: 'rgba(255, 193, 7, 0.15)' }}>
+                                                        <TableRow>
+                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>Time</TableCell>
+                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>Lagna</TableCell>
+                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>Lord</TableCell>
+                                                        </TableRow>
+                                                    </TableHead>
+                                                    <TableBody>
+                                                        {matchChartResult.lagnaTimeline.map((slot, index) => (
+                                                            <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                                                <TableCell sx={{ fontSize: '0.75rem' }}>{formatLagnaTime(slot.start)} - {formatLagnaTime(slot.end)}</TableCell>
+                                                                <TableCell sx={{ fontSize: '0.75rem', fontWeight: slot.isMain ? 'bold' : 'normal' }}>
+                                                                    {slot.lagna} {slot.isMain ? '⭐' : ''}
+                                                                </TableCell>
+                                                                <TableCell sx={{ fontSize: '0.75rem' }}>{slot.lord}</TableCell>
+                                                            </TableRow>
+                                                        ))}
+                                                    </TableBody>
+                                                </Table>
+                                            </TableContainer>
+                                        </Box>
+                                    )}
+                                </Grid>
+                            </Grid>
                         </Collapse>
                     </Box>
                 )}
