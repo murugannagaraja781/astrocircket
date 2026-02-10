@@ -768,17 +768,17 @@ const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = fa
                         {/* PLANETARY DETAILS LIST (Dignity Colors) */}
                         <Box sx={{ mt: 3 }}>
                             <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 1, color: '#FF6F00' }}>
-                                கிரக விவரங்கள் (Planetary Details)
+                                கிரக விவரங்கள்
                             </Typography>
                             <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '12px', border: '1px solid rgba(255, 111, 0, 0.2)' }}>
                                 <Table size="small">
                                     <TableHead sx={{ bgcolor: 'rgba(255, 193, 7, 0.15)' }}>
                                         <TableRow>
-                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>Planet</TableCell>
-                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>Rasi</TableCell>
-                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>Star</TableCell>
-                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>Star Lord</TableCell>
-                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>Dignity</TableCell>
+                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>கிரகம்</TableCell>
+                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>ராசி</TableCell>
+                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>நட்சத்திரம்</TableCell>
+                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>நட்சத்திர அதிபதி</TableCell>
+                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>அந்தஸ்து</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>

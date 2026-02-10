@@ -3244,9 +3244,15 @@ const AdminDashboard = () => {
     ];
 
     const drawer = (
-        <Box sx={{ p: 2 }}>
+        <Box sx={{
+            p: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            overflow: 'hidden'
+        }}>
             <Box
-                onClick={logout}
+                onClick={() => { setCurrentView('dashboard'); setMobileOpen(false); }}
                 sx={{
                     display: 'flex',
                     alignItems: 'center',
@@ -3273,51 +3279,75 @@ const AdminDashboard = () => {
                 />
             </Box>
             <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)', mb: 2 }} />
-            <List>
-                {menuItems.map((item) => {
-                    const active = currentView === item.id;
-                    return (
-                        <ListItem key={item.id} disablePadding sx={{ mb: 1 }}>
-                            <ListItemButton
-                                onClick={() => { setCurrentView(item.id); setMobileOpen(false); }}
-                                sx={{
-                                    borderRadius: '15px',
-                                    background: active ? 'linear-gradient(135deg, #0075FF 0%, #2CD9FF 100%)' : 'transparent',
-                                    boxShadow: active ? '0 4px 6px rgba(0,0,0,0.2)' : 'none',
-                                    transition: 'all 0.3s ease',
-                                    px: 2,
-                                    '&:hover': {
-                                        bgcolor: active ? 'rgba(0,117,255,0.8)' : 'rgba(255,255,255,0.05)',
-                                        transform: 'translateX(5px)'
-                                    }
-                                }}
-                            >
-                                <ListItemIcon sx={{
-                                    minWidth: 40,
-                                    color: active ? 'white' : '#2CD9FF', // Cyan Icon for inactive
-                                    bgcolor: active ? 'rgba(255,255,255,0.2)' : 'rgba(26,31,63,0.5)', // Darker box for inactive
-                                    borderRadius: '10px',
-                                    width: 32, height: 32,
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    mr: 1.5
-                                }}>
-                                    {item.icon}
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary={item.label}
-                                    primaryTypographyProps={{
-                                        fontSize: '0.875rem',
-                                        fontWeight: active ? 'bold' : '500',
-                                        color: active ? 'white' : '#A0AEC0'
-                                    }}
-                                />
-                            </ListItemButton>
-                        </ListItem>
-                    );
-                })}
-            </List>
-            <Box sx={{ mt: 'auto' }}>
+
+            {/* Scrollable menu items */}
+            <Box sx={{
+                flexGrow: 1,
+                overflowY: 'auto',
+                pr: 0.5,
+                '&::-webkit-scrollbar': {
+                    width: '6px',
+                },
+                '&::-webkit-scrollbar-track': {
+                    background: 'transparent',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    borderRadius: '10px',
+                },
+                '&::-webkit-scrollbar-thumb:hover': {
+                    background: 'rgba(255, 255, 255, 0.2)',
+                },
+            }}>
                 <List>
+                    {menuItems.map((item) => {
+                        const active = currentView === item.id;
+                        return (
+                            <ListItem key={item.id} disablePadding sx={{ mb: 1 }}>
+                                <ListItemButton
+                                    onClick={() => { setCurrentView(item.id); setMobileOpen(false); }}
+                                    sx={{
+                                        borderRadius: '15px',
+                                        background: active ? 'linear-gradient(135deg, #0075FF 0%, #2CD9FF 100%)' : 'transparent',
+                                        boxShadow: active ? '0 4px 6px rgba(0,0,0,0.2)' : 'none',
+                                        transition: 'all 0.3s ease',
+                                        px: 2,
+                                        '&:hover': {
+                                            bgcolor: active ? 'rgba(0,117,255,0.8)' : 'rgba(255,255,255,0.05)',
+                                            transform: 'translateX(5px)'
+                                        }
+                                    }}
+                                >
+                                    <ListItemIcon sx={{
+                                        minWidth: 40,
+                                        color: active ? 'white' : '#2CD9FF',
+                                        bgcolor: active ? 'rgba(255,255,255,0.2)' : 'rgba(26,31,63,0.5)',
+                                        borderRadius: '10px',
+                                        width: 32, height: 32,
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        mr: 1.5
+                                    }}>
+                                        {item.icon}
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        primary={item.label}
+                                        primaryTypographyProps={{
+                                            fontSize: '0.875rem',
+                                            fontWeight: active ? 'bold' : '500',
+                                            color: active ? 'white' : '#A0AEC0'
+                                        }}
+                                    />
+                                </ListItemButton>
+                            </ListItem>
+                        );
+                    })}
+                </List>
+            </Box>
+
+            <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)', my: 2 }} />
+
+            <Box>
+                <List sx={{ pb: 0 }}>
                     <ListItem disablePadding>
                         <ListItemButton onClick={logout} sx={{ borderRadius: '15px', '&:hover': { bgcolor: 'rgba(255,0,0,0.1)' } }}>
                             <ListItemIcon sx={{

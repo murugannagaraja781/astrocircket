@@ -187,7 +187,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
         };
         if (tamilLordsMap[ascNakLord]) ascNakLordTamil = tamilLordsMap[ascNakLord];
 
-        summary.push({ label: "லக்னம் (Lagna)", sign: `${ascSign} | ${ascNakName}`, lord: `${ascLord} | ${ascNakLordTamil || '-'}` });
+        summary.push({ label: "லக்னம் (Lagna)", sign: `${ascSign} | ${ascNakName}`, lord: `${ascLord} | நட்சத்திர அதிபதி: ${ascNakLordTamil || '-'}` });
 
         // 2. Moon (Rasi)
         const moon = chartData.moonSign || {};
@@ -529,13 +529,13 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                                     <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
                                                         {matchChartResult.ascendant?.tamil || matchChartResult.ascendant?.english || '-'} <br />
                                                         <span style={{ fontSize: '0.7rem', color: '#666' }}>
-                                                            ({matchChartResult.ascendant?.nakshatra?.tamil || matchChartResult.ascendant?.nakshatra?.name || '-'})
+                                                            ({matchChartResult.ascendant?.nakshatra?.tamil || nakshatraTamilMap[matchChartResult.ascendant?.nakshatra?.name] || matchChartResult.ascendant?.nakshatra?.name || '-'})
                                                         </span>
                                                     </TableCell>
                                                     <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
-                                                        {matchChartResult.ascendant?.lordTamil || matchChartResult.ascendant?.lord || '-'} <br />
+                                                        {matchChartResult.ascendant?.lordTamil || planetFullTamilMap[matchChartResult.ascendant?.lord] || matchChartResult.ascendant?.lord || '-'} <br />
                                                         <span style={{ fontSize: '0.7rem', color: '#888' }}>
-                                                            (Star Lord: {getNakshatraLordHelper(matchChartResult.ascendant?.nakshatra?.name) || '-'})
+                                                            (நட்சத்திர அதிபதி: {planetFullTamilMap[getNakshatraLordHelper(matchChartResult.ascendant?.nakshatra?.name)] || getNakshatraLordHelper(matchChartResult.ascendant?.nakshatra?.name) || '-'})
                                                         </span>
                                                     </TableCell>
                                                 </TableRow>
@@ -549,7 +549,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                                         {matchChartResult.moonSign?.tamil || matchChartResult.moonSign?.english || '-'}
                                                     </TableCell>
                                                     <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
-                                                        {matchChartResult.moonSign?.lordTamil || matchChartResult.moonSign?.lord || '-'}
+                                                        {matchChartResult.moonSign?.lordTamil || planetFullTamilMap[matchChartResult.moonSign?.lord] || matchChartResult.moonSign?.lord || '-'}
                                                     </TableCell>
                                                 </TableRow>
 
@@ -559,10 +559,10 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                                         நட்சத்திரம் (Star)
                                                     </TableCell>
                                                     <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                                        {matchChartResult.moonNakshatra?.tamil || matchChartResult.moonNakshatra?.name || matchChartResult.nakshatra?.name || '-'}
+                                                        {matchChartResult.moonNakshatra?.tamil || nakshatraTamilMap[matchChartResult.moonNakshatra?.name || matchChartResult.nakshatra?.name] || matchChartResult.moonNakshatra?.name || matchChartResult.nakshatra?.name || '-'}
                                                     </TableCell>
                                                     <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
-                                                        {matchChartResult.moonNakshatra?.lordTamil || matchChartResult.moonNakshatra?.lord || getNakshatraLordHelper(matchChartResult.moonNakshatra?.name || matchChartResult.nakshatra?.name) || '-'}
+                                                        {matchChartResult.moonNakshatra?.lordTamil || planetFullTamilMap[matchChartResult.moonNakshatra?.lord || getNakshatraLordHelper(matchChartResult.moonNakshatra?.name || matchChartResult.nakshatra?.name)] || matchChartResult.moonNakshatra?.lord || getNakshatraLordHelper(matchChartResult.moonNakshatra?.name || matchChartResult.nakshatra?.name) || '-'}
                                                     </TableCell>
                                                 </TableRow>
 
@@ -588,21 +588,31 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                                 <Table size="small">
                                                     <TableHead sx={{ bgcolor: 'rgba(255, 193, 7, 0.15)' }}>
                                                         <TableRow>
-                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>Time</TableCell>
-                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>Lagna</TableCell>
-                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>Lord</TableCell>
+                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>நேரம்</TableCell>
+                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>லக்னம்</TableCell>
+                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>அதிபதி</TableCell>
                                                         </TableRow>
                                                     </TableHead>
                                                     <TableBody>
-                                                        {matchChartResult.lagnaTimeline.map((slot, index) => (
-                                                            <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                                                <TableCell sx={{ fontSize: '0.75rem' }}>{formatLagnaTime(slot.start)} - {formatLagnaTime(slot.end)}</TableCell>
-                                                                <TableCell sx={{ fontSize: '0.75rem', fontWeight: slot.isMain ? 'bold' : 'normal' }}>
-                                                                    {slot.lagna} {slot.isMain ? '⭐' : ''}
-                                                                </TableCell>
-                                                                <TableCell sx={{ fontSize: '0.75rem' }}>{slot.lord}</TableCell>
-                                                            </TableRow>
-                                                        ))}
+                                                        {matchChartResult.lagnaTimeline.map((slot, index) => {
+                                                            const signMap = {
+                                                                'Aries': 'மேஷம்', 'Taurus': 'ரிஷபம்', 'Gemini': 'மிதுனம்', 'Cancer': 'கடகம்',
+                                                                'Leo': 'சிம்மம்', 'Virgo': 'கன்னி', 'Libra': 'துலாம்', 'Scorpio': 'விருச்சிகம்',
+                                                                'Sagittarius': 'தனுசு', 'Capricorn': 'மகரம்', 'Aquarius': 'கும்பம்', 'Pisces': 'மீனம்'
+                                                            };
+                                                            const lagnaTamil = signMap[slot.lagna] || slot.lagna;
+                                                            const lordTamil = planetFullTamilMap[slot.lord] || slot.lord;
+
+                                                            return (
+                                                                <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                                                    <TableCell sx={{ fontSize: '0.75rem' }}>{formatLagnaTime(slot.start)} - {formatLagnaTime(slot.end)}</TableCell>
+                                                                    <TableCell sx={{ fontSize: '0.75rem', fontWeight: slot.isMain ? 'bold' : 'normal' }}>
+                                                                        {lagnaTamil} {slot.isMain ? '⭐' : ''}
+                                                                    </TableCell>
+                                                                    <TableCell sx={{ fontSize: '0.75rem' }}>{lordTamil}</TableCell>
+                                                                </TableRow>
+                                                            );
+                                                        })}
                                                     </TableBody>
                                                 </Table>
                                             </TableContainer>
