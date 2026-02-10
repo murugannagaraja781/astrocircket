@@ -30,11 +30,9 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
     const [matchChartResult, setMatchChartResult] = useState(null); // Store result for display
 
     // Country-State-City Selection States
-    const [selectedCountry, setSelectedCountry] = useState(null);
-    const [selectedState, setSelectedState] = useState(null);
-    const [selectedCity, setSelectedCity] = useState(null);
-    const [skipState, setSkipState] = useState(false);
-    const [allCitiesOfCountry, setAllCitiesOfCountry] = useState([]);
+    // Single Line Search State
+    const [locationOptions, setLocationOptions] = useState([]);
+    const [locationLoading, setLocationLoading] = useState(false);
 
 
 
@@ -52,6 +50,28 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
 
     const handleChange = (field, value) => {
         setMatchDetails(prev => ({ ...prev, [field]: value }));
+    };
+
+    const handleLocationSearch = (event, newInputValue) => {
+        if (!newInputValue || newInputValue.length < 3) {
+            return;
+        }
+
+        setLocationLoading(true);
+        // Small delay to prevent blocking typing
+        setTimeout(() => {
+            const q = newInputValue.toLowerCase();
+            const all = City.getAllCities();
+            const matches = [];
+            for (let i = 0; i < all.length; i++) {
+                if (all[i].name.toLowerCase().includes(q)) {
+                    matches.push(all[i]);
+                    if (matches.length >= 50) break;
+                }
+            }
+            setLocationOptions(matches);
+            setLocationLoading(false);
+        }, 100);
     };
 
 
@@ -350,151 +370,102 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                         />
                     </Box>
 
-                    {/* Location Selection - Cascading Dropdowns (Full Width Container) */}
-                    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 1.5, mt: 1, p: 2, bgcolor: '#fff', borderRadius: '12px', border: '1px solid #eee' }}>
-                        <Typography variant="caption" sx={{ fontWeight: 'bold', color: '#666' }}>📍 Select Venue Location</Typography>
+                    {/* Single Line High Performance Location Search */}
+                    <Box sx={{ width: '100%', mt: 1, p: 2, bgcolor: '#fff', borderRadius: '12px', border: '1px solid #eee' }}>
+                        <Typography variant="caption" sx={{ fontWeight: 'bold', color: '#666', mb: 1, display: 'block' }}>📍 Select Venue Location</Typography>
 
-                        <Grid container spacing={2}>
-                            <Grid item xs={12} sm={4}>
-                                <Autocomplete
-                                    options={Country.getAllCountries()}
-                                    getOptionLabel={(option) => option.name || ''}
-                                    value={selectedCountry}
-                                    onChange={(e, val) => {
-                                        setSelectedCountry(val);
-                                        setSelectedState(null);
-                                        setSelectedCity(null);
-                                        setMatchDetails(prev => ({ ...prev, lat: '', long: '', location: val ? val.name : '' }));
-                                    }}
-                                    renderInput={(params) => <TextField {...params} label="🌍 Country" size="small" fullWidth inputProps={{ ...params.inputProps, autoComplete: 'new-password' }} />}
-                                    isOptionEqualToValue={(option, value) => option.isoCode === value?.isoCode}
-                                />
-                            </Grid>
-
-                            <Grid item xs={12} sm={4}>
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                    <Autocomplete
-                                        options={selectedCountry ? State.getStatesOfCountry(selectedCountry.isoCode) : []}
-                                        getOptionLabel={(option) => option.name || ''}
-                                        value={selectedState}
-                                        onChange={(e, val) => {
-                                            setSelectedState(val);
-                                            setSelectedCity(null);
-                                            setSkipState(false);
-                                            // Don't update location string on State selection anymore, wait for City
-                                        }}
-                                        renderInput={(params) => <TextField {...params} label="🏛️ State" size="small" fullWidth inputProps={{ ...params.inputProps, autoComplete: 'new-password' }} />}
-                                        disabled={!selectedCountry || skipState}
-                                        isOptionEqualToValue={(option, value) => option.isoCode === value?.isoCode}
-                                        sx={{ flex: 1 }}
-                                    />
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={skipState}
-                                                onChange={(e) => {
-                                                    const checked = e.target.checked;
-                                                    setSkipState(checked);
-                                                    setSelectedState(null);
-                                                    setSelectedCity(null);
-                                                    if (checked && selectedCountry) {
-                                                        const states = State.getStatesOfCountry(selectedCountry.isoCode);
-                                                        const cities = [];
-                                                        states.forEach(state => {
-                                                            const stateCities = City.getCitiesOfState(selectedCountry.isoCode, state.isoCode);
-                                                            stateCities.forEach(city => {
-                                                                cities.push({ ...city, stateName: state.name });
-                                                            });
-                                                        });
-                                                        setAllCitiesOfCountry(cities);
-                                                    }
-                                                }}
-                                                size="small"
-                                                disabled={!selectedCountry}
-                                            />
+                        <Autocomplete
+                            options={locationOptions}
+                            loading={locationLoading}
+                            getOptionLabel={(option) => `${option.name}, ${option.stateCode}, ${option.countryCode}`}
+                            onInputChange={(event, newInputValue) => {
+                                if (!newInputValue || newInputValue.length < 3) return;
+                                setLocationLoading(true);
+                                // Simple debounce
+                                setTimeout(() => {
+                                    const q = newInputValue.toLowerCase();
+                                    const all = City.getAllCities();
+                                    const matches = [];
+                                    for (let i = 0; i < all.length; i++) {
+                                        if (all[i].name.toLowerCase().includes(q)) {
+                                            matches.push(all[i]);
+                                            if (matches.length >= 50) break;
                                         }
-                                        label={<Typography variant="caption" sx={{ whiteSpace: 'nowrap' }}>Skip</Typography>}
-                                        sx={{ mr: 0 }}
-                                    />
-                                </Box>
-                            </Grid>
-
-                            <Grid item xs={12} sm={4}>
-                                <Autocomplete
-                                    options={
-                                        skipState && selectedCountry
-                                            ? allCitiesOfCountry
-                                            : (selectedCountry && selectedState ? City.getCitiesOfState(selectedCountry.isoCode, selectedState.isoCode) : [])
                                     }
-                                    getOptionLabel={(option) => {
-                                        if (skipState && option.stateName) {
-                                            return `${option.name} (${option.stateName})`;
-                                        }
-                                        return option.name || '';
-                                    }}
-                                    value={selectedCity}
-                                    onChange={(e, val) => {
-                                        setSelectedCity(val);
-                                        if (val && selectedCountry) {
-                                            const stateName = skipState ? (val.stateName || '') : (selectedState?.name || '');
-                                            const location = stateName
-                                                ? `${val.name}, ${stateName}, ${selectedCountry.name}`
-                                                : `${val.name}, ${selectedCountry.name}`;
-                                            const lat = parseFloat(val.latitude) || '';
-                                            const long = parseFloat(val.longitude) || '';
+                                    setLocationOptions(matches);
+                                    setLocationLoading(false);
+                                }, 300);
+                            }}
+                            onChange={(event, val) => {
+                                if (val) {
+                                    const country = Country.getCountryByCode(val.countryCode);
+                                    const state = State.getStateByCodeAndCountry(val.stateCode, val.countryCode);
+                                    const locationName = `${val.name}, ${state?.name || val.stateCode}, ${country?.name || val.countryCode}`;
 
-                                            let tz = 5.5;
-                                            try {
-                                                const timezones = ct.getTimezonesForCountry(selectedCountry.isoCode);
-                                                if (timezones && timezones.length > 0) {
-                                                    const primaryTz = timezones[0];
-                                                    tz = primaryTz.utcOffset / 60;
-                                                } else if (lat && long) {
-                                                    tz = calculateTimezone(long);
-                                                }
-                                            } catch (err) {
-                                                if (lat && long) tz = calculateTimezone(long);
-                                            }
+                                    const lat = parseFloat(val.latitude);
+                                    const long = parseFloat(val.longitude);
 
-                                            setMatchDetails(prev => ({
-                                                ...prev,
-                                                location: location,
-                                                lat: lat,
-                                                long: long,
-                                                timezone: tz
-                                            }));
+                                    // Calculate Timezone
+                                    let tz = 5.5;
+                                    try {
+                                        const timezones = ct.getTimezonesForCountry(val.countryCode);
+                                        if (timezones && timezones.length > 0) {
+                                            tz = timezones[0].utcOffset / 60;
+                                        } else {
+                                            tz = calculateTimezone(long);
                                         }
+                                    } catch (e) {
+                                        tz = calculateTimezone(long);
+                                    }
+
+                                    setMatchDetails(prev => ({
+                                        ...prev,
+                                        location: locationName,
+                                        lat: lat,
+                                        long: long,
+                                        timezone: tz
+                                    }));
+                                }
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="🔍 Search City (Type 3+ letters)"
+                                    size="small"
+                                    fullWidth
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        endAdornment: (
+                                            <React.Fragment>
+                                                {locationLoading ? <CircularProgress color="inherit" size={20} /> : null}
+                                                {params.InputProps.endAdornment}
+                                            </React.Fragment>
+                                        ),
                                     }}
-                                    renderInput={(params) => <TextField {...params} label={skipState ? "🔍 City (All)" : "🏙️ City"} size="small" fullWidth inputProps={{ ...params.inputProps, autoComplete: 'new-password' }} />}
-                                    disabled={!selectedCountry || (!skipState && !selectedState)}
-                                    // Optimization for large lists
-                                    filterOptions={(options, { inputValue }) => {
-                                        const filtered = options.filter(option =>
-                                            option.name.toLowerCase().includes(inputValue.toLowerCase())
-                                        );
-                                        return filtered.slice(0, 100);
-                                    }}
-                                    isOptionEqualToValue={(option, value) => option.name === value?.name}
                                 />
-                            </Grid>
-                        </Grid>
+                            )}
+                            renderOption={(props, option) => {
+                                const country = Country.getCountryByCode(option.countryCode);
+                                return (
+                                    <li {...props} key={`${option.name}-${option.latitude}`}>
+                                        <Box>
+                                            <Typography variant="body2" fontWeight="bold">{option.name}</Typography>
+                                            <Typography variant="caption" color="textSecondary">
+                                                {option.stateCode}, {country?.name}
+                                            </Typography>
+                                        </Box>
+                                    </li>
+                                )
+                            }}
+                        />
 
                         <TextField
-                            label="📍 Selected Location"
+                            label="Selected Location (Preview)"
                             value={matchDetails.location}
-                            onChange={(e) => handleChange('location', e.target.value)}
                             size="small"
                             fullWidth
-                            InputProps={{
-                                readOnly: false, // User can still edit manually if needed
-                            }}
-                            sx={{
-                                '& .MuiInputBase-root': {
-                                    borderRadius: '8px',
-                                    fontSize: '0.9rem',
-                                    bgcolor: 'rgba(255, 193, 7, 0.05)',
-                                },
-                            }}
+                            sx={{ mt: 2, bgcolor: 'rgba(255, 193, 7, 0.05)' }}
+                            InputProps={{ readOnly: true }}
                         />
                     </Box>
 

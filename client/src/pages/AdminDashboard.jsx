@@ -654,12 +654,9 @@ const KPView = () => {
         tz: '5.5',
     });
 
-    // Location State
-    const [selectedCountry, setSelectedCountry] = useState(null);
-    const [selectedState, setSelectedState] = useState(null);
-    const [selectedCity, setSelectedCity] = useState(null);
-    const [skipState, setSkipState] = useState(false);
-    const [allCitiesOfCountry, setAllCitiesOfCountry] = useState([]);
+    // Location Search State
+    const [locationOptions, setLocationOptions] = useState([]);
+    const [locationLoading, setLocationLoading] = useState(false);
     // Random ID for autofill prevention
     const [fieldId] = useState(Math.random().toString(36).substring(7));
 
@@ -671,6 +668,24 @@ const KPView = () => {
         if (offset > 14) offset = 14;
         if (offset < -12) offset = -12;
         return offset;
+    };
+
+    const handleLocationSearch = (event, newInputValue) => {
+        if (!newInputValue || newInputValue.length < 3) return;
+        setLocationLoading(true);
+        setTimeout(() => {
+            const q = newInputValue.toLowerCase();
+            const all = City.getAllCities();
+            const matches = [];
+            for (let i = 0; i < all.length; i++) {
+                if (all[i].name.toLowerCase().includes(q)) {
+                    matches.push(all[i]);
+                    if (matches.length >= 50) break;
+                }
+            }
+            setLocationOptions(matches);
+            setLocationLoading(false);
+        }, 300);
     };
 
     const fetchTimeline = async () => {
@@ -802,170 +817,81 @@ const KPView = () => {
                         />
                     </Grid>
                     {/* Location Selection */}
+                    {/* Single Line High Performance Location Search */}
                     <Grid item xs={12}>
-                        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 1.5, p: 2, bgcolor: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                            <Typography variant="caption" sx={{ fontWeight: 'bold', color: '#64748b' }}>📍 Select Venue Location</Typography>
+                        <Box sx={{ width: '100%', mt: 0, p: 2, bgcolor: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                            <Typography variant="caption" sx={{ fontWeight: 'bold', color: '#64748b', mb: 1, display: 'block' }}>📍 Select Venue Location</Typography>
 
-                            <Grid container spacing={2}>
-                                <Grid item xs={12} sm={4}>
-                                    <Autocomplete
-                                        options={Country.getAllCountries()}
-                                        getOptionLabel={(option) => option.name || ''}
-                                        value={selectedCountry}
-                                        onChange={(e, val) => {
-                                            setSelectedCountry(val);
-                                            setSelectedState(null);
-                                            setSelectedCity(null);
-                                            setForm(prev => ({ ...prev, lat: '', lon: '' })); // Reset lat/lon but keep date/time
-                                        }}
-                                        renderInput={(params) =>
-                                            <TextField
-                                                {...params}
-                                                label="🌍 Country"
-                                                size="small"
-                                                fullWidth
-                                                name={`no_autofill_country_${fieldId}`}
-                                                id={`no_autofill_country_${fieldId}`}
-                                                inputProps={{ ...params.inputProps, autoComplete: 'new-password' }}
-                                            />
+                            <Autocomplete
+                                options={locationOptions}
+                                loading={locationLoading}
+                                getOptionLabel={(option) => `${option.name}, ${option.stateCode}, ${option.countryCode}`}
+                                onInputChange={handleLocationSearch}
+                                onChange={(event, val) => {
+                                    if (val) {
+                                        const country = Country.getCountryByCode(val.countryCode);
+                                        const state = State.getStateByCodeAndCountry(val.stateCode, val.countryCode);
+
+                                        const lat = parseFloat(val.latitude);
+                                        const long = parseFloat(val.longitude);
+
+                                        // Calculate Timezone
+                                        let tz = 5.5;
+                                        try {
+                                            const timezones = ct.getTimezonesForCountry(val.countryCode);
+                                            if (timezones && timezones.length > 0) {
+                                                tz = timezones[0].utcOffset / 60;
+                                            } else {
+                                                tz = calculateTimezone(long);
+                                            }
+                                        } catch (e) {
+                                            tz = calculateTimezone(long);
                                         }
-                                        isOptionEqualToValue={(option, value) => option.isoCode === value?.isoCode}
-                                    />
-                                </Grid>
 
-                                <Grid item xs={12} sm={4}>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                        <Autocomplete
-                                            options={selectedCountry ? State.getStatesOfCountry(selectedCountry.isoCode) : []}
-                                            getOptionLabel={(option) => option.name || ''}
-                                            value={selectedState}
-                                            onChange={(e, val) => {
-                                                setSelectedState(val);
-                                                setSelectedCity(null);
-                                                setSkipState(false);
-                                            }}
-                                            renderInput={(params) =>
-                                                <TextField
-                                                    {...params}
-                                                    label="🏛️ State"
-                                                    size="small"
-                                                    fullWidth
-                                                    name={`no_autofill_state_${fieldId}`}
-                                                    id={`no_autofill_state_${fieldId}`}
-                                                    inputProps={{ ...params.inputProps, autoComplete: 'new-password' }}
-                                                />
-                                            }
-                                            disabled={!selectedCountry || skipState}
-                                            isOptionEqualToValue={(option, value) => option.isoCode === value?.isoCode}
-                                            sx={{ flex: 1 }}
-                                        />
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={skipState}
-                                                    onChange={(e) => {
-                                                        const checked = e.target.checked;
-                                                        setSkipState(checked);
-                                                        setSelectedState(null);
-                                                        setSelectedCity(null);
-                                                        if (checked && selectedCountry) {
-                                                            const states = State.getStatesOfCountry(selectedCountry.isoCode);
-                                                            const cities = [];
-                                                            states.forEach(state => {
-                                                                const stateCities = City.getCitiesOfState(selectedCountry.isoCode, state.isoCode);
-                                                                stateCities.forEach(city => {
-                                                                    cities.push({ ...city, stateName: state.name });
-                                                                });
-                                                            });
-                                                            setAllCitiesOfCountry(cities);
-                                                        }
-                                                    }}
-                                                    size="small"
-                                                    disabled={!selectedCountry}
-                                                />
-                                            }
-                                            label={<Typography variant="caption" sx={{ whiteSpace: 'nowrap' }}>Skip</Typography>}
-                                            sx={{ mr: 0 }}
-                                        />
-                                    </Box>
-                                </Grid>
-
-                                <Grid item xs={12} sm={4}>
-                                    <Autocomplete
-                                        options={
-                                            skipState && selectedCountry
-                                                ? allCitiesOfCountry
-                                                : (selectedCountry && selectedState ? City.getCitiesOfState(selectedCountry.isoCode, selectedState.isoCode) : [])
-                                        }
-                                        getOptionLabel={(option) => {
-                                            if (skipState && option.stateName) {
-                                                return `${option.name} (${option.stateName})`;
-                                            }
-                                            return option.name || '';
-                                        }}
-                                        value={selectedCity}
-                                        onChange={(e, val) => {
-                                            setSelectedCity(val);
-                                            if (val && selectedCountry) {
-                                                const lat = parseFloat(val.latitude) || '';
-                                                const long = parseFloat(val.longitude) || '';
-
-                                                let tz = 5.5;
-                                                try {
-                                                    const timezones = ct.getTimezonesForCountry(selectedCountry.isoCode);
-                                                    if (timezones && timezones.length > 0) {
-                                                        const primaryTz = timezones[0];
-                                                        tz = primaryTz.utcOffset / 60;
-                                                    } else if (lat && long) {
-                                                        tz = calculateTimezone(long);
-                                                    }
-                                                } catch (err) {
-                                                    if (lat && long) tz = calculateTimezone(long);
-                                                }
-
-                                                setForm(prev => ({
-                                                    ...prev,
-                                                    lat: lat,
-                                                    lon: long,
-                                                    tz: tz
-                                                }));
-                                            }
-                                        }}
-                                        renderInput={(params) =>
-                                            <TextField
-                                                {...params}
-                                                label={skipState ? "🔍 City (All)" : "🏙️ City"}
-                                                size="small"
-                                                fullWidth
-                                                name={`no_autofill_city_${fieldId}`}
-                                                id={`no_autofill_city_${fieldId}`}
-                                                inputProps={{ ...params.inputProps, autoComplete: 'new-password' }}
-                                            />
-                                        }
-                                        disabled={!selectedCountry || (!skipState && !selectedState)}
-                                        filterOptions={(options, { inputValue }) => {
-                                            const filtered = options.filter(option =>
-                                                option.name.toLowerCase().includes(inputValue.toLowerCase())
-                                            );
-                                            return filtered.slice(0, 100);
-                                        }}
-                                        isOptionEqualToValue={(option, value) => option.name === value?.name}
-                                    />
-                                </Grid>
-                            </Grid>
-
-                            {/* Selected Location Display */}
-                            <TextField
-                                fullWidth
-                                label="📍 Selected Location"
-                                value={selectedCity ? (selectedCountry ? `${selectedCity.name}, ${selectedCity.stateName || ''}, ${selectedCountry.name}` : selectedCity.name) : ''}
-                                size="small"
-                                InputProps={{
-                                    readOnly: true,
-                                    style: { fontWeight: 'bold', color: '#1a202c', backgroundColor: 'rgba(37, 99, 235, 0.05)' }
+                                        setForm(prev => ({
+                                            ...prev,
+                                            lat: lat,
+                                            lon: long,
+                                            tz: tz
+                                        }));
+                                    }
                                 }}
-                                placeholder="Select Country > City to fill this"
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="🔍 Search City (Type 3+ letters)"
+                                        size="small"
+                                        fullWidth
+                                        InputProps={{
+                                            ...params.InputProps,
+                                            endAdornment: (
+                                                <React.Fragment>
+                                                    {locationLoading ? <CircularProgress color="inherit" size={20} /> : null}
+                                                    {params.InputProps.endAdornment}
+                                                </React.Fragment>
+                                            ),
+                                        }}
+                                    />
+                                )}
+                                renderOption={(props, option) => {
+                                    const country = Country.getCountryByCode(option.countryCode);
+                                    return (
+                                        <li {...props} key={`${option.name}-${option.latitude}`}>
+                                            <Box>
+                                                <Typography variant="body2" fontWeight="bold">{option.name}</Typography>
+                                                <Typography variant="caption" color="textSecondary">
+                                                    {option.stateCode}, {country?.name}
+                                                </Typography>
+                                            </Box>
+                                        </li>
+                                    )
+                                }}
                             />
+
+                            <Box sx={{ mt: 2, p: 1, bgcolor: '#e0f2fe', borderRadius: '8px', display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                                <Typography variant="caption">Selected: <b>{form.lat}, {form.lon}</b></Typography>
+                                <Typography variant="caption">TZ: <b>{form.tz}</b></Typography>
+                            </Box>
                         </Box>
                     </Grid>
 
