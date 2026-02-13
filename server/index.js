@@ -41,6 +41,10 @@ if (fs.existsSync(uploadDir)) {
 }
 
 // Health check route (before auth)
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'UP', timestamp: new Date().toISOString() });
+});
+
 app.get('/', (req, res) => {
     res.send('API is running');
 });
@@ -57,11 +61,14 @@ app.use('/api/leagues', require('./routes/leagues'));
 // Serve Static Assets (Frontend)
 const clientBuildPath = path.join(__dirname, '../client/dist');
 if (fs.existsSync(clientBuildPath)) {
+    console.log('Serving frontend from:', clientBuildPath);
     app.use(express.static(clientBuildPath));
     app.get(/.*/, (req, res) => {
         if (req.url.startsWith('/api/')) return res.status(404).json({ msg: 'API route not found' });
         res.sendFile(path.join(clientBuildPath, 'index.html'));
     });
+} else {
+    console.warn('Frontend build not found at:', clientBuildPath);
 }
 
 // Global Error Handler (MUST be after routes)
@@ -72,22 +79,34 @@ app.use((err, req, res, next) => {
 
 // Database Connection
 const connectDB = async () => {
-    if (mongoose.connection.readyState >= 1) {
-        return;
-    }
     try {
+        if (mongoose.connection.readyState >= 1) return;
+
         await mongoose.connect(process.env.MONGO_URI);
-        console.log('MongoDB connected');
+        console.log('MongoDB connected successfully');
     } catch (err) {
-        console.error('MongoDB connection error:', err);
+        console.error('MongoDB connection error:', err.message);
+        // Don't exit immediately, let the health check reflect the status if needed
     }
 };
 
 connectDB();
 
 if (require.main === module) {
-    app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
+    const server = app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Server running on port ${PORT} (bound to 0.0.0.0)`);
+    });
+
+    // Handle process termination gracefully
+    process.on('SIGTERM', () => {
+        console.log('SIGTERM signal received: closing HTTP server');
+        server.close(() => {
+            console.log('HTTP server closed');
+            mongoose.connection.close(false, () => {
+                console.log('MongoDB connection closed');
+                process.exit(0);
+            });
+        });
     });
 }
 
