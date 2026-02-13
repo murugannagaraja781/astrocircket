@@ -86,6 +86,18 @@ if (clientBuildPath) {
     possibleBuildPaths.forEach(p => console.warn(` - ${p}`));
     console.warn('Current __dirname:', __dirname);
     console.warn('Current process.cwd():', process.cwd());
+
+    // Diagnostic: List contents of current directory
+    try {
+        const rootContents = fs.readdirSync(process.cwd());
+        console.warn('Contents of process.cwd():', rootContents);
+        if (rootContents.includes('client')) {
+            const clientContents = fs.readdirSync(path.join(process.cwd(), 'client'));
+            console.warn('Contents of /client:', clientContents);
+        }
+    } catch (e) {
+        console.warn('Could not list directory contents:', e.message);
+    }
 }
 
 // Global Error Handler (MUST be after routes)
