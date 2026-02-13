@@ -5,6 +5,7 @@ import axios from 'axios';
 import AuthContext from '../context/AuthContext';
 import RasiChart from '../components/RasiChart';
 import MatchPredictionControl from '../components/MatchPredictionControl';
+import LeagueManager from '../components/LeagueManager';
 import { runPrediction } from '../utils/predictionAdapter';
 import { setPlayers } from '../redux/slices/playerSlice';
 import { calculatePredictions, clearPredictions, clearMatchChart } from '../redux/slices/predictionSlice';
@@ -2391,6 +2392,8 @@ const UserDashboard = ({ hideHeader = false }) => {
     const [saveDialogOpen, setSaveDialogOpen] = useState(false);
     const [predictionWinner, setPredictionWinner] = useState('');
     const [savingPrediction, setSavingPrediction] = useState(false);
+    const [leagues, setLeagues] = useState([]);
+    const [selectedLeagueId, setSelectedLeagueId] = useState('');
 
     const handleOpenSaveDialog = () => {
         if (selectedPlayerIds.length === 0) {
@@ -2404,7 +2407,7 @@ const UserDashboard = ({ hideHeader = false }) => {
         if (!predictionWinner) return;
         setSavingPrediction(true);
         try {
-            const authToken = token || localStorage.getItem('x-auth-token');
+            const authToken = token || localStorage.getItem('token');
             const config = { headers: { 'x-auth-token': authToken } };
 
             // Get Star Player Names from the existing players list
@@ -2418,7 +2421,8 @@ const UserDashboard = ({ hideHeader = false }) => {
                 teamA: groups.find(g => g._id === teamA)?.name || 'Team A',
                 teamB: groups.find(g => g._id === teamB)?.name || 'Team B',
                 predictedWinner: predictionWinner,
-                starPlayers: starPlayerNames
+                starPlayers: starPlayerNames,
+                leagueId: selectedLeagueId || null
             };
 
             await axios.post(`${baseUrl}/api/user-predictions/save`, payload, config);
@@ -2497,7 +2501,7 @@ const UserDashboard = ({ hideHeader = false }) => {
 
     const handleSavePlayer = async () => {
         try {
-            const authToken = token || localStorage.getItem('x-auth-token');
+            const authToken = token || localStorage.getItem('token');
             // Optimistic update or wait? Wait.
 
             // Assuming we use custom 'id' for URL parameter based on controller logic
@@ -2531,7 +2535,7 @@ const UserDashboard = ({ hideHeader = false }) => {
         const fetchData = async () => {
             try {
                 // Use token from Context first, then localStorage
-                const authToken = token || localStorage.getItem('x-auth-token');
+                const authToken = token || localStorage.getItem('token');
                 if (!authToken) return;
 
                 // 1. Fetch Players
@@ -2555,6 +2559,12 @@ const UserDashboard = ({ hideHeader = false }) => {
                     headers: { 'x-auth-token': authToken }
                 });
                 setGroups(Array.isArray(groupRes.data) ? groupRes.data : []);
+
+                // 3. Fetch Leagues
+                const leagueRes = await axios.get(`${baseUrl}/api/leagues`, {
+                    headers: { 'x-auth-token': authToken }
+                });
+                setLeagues(Array.isArray(leagueRes.data) ? leagueRes.data : []);
 
             } catch (err) {
                 console.error("Load Error", err);
@@ -2589,6 +2599,13 @@ const UserDashboard = ({ hideHeader = false }) => {
                 desc: `${groups.length} teams created`,
                 icon: '🏟️',
                 color: '#FF9800'
+            },
+            {
+                id: 'leagues',
+                title: 'Leagues',
+                desc: `${leagues.length} leagues`,
+                icon: '🏆',
+                color: '#E65100'
             },
         ];
 
@@ -2983,7 +3000,7 @@ const UserDashboard = ({ hideHeader = false }) => {
                                 ← Back
                             </Button>
                             <Typography variant="h6" fontWeight="bold" sx={{ color: visionPro.text }}>
-                                {currentView === 'players' ? '👥 All Players' : currentView === 'teams' ? '🏟️ Teams' : ''}
+                                {currentView === 'players' ? '👥 All Players' : currentView === 'teams' ? '🏟️ Teams' : currentView === 'leagues' ? '🏆 Leagues' : ''}
                             </Typography>
                         </Box>
 
@@ -3064,8 +3081,7 @@ const UserDashboard = ({ hideHeader = false }) => {
                                     <MatchPredictionControl ref={dashboardPredictionRef} onPredictionComplete={handlePredictionReady} token={token} />
                                 </Collapse>
 
-                                {/* Content Area */}
-                                {renderTeams()}
+                                {/* Content Area - Player Table */}
                                 <Paper sx={{
                                     borderRadius: 2,
                                     overflow: 'hidden',
@@ -3196,6 +3212,12 @@ const UserDashboard = ({ hideHeader = false }) => {
                                 </Paper>
                             </>
                         )}
+                        {/* LEAGUES VIEW */}
+                        {currentView === 'leagues' && (
+                            <Paper sx={{ borderRadius: 2, p: 2, bgcolor: hideHeader ? 'rgba(255,255,255,0.05)' : 'white' }}>
+                                <LeagueManager onLeagueCreated={(newLeague) => setLeagues([newLeague, ...leagues])} />
+                            </Paper>
+                        )}
                     </>
                 )}
 
@@ -3238,8 +3260,30 @@ const UserDashboard = ({ hideHeader = false }) => {
                     <Typography variant="body1" sx={{ mb: 3, fontWeight: 'medium' }}>
                         You have selected <span style={{ color: '#E65100', fontWeight: 'bold' }}>{selectedPlayerIds.length}</span> Star Players.
                         <br />
-                        Now select the winning team to complete your prediction.
+                        Assign to a League and select the winning team.
                     </Typography>
+
+                    <Box sx={{ mb: 4, textAlign: 'left' }}>
+                        <FormControl fullWidth variant="outlined">
+                            <InputLabel id="league-select-label">Assign to League (Optional)</InputLabel>
+                            <Select
+                                labelId="league-select-label"
+                                value={selectedLeagueId}
+                                label="Assign to League (Optional)"
+                                onChange={(e) => setSelectedLeagueId(e.target.value)}
+                                sx={{ borderRadius: '12px' }}
+                            >
+                                <MenuItem value="">
+                                    <em>None (Unassigned)</em>
+                                </MenuItem>
+                                {leagues.map((league) => (
+                                    <MenuItem key={league._id} value={league._id}>
+                                        {league.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Box>
 
                     <Grid container spacing={2} justifyContent="center">
                         <Grid item xs={6}>

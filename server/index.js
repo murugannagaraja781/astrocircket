@@ -52,6 +52,7 @@ app.use('/api/players', require('./routes/players'));
 app.use('/api/groups', groupRoutes);
 app.use('/api/prediction', require('./routes/prediction'));
 app.use('/api/user-predictions', require('./routes/userPredictions'));
+app.use('/api/leagues', require('./routes/leagues'));
 
 // Serve Static Assets (Frontend)
 const clientBuildPath = path.join(__dirname, '../client/dist');

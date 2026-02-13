@@ -3213,7 +3213,7 @@ const AdminDashboard = () => {
 
         setDeleteLoading(true);
         try {
-            const authToken = token || localStorage.getItem('x-auth-token');
+            const authToken = token || localStorage.getItem('token');
             const response = await axios.post(
                 `${import.meta.env.VITE_BACKEND_URL}/api/players/delete-all`,
                 { password: deletePassword },

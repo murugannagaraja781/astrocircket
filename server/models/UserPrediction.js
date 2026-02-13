@@ -31,6 +31,11 @@ const UserPredictionSchema = new mongoose.Schema({
         type: String, // "Team A" name or "Team B" name
         default: null
     },
+    leagueId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'League',
+        default: null
+    },
     createdAt: {
         type: Date,
         default: Date.now

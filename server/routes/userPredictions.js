@@ -23,7 +23,7 @@ const verifyToken = (req, res, next) => {
 // @access  Private
 router.post('/save', verifyToken, async (req, res) => {
     try {
-        const { matchDate, teamA, teamB, predictedWinner, starPlayers } = req.body;
+        const { matchDate, teamA, teamB, predictedWinner, starPlayers, leagueId } = req.body;
 
         // Basic validation
         if (!predictedWinner || !starPlayers) {
@@ -40,7 +40,8 @@ router.post('/save', verifyToken, async (req, res) => {
             teamA,
             teamB,
             predictedWinner,
-            starPlayers
+            starPlayers,
+            leagueId: leagueId || null
         });
 
         const savedPrediction = await newPrediction.save();
@@ -81,7 +82,12 @@ router.put('/:id/result', verifyToken, async (req, res) => {
 // @access  Private
 router.get('/my', verifyToken, async (req, res) => {
     try {
-        const predictions = await UserPrediction.find({ userId: req.user.id }).sort({ createdAt: -1 });
+        const { leagueId } = req.query;
+        let query = { userId: req.user.id };
+        if (leagueId) {
+            query.leagueId = leagueId === 'null' ? null : leagueId;
+        }
+        const predictions = await UserPrediction.find(query).sort({ createdAt: -1 });
         res.json(predictions);
     } catch (err) {
         console.error(err.message);
