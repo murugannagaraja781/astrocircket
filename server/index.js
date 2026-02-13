@@ -59,8 +59,22 @@ app.use('/api/user-predictions', require('./routes/userPredictions'));
 app.use('/api/leagues', require('./routes/leagues'));
 
 // Serve Static Assets (Frontend)
-const clientBuildPath = path.join(__dirname, '../client/dist');
-if (fs.existsSync(clientBuildPath)) {
+const possibleBuildPaths = [
+    path.join(__dirname, '../client/dist'),
+    path.join(process.cwd(), 'client/dist'),
+    path.join(process.cwd(), 'dist'),
+    path.join(__dirname, 'client/dist')
+];
+
+let clientBuildPath = null;
+for (const p of possibleBuildPaths) {
+    if (fs.existsSync(p)) {
+        clientBuildPath = p;
+        break;
+    }
+}
+
+if (clientBuildPath) {
     console.log('Serving frontend from:', clientBuildPath);
     app.use(express.static(clientBuildPath));
     app.get(/.*/, (req, res) => {
@@ -68,7 +82,10 @@ if (fs.existsSync(clientBuildPath)) {
         res.sendFile(path.join(clientBuildPath, 'index.html'));
     });
 } else {
-    console.warn('Frontend build not found at:', clientBuildPath);
+    console.warn('Frontend build not found. Attempted paths:');
+    possibleBuildPaths.forEach(p => console.warn(` - ${p}`));
+    console.warn('Current __dirname:', __dirname);
+    console.warn('Current process.cwd():', process.cwd());
 }
 
 // Global Error Handler (MUST be after routes)
