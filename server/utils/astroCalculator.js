@@ -411,49 +411,26 @@ const getLagnaTimeline = (year, month, day, hour, minute, lat, lon, timezone = 5
 
     let currentTime = new Date(startTime);
     let currentLagna = null;
+    let currentLagnaLord = null;
     let lagnaStartTime = new Date(startTime);
 
-    // Iteration step in minutes (10 mins is sufficient for Lagna which changes every ~2 hours)
-    const stepMinutes = 10;
+    // Iteration step in minutes (fine-grained to catch changes)
+    const stepMinutes = 5;
 
     while (currentTime <= endTime) {
-        // Calculate Ascendant for current time slice
-        // Using existing calculatePlanetaryPositions but we only need Ascendant
-        // optimize: extract just ascendant calc if needed, but this is fine for ~24 iterations
-        const cYear = currentTime.getFullYear();
-        const cMonth = currentTime.getMonth() + 1;
-        const cDay = currentTime.getDate();
-        const cHour = currentTime.getHours();
-        const cMinute = currentTime.getMinutes();
+        // Essential Fix: calculatePlanetaryPositions expects Wall Clock Time of the location (e.g. 19:30 for 7:30 PM).
+        // But currentTime is a UTC timestamp (e.g. 14:00 UTC).
+        // If we just pull hours from UTC (14:00) and pass to calc, calc might interpret 14:00 - 5.5 = 08:30 UTC.
+        // We must reconstruct the "Wall Clock" components.
+        // A simple way is to shift the UTC time BY the timezone offset, then read UTC components.
 
-        // Note: calculatePlanetaryPositions expects local time components? 
-        // Our createDate handles TZ. 
-        // We should pass the components of 'currentTime' which is already a Date object in likely local or UTC?
-        // Actually 'createDate' creates a Date object. 'currentTime' is a Date object.
-        // We need to pass Year/Month/Day etc. 
-        // CAUTION: calculatePlanetaryPositions takes (year, month, day...) and creates a Date using 'timezone'.
-        // If 'currentTime' is already adjusted, we need to be careful.
-        // Let's assume calculatePlanetaryPositions handles it if we pass components.
-        // BUT 'currentTime' components are in local Browser/Server time? 
-        // We need to be consistent. 
-        // Let's use the helper `calculatePlanetaryPositions` directly with the components derived from `currentTime`.
-        // However, `currentTime` is a JS Date. `getFullYear()` etc returns local system time.
-        // The `calculatePlanetaryPositions` function reconstructs the date using `createDate`.
-        // To be safe, let's just use `calculateAscendantPackage` directly if possible, or stick to the tested flow.
+        const wallClockTime = new Date(currentTime.getTime() + (parseFloat(timezone) * 3600000));
 
-        // Wait, `calculatePlanetaryPositions` calls `createDate`. 
-        // If we simply pass `currentTime` components, `createDate` will shift it by `timezone` again?
-        // `createDate` logic: `new Date(Date.UTC(year, month - 1, day, hour - timezoneOffsetHours, minute ...))`
-        // So if we pass components of a Date that is ALREADY shifted, we might double shift.
-        // SIMPLIFICATION for this specific function:
-        // We already have `currentTime` as a Date object representing the moment in time.
-        // We can skip `createDate` if we refactor or use internal logic.
-        // But to reuse `calculatePlanetaryPositions`, we must pass inputs.
-        // Actually, let's just copy the Ascendant calculation part or use a stripped down version.
-
-        // BETTER APPROACH: Use `calculatePlanetaryPositions` but pass the expected "Local" time components for that specific moment.
-        // Since we are iterating `currentTime` which is a standard JS Date initialized from the user's input, 
-        // we can just extract components.
+        const cYear = wallClockTime.getUTCFullYear();
+        const cMonth = wallClockTime.getUTCMonth() + 1;
+        const cDay = wallClockTime.getUTCDate();
+        const cHour = wallClockTime.getUTCHours();
+        const cMinute = wallClockTime.getUTCMinutes();
 
         const result = calculatePlanetaryPositions(cYear, cMonth, cDay, cHour, cMinute, lat, lon, timezone);
         const ascDegree = result.ascendant;
