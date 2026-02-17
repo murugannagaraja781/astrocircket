@@ -9,6 +9,7 @@ import { customColors } from '../utils/theme';
 const { width, height } = Dimensions.get('window');
 
 export default function LoginScreen({ navigation }) {
+    console.log('LoginScreen: Initializing...');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { login, isLoading } = useContext(AuthContext);
@@ -23,7 +24,7 @@ export default function LoginScreen({ navigation }) {
         try {
             await login(email, password);
         } catch (error) {
-            Alert.alert("Login Failed", error.response?.data?.msg || "Invalid credentials or server error");
+            Alert.alert("Login Failed", error.message || "Invalid credentials or server error");
         }
     };
 
@@ -111,7 +112,7 @@ export default function LoginScreen({ navigation }) {
 
                     <View style={styles.registerRow}>
                         <Text style={{ color: 'gray' }}>Don't have an account? </Text>
-                        <TouchableOpacity onPress={() => Alert.alert("Register", "Contact Admin")}>
+                        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
                             <Text style={{ color: customColors.neon, fontWeight: 'bold' }}>Sign Up</Text>
                         </TouchableOpacity>
                     </View>

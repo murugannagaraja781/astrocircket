@@ -57,6 +57,7 @@ app.use('/api/groups', groupRoutes);
 app.use('/api/prediction', require('./routes/prediction'));
 app.use('/api/user-predictions', require('./routes/userPredictions'));
 app.use('/api/leagues', require('./routes/leagues'));
+app.use('/api/matches', require('./routes/matches'));
 
 // Serve Static Assets (Frontend)
 const possibleBuildPaths = [

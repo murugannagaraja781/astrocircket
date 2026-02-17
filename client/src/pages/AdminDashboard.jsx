@@ -1018,6 +1018,7 @@ const KPView = () => {
 // Mobile App Style Dashboard Home
 const DashboardHome = ({ onNavigate }) => {
     const { token, user } = useContext(AuthContext);
+    console.log('DashboardHome rendering. User:', user);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 

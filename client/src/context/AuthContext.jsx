@@ -78,8 +78,10 @@ export const AuthProvider = ({ children }) => {
             // I will implement a quick /me endpoint in the backend for robustness if I can, or just decode.
             // I'll decoding for now using a helper or just persist user in localStorage too (less secure but faster for prototype).
             const user = JSON.parse(localStorage.getItem('user'));
-            if(user) {
-                 dispatch({ type: 'USER_LOADED', payload: user });
+            if (user) {
+                dispatch({ type: 'USER_LOADED', payload: user });
+            } else {
+                dispatch({ type: 'AUTH_ERROR' });
             }
         } catch (err) {
             dispatch({ type: 'AUTH_ERROR' });
@@ -102,7 +104,7 @@ export const AuthProvider = ({ children }) => {
                 type: 'REGISTER_FAIL',
                 payload: err.response?.data?.msg || 'Registration Error'
             });
-             return { success: false, msg: err.response?.data?.msg || 'Registration Error' };
+            return { success: false, msg: err.response?.data?.msg || 'Registration Error' };
         }
     };
 
@@ -157,7 +159,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        if(localStorage.token) setAuthToken(localStorage.token);
+        if (localStorage.token) setAuthToken(localStorage.token);
         loadUser();
 
         // Setup Axios Interceptor for 401s

@@ -6,6 +6,7 @@ import AuthContext from '../context/AuthContext';
 import RasiChart from '../components/RasiChart';
 import MatchPredictionControl from '../components/MatchPredictionControl';
 import LeagueManager from '../components/LeagueManager';
+import AdminPredictionManager from '../components/AdminPredictionManager';
 import { runPrediction } from '../utils/predictionAdapter';
 import { setPlayers } from '../redux/slices/playerSlice';
 import { calculatePredictions, clearPredictions, clearMatchChart } from '../redux/slices/predictionSlice';
@@ -2361,7 +2362,7 @@ const PlayerMobileCard = ({ player, matchChart, isSelected, onSelect, onEdit, on
 };
 
 const UserDashboard = ({ hideHeader = false }) => {
-    const { logout, token } = useContext(AuthContext);
+    const { logout, token, user } = useContext(AuthContext);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const dispatch = useDispatch();
@@ -2536,7 +2537,10 @@ const UserDashboard = ({ hideHeader = false }) => {
             try {
                 // Use token from Context first, then localStorage
                 const authToken = token || localStorage.getItem('token');
-                if (!authToken) return;
+                if (!authToken) {
+                    setLoading(false);
+                    return;
+                }
 
                 // 1. Fetch Players
                 const res = await axios.get(`${baseUrl}/api/players?page=${page + 1}&limit=${rowsPerPage}`, {
@@ -2608,6 +2612,16 @@ const UserDashboard = ({ hideHeader = false }) => {
                 color: '#E65100'
             },
         ];
+
+        if (user?.role === 'superadmin') {
+            quickActions.push({
+                id: 'admin',
+                title: 'Admin Panel',
+                desc: 'Manage expert predictions',
+                icon: '🛠️',
+                color: '#d32f2f'
+            });
+        }
 
         return (
             <Box sx={{ px: 2, py: 3 }}>
@@ -3212,10 +3226,18 @@ const UserDashboard = ({ hideHeader = false }) => {
                                 </Paper>
                             </>
                         )}
+
                         {/* LEAGUES VIEW */}
                         {currentView === 'leagues' && (
                             <Paper sx={{ borderRadius: 2, p: 2, bgcolor: hideHeader ? 'rgba(255,255,255,0.05)' : 'white' }}>
                                 <LeagueManager onLeagueCreated={(newLeague) => setLeagues([newLeague, ...leagues])} />
+                            </Paper>
+                        )}
+
+                        {/* ADMIN VIEW */}
+                        {currentView === 'admin' && user?.role === 'superadmin' && (
+                            <Paper sx={{ borderRadius: 2, p: 2, bgcolor: hideHeader ? 'rgba(255,255,255,0.05)' : 'white' }}>
+                                <AdminPredictionManager />
                             </Paper>
                         )}
                     </>
