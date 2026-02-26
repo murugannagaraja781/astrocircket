@@ -256,15 +256,14 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
     const formatLagnaTime = (isoString) => {
         if (!isoString) return '-';
         try {
-            // matchDetails.timezone is offset in hours (e.g., 5.5)
-            // Parse the UTC ISO string
             const date = new Date(isoString);
             const utcTime = date.getTime();
-            // Add the offset to get the local time represented as a UTC date
-            // Note: This creates a Date object where getUTCHours() returns the local hours
             const localDate = new Date(utcTime + (parseFloat(matchDetails.timezone || 0) * 3600000));
-            // Extract HH:MM from the ISO string of the shifted date
-            return localDate.toISOString().split('T')[1].slice(0, 5);
+            let hours = localDate.getUTCHours();
+            const minutes = localDate.getUTCMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12;
+            return `${hours.toString().padStart(2, '0')}:${minutes} ${ampm}`;
         } catch (e) {
             console.error("Time format error", e);
             return isoString.split('T')[1]?.slice(0, 5) || isoString;
@@ -588,31 +587,90 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                                 <Table size="small">
                                                     <TableHead sx={{ bgcolor: 'rgba(255, 193, 7, 0.15)' }}>
                                                         <TableRow>
-                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>நேரம்</TableCell>
-                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>லக்னம்</TableCell>
-                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.75rem' }}>அதிபதி</TableCell>
+                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.7rem', px: 0.5 }}>#</TableCell>
+                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.7rem', px: 0.5 }}>தொடக்கம்</TableCell>
+                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.7rem', px: 0.5 }}>முடிவு</TableCell>
+                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.7rem', px: 0.5 }}>லக்னம்</TableCell>
+                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.7rem', px: 0.5 }}>நட்சத்திரம்</TableCell>
+                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.7rem', px: 0.5 }}>அதிபதி</TableCell>
+                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.7rem', px: 0.5 }}>கால அளவு</TableCell>
                                                         </TableRow>
                                                     </TableHead>
                                                     <TableBody>
-                                                        {matchChartResult.lagnaTimeline.map((slot, index) => {
-                                                            const signMap = {
-                                                                'Aries': 'மேஷம்', 'Taurus': 'ரிஷபம்', 'Gemini': 'மிதுனம்', 'Cancer': 'கடகம்',
-                                                                'Leo': 'சிம்மம்', 'Virgo': 'கன்னி', 'Libra': 'துலாம்', 'Scorpio': 'விருச்சிகம்',
-                                                                'Sagittarius': 'தனுசு', 'Capricorn': 'மகரம்', 'Aquarius': 'கும்பம்', 'Pisces': 'மீனம்'
-                                                            };
-                                                            const lagnaTamil = signMap[slot.lagna] || slot.lagna;
-                                                            const lordTamil = planetFullTamilMap[slot.lord] || slot.lord;
+                                                        {(() => {
+                                                            // Pre-compute L# and N# labels
+                                                            let lagnaCount = 0;
+                                                            let nakCount = 0;
+                                                            let prevLagna = null;
+                                                            const timeline = matchChartResult.lagnaTimeline;
+                                                            const labeled = timeline.map((slot) => {
+                                                                if (slot.lagna !== prevLagna) {
+                                                                    lagnaCount++;
+                                                                    nakCount = 1; // Reset nakshatra count on lagna change
+                                                                    prevLagna = slot.lagna;
+                                                                } else {
+                                                                    nakCount++;
+                                                                }
+                                                                return { ...slot, lagnaLabel: `L${lagnaCount}`, nakLabel: `N${nakCount}` };
+                                                            });
 
-                                                            return (
-                                                                <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                                                    <TableCell sx={{ fontSize: '0.75rem' }}>{formatLagnaTime(slot.start)} - {formatLagnaTime(slot.end)}</TableCell>
-                                                                    <TableCell sx={{ fontSize: '0.75rem', fontWeight: slot.isMain ? 'bold' : 'normal' }}>
-                                                                        {lagnaTamil} {slot.isMain ? '⭐' : ''}
-                                                                    </TableCell>
-                                                                    <TableCell sx={{ fontSize: '0.75rem' }}>{lordTamil}</TableCell>
-                                                                </TableRow>
-                                                            );
-                                                        })}
+                                                            return labeled.map((slot, index) => {
+                                                                const signMap = {
+                                                                    'Aries': 'மேஷம்', 'Taurus': 'ரிஷபம்', 'Gemini': 'மிதுனம்', 'Cancer': 'கடகம்',
+                                                                    'Leo': 'சிம்மம்', 'Virgo': 'கன்னி', 'Libra': 'துலாம்', 'Scorpio': 'விருச்சிகம்',
+                                                                    'Sagittarius': 'தனுசு', 'Capricorn': 'மகரம்', 'Aquarius': 'கும்பம்', 'Pisces': 'மீனம்'
+                                                                };
+                                                                const lagnaTamil = signMap[slot.lagna] || slot.lagna;
+                                                                const lordTamil = planetFullTamilMap[slot.lord] || slot.lord;
+                                                                const nakTamil = slot.nakshatraTamil || nakshatraTamilMap[slot.nakshatra] || slot.nakshatra || '-';
+                                                                const nakLordTamil = planetFullTamilMap[slot.nakshatraLord] || slot.nakshatraLord || '-';
+
+                                                                // Calculate duration
+                                                                const startMs = new Date(slot.start).getTime();
+                                                                const endMs = new Date(slot.end).getTime();
+                                                                const diffMs = endMs - startMs;
+                                                                const diffMin = Math.floor(diffMs / 60000);
+                                                                const durationHrs = Math.floor(diffMin / 60);
+                                                                const durationMins = diffMin % 60;
+                                                                const durationStr = durationHrs > 0 ? `${durationHrs}h ${durationMins}m` : `${durationMins}m`;
+
+                                                                // Color coding for L# and N# badges
+                                                                const lagnaColors = ['#FF6F00', '#1565C0', '#2E7D32', '#6A1B9A', '#C62828'];
+                                                                const lColor = lagnaColors[(parseInt(slot.lagnaLabel.slice(1)) - 1) % lagnaColors.length];
+
+                                                                return (
+                                                                    <TableRow key={index} sx={{
+                                                                        '&:last-child td, &:last-child th': { border: 0 },
+                                                                        bgcolor: slot.isMain ? 'rgba(255, 193, 7, 0.08)' : 'inherit'
+                                                                    }}>
+                                                                        <TableCell sx={{ fontSize: '0.65rem', px: 0.5, whiteSpace: 'nowrap' }}>
+                                                                            <Box sx={{ display: 'flex', gap: 0.3 }}>
+                                                                                <Box sx={{
+                                                                                    bgcolor: lColor, color: '#fff', px: 0.5, py: 0.1,
+                                                                                    borderRadius: '4px', fontSize: '0.6rem', fontWeight: 'bold',
+                                                                                    lineHeight: 1.3, minWidth: '20px', textAlign: 'center'
+                                                                                }}>{slot.lagnaLabel}</Box>
+                                                                                <Box sx={{
+                                                                                    bgcolor: '#00897B', color: '#fff', px: 0.5, py: 0.1,
+                                                                                    borderRadius: '4px', fontSize: '0.6rem', fontWeight: 'bold',
+                                                                                    lineHeight: 1.3, minWidth: '20px', textAlign: 'center'
+                                                                                }}>{slot.nakLabel}</Box>
+                                                                            </Box>
+                                                                        </TableCell>
+                                                                        <TableCell sx={{ fontSize: '0.7rem', px: 0.5, whiteSpace: 'nowrap' }}>{formatLagnaTime(slot.start)}</TableCell>
+                                                                        <TableCell sx={{ fontSize: '0.7rem', px: 0.5, whiteSpace: 'nowrap' }}>{formatLagnaTime(slot.end)}</TableCell>
+                                                                        <TableCell sx={{ fontSize: '0.7rem', px: 0.5, fontWeight: slot.isMain ? 'bold' : 'normal' }}>
+                                                                            {lagnaTamil} {slot.isMain ? '⭐' : ''}
+                                                                        </TableCell>
+                                                                        <TableCell sx={{ fontSize: '0.7rem', px: 0.5 }}>{nakTamil}</TableCell>
+                                                                        <TableCell sx={{ fontSize: '0.7rem', px: 0.5 }}>
+                                                                            {lordTamil}/{nakLordTamil}
+                                                                        </TableCell>
+                                                                        <TableCell sx={{ fontSize: '0.7rem', px: 0.5, color: '#666' }}>{durationStr}</TableCell>
+                                                                    </TableRow>
+                                                                );
+                                                            });
+                                                        })()}
                                                     </TableBody>
                                                 </Table>
                                             </TableContainer>

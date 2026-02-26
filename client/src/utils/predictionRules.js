@@ -169,6 +169,12 @@ export const evaluateBatsman = (playerChart, matchChart) => {
 
     const isRahuKetuMatchStar = (getStarLord(matchStar) === 'Rahu' || getStarLord(matchStar) === 'Ketu');
 
+    // Mars relevance check: active only if player's rasi/star lord is Mars, or both lords are conjunct
+    const pRasiLordSignBat = getPlanet(playerChart, playerRasiLord)?.sign;
+    const pStarLordSignBat = getPlanet(playerChart, playerStarLord)?.sign;
+    const isMarsRelevant = (playerRasiLord === 'Mars' || playerStarLord === 'Mars') ||
+        (pRasiLordSignBat && pStarLordSignBat && pRasiLordSignBat === pStarLordSignBat);
+
     const matchLagnaLord = getSignLord(mLagna?.sign);
 
     /* STATE */
@@ -268,8 +274,10 @@ export const evaluateBatsman = (playerChart, matchChart) => {
         // 1. ASWINI
         case 'Ashwini':
         case 'Aswini':
-            if (isExalted('Mars', getPlanet(playerChart, 'Mars')?.sign)) addRule('Aswini: Mars Exalted', 8, 'both', false, 'அசுவினி: செவ்வாய் உச்சம்');
-            else if (isDebilitated('Mars', getPlanet(playerChart, 'Mars')?.sign)) addRule('Aswini: Mars Debilitated', -12, 'both', false, 'அசுவினி: செவ்வாய் நீசம்');
+            if (isMarsRelevant) {
+                if (isExalted('Mars', getPlanet(playerChart, 'Mars')?.sign)) addRule('Aswini: Mars Exalted', 8, 'both', false, 'அசுவினி: செவ்வாய் உச்சம்');
+                else if (isDebilitated('Mars', getPlanet(playerChart, 'Mars')?.sign)) addRule('Aswini: Mars Debilitated', -12, 'both', false, 'அசுவினி: செவ்வாய் நீசம்');
+            }
             if (areInSameSign(playerChart, 'Mars', 'Venus')) addRule('Aswini: Mars + Venus Conjunction', 10, 'both', false, 'அசுவினி: செவ்வாய் + சுக்கிரன் சேர்க்கை');
             break;
 
@@ -288,14 +296,16 @@ export const evaluateBatsman = (playerChart, matchChart) => {
         case 'Ardra':
         case 'Thiruvathirai':
         case 'Thiruvadhirai':
-            const marsSign = getPlanet(playerChart, 'Mars')?.sign;
-            if (marsSign) {
-                if (isDebilitated('Mars', marsSign)) {
-                    setSureFlop('Ardra: Mars Neecham (Batting)', 'திருவாதிரை: செவ்வாய் நீசம் (பேட்டிங்)');
-                } else if (isExalted('Mars', marsSign) || isOwnSign('Mars', marsSign)) {
-                    addRule('Ardra: Mars Aatchi/Ucham', 0, 'bat', false, 'திருவாதிரை: செவ்வாய் ஆட்சி/உச்சம்');
-                } else if (playerRasiLord === 'Mars' || playerStarLord === 'Mars') {
-                    addRule('Ardra: Mars Lord', 0, 'bat', false, 'திருவாதிரை: செவ்வாய் அதிபதி');
+            if (isMarsRelevant) {
+                const marsSign = getPlanet(playerChart, 'Mars')?.sign;
+                if (marsSign) {
+                    if (isDebilitated('Mars', marsSign)) {
+                        setSureFlop('Ardra: Mars Neecham (Batting)', 'திருவாதிரை: செவ்வாய் நீசம் (பேட்டிங்)');
+                    } else if (isExalted('Mars', marsSign) || isOwnSign('Mars', marsSign)) {
+                        addRule('Ardra: Mars Aatchi/Ucham', 0, 'bat', false, 'திருவாதிரை: செவ்வாய் ஆட்சி/உச்சம்');
+                    } else if (playerRasiLord === 'Mars' || playerStarLord === 'Mars') {
+                        addRule('Ardra: Mars Lord', 0, 'bat', false, 'திருவாதிரை: செவ்வாய் அதிபதி');
+                    }
                 }
             }
             break;
@@ -450,6 +460,12 @@ export const evaluateBowler = (playerChart, matchChart) => {
 
     const isRahuKetuMatchStar = (getStarLord(matchStar) === 'Rahu' || getStarLord(matchStar) === 'Ketu');
 
+    // Mars relevance check: active only if player's rasi/star lord is Mars, or both lords are conjunct
+    const pRasiLordSignBowl = getPlanet(playerChart, playerRasiLord)?.sign;
+    const pStarLordSignBowl = getPlanet(playerChart, playerStarLord)?.sign;
+    const isMarsRelevant = (playerRasiLord === 'Mars' || playerStarLord === 'Mars') ||
+        (pRasiLordSignBowl && pStarLordSignBowl && pRasiLordSignBowl === pStarLordSignBowl);
+
     const matchLagnaLord = getSignLord(mLagna?.sign);
 
     const addRule = (name, pts, type = "both", isSpecial = false, nameTamil = "") => {
@@ -565,14 +581,16 @@ export const evaluateBowler = (playerChart, matchChart) => {
         case 'Ardra':
         case 'Thiruvathirai':
         case 'Thiruvadhirai':
-            const marsSign = getPlanet(playerChart, 'Mars')?.sign;
-            if (marsSign) {
-                if (isDebilitated('Mars', marsSign)) {
-                    setSureFlop('Ardra: Mars Neecham', 'திருவாதிரை: செவ்வாய் நீசம்');
-                } else if (isExalted('Mars', marsSign) || isOwnSign('Mars', marsSign)) {
-                    addRule('Ardra: Mars Aatchi/Ucham', 10, 'bowl', true, 'திருவாதிரை: செவ்வாய் ஆட்சி/உச்சம்');
-                } else if (playerRasiLord === 'Mars' || playerStarLord === 'Mars') {
-                    addRule('Ardra: Mars Lord', 4, 'bowl', false, 'திருவாதிரை: செவ்வாய் அதிபதி');
+            if (isMarsRelevant) {
+                const marsSign = getPlanet(playerChart, 'Mars')?.sign;
+                if (marsSign) {
+                    if (isDebilitated('Mars', marsSign)) {
+                        setSureFlop('Ardra: Mars Neecham', 'திருவாதிரை: செவ்வாய் நீசம்');
+                    } else if (isExalted('Mars', marsSign) || isOwnSign('Mars', marsSign)) {
+                        addRule('Ardra: Mars Aatchi/Ucham', 10, 'bowl', true, 'திருவாதிரை: செவ்வாய் ஆட்சி/உச்சம்');
+                    } else if (playerRasiLord === 'Mars' || playerStarLord === 'Mars') {
+                        addRule('Ardra: Mars Lord', 4, 'bowl', false, 'திருவாதிரை: செவ்வாய் அதிபதி');
+                    }
                 }
             }
             break;

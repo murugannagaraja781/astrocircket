@@ -50,8 +50,8 @@ class RuleContext {
         this.match = match;
         this.transit = transit;
 
-        this.batting = { score: 0, logs: [], isSpecial: false, status: 'Active', matchedLagnas: [] };
-        this.bowling = { score: 0, logs: [], isSpecial: false, status: 'Active', matchedLagnas: [] };
+        this.batting = { score: 0, logs: [], isSpecial: false, status: 'Active', matchedLagnas: [], matchedNakshatras: [] };
+        this.bowling = { score: 0, logs: [], isSpecial: false, status: 'Active', matchedLagnas: [], matchedNakshatras: [] };
 
         this.P = player.planetPositions || {};
         this.M = transit.planetPositions || {};
@@ -96,6 +96,10 @@ class RuleContext {
 
         this.sureFlopBat = false;
         this.sureFlopBowl = false;
+
+        // Mars relevance: active only if player's rasi/star lord is Mars, or both lords are conjunct
+        this.isMarsRelevant = (this.playerRasiLord === 'Mars' || this.playerStarLord === 'Mars') ||
+            (this.P[this.playerRasiLord] && this.P[this.playerStarLord] && this.P[this.playerRasiLord] === this.P[this.playerStarLord]);
     }
 
     addRule(name, score, type = 'both', isSpecial = false, nameTamil = '') {
@@ -308,6 +312,15 @@ const GENERAL_RULES = [
                     ctx.addRule(`BOWL Rule 8: Planet Bonus${suffix}`, 4, 'bowl', false, `பவுலிங் விதி 8: லக்ன கிரக போனஸ்${suffix}`);
                 }
             }
+
+            // Nakshatra Lord Match Check - N# badges
+            const nakLord = lagnaObj.nakshatraLord;
+            if (nakLord && nakLord === ctx.playerRasiLord) {
+                // Compute N# label: sequential nakshatra index within current lagna
+                let nLabel = index + 1;
+                ctx.batting.matchedNakshatras.push(nLabel);
+                ctx.bowling.matchedNakshatras.push(nLabel);
+            }
         });
     },
     // Rule 9: Double Lord Conjunction
@@ -325,8 +338,10 @@ const GENERAL_RULES = [
 /** Match Star Specific Rules **/
 const NAKSHATRA_RULES = {
     'Ashwini': (ctx) => {
-        if (isExalted('Mars', ctx.P['Mars'])) ctx.addRule('Aswini: Mars Exalted', 8, 'both', false, 'அசுவினி: செவ்வாய் உச்சம்');
-        else if (getDignity('Mars', ctx.P['Mars']) === 'Debilitated') ctx.addRule('Aswini: Mars Debilitated', -12, 'both', false, 'அசுவினி: செவ்வாய் நீசம்');
+        if (ctx.isMarsRelevant) {
+            if (isExalted('Mars', ctx.P['Mars'])) ctx.addRule('Aswini: Mars Exalted', 8, 'both', false, 'அசுவினி: செவ்வாய் உச்சம்');
+            else if (getDignity('Mars', ctx.P['Mars']) === 'Debilitated') ctx.addRule('Aswini: Mars Debilitated', -12, 'both', false, 'அசுவினி: செவ்வாய் நீசம்');
+        }
         if (ctx.P['Mars'] && ctx.P['Venus'] && ctx.P['Mars'] === ctx.P['Venus']) ctx.addRule('Aswini: Mars + Venus Conjunction', 10, 'both', false, 'அசுவினி: செவ்வாய் + சுக்கிரன் சேர்க்கை');
     },
     'Aswini': (ctx) => NAKSHATRA_RULES['Ashwini'](ctx),
@@ -351,17 +366,19 @@ const NAKSHATRA_RULES = {
     },
     'Mrigashirsha': (ctx) => NAKSHATRA_RULES['Mrigashira'](ctx),
     'Ardra': (ctx) => {
-        const marsPos = ctx.P['Mars'];
-        if (marsPos) {
-            const dignity = getDignity('Mars', marsPos);
-            if (dignity === 'Debilitated') {
-                ctx.setSureFlop('Ardra: Mars Neecham', 'திருவாதிரை: செவ்வாய் நீசம்', 'both');
-            } else if (isExalted('Mars', marsPos) || isOwnSign('Mars', marsPos)) {
-                ctx.addRule('Ardra: Mars Aatchi/Ucham', 10, 'bowl', true, 'திருவாதிரை: செவ்வாய் ஆட்சி/உச்சம்');
-                ctx.addRule('Ardra: Mars Aatchi/Ucham', 0, 'bat', false, 'திருவாதிரை: செவ்வாய் ஆட்சி/உச்சம்');
-            } else if (ctx.playerRasiLord === 'Mars' || ctx.playerStarLord === 'Mars') {
-                ctx.addRule('Ardra: Mars Lord', 4, 'bowl', false, 'திருவாதிரை: செவ்வாய் அதிபதி');
-                ctx.addRule('Ardra: Mars Lord', 0, 'bat', false, 'திருவாதிரை: செவ்வாய் அதிபதி');
+        if (ctx.isMarsRelevant) {
+            const marsPos = ctx.P['Mars'];
+            if (marsPos) {
+                const dignity = getDignity('Mars', marsPos);
+                if (dignity === 'Debilitated') {
+                    ctx.setSureFlop('Ardra: Mars Neecham', 'திருவாதிரை: செவ்வாய் நீசம்', 'both');
+                } else if (isExalted('Mars', marsPos) || isOwnSign('Mars', marsPos)) {
+                    ctx.addRule('Ardra: Mars Aatchi/Ucham', 10, 'bowl', true, 'திருவாதிரை: செவ்வாய் ஆட்சி/உச்சம்');
+                    ctx.addRule('Ardra: Mars Aatchi/Ucham', 0, 'bat', false, 'திருவாதிரை: செவ்வாய் ஆட்சி/உச்சம்');
+                } else if (ctx.playerRasiLord === 'Mars' || ctx.playerStarLord === 'Mars') {
+                    ctx.addRule('Ardra: Mars Lord', 4, 'bowl', false, 'திருவாதிரை: செவ்வாய் அதிபதி');
+                    ctx.addRule('Ardra: Mars Lord', 0, 'bat', false, 'திருவாதிரை: செவ்வாய் அதிபதி');
+                }
             }
         }
     },

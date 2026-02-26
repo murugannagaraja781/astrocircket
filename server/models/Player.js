@@ -15,5 +15,10 @@ const PlayerSchema = new mongoose.Schema({
     manualStatus: { type: String, default: '' }
 });
 
+// Indexes for fast player search
+PlayerSchema.index({ name: 'text', birthPlace: 'text' });
+PlayerSchema.index({ name: 1 });
+PlayerSchema.index({ id: 1 });
+
 module.exports = mongoose.model('Player', PlayerSchema);
 

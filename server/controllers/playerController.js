@@ -223,12 +223,41 @@ const getPlayers = async (req, res) => {
 
         // Build Filter
         const query = {};
-        if (req.query.search) {
-            query.name = { $regex: req.query.search, $options: 'i' };
+        const searchText = (req.query.search || '').trim();
+
+        if (searchText) {
+            // Split search into individual words for flexible matching
+            // e.g. "Virat Kohli" will match name containing both "Virat" AND "Kohli"
+            const words = searchText.split(/\s+/).filter(w => w.length > 0);
+
+            // Each word must match at least one searched field (AND logic across words)
+            const wordConditions = words.map(word => {
+                const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const regex = { $regex: escaped, $options: 'i' };
+                return {
+                    $or: [
+                        { name: regex },
+                        { birthPlace: regex },
+                        { id: regex },
+                        // Search inside birth chart - Moon sign (rasi) and nakshatra
+                        { 'birthChart.planets.Moon.sign': regex },
+                        { 'birthChart.planets.Moon.signTamil': regex },
+                        { 'birthChart.planets.Moon.nakshatra': regex },
+                        { 'birthChart.planets.Moon.nakshatraTamil': regex },
+                    ]
+                };
+            });
+
+            query.$and = wordConditions;
         }
+
         if (req.query.place) {
-            // Basic text match for place
-            query.birthPlace = { $regex: req.query.place, $options: 'i' };
+            const placeRegex = { $regex: req.query.place, $options: 'i' };
+            if (query.$and) {
+                query.$and.push({ birthPlace: placeRegex });
+            } else {
+                query.birthPlace = placeRegex;
+            }
         }
 
         const totalPlayers = await Player.countDocuments(query);

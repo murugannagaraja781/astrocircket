@@ -402,7 +402,7 @@ const calculatePanchang = (sunLong, moonLong, dateObj) => {
 
 /**
  * Calculate Lagna Timeline for a match duration (e.g. 4 hours)
- * Returns array of Lagnas with start/end times
+ * Returns array of Lagnas with start/end times, nakshatra detail
  */
 const getLagnaTimeline = (year, month, day, hour, minute, lat, lon, timezone = 5.5, durationHours = 4) => {
     const timeline = [];
@@ -412,18 +412,15 @@ const getLagnaTimeline = (year, month, day, hour, minute, lat, lon, timezone = 5
     let currentTime = new Date(startTime);
     let currentLagna = null;
     let currentLagnaLord = null;
-    let lagnaStartTime = new Date(startTime);
+    let currentNakshatra = null;
+    let currentNakLord = null;
+    let currentNakTamil = null;
+    let segmentStartTime = new Date(startTime);
 
-    // Iteration step in minutes (fine-grained to catch changes)
-    const stepMinutes = 5;
+    // 1-minute steps for precise nakshatra boundary detection
+    const stepMinutes = 1;
 
     while (currentTime <= endTime) {
-        // Essential Fix: calculatePlanetaryPositions expects Wall Clock Time of the location (e.g. 19:30 for 7:30 PM).
-        // But currentTime is a UTC timestamp (e.g. 14:00 UTC).
-        // If we just pull hours from UTC (14:00) and pass to calc, calc might interpret 14:00 - 5.5 = 08:30 UTC.
-        // We must reconstruct the "Wall Clock" components.
-        // A simple way is to shift the UTC time BY the timezone offset, then read UTC components.
-
         const wallClockTime = new Date(currentTime.getTime() + (parseFloat(timezone) * 3600000));
 
         const cYear = wallClockTime.getUTCFullYear();
@@ -437,36 +434,55 @@ const getLagnaTimeline = (year, month, day, hour, minute, lat, lon, timezone = 5
         const signData = calculateSign(ascDegree);
         const signName = signData.name;
         const signLord = signData.lord;
+        const nakData = calculateNakshatra(ascDegree);
+        const nakName = nakData.name;
+        const nakLord = nakData.lord;
+        const nakTamil = nakData.tamil || nakName;
 
         if (currentLagna === null) {
+            // First iteration - initialize
             currentLagna = signName;
             currentLagnaLord = signLord;
-            lagnaStartTime = new Date(currentTime);
-        } else if (currentLagna !== signName) {
-            // Lagna Changed
+            currentNakshatra = nakName;
+            currentNakLord = nakLord;
+            currentNakTamil = nakTamil;
+            segmentStartTime = new Date(currentTime);
+        } else if (currentLagna !== signName || currentNakshatra !== nakName) {
+            // Sign or Nakshatra changed - push previous segment
             timeline.push({
                 lagna: currentLagna,
                 lord: currentLagnaLord,
-                start: lagnaStartTime.toISOString(),
-                end: currentTime.toISOString(), // Approx end time (start of next)
-                isMain: timeline.length === 0 // First one is main
+                nakshatra: currentNakshatra,
+                nakshatraTamil: currentNakTamil,
+                nakshatraLord: currentNakLord,
+                start: segmentStartTime.toISOString(),
+                end: currentTime.toISOString(),
+                isMain: timeline.length === 0
             });
             currentLagna = signName;
             currentLagnaLord = signLord;
-            lagnaStartTime = new Date(currentTime);
+            currentNakshatra = nakName;
+            currentNakLord = nakLord;
+            currentNakTamil = nakTamil;
+            segmentStartTime = new Date(currentTime);
         }
 
-        currentTime = new Date(currentTime.getTime() + stepMinutes * 60 * 1000); // Add step
+        currentTime = new Date(currentTime.getTime() + stepMinutes * 60 * 1000);
     }
 
     // Push the last segment
-    timeline.push({
-        lagna: currentLagna,
-        lord: currentLagnaLord,
-        start: lagnaStartTime.toISOString(),
-        end: endTime.toISOString(),
-        isMain: timeline.length === 0
-    });
+    if (currentLagna) {
+        timeline.push({
+            lagna: currentLagna,
+            lord: currentLagnaLord,
+            nakshatra: currentNakshatra,
+            nakshatraTamil: currentNakTamil,
+            nakshatraLord: currentNakLord,
+            start: segmentStartTime.toISOString(),
+            end: endTime.toISOString(),
+            isMain: timeline.length === 0
+        });
+    }
 
     return timeline;
 };

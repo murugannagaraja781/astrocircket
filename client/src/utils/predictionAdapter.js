@@ -167,6 +167,7 @@ export const runPrediction = (playerChart, matchChart, role = "BAT") => {
         // Rule 2 flag for UI to show special split indicator
         isRule2Split: engineOutput.status === 'SURE FLOP' || (isBowling && engineOutput.score <= -5),
         isSpecial: engineOutput.isSpecial,
-        matchedLagnas: engineOutput.matchedLagnas
+        matchedLagnas: engineOutput.matchedLagnas,
+        matchedNakshatras: engineOutput.matchedNakshatras
     };
 };

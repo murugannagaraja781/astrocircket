@@ -1616,13 +1616,19 @@ const MatchWizardDialog = (props) => {
                                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                                                         <Chip label={`B:${res.bat.score}`} size="small" sx={{ height: 18, fontSize: '0.65rem', px: 0.5, bgcolor: res.bat.score >= 1 ? '#e6fffa' : '#f3f4f6', color: res.bat.score >= 1 ? '#059669' : '#374151', border: '1px solid', borderColor: res.bat.score >= 1 ? '#10b981' : '#d1d5db' }} />
                                                         {res.bat.matchedLagnas?.map(idx => (
-                                                            <Box key={idx} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#FFC107', color: '#000', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #FFA000' }}>L{idx}</Box>
+                                                            <Box key={`L${idx}`} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#FFC107', color: '#000', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #FFA000' }}>L{idx}</Box>
+                                                        ))}
+                                                        {res.bat.matchedNakshatras?.map(idx => (
+                                                            <Box key={`N${idx}`} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#00897B', color: '#fff', fontSize: '0.65rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #00695C' }}>N{idx}</Box>
                                                         ))}
                                                     </Box>
                                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                                                         <Chip label={`Bw:${res.bowl.score}`} size="small" sx={{ height: 18, fontSize: '0.65rem', px: 0.5, bgcolor: res.bowl.score >= 1 ? '#e6fffa' : '#f3f4f6', color: res.bowl.score >= 1 ? '#059669' : '#374151', border: '1px solid', borderColor: res.bowl.score >= 1 ? '#10b981' : '#d1d5db' }} />
                                                         {res.bowl.matchedLagnas?.map(idx => (
-                                                            <Box key={idx} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#FFC107', color: '#000', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #FFA000' }}>L{idx}</Box>
+                                                            <Box key={`L${idx}`} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#FFC107', color: '#000', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #FFA000' }}>L{idx}</Box>
+                                                        ))}
+                                                        {res.bowl.matchedNakshatras?.map(idx => (
+                                                            <Box key={`N${idx}`} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#00897B', color: '#fff', fontSize: '0.65rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #00695C' }}>N{idx}</Box>
                                                         ))}
                                                     </Box>
                                                 </Box>
@@ -1804,13 +1810,19 @@ const MatchWizardDialog = (props) => {
                                                                         <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
                                                                             <Chip label={`B:${res.bat.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bat.score >= 1 ? 'success' : 'default'} />
                                                                             {res.bat.matchedLagnas?.map(idx => (
-                                                                                <Box key={idx} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#FFC107', color: '#000', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #FFA000' }}>L{idx}</Box>
+                                                                                <Box key={`L${idx}`} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#FFC107', color: '#000', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #FFA000' }}>L{idx}</Box>
+                                                                            ))}
+                                                                            {res.bat.matchedNakshatras?.map(idx => (
+                                                                                <Box key={`N${idx}`} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#00897B', color: '#fff', fontSize: '0.65rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #00695C' }}>N{idx}</Box>
                                                                             ))}
                                                                         </Box>
                                                                         <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
                                                                             <Chip label={`Bo:${res.bowl.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bowl.score >= 1 ? 'success' : 'default'} />
                                                                             {res.bowl.matchedLagnas?.map(idx => (
-                                                                                <Box key={idx} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#FFC107', color: '#000', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #FFA000' }}>L{idx}</Box>
+                                                                                <Box key={`L${idx}`} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#FFC107', color: '#000', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #FFA000' }}>L{idx}</Box>
+                                                                            ))}
+                                                                            {res.bowl.matchedNakshatras?.map(idx => (
+                                                                                <Box key={`N${idx}`} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#00897B', color: '#fff', fontSize: '0.65rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #00695C' }}>N{idx}</Box>
                                                                             ))}
                                                                         </Box>
                                                                     </Box>
@@ -2372,6 +2384,7 @@ const UserDashboard = ({ hideHeader = false }) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(25);
     const [searchTerm, setSearchTerm] = useState('');
+    const [debouncedSearch, setDebouncedSearch] = useState('');
     const [totalPlayers, setTotalPlayers] = useState(0);
     const [selectedPlayerIds, setSelectedPlayerIds] = useState([]);
 
@@ -2543,7 +2556,8 @@ const UserDashboard = ({ hideHeader = false }) => {
                 }
 
                 // 1. Fetch Players
-                const res = await axios.get(`${baseUrl}/api/players?page=${page + 1}&limit=${rowsPerPage}`, {
+                const searchParam = debouncedSearch ? `&search=${encodeURIComponent(debouncedSearch)}` : '';
+                const res = await axios.get(`${baseUrl}/api/players?page=${page + 1}&limit=${rowsPerPage}${searchParam}`, {
                     headers: { 'x-auth-token': authToken }
                 });
 
@@ -2577,7 +2591,16 @@ const UserDashboard = ({ hideHeader = false }) => {
             }
         };
         fetchData();
-    }, [token, baseUrl, page, rowsPerPage]);
+    }, [token, baseUrl, page, rowsPerPage, debouncedSearch]);
+
+    // Debounce search term (400ms delay)
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearch(searchTerm);
+            setPage(0); // Reset to first page on new search
+        }, 400);
+        return () => clearTimeout(timer);
+    }, [searchTerm]);
 
     // ===== HOME PAGE COMPONENT WITH QUICK ACTIONS =====
     const HomePage = () => {
@@ -2879,7 +2902,7 @@ const UserDashboard = ({ hideHeader = false }) => {
         });
     }, [searchTerm, players]);
 
-    const paginatedPlayers = filteredPlayers; // Server handles pagination now
+    const paginatedPlayers = debouncedSearch ? filteredPlayers : players; // When searching, server handles filtering
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
