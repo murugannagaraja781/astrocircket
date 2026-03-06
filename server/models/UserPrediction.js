@@ -42,4 +42,8 @@ const UserPredictionSchema = new mongoose.Schema({
     }
 });
 
+// Add indexes for common queries
+UserPredictionSchema.index({ userId: 1 });
+UserPredictionSchema.index({ matchDate: -1 }); // Often sort by date descending
+
 module.exports = mongoose.model('UserPrediction', UserPredictionSchema);

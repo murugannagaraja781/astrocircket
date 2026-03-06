@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const compression = require('compression');
 const authRoutes = require('./routes/auth');
 const chartRoutes = require('./routes/charts');
 const groupRoutes = require('./routes/groups'); // Import it!
@@ -30,6 +31,9 @@ const corsOptions = {
 
 // Apply CORS middleware (handles preflight automatically)
 app.use(cors(corsOptions));
+
+// Enable compression
+app.use(compression());
 
 app.use(express.json());
 

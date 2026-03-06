@@ -58,4 +58,9 @@ const MatchSchema = new mongoose.Schema({
     }
 });
 
+// Add indexes for common queries
+MatchSchema.index({ matchDate: -1 });
+MatchSchema.index({ status: 1 });
+MatchSchema.index({ leagueId: 1 });
+
 module.exports = mongoose.model('Match', MatchSchema);

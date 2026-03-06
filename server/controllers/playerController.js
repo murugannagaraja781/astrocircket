@@ -3,7 +3,7 @@ const axios = require('axios');
 const { formatPlanetaryData } = require('../utils/chartUtils');
 const path = require('path');
 const fs = require('fs');
-const xlsx = require('xlsx');
+const ExcelJS = require('exceljs');
 
 // Import local astro calculator using vedic-astrology-api
 const {
@@ -153,11 +153,30 @@ const uploadPlayers = async (req, res) => {
             req.file.originalname.endsWith('.xls') ||
             req.file.originalname.endsWith('.csv')
         ) {
-            // Parse Excel
-            const workbook = xlsx.readFile(req.file.path);
-            const sheetName = workbook.SheetNames[0];
-            const worksheet = workbook.Sheets[sheetName];
-            playersData = xlsx.utils.sheet_to_json(worksheet);
+            // Parse Excel using exceljs
+            const workbook = new ExcelJS.Workbook();
+            await workbook.xlsx.readFile(req.file.path);
+            const worksheet = workbook.getWorksheet(1);
+
+            const data = [];
+            const headers = [];
+
+            worksheet.getRow(1).eachCell((cell, colNumber) => {
+                headers[colNumber] = cell.value;
+            });
+
+            worksheet.eachRow((row, rowNumber) => {
+                if (rowNumber === 1) return; // Skip header row
+                const rowData = {};
+                row.eachCell((cell, colNumber) => {
+                    const header = headers[colNumber];
+                    if (header) {
+                        rowData[header] = cell.value;
+                    }
+                });
+                data.push(rowData);
+            });
+            playersData = data;
         } else {
             fs.unlinkSync(req.file.path);
             return res.status(400).json({ message: 'Invalid file format. Use .json or .xlsx' });

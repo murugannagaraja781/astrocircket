@@ -15,15 +15,16 @@
     "axios": "^1.13.2",
     "bcryptjs": "^3.0.3",
     "body-parser": "^2.2.1",
+    "compression": "^1.8.1",
     "cors": "^2.8.5",
     "country-state-city": "^3.2.1",
     "dotenv": "^17.2.3",
+    "exceljs": "^4.4.0",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.0.1",
     "multer": "^2.0.2",
     "nodemon": "^3.1.11",
-    "vedic-astrology-api": "^1.0.9",
-    "xlsx": "^0.18.5"
+    "vedic-astrology-api": "^1.0.9"
   }
 }
