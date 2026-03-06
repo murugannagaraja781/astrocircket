@@ -2721,141 +2721,123 @@ const GroupsManager = () => {
                 </Paper>
 
                 {isExpanded && (
-                    <Grid container spacing={2} sx={{ mt: 1 }}>
-                        {list.map(g => (
-                            <Grid item xs={12} sm={6} md={4} key={g._id}>
-                                <Paper
-                                    elevation={0}
-                                    sx={{
-                                        p: 0,
-                                        borderRadius: '16px',
-                                        border: '1px solid rgba(0,0,0,0.06)',
-                                        boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
-                                        overflow: 'hidden',
-                                        transition: 'all 0.2s ease',
-                                        '&:hover': {
-                                            boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
-                                            transform: 'translateY(-2px)'
-                                        }
-                                    }}
-                                >
-                                    <Box sx={{
-                                        p: 2,
-                                        background: g.leagueType === 'T20' ? 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)' :
-                                            g.leagueType === 'ODI' ? 'linear-gradient(135deg, #166534 0%, #22c55e 100%)' :
-                                                'linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%)',
-                                        color: 'white'
-                                    }}>
-                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <Typography variant="h6" fontWeight="700">{g.name}</Typography>
+                    <TableContainer component={Paper} elevation={0} sx={{ border: '1px solid rgba(0,0,0,0.06)', borderRadius: '16px', overflow: 'hidden' }}>
+                        <Table size="small">
+                            <TableHead>
+                                <TableRow sx={{ bgcolor: 'rgba(32, 41, 58, 0.02)' }}>
+                                    <TableCell sx={{ fontWeight: 'bold', py: 2 }}>Team Name</TableCell>
+                                    <TableCell align="center" sx={{ fontWeight: 'bold' }}>Players</TableCell>
+                                    <TableCell align="center" sx={{ fontWeight: 'bold' }}>Squad Preview</TableCell>
+                                    <TableCell align="right" sx={{ fontWeight: 'bold', pr: 2 }}>Actions</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {list.map(g => (
+                                    <TableRow key={g._id} hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                        <TableCell>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                                <Box sx={{
+                                                    width: 6, height: 32, borderRadius: '4px',
+                                                    background: g.leagueType === 'T20' ? 'linear-gradient(to bottom, #1e3a8a, #3b82f6)' :
+                                                        g.leagueType === 'ODI' ? 'linear-gradient(to bottom, #166534, #22c55e)' : '#2563eb'
+                                                }} />
+                                                <Typography variant="subtitle1" fontWeight="700" color="text.primary">{g.name}</Typography>
+                                            </Box>
+                                        </TableCell>
+                                        <TableCell align="center">
                                             <Chip
                                                 label={`${g.players.length} Players`}
                                                 size="small"
                                                 sx={{
-                                                    bgcolor: 'rgba(255,255,255,0.2)',
-                                                    color: 'white',
-                                                    fontWeight: 600,
-                                                    fontSize: '0.75rem'
+                                                    bgcolor: g.players.length > 0 ? 'rgba(37, 99, 235, 0.08)' : 'rgba(0,0,0,0.04)',
+                                                    color: g.players.length > 0 ? '#1e40af' : 'text.disabled',
+                                                    fontWeight: 700,
+                                                    fontSize: '0.75rem',
+                                                    border: '1px solid rgba(0,0,0,0.05)'
                                                 }}
                                             />
-                                        </Box>
-                                    </Box>
-
-                                    <Box sx={{ p: 2 }}>
-                                        <Box sx={{ display: 'flex', mb: 2 }}>
-                                            {g.players.slice(0, 5).map((p, idx) => (
-                                                <Avatar
-                                                    key={p.id}
-                                                    src={p.profile?.startsWith('http') ? p.profile : `${import.meta.env.VITE_BACKEND_URL}/uploads/${p.profile}`}
-                                                    sx={{
-                                                        width: 32,
-                                                        height: 32,
-                                                        ml: idx > 0 ? -1 : 0,
-                                                        border: '2px solid white',
-                                                        fontSize: 12
-                                                    }}
-                                                >
-                                                    {p.name?.[0]}
-                                                </Avatar>
-                                            ))}
-                                            {g.players.length > 5 && (
-                                                <Avatar sx={{
-                                                    width: 32,
-                                                    height: 32,
-                                                    ml: -1,
-                                                    bgcolor: '#e5e7eb',
-                                                    color: '#6b7280',
-                                                    fontSize: 10,
-                                                    fontWeight: 700,
-                                                    border: '2px solid white'
-                                                }}>
-                                                    +{g.players.length - 5}
-                                                </Avatar>
-                                            )}
-                                            {g.players.length === 0 && (
-                                                <Typography variant="caption" color="#9ca3af">No players yet</Typography>
-                                            )}
-                                        </Box>
-
-                                        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                                            <Button
-                                                variant="contained"
-                                                size="small"
-                                                onClick={() => openManageDialog(g)}
-                                                sx={{
-                                                    borderRadius: '8px',
-                                                    textTransform: 'none',
-                                                    fontWeight: 600,
-                                                    flex: 1,
-                                                    background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
-                                                }}
-                                            >
-                                                Manage
-                                            </Button>
-
-                                            {/* Move Buttons */}
-                                            <Tooltip title={g.leagueType === 'T20' ? "Move to ODI" : "Move to T20"}>
-                                                <IconButton
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                                                {g.players.slice(0, 5).map((p, idx) => (
+                                                    <Avatar
+                                                        key={p.id || idx}
+                                                        src={p.profile?.startsWith('http') ? p.profile : `${import.meta.env.VITE_BACKEND_URL}/uploads/${p.profile}`}
+                                                        sx={{
+                                                            width: 28, height: 28, ml: idx > 0 ? -1 : 0,
+                                                            border: '2px solid white', fontSize: 10, bgcolor: 'primary.light',
+                                                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                                        }}
+                                                    >
+                                                        {p.name?.[0]}
+                                                    </Avatar>
+                                                ))}
+                                                {g.players.length > 5 && (
+                                                    <Avatar sx={{
+                                                        width: 28, height: 28, ml: -1, border: '2px solid white',
+                                                        bgcolor: '#f1f5f9', color: '#475569', fontSize: 10, fontWeight: 700
+                                                    }}>
+                                                        +{g.players.length - 5}
+                                                    </Avatar>
+                                                )}
+                                                {g.players.length === 0 && (
+                                                    <Typography variant="caption" color="text.disabled" sx={{ fontStyle: 'italic' }}>No players</Typography>
+                                                )}
+                                            </Box>
+                                        </TableCell>
+                                        <TableCell align="right" sx={{ pr: 2 }}>
+                                            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
+                                                <Button
+                                                    variant="contained"
                                                     size="small"
-                                                    onClick={() => handleMoveGroup(g._id, g.leagueType === 'T20' ? 'ODI' : 'T20')}
+                                                    onClick={() => openManageDialog(g)}
+                                                    startIcon={<PeopleIcon sx={{ fontSize: '1rem !important' }} />}
                                                     sx={{
-                                                        color: '#6366f1',
-                                                        bgcolor: 'rgba(99, 102, 241, 0.1)',
-                                                        '&:hover': { bgcolor: 'rgba(99, 102, 241, 0.2)' }
+                                                        borderRadius: '10px', textTransform: 'none', fontWeight: 700,
+                                                        px: 2, height: 32, fontSize: '0.8rem',
+                                                        background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
+                                                        '&:hover': { transform: 'translateY(-1px)', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }
                                                     }}
                                                 >
-                                                    <AddIcon sx={{ transform: 'rotate(45deg)' }} />
-                                                </IconButton>
-                                            </Tooltip>
+                                                    Manage
+                                                </Button>
 
-                                            <IconButton
-                                                size="small"
-                                                onClick={() => convertConfirmAction('Clear Group', `Clear all players from ${g.name}?`, () => handleClearGroup(g.name))}
-                                                sx={{
-                                                    color: '#f59e0b',
-                                                    bgcolor: 'rgba(245, 158, 11, 0.1)',
-                                                    '&:hover': { bgcolor: 'rgba(245, 158, 11, 0.2)' }
-                                                }}
-                                            >
-                                                <DeleteIcon fontSize="small" />
-                                            </IconButton>
-                                            <IconButton
-                                                size="small"
-                                                onClick={() => convertConfirmAction('Delete Group', 'Are you sure you want to delete this group?', () => handleDeleteGroup(g._id))}
-                                                sx={{
-                                                    color: '#ef4444',
-                                                    bgcolor: 'rgba(239, 68, 68, 0.1)',
-                                                    '&:hover': { bgcolor: 'rgba(239, 68, 68, 0.2)' }
-                                                }}
-                                            >
-                                                <DeleteIcon fontSize="small" />
-                                            </IconButton>
-                                        </Box>
-                                    </Box>
-                                </Paper>
-                            </Grid>
-                        ))}
-                    </Grid>
+                                                <Tooltip title={g.leagueType === 'T20' ? "Move to ODI" : "Move to T20"}>
+                                                    <IconButton
+                                                        size="small"
+                                                        onClick={() => handleMoveGroup(g._id, g.leagueType === 'T20' ? 'ODI' : 'T20')}
+                                                        sx={{ color: '#6366f1', bgcolor: 'rgba(99, 102, 241, 0.08)', '&:hover': { bgcolor: 'rgba(99, 102, 241, 0.15)' } }}
+                                                    >
+                                                        <AddIcon sx={{ transform: 'rotate(45deg)', fontSize: 18 }} />
+                                                    </IconButton>
+                                                </Tooltip>
+
+                                                <Tooltip title="Clear Group">
+                                                    <IconButton
+                                                        size="small"
+                                                        onClick={() => convertConfirmAction('Clear Group', `Clear all players from ${g.name}?`, () => handleClearGroup(g.name))}
+                                                        sx={{ color: '#f59e0b', bgcolor: 'rgba(245, 158, 11, 0.08)', '&:hover': { bgcolor: 'rgba(245, 158, 11, 0.15)' } }}
+                                                    >
+                                                        <DeleteIcon sx={{ fontSize: 18, color: '#f59e0b' }} />
+                                                    </IconButton>
+                                                </Tooltip>
+
+                                                <Tooltip title="Delete Group">
+                                                    <IconButton
+                                                        size="small"
+                                                        onClick={() => convertConfirmAction('Delete Group', 'Are you sure you want to delete this group?', () => handleDeleteGroup(g._id))}
+                                                        sx={{ color: '#ef4444', bgcolor: 'rgba(239, 68, 68, 0.08)', '&:hover': { bgcolor: 'rgba(239, 68, 68, 0.15)' } }}
+                                                    >
+                                                        <DeleteIcon sx={{ fontSize: 18 }} />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </Box>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                 )}
             </Box>
         );
