@@ -61,6 +61,62 @@ const visionPro = {
     gradientWarm: 'linear-gradient(135deg, #FFD54F 0%, #FF6F00 100%)', // Subtle warm gradient
 };
 
+const PLANET_TAMIL_SHORT = {
+    'Sun': 'சூரி',
+    'Moon': 'சந்',
+    'Mars': 'செவ்',
+    'Mercury': 'புத',
+    'Jupiter': 'குரு',
+    'Venus': 'சுக்',
+    'Saturn': 'சனி',
+    'Rahu': 'ராகு',
+    'Ketu': 'கேது',
+    'Unknown': '??'
+};
+
+const renderGroupedBadges = (matches, type) => {
+    if (!matches || matches.length === 0) return null;
+
+    const grouped = matches.reduce((acc, curr) => {
+        const lord = typeof curr === 'object' ? curr.lord : curr;
+        const idx = typeof curr === 'object' ? curr.index : null;
+        if (!acc[lord]) acc[lord] = [];
+        if (idx && !acc[lord].includes(idx)) acc[lord].push(idx);
+        return acc;
+    }, {});
+
+    return Object.entries(grouped).map(([lord, indices]) => {
+        const tamilName = PLANET_TAMIL_SHORT[lord] || lord;
+        const prefix = type === 'lagna' ? 'L' : 'N';
+        const indicesText = indices.length > 0 ? ` ${prefix}${indices.sort((a, b) => a - b).join(',')}` : '';
+        const label = `${tamilName}${indicesText}`;
+
+        return (
+            <Box
+                key={`${type}-${lord}`}
+                sx={{
+                    minWidth: 24,
+                    height: 20,
+                    px: 0.6,
+                    borderRadius: '4px',
+                    bgcolor: type === 'lagna' ? '#FFC107' : '#00897B',
+                    color: type === 'lagna' ? '#000' : '#fff',
+                    fontSize: '0.62rem',
+                    fontWeight: 'bold',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: '1px solid',
+                    borderColor: type === 'lagna' ? '#FFA000' : '#00695C',
+                    flexShrink: 0
+                }}
+            >
+                {label}
+            </Box>
+        );
+    });
+};
+
 // --- HELPERS ---
 const getFlag = (player) => {
     const tz = player.timezone || '';
@@ -102,6 +158,7 @@ const RuleChecklist = ({ logs, role }) => {
         { id: 7, name: "Rahu/Ketu Player", tamil: "ராகு/கேது விதி" },
         { id: 8, name: "Lagna", tamil: "லக்ன விதி" },
         { id: 9, name: "Double Lord", tamil: "மேட்ச் ராசி" },
+        { id: 10, name: "Spl Rule", tamil: "சிறப்பு விதி" },
     ];
 
     return (
@@ -155,6 +212,7 @@ const PredictionChip = ({ score, type, report = [] }) => {
 
     if (score >= 2) { color = 'success'; label = 'Excellent'; }
     else if (score >= 1) { color = 'primary'; label = 'Good'; }
+    else if (score < 0) { color = 'error'; label = 'Sure Flop'; }
     else { color = 'error'; label = 'Flop'; }
 
     return (
@@ -169,10 +227,10 @@ const PredictionChip = ({ score, type, report = [] }) => {
             </div>
         } arrow placement="top">
             <Chip
-                label={`${type}: ${label}`}
+                label={`${type}: ${score ?? 0} (${label})`}
                 size="small"
                 color={color}
-                variant={score > 0 ? 'filled' : 'outlined'}
+                variant={score !== undefined ? 'filled' : 'outlined'}
                 sx={{ mr: 1, fontWeight: 'bold' }}
             />
         </Tooltip>
@@ -834,14 +892,12 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewCha
     // Use first letter of name for Avatar
     const avatarLetter = player.name ? player.name.charAt(0).toUpperCase() : '?';
 
-    // Calculate Permissions if Match Chart is available
-    let batResult = null;
-    let bowlResult = null;
+    const playerPredictions = useSelector(state => state.predictions.playerPredictions);
+    const pid = player.id || player._id;
+    const res = playerPredictions[pid];
 
-    if (matchChart && chart) {
-        batResult = runPrediction({ ...chart, role: player.role }, matchChart.data || matchChart, "BAT");
-        bowlResult = runPrediction({ ...chart, role: player.role }, matchChart.data || matchChart, "BOWL");
-    }
+    const batResult = res?.bat || (matchChart && chart ? runPrediction({ ...chart, role: player.role }, matchChart.data || matchChart, "BAT") : null);
+    const bowlResult = res?.bowl || (matchChart && chart ? runPrediction({ ...chart, role: player.role }, matchChart.data || matchChart, "BOWL") : null);
 
     const isSpecialPlayer = batResult?.isSpecial || bowlResult?.isSpecial;
 
@@ -1613,23 +1669,15 @@ const MatchWizardDialog = (props) => {
                                             {/* Prediction Chips (Moved Below Name) */}
                                             {res && (
                                                 <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mt: 0.2 }}>
-                                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flexWrap: 'wrap' }}>
                                                         <Chip label={`B:${res.bat.score}`} size="small" sx={{ height: 18, fontSize: '0.65rem', px: 0.5, bgcolor: res.bat.score >= 1 ? '#e6fffa' : '#f3f4f6', color: res.bat.score >= 1 ? '#059669' : '#374151', border: '1px solid', borderColor: res.bat.score >= 1 ? '#10b981' : '#d1d5db' }} />
-                                                        {res.bat.matchedLagnas?.map(idx => (
-                                                            <Box key={`L${idx}`} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#FFC107', color: '#000', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #FFA000' }}>L{idx}</Box>
-                                                        ))}
-                                                        {res.bat.matchedNakshatras?.map(idx => (
-                                                            <Box key={`N${idx}`} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#00897B', color: '#fff', fontSize: '0.65rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #00695C' }}>N{idx}</Box>
-                                                        ))}
+                                                        {renderGroupedBadges(res.bat.matchedLagnas, 'lagna')}
+                                                        {renderGroupedBadges(res.bat.matchedNakshatras, 'star')}
                                                     </Box>
-                                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                                        <Chip label={`Bw:${res.bowl.score}`} size="small" sx={{ height: 18, fontSize: '0.65rem', px: 0.5, bgcolor: res.bowl.score >= 1 ? '#e6fffa' : '#f3f4f6', color: res.bowl.score >= 1 ? '#059669' : '#374151', border: '1px solid', borderColor: res.bowl.score >= 1 ? '#10b981' : '#d1d5db' }} />
-                                                        {res.bowl.matchedLagnas?.map(idx => (
-                                                            <Box key={`L${idx}`} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#FFC107', color: '#000', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #FFA000' }}>L{idx}</Box>
-                                                        ))}
-                                                        {res.bowl.matchedNakshatras?.map(idx => (
-                                                            <Box key={`N${idx}`} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#00897B', color: '#fff', fontSize: '0.65rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #00695C' }}>N{idx}</Box>
-                                                        ))}
+                                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flexWrap: 'wrap' }}>
+                                                        <Chip label={`Bo:${res.bowl.score}`} size="small" sx={{ height: 18, fontSize: '0.65rem', fontWeight: 'bold' }} color={res.bowl.score >= 1 ? 'success' : 'default'} />
+                                                        {renderGroupedBadges(res.bowl.matchedLagnas, 'lagna')}
+                                                        {renderGroupedBadges(res.bowl.matchedNakshatras, 'star')}
                                                     </Box>
                                                 </Box>
                                             )}
@@ -1807,23 +1855,15 @@ const MatchWizardDialog = (props) => {
                                                             <TableCell>
                                                                 {res ? (
                                                                     <Box sx={{ display: 'flex', gap: 1, flexDirection: 'column' }}>
-                                                                        <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
+                                                                        <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center', flexWrap: 'wrap' }}>
                                                                             <Chip label={`B:${res.bat.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bat.score >= 1 ? 'success' : 'default'} />
-                                                                            {res.bat.matchedLagnas?.map(idx => (
-                                                                                <Box key={`L${idx}`} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#FFC107', color: '#000', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #FFA000' }}>L{idx}</Box>
-                                                                            ))}
-                                                                            {res.bat.matchedNakshatras?.map(idx => (
-                                                                                <Box key={`N${idx}`} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#00897B', color: '#fff', fontSize: '0.65rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #00695C' }}>N{idx}</Box>
-                                                                            ))}
+                                                                            {renderGroupedBadges(res.bat.matchedLagnas, 'lagna')}
+                                                                            {renderGroupedBadges(res.bat.matchedNakshatras, 'star')}
                                                                         </Box>
-                                                                        <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
+                                                                        <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center', flexWrap: 'wrap' }}>
                                                                             <Chip label={`Bo:${res.bowl.score}`} size="small" sx={{ height: 16, fontSize: '0.6rem' }} color={res.bowl.score >= 1 ? 'success' : 'default'} />
-                                                                            {res.bowl.matchedLagnas?.map(idx => (
-                                                                                <Box key={`L${idx}`} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#FFC107', color: '#000', fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #FFA000' }}>L{idx}</Box>
-                                                                            ))}
-                                                                            {res.bowl.matchedNakshatras?.map(idx => (
-                                                                                <Box key={`N${idx}`} sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#00897B', color: '#fff', fontSize: '0.65rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #00695C' }}>N{idx}</Box>
-                                                                            ))}
+                                                                            {renderGroupedBadges(res.bowl.matchedLagnas, 'lagna')}
+                                                                            {renderGroupedBadges(res.bowl.matchedNakshatras, 'star')}
                                                                         </Box>
                                                                     </Box>
                                                                 ) : <Typography variant="caption">-</Typography>}

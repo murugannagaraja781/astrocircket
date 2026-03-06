@@ -49,6 +49,9 @@ class RuleContext {
             ascSign: calculateSign(matchData.ascendant)
         };
 
+        this.batting = { score: 0, logs: [], isSpecial: false, matchedLagnas: [], matchedNakshatras: [] };
+        this.bowling = { score: 0, logs: [], isSpecial: false, matchedLagnas: [], matchedNakshatras: [] };
+
         // Handle Dynamic Lagna for Batting/Bowling Phases
         this.matchLagnaSignBowl = this.matchChart.ascSign.name;
         this.matchLagnaLordBowl = this.matchChart.ascSign.lord;
@@ -57,6 +60,25 @@ class RuleContext {
         this.matchLagnas = matchParams.matchLagnas || [
             { lagna: this.matchChart.ascSign.name, lord: this.matchChart.ascSign.lord, isMain: true }
         ];
+
+        // Pre-compute global sequential indices for L# and N# labels
+        let lCount = 0;
+        let nCount = 0;
+        let pLagna = null;
+        let pNak = null;
+        this.matchLagnas.forEach(slot => {
+            if (slot.lagna !== pLagna) {
+                lCount++;
+                pLagna = slot.lagna;
+            }
+            const currentNak = slot.nakshatra || slot.star;
+            if (currentNak && currentNak !== pNak) {
+                nCount++;
+                pNak = currentNak;
+            }
+            slot.lSeq = lCount;
+            slot.nSeq = nCount;
+        });
 
         // If specific batting time is provided, calculate separate Lagna (Legacy support, maybe unused if timeline is active)
         if (matchParams.battingHour !== undefined && matchParams.battingMinute !== undefined) {
@@ -256,12 +278,23 @@ const GENERAL_RULES = [
             ctx.addRule('BOWL Rule 5: Same House (Rasi Lord)', 6, 'bowl', false, 'பவுலிங் விதி 5: மேட்ச் ராசி அதிபதி வீட்டில் ஒரே ராசி (+6)');
         }
     },
-    (ctx) => { // Rule 6: Player Rasi Home
-        if (ctx.isMatchStarLordRahuKetu) return;
-        if (ctx.playerRasi && ctx.M[ctx.matchRasiLord] === ctx.playerRasi && ctx.M[ctx.matchStarLord] === ctx.playerRasi) {
-            ctx.addRule('BAT Rule 6: Player Rasi Home', 6, 'bat', false, 'பேட்டிங் விதி 6: ராசி அதிபதி வீடு');
-            ctx.addRule('BOWL Rule 6: Player Rasi Home', 4, 'bowl', false, 'பவுலிங் விதி 6: ராசி அதிபதி வீடு');
-            ctx.applyBonuses(ctx.playerRasiLord, 4, 'bat');
+    (ctx) => { // Rule 6: Player Rasi Home (Updated)
+        const prlHouses = getOwnedSigns(ctx.playerRasiLord);
+        const pslHouses = getOwnedSigns(ctx.playerStarLord);
+        const playerLobby = [...prlHouses, ...pslHouses];
+
+        const mRasiPos = ctx.playerPlanets[ctx.matchRasiLord];
+        const mStarPos = ctx.playerPlanets[ctx.matchStarLord];
+
+        if (mRasiPos !== undefined && mStarPos !== undefined) {
+            const mRasiSignId = calculateSign(mRasiPos).id;
+            const mStarSignId = calculateSign(mStarPos).id;
+
+            if (playerLobby.includes(mRasiSignId) && playerLobby.includes(mStarSignId)) {
+                ctx.addRule('BAT Rule 6: Match Lords in Player House', 6, 'bat', false, 'பேட்டிங் விதி 6: ராசி அதிபதி வீடு');
+                ctx.addRule('BOWL Rule 6: Match Lords in Player House', 4, 'bowl', false, 'பவுலிங் விதி 6: ராசி அதிபதி வீடு');
+                ctx.applyBonuses(ctx.playerRasiLord, 4, 'bat');
+            }
         }
     },
     (ctx) => { // Rule 7: Rahu/Ketu
@@ -284,6 +317,9 @@ const GENERAL_RULES = [
             const lagnaName = lagnaObj.lagna;
 
             // Batting Lagna Check
+            if (lagnaLord === ctx.playerRasiLord) {
+                ctx.batting.matchedLagnas.push({ lord: lagnaLord, index: lagnaObj.lSeq || (index + 1) });
+            }
             if (lagnaLord === ctx.playerRasiLord && !processedLignasBat.has(lagnaName)) {
                 processedLignasBat.add(lagnaName); // Avoid double counting same lagna name if multiple segments
                 const suffix = ctx.matchLagnas.length > 1 ? ` (${lagnaName})` : '';
@@ -300,6 +336,9 @@ const GENERAL_RULES = [
             }
 
             // Bowling Lagna Check
+            if (lagnaLord === ctx.playerRasiLord) {
+                ctx.bowling.matchedLagnas.push({ lord: lagnaLord, index: lagnaObj.lSeq || (index + 1) });
+            }
             if (lagnaLord === ctx.playerRasiLord && !processedLignasBowl.has(lagnaName)) {
                 processedLignasBowl.add(lagnaName);
                 const suffix = ctx.matchLagnas.length > 1 ? ` (${lagnaName})` : '';
@@ -319,6 +358,13 @@ const GENERAL_RULES = [
                     ctx.addRule(`BOWL Rule 8: Planet Bonus${suffix}`, 4, 'bowl', false, `பவுலிங் விதி 8: லக்ன கிரக போனஸ்${suffix}`);
                 }
             }
+
+            // Nakshatra Lord Match Check
+            const nakLord = lagnaObj.nakshatraLord;
+            if (nakLord && nakLord === ctx.playerRasiLord) {
+                ctx.batting.matchedNakshatras.push({ lord: nakLord, index: lagnaObj.nSeq || (index + 1) });
+                ctx.bowling.matchedNakshatras.push({ lord: nakLord, index: lagnaObj.nSeq || (index + 1) });
+            }
         });
     },
     (ctx) => { // Rule 9: Double Lord Conjunction
@@ -326,7 +372,11 @@ const GENERAL_RULES = [
         const mRasiPos = ctx.P[ctx.matchRasiLord];
         const mStarPos = ctx.P[ctx.matchStarLord];
         if (mRasiPos && mStarPos && mRasiPos === mStarPos) {
-            ctx.addRule('Rule 9: Double Lord Conjunction', 12, 'both', true, 'விதி 9: மேட்ச் ராசி & நட்சத்திர அதிபதி ஜாதகத்தில் சேர்க்கை (+12)');
+            const pRasiLordSign = ctx.P["Moon"];
+            const pStarLordSign = ctx.P[ctx.playerStarLord];
+            if (mRasiPos === pRasiLordSign || mRasiPos === pStarLordSign) {
+                ctx.addRule('Rule 9: Double Lord Conjunction', 12, 'both', true, 'விதி 9: மேட்ச் ராசி & நட்சத்திர அதிபதி ஜாதகத்தில் சேர்க்கை (+12)');
+            }
         }
     }
 ];
@@ -381,6 +431,13 @@ const NAKSHATRA_RULES = {
             if (ctx.P['Venus'] === ctx.P['Mercury']) {
                 ctx.setSureFlop('Ayilyam: Venus + Mercury', 'ஆயில்யம்: சுக்கிரன் + புதன்', 'bat');
                 ctx.addRule('Ayilyam: Venus + Mercury', 12, 'bowl', true);
+            }
+        }
+        // Rule 10: Special Spl Rule (Ashlesha Match + Shatabhisha Player)
+        if (ctx.playerStar === 'Shatabhisha' || ctx.playerStar === 'Sathayam') {
+            if (ctx.playerRasi === 'Aquarius' || ctx.playerRasi === 'Kumbha') {
+                ctx.addRule('Rule 10: Spl Rule - Match-Player Combo', 20, 'bat', true, 'விதி 10: சிறப்பு விதி - மேட்ச்-வீரர் கூட்டணி');
+                ctx.addRule('Rule 10: Spl Rule - Match-Player Combo', 0, 'bowl', false, 'விதி 10: சிறப்பு விதி - மேட்ச்-வீரர் கூட்டணி');
             }
         }
     },

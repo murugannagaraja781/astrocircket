@@ -157,8 +157,8 @@ export const runPrediction = (playerChart, matchChart, role = "BAT") => {
 
     return {
         score: engineOutput.score,
-        logs: engineOutput.logs,
-        report: engineOutput.logs, // Map logs to report for UI compatibility
+        logs: engineOutput.logs || [],
+        report: engineOutput.logs || [], // Map logs to report for UI compatibility
         verdict: finalResult.verdict,
         verdictTamil: finalResult.verdictTamil,
         message: finalResult.message,

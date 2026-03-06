@@ -179,9 +179,11 @@ export const evaluateBatsman = (playerChart, matchChart) => {
 
     /* STATE */
     let globalNegative = false;
+    let globalSpecial = false;
 
     const addRule = (name, pts, type = "both", isSpecial = false, nameTamil = "") => {
         score += pts;
+        if (isSpecial) globalSpecial = true;
         const ruleText = `${name} (${pts > 0 ? "+" : ""}${pts})`;
         const ruleTextTamil = nameTamil ? `${nameTamil} (${pts > 0 ? "+" : ""}${pts})` : ruleText;
         report.push({ en: ruleText, ta: ruleTextTamil });
@@ -261,7 +263,12 @@ export const evaluateBatsman = (playerChart, matchChart) => {
         const mRasiPos = getPlanet(playerChart, matchRasiLord)?.sign;
         const mStarPos = getPlanet(playerChart, matchStarLord)?.sign;
         if (mRasiPos && mStarPos && mRasiPos === mStarPos) {
-            addRule('Rule 9: Double Lord Conjunction', 12, 'bat', false, 'விதி 9: இரட்டை அதிபதி சேர்க்கை');
+            // Updated Rule 9: Must be in Player's Rasi House or Star Lord House
+            const playerRasiLordSign = pMoon?.sign; // Player's Rasi Sign
+            const playerStarLordSign = getPlanet(playerChart, playerStarLord)?.sign; // Player's Star Lord's Sign
+            if (mRasiPos === playerRasiLordSign || mRasiPos === playerStarLordSign) {
+                addRule('Rule 9: Double Lord Conjunction', 12, 'bat', false, 'விதி 9: இரட்டை அதிபதி சேர்க்கை');
+            }
         }
     }
 
@@ -315,6 +322,14 @@ export const evaluateBatsman = (playerChart, matchChart) => {
         case 'Ashlesha':
         case 'Ayilyam':
             if (areInSameSign(playerChart, 'Venus', 'Mercury')) setSureFlop('Ayilyam: Venus + Mercury Conjunction', 'ஆயில்யம்: சுக்கிரன் + புதன் சேர்க்கை');
+
+            // Rule 10: Spl Rule - Match-Player Combo
+            if (playerStar === 'Shatabhisha' || playerStar === 'Sathayam') {
+                const pMoonObj = getPlanet(playerChart, 'Moon');
+                if (pMoonObj && (pMoonObj.sign === 'Aquarius' || pMoonObj.sign === 'Kumbha' || pMoonObj.sign === 'கும்பம்')) {
+                    addRule('Rule 10: Spl Rule - Match-Player Combo', 20, 'bat', true, 'விதி 10: சிறப்பு விதி - மேட்ச்-வீரர் கூட்டணி');
+                }
+            }
             break;
 
         // 6. MAGAM
@@ -419,7 +434,7 @@ export const evaluateBatsman = (playerChart, matchChart) => {
     if (score >= 8) label = "Excellent";
     if (globalNegative) label = "SURE FLOP";
 
-    return { score, label, report };
+    return { score, label, report, isSpecial: globalSpecial };
 };
 
 export const evaluateBowler = (playerChart, matchChart) => {
@@ -468,8 +483,11 @@ export const evaluateBowler = (playerChart, matchChart) => {
 
     const matchLagnaLord = getSignLord(mLagna?.sign);
 
+    let globalSpecial = false;
+
     const addRule = (name, pts, type = "both", isSpecial = false, nameTamil = "") => {
         score += pts;
+        if (isSpecial) globalSpecial = true;
         const ruleText = `${name} (${pts > 0 ? "+" : ""}${pts})`;
         const ruleTextTamil = nameTamil ? `${nameTamil} (${pts > 0 ? "+" : ""}${pts})` : ruleText;
         report.push({ en: ruleText, ta: ruleTextTamil });
@@ -572,7 +590,12 @@ export const evaluateBowler = (playerChart, matchChart) => {
         const mRasiPos = getPlanet(playerChart, matchRasiLord)?.sign;
         const mStarPos = getPlanet(playerChart, matchStarLord)?.sign;
         if (mRasiPos && mStarPos && mRasiPos === mStarPos) {
-            addRule('Rule 9: Double Lord Conjunction', 12, 'bowl', false, 'விதி 9: இரட்டை அதிபதி சேர்க்கை');
+            // Updated Rule 9: Must be in Player's Rasi House or Star Lord House
+            const playerRasiLordSign = pMoon?.sign; // Player's Rasi Sign
+            const playerStarLordSign = getPlanet(playerChart, playerStarLord)?.sign; // Player's Star Lord's Sign
+            if (mRasiPos === playerRasiLordSign || mRasiPos === playerStarLordSign) {
+                addRule('Rule 9: Double Lord Conjunction', 12, 'bowl', false, 'விதி 9: இரட்டை அதிபதி சேர்க்கை');
+            }
         }
     }
 
@@ -594,6 +617,18 @@ export const evaluateBowler = (playerChart, matchChart) => {
                 }
             }
             break;
+
+        // 5. AYILYAM (Special Rule 10 Bowl)
+        case 'Ashlesha':
+        case 'Ayilyam':
+            // Rule 10: Spl Rule - Match-Player Combo (Bowling is 0)
+            if (playerStar === 'Shatabhisha' || playerStar === 'Sathayam') {
+                const pMoonObj = getPlanet(playerChart, 'Moon');
+                if (pMoonObj && (pMoonObj.sign === 'Aquarius' || pMoonObj.sign === 'Kumbha' || pMoonObj.sign === 'கும்பம்')) {
+                    addRule('Rule 10: Spl Rule - Match-Player Combo', 0, 'bowl', false, 'விதி 10: சிறப்பு விதி - மேட்ச்-வீரர் கூட்டணி');
+                }
+            }
+            break;
     }
 
     if (globalNegative) score = 0;
@@ -605,7 +640,7 @@ export const evaluateBowler = (playerChart, matchChart) => {
     if (globalNegative) label = "SURE FLOP";
     else if (score <= -4) label = "SURE FLOP";
 
-    return { score, label, report };
+    return { score, label, report, isSpecial: globalSpecial };
 };
 
 // Export helper for UI

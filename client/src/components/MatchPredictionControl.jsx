@@ -602,14 +602,16 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                                             let lagnaCount = 0;
                                                             let nakCount = 0;
                                                             let prevLagna = null;
+                                                            let prevNak = null;
                                                             const timeline = matchChartResult.lagnaTimeline;
                                                             const labeled = timeline.map((slot) => {
                                                                 if (slot.lagna !== prevLagna) {
                                                                     lagnaCount++;
-                                                                    nakCount = 1; // Reset nakshatra count on lagna change
                                                                     prevLagna = slot.lagna;
-                                                                } else {
+                                                                }
+                                                                if (slot.nakshatra !== prevNak) {
                                                                     nakCount++;
+                                                                    prevNak = slot.nakshatra;
                                                                 }
                                                                 return { ...slot, lagnaLabel: `L${lagnaCount}`, nakLabel: `N${nakCount}` };
                                                             });

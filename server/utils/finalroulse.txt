@@ -16,8 +16,8 @@ Match Star Lord = Player Rasi OR Star Lord -> 4 Pts (+4 Bonus)
 Match Star Lord conjoined with Player Rasi Lord -> 4 Pts (+4 Bonus)
 🟩 Rule 5: SAME HOUSE RULE
 Both Player Rasi and Star Lords in signs owned by Match Star Lord -> 4 Pts (+2 Bonus)
-🟩 Rule 6: PLAYER RASI ATHIPATHI HOME
-Match Rasi and Star Lords both in Player Rasi -> 6 Pts (+4 Bonus)
+🟩 Rule 6: MATCH LORDS IN PLAYER HOUSES
+Match Rasi and Star Lords (in Player Chart) are in signs owned by Player Rasi or Star Lord -> 6 Pts (+4 Bonus)
 🟩 Rule 7: RAHU / KETU PLAYER RULE
 Player Nak Lord is Rahu/Ketu AND Player Rasi Lord in Match Star house -> 4 Pts (+4 Bonus)
 🟩 Rule 8: LAGNA RULE (BATTING)
