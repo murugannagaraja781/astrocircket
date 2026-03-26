@@ -410,7 +410,7 @@ const RulesView = () => {
                             </TableRow>
                             <TableRow>
                                 <TableCell sx={tableCellStyle}>பவுலிங் பொது விதிகள் (Bowling Rules)</TableCell>
-                                <TableCell align="center" sx={tableCellStyle}>9</TableCell>
+                                <TableCell align="center" sx={tableCellStyle}>11</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell sx={tableCellStyle}>நட்சத்திர சிறப்பு விதிகள் (Nakshatra Rules)</TableCell>
@@ -450,6 +450,7 @@ const RulesView = () => {
                                 { rule: 'BAT Rule 7', tamil: 'ராகு/கேது விதி', points: '+4' },
                                 { rule: 'BAT Rule 8', tamil: 'லக்ன விதி', points: '+2' },
                                 { rule: 'BAT Rule 9', tamil: 'ராசி & நட்சத்திர அதிபதி சேர்க்கை', points: '+12' },
+                                { rule: 'BAT Rule 11', tamil: 'ராகு/கேது சிறப்பு நிலை', points: '+20' },
                             ].map((row, idx) => (
                                 <TableRow key={idx} sx={{ '&:nth-of-type(odd)': { bgcolor: '#f8fafc' } }}>
                                     <TableCell sx={tableCellStyle}>{row.rule}</TableCell>
@@ -487,6 +488,7 @@ const RulesView = () => {
                                 { rule: 'BOWL Rule 7', tamil: 'ராகு/கேது விதி', points: '+4' },
                                 { rule: 'BOWL Rule 8', tamil: 'லக்ன விதி', points: '+4' },
                                 { rule: 'BOWL Rule 9', tamil: 'ராசி & நட்சத்திர அதிபதி சேர்க்கை', points: '+12' },
+                                { rule: 'BOWL Rule 11', tamil: 'ராகு/கேது சிறப்பு நிலை', points: '+20' },
                             ].map((row, idx) => (
                                 <TableRow key={idx} sx={{ '&:nth-of-type(odd)': { bgcolor: '#f8fafc' } }}>
                                     <TableCell sx={tableCellStyle}>{row.rule}</TableCell>

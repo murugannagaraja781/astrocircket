@@ -6,6 +6,7 @@ const predictionSlice = createSlice({
     initialState: {
         matchChart: null,
         playerPredictions: {}, // Map of playerId -> { bat: result, bowl: result }
+        teamB_Ids: [], // Store team B IDs for consistent predictions
         loading: false,
     },
     reducers: {
@@ -75,9 +76,24 @@ const predictionSlice = createSlice({
         },
         setLoading: (state, action) => {
             state.loading = action.payload;
+        },
+        setTeamBIds: (state, action) => {
+            state.teamB_Ids = action.payload;
+        },
+        resetPredictions: (state) => {
+            state.playerPredictions = {};
+            state.matchResults = null;
         }
     }
 });
 
-export const { setMatchChart, calculatePredictions, clearPredictions, clearMatchChart, setLoading } = predictionSlice.actions;
+export const { 
+    setMatchChart, 
+    calculatePredictions, 
+    clearPredictions, 
+    clearMatchChart, 
+    setLoading,
+    setTeamBIds,
+    resetPredictions
+} = predictionSlice.actions;
 export default predictionSlice.reducer;

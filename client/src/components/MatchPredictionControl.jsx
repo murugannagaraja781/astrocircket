@@ -757,15 +757,34 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
 const getNakshatraLordHelper = (starName) => {
     if (!starName) return null;
     const n = starName.toLowerCase();
-    if (['ashwini', 'magha', 'mula', 'moola'].some(s => n.includes(s))) return 'Ketu';
-    if (['bharani', 'purva phalguni', 'purvaphalguni', 'purva ashadha', 'purvashada'].some(s => n.includes(s))) return 'Venus';
-    if (['krittika', 'uttara phalguni', 'uttaraphalguni', 'uttara ashadha', 'uttarashada'].some(s => n.includes(s))) return 'Sun';
-    if (['rohini', 'hasta', 'shravana'].some(s => n.includes(s))) return 'Moon';
-    if (['mrigashira', 'chitra', 'dhanishta'].some(s => n.includes(s))) return 'Mars';
-    if (['ardra', 'swati', 'shatabhisha'].some(s => n.includes(s))) return 'Rahu';
-    if (['punarvasu', 'vishakha', 'purva bhadrapada', 'purvabhadra'].some(s => n.includes(s))) return 'Jupiter';
-    if (['pushya', 'anuradha', 'uttara bhadrapada', 'uttarabhadra'].some(s => n.includes(s))) return 'Saturn';
-    if (['ashlesha', 'jyeshtha', 'revati'].some(s => n.includes(s))) return 'Mercury';
+    
+    // Ketu: Ashwini, Magha, Mula
+    if (['ashwini', 'aswini', 'magha', 'magam', 'makam', 'mula', 'moola', 'moolam'].some(s => n.includes(s))) return 'Ketu';
+    
+    // Venus: Bharani, Purva Phalguni, Purva Ashadha
+    if (['bharani', 'purva phalguni', 'purvaphalguni', 'pooram', 'purva ashadha', 'purvashada', 'pooradam'].some(s => n.includes(s))) return 'Venus';
+    
+    // Sun: Krittika, Uttara Phalguni, Uttara Ashadha
+    if (['krittika', 'karthigai', 'uttara phalguni', 'uttaraphalguni', 'uthiram', 'uttara ashadha', 'uttarashada', 'uthiradam'].some(s => n.includes(s))) return 'Sun';
+    
+    // Moon: Rohini, Hasta, Shravana
+    if (['rohini', 'hasta', 'hastham', 'shravana', 'thiruvonam'].some(s => n.includes(s))) return 'Moon';
+    
+    // Mars: Mrigashira, Chitra, Dhanishta
+    if (['mrigashira', 'mrigashirsha', 'mrigasirisa', 'mrigasirisha', 'mirugasirisha', 'mirugasirish', 'mrigasirisam', 'chitra', 'chithirai', 'dhanishta', 'avittam'].some(s => n.includes(s))) return 'Mars';
+    
+    // Rahu: Ardra, Swati, Shatabhisha
+    if (['ardra', 'thiruvadhirai', 'swati', 'swathi', 'shatabhisha', 'sadhayam', 'sathayam'].some(s => n.includes(s))) return 'Rahu';
+    
+    // Jupiter: Punarvasu, Vishakha, Purva Bhadrapada
+    if (['punarvasu', 'punarpusam', 'vishakha', 'visakam', 'purva bhadrapada', 'purvabhadra', 'poorattathi'].some(s => n.includes(s))) return 'Jupiter';
+    
+    // Saturn: Pushya, Anuradha, Uttara Bhadrapada
+    if (['pushya', 'poosam', 'anuradha', 'anusham', 'uttara bhadrapada', 'uttarabhadra', 'uthirattathi'].some(s => n.includes(s))) return 'Saturn';
+    
+    // Mercury: Ashlesha, Jyeshtha, Revati
+    if (['ashlesha', 'ayilyam', 'jyeshtha', 'kettai', 'revati'].some(s => n.includes(s))) return 'Mercury';
+    
     return null;
 };
 

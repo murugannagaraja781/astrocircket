@@ -356,6 +356,25 @@ const GENERAL_RULES = [
                 ctx.addRule('Rule 9: Double Lord Conjunction', 12, 'both', true, 'விதி 9: மேட்ச் ராசி & நட்சத்திர அதிபதி ஜாதகத்தில் சேர்க்கை (+12)');
             }
         }
+    },
+    // Rule 11: Rahu/Ketu Special Placement
+    (ctx) => {
+        if (['Rahu', 'Ketu'].includes(ctx.player.nakshatraLord)) {
+            const mRasiSigns = OWN_SIGNS[ctx.matchRasiLord] || [];
+            const mStarSigns = OWN_SIGNS[ctx.matchStarLord] || [];
+
+            const pRahuSign = ctx.P['Rahu'];
+            const pKetuSign = ctx.P['Kethu'] || ctx.P['Ketu'];
+
+            if (pRahuSign && pKetuSign) {
+                const cond1 = isSignInList(pRahuSign, mRasiSigns) && isSignInList(pKetuSign, mStarSigns);
+                const cond2 = isSignInList(pKetuSign, mRasiSigns) && isSignInList(pRahuSign, mStarSigns);
+
+                if (cond1 || cond2) {
+                    ctx.addRule('Rule 11: Rahu/Ketu Special Placement', 20, 'both', true, 'விதி 11: ராகு/கேது சிறப்பு நிலை (+20)');
+                }
+            }
+        }
     }
 ];
 

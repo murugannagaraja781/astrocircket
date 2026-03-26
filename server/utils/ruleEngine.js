@@ -141,6 +141,7 @@ class RuleContext {
         if (this.playerStarLord === 'Rahu' || this.playerStarLord === 'Ketu') {
             this.playerStarLord = this.playerRasiLord;
         }
+        this.originalPlayerStarLord = pMoon.nakLord; // Keep for Rule 11
 
         // P and M maps (Planet -> SignName) for rule logic compatibility
         this.P = {};
@@ -376,6 +377,27 @@ const GENERAL_RULES = [
             const pStarLordSign = ctx.P[ctx.playerStarLord];
             if (mRasiPos === pRasiLordSign || mRasiPos === pStarLordSign) {
                 ctx.addRule('Rule 9: Double Lord Conjunction', 12, 'both', true, 'விதி 9: மேட்ச் ராசி & நட்சத்திர அதிபதி ஜாதகத்தில் சேர்க்கை (+12)');
+            }
+        }
+    },
+    (ctx) => { // Rule 11: Rahu/Ketu Special Placement
+        if (['Rahu', 'Ketu'].includes(ctx.originalPlayerStarLord)) {
+            const mRasiSigns = getOwnedSigns(ctx.matchRasiLord);
+            const mStarSigns = getOwnedSigns(ctx.matchStarLord);
+
+            const pRahu = ctx.getP("Rahu");
+            const pKetu = ctx.getP("Ketu");
+
+            if (pRahu && pKetu) {
+                const pRahuSignId = pRahu.signId;
+                const pKetuSignId = pKetu.signId;
+
+                const condition1 = mRasiSigns.includes(pRahuSignId) && mStarSigns.includes(pKetuSignId);
+                const condition2 = mRasiSigns.includes(pKetuSignId) && mStarSigns.includes(pRahuSignId);
+
+                if (condition1 || condition2) {
+                    ctx.addRule('Rule 11: Rahu/Ketu Special Placement', 20, 'both', true, 'விதி 11: ராகு/கேது சிறப்பு நிலை (+20)');
+                }
             }
         }
     }
