@@ -451,6 +451,14 @@ const NAKSHATRA_RULES = {
     'Purva Phalguni': (ctx) => {
         if (ctx.playerRasiLord === 'Saturn' && ctx.playerStarLord === 'Mars') ctx.addRule('Pooram: Rasi Lord Saturn & Star Lord Mars', 12, 'bat', true, 'பூரம்: ராசி அதிபதி சனி & நட்சத்திர அதிபதி செவ்வாய்');
         if (ctx.playerRasiLord === 'Jupiter' && ctx.playerStarLord === 'Mercury') ctx.addRule('Pooram: Rasi Lord Jupiter & Star Lord Mercury', 12, 'bowl', true, 'பூரம்: ராசி அதிபதி குரு & நட்சத்திர அதிபதி புதன்');
+        
+        // New Sure Flop Rule
+        const isVenusEligible = ctx.playerRasiLord === 'Venus' || ctx.playerStarLord === 'Venus';
+        const posSun = ctx.P['Sun'];
+        const posVen = ctx.P['Venus'];
+        if (isVenusEligible && posSun && posVen && posSun === posVen) {
+            ctx.setSureFlop('Pooram: Sun + Venus Conjunction', 'பூரம்: சூரியன் + சுக்கிரன் சேர்க்கை (Sure Flop)');
+        }
     },
     'Pooram': (ctx) => NAKSHATRA_RULES['Purva Phalguni'](ctx),
     'Uttara Phalguni': (ctx) => {
@@ -527,7 +535,23 @@ const NAKSHATRA_RULES = {
             ctx.addRule('Sathayam: Rasi Lord Moon (+12)', 12, 'both', true, 'சதயம்: ராசி அதிபதி சந்திரன் (+12)');
         }
     },
-    'Sathayam': (ctx) => NAKSHATRA_RULES['Shatabhisha'](ctx)
+    'Sathayam': (ctx) => NAKSHATRA_RULES['Shatabhisha'](ctx),
+    'Swati': (ctx) => {
+        const targetLords = ['Mercury', 'Sun', 'Jupiter'];
+        const isEligibleLord = targetLords.includes(ctx.playerRasiLord) || targetLords.includes(ctx.playerStarLord);
+        
+        const posMerc = ctx.P['Mercury'];
+        const posSun = ctx.P['Sun'];
+        const posJup = ctx.P['Jupiter'];
+        
+        const isTripleConjunction = posMerc && posSun && posJup && (posMerc === posSun && posSun === posJup);
+        
+        if (isEligibleLord && isTripleConjunction) {
+            ctx.addRule('Swathi Special: Merc+Sun+Jup Conjunction', 20, 'bat', true, 'சுவாதி சிறப்பு: புதன்+சூரியன்+குரு சேர்க்கை (+20)');
+            ctx.addRule('Swathi Special: Merc+Sun+Jup Conjunction', 0, 'bowl', false, 'சுவாதி சிறப்பு: புதன்+சூரியன்+குரு சேர்க்கை (0)');
+        }
+    },
+    'Swathi': (ctx) => NAKSHATRA_RULES['Swati'](ctx)
 };
 
 /** Main Function **/

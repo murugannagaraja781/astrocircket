@@ -343,6 +343,15 @@ export const evaluateBatsman = (playerChart, matchChart) => {
         case 'Pooram':
             if (playerRasiLord === 'Saturn' && playerStarLord === 'Mars') addRule('Pooram: Rasi Lord Saturn & Star Lord Mars', 12, 'bat', true, 'பூரம்: ராசி அதிபதி சனி & நட்சத்திர அதிபதி செவ்வாய்');
             if (playerRasiLord === 'Jupiter' && playerStarLord === 'Mercury') addRule('Pooram: Rasi Lord Jupiter & Star Lord Mercury', 12, 'bowl', true, 'பூரம்: ராசி அதிபதி குரு & நட்சத்திர அதிபதி புதன்');
+            
+            // New Sure Flop Rule
+            if (playerRasiLord === 'Venus' || playerStarLord === 'Venus') {
+                const posSun = getPlanet(playerChart, 'Sun')?.sign;
+                const posVen = getPlanet(playerChart, 'Venus')?.sign;
+                if (posSun && posVen && posSun === posVen) {
+                    setSureFlop('Pooram: Sun + Venus Conjunction', 'பூரம்: சூரியன் + சுக்கிரன் சேர்க்கை (Sure Flop)');
+                }
+            }
             break;
 
         // 8. UTHIRAM
@@ -421,6 +430,24 @@ export const evaluateBatsman = (playerChart, matchChart) => {
         case 'Sathayam':
             if (playerRasiLord === 'Moon') addRule('Sathayam: Rasi Lord Moon (+12) 👉 GAME CHANGER 👉 Must Show Special Player', 12, 'both', true, 'சதயம்: ராசி அதிபதி சந்திரன் (+12) 👉 கேம் சேஞ்சர் 👉 சிறப்பு வீரர்');
             break;
+            
+        // 18. SWATHI
+        case 'Swati':
+        case 'Swathi': {
+            const targetLords = ['Mercury', 'Sun', 'Jupiter'];
+            const isEligibleLord = targetLords.includes(playerRasiLord) || targetLords.includes(playerStarLord);
+            
+            const posMerc = getPlanet(playerChart, 'Mercury')?.sign;
+            const posSun = getPlanet(playerChart, 'Sun')?.sign;
+            const posJup = getPlanet(playerChart, 'Jupiter')?.sign;
+            
+            const isTripleConjunction = posMerc && posSun && posJup && (posMerc === posSun && posSun === posJup);
+            
+            if (isEligibleLord && isTripleConjunction) {
+                addRule('Swathi Special: Merc+Sun+Jup Conjunction', 20, 'bat', true, 'சுவாதி சிறப்பு: புதன்+சூரியன்+குரு சேர்க்கை (+20) ⭐ சிறப்பு வீரர்');
+            }
+            break;
+        }
     }
 
     if (globalNegative) {

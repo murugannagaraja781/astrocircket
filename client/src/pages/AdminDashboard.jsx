@@ -527,11 +527,11 @@ const RulesView = () => {
                                 { num: 8, star: 'பூசம் (Pushya)', condition: '-' },
                                 { num: 9, star: 'ஆயில்யம் (Ashlesha)', condition: 'சுக்கிரன்+புதன் சேர்க்கை = SURE FLOP (Bat) ❌ / +12 (Bowl)' },
                                 { num: 10, star: 'மகம் (Magha)', condition: 'புதன் ராசி + செவ்வாய் நட்சத்திரம் (+12) ⭐ சிறப்பு வீரர்' },
-                                { num: 11, star: 'பூரம் (Purva Phalguni)', condition: 'சனி+செவ்வாய் (+12 பேட்டிங்), குரு+புதன் (+12 பவுலிங்)' },
+                                { num: 11, star: 'பூரம் (Purva Phalguni)', condition: 'சனி+செவ்வாய் (+12 Bat), குரு+புதன் (+12 Bowl), சூரியன்+சுக்கிரன் = SURE FLOP ❌' },
                                 { num: 12, star: 'உத்திரம் (Uttara Phalguni)', condition: 'கன்னி ராசி + சனி+ராகு (+12) ⭐ சிறப்பு வீரர்' },
                                 { num: 13, star: 'ஹஸ்தம் (Hasta)', condition: '-' },
                                 { num: 14, star: 'சித்திரை (Chitra)', condition: 'கன்னி: புதன்+சூரியன் (+6-12), துலாம்: சந்திரன்+சனி (+12)' },
-                                { num: 15, star: 'சுவாதி (Swati)', condition: '-' },
+                                { num: 15, star: 'சுவாதி (Swati)', condition: 'புதன்/சூரியன்/குரு ராசி/நட்சத்திர அதிபதி & மூவர் சேர்க்கை (+20 பேட்டிங்) ⭐' },
                                 { num: 16, star: 'விசாகம் (Vishakha)', condition: '-' },
                                 { num: 17, star: 'அனுஷம் (Anuradha)', condition: 'குரு ராசி (+5), குரு ஆட்சி/உச்சம் (+10)' },
                                 { num: 18, star: 'கேட்டை (Jyeshtha)', condition: 'புதன்+சுக்கிரன் சேர்க்கை = SURE FLOP (Bat) ❌ / +12 (Bowl)' },
@@ -1214,7 +1214,6 @@ const DashboardHome = ({ onNavigate }) => {
                     { title: 'Active Teams', desc: 'Manage your cricket teams', icon: <GroupIcon />, color: '#2563eb', viewId: 'groups' },
                     { title: 'Manage Players', desc: 'Add, edit or remove players', icon: <SportsCricketIcon />, color: '#22c55e', viewId: 'players' },
                     { title: 'User Approvals', desc: `${stats.pendingUsers} pending requests`, icon: <PeopleIcon />, color: '#f59e0b', viewId: 'users' },
-                    { title: 'Prediction Rules', desc: 'View Tamil astrology rules', icon: <GavelIcon />, color: '#8b5cf6', viewId: 'rules' },
                 ].map((action, index) => (
                     <Paper
                         key={index}
@@ -3223,7 +3222,6 @@ const AdminDashboard = () => {
         { id: 'players', label: 'Players', icon: <SportsCricketIcon /> },
         { id: 'groups', label: 'Groups', icon: <GroupIcon /> },
         { id: 'clientDashboard', label: 'Client Dashboard', icon: <DashboardIcon /> },
-        { id: 'rules', label: 'Rules', icon: <GavelIcon /> },
         { id: 'kpAstrology', label: 'KP Astrology', icon: <TimelineIcon /> },
         { id: 'myPredictions', label: 'My Predictions', icon: <EmojiEventsIcon /> },
     ];
@@ -3357,7 +3355,6 @@ const AdminDashboard = () => {
             case 'players': return <PlayersManager />;
             case 'groups': return <GroupsManager />;
             case 'clientDashboard': return <UserDashboard hideHeader={true} />;
-            case 'rules': return <RulesView />;
             case 'kpAstrology': return <KPView />;
             case 'myPredictions': return <MyPredictions />;
             default: return <DashboardHome onNavigate={setCurrentView} />;
