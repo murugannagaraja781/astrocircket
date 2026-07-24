@@ -1,0 +1,159 @@
+{
+  "_id": "6970890b0dbcecb76a43586f",
+  "id": "mitchell_owen_1768982795174",
+  "name": "Mitchell OWEN",
+  "profile": "mitchell_owen_1768982795174_profile_1768982860774.jpg",
+  "dob": "2001-09-16",
+  "birthTime": "21:10",
+  "birthPlace": "Hobart, City of Hobart, Tasmania, Australia",
+  "latitude": -42.8825088,
+  "longitude": 147.3281233,
+  "timezone": "10",
+  "birthChart": {
+    "planets": {
+      "Sun": {
+        "longitude": 149.78730196788752,
+        "sign": "Leo",
+        "signTamil": "சிம்மம்",
+        "signLord": "Sun",
+        "nakshatra": "Uttara Phalguni",
+        "nakshatraTamil": "உத்திரம்",
+        "nakshatraLord": "Sun",
+        "pada": 1,
+        "dignity": "Own Sign",
+        "dignityTamil": "ஆட்சி"
+      },
+      "Moon": {
+        "longitude": 135.94984633936008,
+        "sign": "Leo",
+        "signTamil": "சிம்மம்",
+        "signLord": "Sun",
+        "nakshatra": "Purva Phalguni",
+        "nakshatraTamil": "பூரம்",
+        "nakshatraLord": "Venus",
+        "pada": 1,
+        "dignity": "Friendly",
+        "dignityTamil": "நட்பு"
+      },
+      "Mars": {
+        "longitude": 250.22784340103635,
+        "sign": "Sagittarius",
+        "signTamil": "தனுசு",
+        "signLord": "Jupiter",
+        "nakshatra": "Mula",
+        "nakshatraTamil": "மூலம்",
+        "nakshatraLord": "Ketu",
+        "pada": 4,
+        "dignity": "Friendly",
+        "dignityTamil": "நட்பு"
+      },
+      "Mercury": {
+        "longitude": 176.09229741287064,
+        "sign": "Virgo",
+        "signTamil": "கன்னி",
+        "signLord": "Mercury",
+        "nakshatra": "Chitra",
+        "nakshatraTamil": "சித்திரை",
+        "nakshatraLord": "Mars",
+        "pada": 1,
+        "dignity": "Exalted",
+        "dignityTamil": "உச்சம்"
+      },
+      "Jupiter": {
+        "longitude": 78.41509379934288,
+        "sign": "Gemini",
+        "signTamil": "மிதுனம்",
+        "signLord": "Mercury",
+        "nakshatra": "Ardra",
+        "nakshatraTamil": "திருவாதிரை",
+        "nakshatraLord": "Rahu",
+        "pada": 4,
+        "dignity": "Enemy",
+        "dignityTamil": "பகை"
+      },
+      "Venus": {
+        "longitude": 120.51105239363882,
+        "sign": "Leo",
+        "signTamil": "சிம்மம்",
+        "signLord": "Sun",
+        "nakshatra": "Magha",
+        "nakshatraTamil": "மகம்",
+        "nakshatraLord": "Ketu",
+        "pada": 1,
+        "dignity": "Enemy",
+        "dignityTamil": "பகை"
+      },
+      "Saturn": {
+        "longitude": 51.00057351130715,
+        "sign": "Taurus",
+        "signTamil": "ரிஷபம்",
+        "signLord": "Venus",
+        "nakshatra": "Rohini",
+        "nakshatraTamil": "ரோகிணி",
+        "nakshatraLord": "Moon",
+        "pada": 4,
+        "dignity": "Friendly",
+        "dignityTamil": "நட்பு"
+      },
+      "Rahu": {
+        "longitude": 68.10193908782831,
+        "sign": "Gemini",
+        "signTamil": "மிதுனம்",
+        "signLord": "Mercury",
+        "nakshatra": "Ardra",
+        "nakshatraTamil": "திருவாதிரை",
+        "nakshatraLord": "Rahu",
+        "pada": 1,
+        "dignity": "Neutral",
+        "dignityTamil": "சமம்"
+      },
+      "Ketu": {
+        "longitude": 248.10193908782833,
+        "sign": "Sagittarius",
+        "signTamil": "தனுசு",
+        "signLord": "Jupiter",
+        "nakshatra": "Mula",
+        "nakshatraTamil": "மூலம்",
+        "nakshatraLord": "Ketu",
+        "pada": 3,
+        "dignity": "Neutral",
+        "dignityTamil": "சமம்"
+      }
+    },
+    "ascendant": {
+      "longitude": 7.300994595911199,
+      "sign": {
+        "id": 1,
+        "name": "Aries",
+        "tamil": "மேஷம்",
+        "lord": "Mars",
+        "lordTamil": "செவ்வாய்",
+        "degreesInSign": 7.300994595911199,
+        "totalLongitude": 7.300994595911199
+      }
+    },
+    "ayanamsa": 23.870072222222223,
+    "panchangam": {
+      "tithi": {
+        "name": "Chaturdashi",
+        "tamil": "சதுர்த்தசி",
+        "paksha": "Krishna"
+      },
+      "yoga": {
+        "name": "Sadhya",
+        "tamil": "சாத்தியம்"
+      },
+      "karana": {
+        "name": "Shakuni",
+        "tamil": "சகுனி"
+      },
+      "vara": {
+        "name": "Sunday",
+        "tamil": "ஞாயிறு"
+      }
+    }
+  },
+  "role": "BAT",
+  "manualStatus": "",
+  "__v": 0
+}

@@ -1,0 +1,95 @@
+{
+  "player": "Alyssa Healy",
+  "matchDate": "2024-05-14",
+  "prediction": {
+    "batting": {
+      "score": 20,
+      "rules": [
+        {
+          "en": "Rule 10: Spl Rule - Match-Player Combo (+20)",
+          "ta": "விதி 10: சிறப்பு விதி - மேட்ச்-வீரர் கூட்டணி (+20)"
+        }
+      ],
+      "isSpecial": true,
+      "status": "Active"
+    },
+    "bowling": {
+      "score": 0,
+      "rules": [
+        {
+          "en": "Rule 10: Spl Rule - Match-Player Combo (0)",
+          "ta": "விதி 10: சிறப்பு விதி - மேட்ச்-வீரர் கூட்டணி (0)"
+        }
+      ],
+      "isSpecial": false,
+      "status": "Active"
+    },
+    "netScore": 20,
+    "matchStar": "Ashlesha",
+    "matchStarLord": "Mercury",
+    "matchRasiLord": "Moon",
+    "isMatchStarLordRahuKetu": false,
+    "lagnaTimeline": [
+      {
+        "lagna": "Libra",
+        "lord": "Venus",
+        "nakshatra": "Swati",
+        "nakshatraTamil": "சுவாதி",
+        "nakshatraLord": "Rahu",
+        "start": "2024-05-14T11:30:00.000Z",
+        "end": "2024-05-14T12:12:00.000Z",
+        "isMain": true
+      },
+      {
+        "lagna": "Libra",
+        "lord": "Venus",
+        "nakshatra": "Vishakha",
+        "nakshatraTamil": "விசாகம்",
+        "nakshatraLord": "Jupiter",
+        "start": "2024-05-14T12:12:00.000Z",
+        "end": "2024-05-14T12:55:00.000Z",
+        "isMain": false
+      },
+      {
+        "lagna": "Scorpio",
+        "lord": "Mars",
+        "nakshatra": "Vishakha",
+        "nakshatraTamil": "விசாகம்",
+        "nakshatraLord": "Jupiter",
+        "start": "2024-05-14T12:55:00.000Z",
+        "end": "2024-05-14T13:09:00.000Z",
+        "isMain": false
+      },
+      {
+        "lagna": "Scorpio",
+        "lord": "Mars",
+        "nakshatra": "Anuradha",
+        "nakshatraTamil": "அனுஷம்",
+        "nakshatraLord": "Saturn",
+        "start": "2024-05-14T13:09:00.000Z",
+        "end": "2024-05-14T14:08:00.000Z",
+        "isMain": false
+      },
+      {
+        "lagna": "Scorpio",
+        "lord": "Mars",
+        "nakshatra": "Jyeshtha",
+        "nakshatraTamil": "கேட்டை",
+        "nakshatraLord": "Mercury",
+        "start": "2024-05-14T14:08:00.000Z",
+        "end": "2024-05-14T15:07:00.000Z",
+        "isMain": false
+      },
+      {
+        "lagna": "Sagittarius",
+        "lord": "Jupiter",
+        "nakshatra": "Mula",
+        "nakshatraTamil": "மூலம்",
+        "nakshatraLord": "Ketu",
+        "start": "2024-05-14T15:07:00.000Z",
+        "end": "2024-05-14T15:30:00.000Z",
+        "isMain": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,155 @@
+Found 1 matching players.
+
+------------------------------------------------
+Name: Beth MOONEY
+Role: BAT
+ID: beth_mooney_1767964708151
+Rasi: undefined
+Nakshatra: undefined
+Rasi Lord: undefined
+Nakshatra Lord: undefined
+Chart Details: {
+  "planets": {
+    "Sun": {
+      "longitude": 269.8208619508972,
+      "sign": "Sagittarius",
+      "signTamil": "தனுசு",
+      "signLord": "Jupiter",
+      "nakshatra": "Uttara Ashadha",
+      "nakshatraTamil": "உத்திராடம்",
+      "nakshatraLord": "Sun",
+      "pada": 1,
+      "dignity": "Friendly",
+      "dignityTamil": "நட்பு"
+    },
+    "Moon": {
+      "longitude": 294.5236774517533,
+      "sign": "Capricorn",
+      "signTamil": "மகரம்",
+      "signLord": "Saturn",
+      "nakshatra": "Dhanishta",
+      "nakshatraTamil": "அவிட்டம்",
+      "nakshatraLord": "Mars",
+      "pada": 1,
+      "dignity": "Neutral",
+      "dignityTamil": "சமம்"
+    },
+    "Mars": {
+      "longitude": 265.2642684158036,
+      "sign": "Sagittarius",
+      "signTamil": "தனுசு",
+      "signLord": "Jupiter",
+      "nakshatra": "Purva Ashadha",
+      "nakshatraTamil": "பூராடம்",
+      "nakshatraLord": "Venus",
+      "pada": 4,
+      "dignity": "Friendly",
+      "dignityTamil": "நட்பு"
+    },
+    "Mercury": {
+      "longitude": 276.20439027487305,
+      "sign": "Capricorn",
+      "signTamil": "மகரம்",
+      "signLord": "Saturn",
+      "nakshatra": "Uttara Ashadha",
+      "nakshatraTamil": "உத்திராடம்",
+      "nakshatraLord": "Sun",
+      "pada": 3,
+      "dignity": "Neutral",
+      "dignityTamil": "சமம்"
+    },
+    "Jupiter": {
+      "longitude": 197.82015146207766,
+      "sign": "Libra",
+      "signTamil": "துலாம்",
+      "signLord": "Venus",
+      "nakshatra": "Swati",
+      "nakshatraTamil": "சுவாதி",
+      "nakshatraLord": "Rahu",
+      "pada": 4,
+      "dignity": "Enemy",
+      "dignityTamil": "பகை"
+    },
+    "Venus": {
+      "longitude": 269.0835794029266,
+      "sign": "Sagittarius",
+      "signTamil": "தனுசு",
+      "signLord": "Jupiter",
+      "nakshatra": "Uttara Ashadha",
+      "nakshatraTamil": "உத்திராடம்",
+      "nakshatraLord": "Sun",
+      "pada": 1,
+      "dignity": "Neutral",
+      "dignityTamil": "சமம்"
+    },
+    "Saturn": {
+      "longitude": 304.5534976739107,
+      "sign": "Aquarius",
+      "signTamil": "கும்பம்",
+      "signLord": "Saturn",
+      "nakshatra": "Dhanishta",
+      "nakshatraTamil": "அவிட்டம்",
+      "nakshatraLord": "Mars",
+      "pada": 4,
+      "dignity": "Mooltrikona",
+      "dignityTamil": "மூலதிரிகோணம்"
+    },
+    "Rahu": {
+      "longitude": 216.60956909352458,
+      "sign": "Scorpio",
+      "signTamil": "விருச்சிகம்",
+      "signLord": "Mars",
+      "nakshatra": "Anuradha",
+      "nakshatraTamil": "அனுஷம்",
+      "nakshatraLord": "Saturn",
+      "pada": 1,
+      "dignity": "Debilitated",
+      "dignityTamil": "நீசம்"
+    },
+    "Ketu": {
+      "longitude": 36.609569093524556,
+      "sign": "Taurus",
+      "signTamil": "ரிஷபம்",
+      "signLord": "Venus",
+      "nakshatra": "Krittika",
+      "nakshatraTamil": "கார்த்திகை",
+      "nakshatraLord": "Sun",
+      "pada": 3,
+      "dignity": "Debilitated",
+      "dignityTamil": "நீசம்"
+    }
+  },
+  "ascendant": {
+    "longitude": 326.83820060616,
+    "sign": {
+      "id": 11,
+      "name": "Aquarius",
+      "tamil": "கும்பம்",
+      "lord": "Saturn",
+      "lordTamil": "சனி",
+      "degreesInSign": 26.83820060616,
+      "totalLongitude": 326.83820060616
+    }
+  },
+  "ayanamsa": 23.772344444444446,
+  "panchangam": {
+    "tithi": {
+      "name": "Tritiya",
+      "tamil": "திரிதியை",
+      "paksha": "Shukla"
+    },
+    "yoga": {
+      "name": "Siddhi",
+      "tamil": "சித்தி"
+    },
+    "karana": {
+      "name": "Taitila",
+      "tamil": "தைதுலை"
+    },
+    "vara": {
+      "name": "Friday",
+      "tamil": "வெள்ளி"
+    }
+  }
+}
+------------------------------------------------

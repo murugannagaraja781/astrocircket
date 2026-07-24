@@ -1,0 +1,51 @@
+🏏 CRICKET ASTROLOGY RULE BOOK (Updated)
+
+🔴 PART 2: IMPORTANT RAHU / KETU RULE (MATCH)
+🔹 If Match Nakshatra Lord = Rahu or Ketu -> Use Match Rasi Lord.
+🔹 Special: Magam -> Star Lord becomes Chevvai (Mars).
+🔹 Special: Ashwini -> Star Lord becomes Chevvai (Mars).
+
+🟢 PART 4: BATTING RULES
+🟩 Rule 1: ZIG–ZAG RULE (Strongest)
+Rasi Lord A = Star Lord B AND Star Lord A = Rasi Lord B -> 12 Pts (+4 Bonus)
+🟩 Rule 2: DIRECT RULE
+Rasi Lord Match = Rasi Lord Player AND Star Lord Match = Star Lord Player -> 6 Pts (+4 Bonus)
+🟩 Rule 3: STAR RULE
+Match Star Lord = Player Rasi OR Star Lord -> 4 Pts (+4 Bonus)
+🟩 Rule 4: CONJUNCTION RULE
+Match Star Lord conjoined with Player Rasi Lord -> 4 Pts (+4 Bonus)
+🟩 Rule 5: SAME HOUSE RULE
+Both Player Rasi and Star Lords in signs owned by Match Star Lord -> 4 Pts (+2 Bonus)
+🟩 Rule 6: MATCH LORDS IN PLAYER HOUSES
+Match Rasi and Star Lords (in Player Chart) are in signs owned by Player Rasi or Star Lord -> 6 Pts (+4 Bonus)
+🟩 Rule 7: RAHU / KETU PLAYER RULE
+Player Nak Lord is Rahu/Ketu AND Player Rasi Lord in Match Star house -> 4 Pts (+4 Bonus)
+🟩 Rule 8: LAGNA RULE (BATTING)
+Match Lagna Lord = Player Rasi Lord -> 2 Pts (+2 Bonus)
+
+🔵 PART 5: BOWLING RULES
+🟦 Rule 1: ZIG–ZAG RULE (12 Pts + Bonus)
+🟦 Rule 2: DIRECT RULE (NEGATIVE) -> -12 Pts
+🟦 Rule 3: STAR RULE -> 3 Pts (+6 Bonus)
+🟦 Rule 4: CONJUNCTION RULE -> 4 Pts (+4 Bonus)
+🟦 Rule 5: SAME HOUSE RULE -> 4 Pts (+2 Bonus)
+🟦 Rule 6: PLAYER RASI HOME -> 4 Pts (+2 Bonus)
+🟦 Rule 7: RAHU / KETU RULE -> 4 Pts (+4 Bonus)
+🟦 Rule 8: LAGNA RULE -> 4 Pts (+4 Bonus + 4 Planet Bonus)
+🟦 Rule 9: MATCH SIGN LORD RULE -> 3 Pts (+8 Bonus)
+
+(Original Star Specific Rules from Aswini to Sathayam are also active)
+
+⭐ SPECIAL MATCH NAKSHATRA RULES (+12 Points – Show Special Player)
+
+🔶 1️⃣ Magam: Rasi Suriyan, Nak Kethu. Player: Rasi Budhan, Nak Chevvai -> +12 👉 Special
+🔶 2️⃣ Uthiram (Kanya): Nak Budhan, Sec Suriyan. Player: Rasi Sani, Nak Rahu -> +12 👉 Special
+🔶 3️⃣ Chithirai (3,4): Nak Sukkiran, RL Chevvai. Player: Rasi Chandran, Nak Sani -> +12 👉 Special
+🔶 4️⃣ Moolam: Nak Guru, Sec Kethu.
+   - Batting: Rasi Sani, Nak Chevvai -> +12 👉 Special
+   - Bowling: Rasi Chevvai, Nak Sani -> +12 👉 Special
+🔶 5️⃣ Uthiradam (Makara): Nak Sani, RL Suriyan. Player: Rasi Chandran -> +12 👉 Special
+🔶 6️⃣ Thiruvonam: Nak Sani, RL Chandran.
+   - Bowl Type 1: Rasi Chevvai, Chevvai in Cancer -> +6
+   - Bowl Type 2: Rasi Sani, Nak Rahu -> +12 👉 Special
+🔶 7️⃣ Sathayam: Nak Sani, Sec Rahu. Player: Rasi Chandran -> +12 👉 GAME CHANGER

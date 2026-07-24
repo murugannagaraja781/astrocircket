@@ -1,0 +1,65 @@
+{
+  "batting": {
+    "score": 8,
+    "rules": [
+      {
+        "en": "BAT Rule 4: Conjunction (Rasi Lord) (+4)",
+        "ta": "பேட்டிங் விதி 4: சேர்க்கை விதி (ராசி அதிபதி) (+4)"
+      },
+      {
+        "en": "Saturn Aatchi/Ucham Bonus (+4)",
+        "ta": "Saturn ஆட்சி (+4)"
+      },
+      {
+        "en": "Ardra: Mars Aatchi/Ucham (0)",
+        "ta": "திருவாதிரை: செவ்வாய் ஆட்சி/உச்சம் (0)"
+      }
+    ],
+    "isSpecial": false,
+    "status": "Active"
+  },
+  "bowling": {
+    "score": 26,
+    "rules": [
+      {
+        "en": "BOWL Rule 4: Conjunction Star (Rasi Lord) (+4)",
+        "ta": "பவுலிங் விதி 4: சேர்க்கை விதி (நட்சத்திர அதிபதி) (+4)"
+      },
+      {
+        "en": "Saturn Aatchi/Ucham Bonus (+4)",
+        "ta": "Saturn ஆட்சி (+4)"
+      },
+      {
+        "en": "BOWL Rule 4: Conjunction Rasi (Rasi Lord) (+4)",
+        "ta": "பவுலிங் விதி 4: மேட்ச் ராசி அதிபதி சேர்க்கை (+4)"
+      },
+      {
+        "en": "Saturn Aatchi/Ucham Bonus (+4)",
+        "ta": "Saturn ஆட்சி (+4)"
+      },
+      {
+        "en": "Ardra: Mars Aatchi/Ucham (+10)",
+        "ta": "திருவாதிரை: செவ்வாய் ஆட்சி/உச்சம் (+10)"
+      }
+    ],
+    "isSpecial": true,
+    "status": "Active"
+  },
+  "netScore": 34,
+  "matchStar": "Ardra",
+  "matchStarLord": "Mercury",
+  "matchRasiLord": "Mercury",
+  "isMatchStarLordRahuKetu": true,
+  "playerPlanets": {
+    "Sun": 299.56880968628377,
+    "Moon": 319.0213751180906,
+    "Mars": 288.03819652027806,
+    "Mercury": 313.7323361932261,
+    "Jupiter": 200.4706727749707,
+    "Venus": 305.86442794570326,
+    "Saturn": 307.9320269473047,
+    "Rahu": 215.04628147399555,
+    "Ketu": 35.04628147399558
+  },
+  "playerLagna": 39.653888076925654
+}

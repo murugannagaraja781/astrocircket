@@ -1,0 +1,50 @@
+{
+  "regular": {
+    "matchStar": "Ashlesha",
+    "matchStarLord": "Mercury",
+    "isMatchStarLordRahuKetu": false,
+    "batting": [
+      "BAT Rule 3: Star (+4)",
+      "Mercury Aatchi/Ucham Bonus (+4)",
+      "BAT Rule 4: Conjunction (Rasi Lord) (+4)",
+      "Mercury Aatchi/Ucham Bonus (+4)",
+      "Rule 9: Double Lord Conjunction (+12)",
+      "Ayilyam: Venus + Mercury (0)"
+    ],
+    "battingScore": 0,
+    "battingStatus": "SURE FLOP",
+    "bowling": [
+      "BOWL Rule 3: Star (+3)",
+      "BOWL Rule 3: Bonus (+6)",
+      "BOWL Rule 4: Conjunction Star (Rasi Lord) (+4)",
+      "Mercury Aatchi/Ucham Bonus (+4)",
+      "BOWL Rule 4: Conjunction Rasi (Rasi Lord) (+4)",
+      "Mercury Aatchi/Ucham Bonus (+4)",
+      "Rule 9: Double Lord Conjunction (+12)",
+      "Ayilyam: Venus + Mercury (+12)"
+    ],
+    "bowlingScore": 49,
+    "bowlingStatus": "Active"
+  },
+  "rahuKetu": {
+    "matchStar": "Ardra",
+    "matchStarLord": "Mercury",
+    "isMatchStarLordRahuKetu": true,
+    "batting": [
+      "Ardra: Batting always 0"
+    ],
+    "battingScore": 0,
+    "battingStatus": "Active",
+    "bowling": [
+      "BOWL Rule 3: Star (+3)",
+      "BOWL Rule 3: Bonus (+6)",
+      "BOWL Rule 4: Conjunction Star (Rasi Lord) (+4)",
+      "Mercury Aatchi/Ucham Bonus (+4)",
+      "BOWL Rule 4: Conjunction Rasi (Rasi Lord) (+4)",
+      "Mercury Aatchi/Ucham Bonus (+4)",
+      "Ardra: Mars Neecham (0)"
+    ],
+    "bowlingScore": 0,
+    "bowlingStatus": "SURE FLOP"
+  }
+}
