@@ -2507,11 +2507,25 @@ const GroupsManager = () => {
             const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/groups`, {
                 headers: { 'x-auth-token': token }
             });
-            setGroups(res.data);
+
+            const roleOrder = { 'BAT': 1, 'WK': 1.5, 'ALL': 2, 'BOWL': 3 };
+            const sortedData = res.data.map(group => {
+                if (group.players && group.players.length > 0) {
+                    group.players.sort((a, b) => {
+                        const roleA = roleOrder[a.role?.toUpperCase()] || 99;
+                        const roleB = roleOrder[b.role?.toUpperCase()] || 99;
+                        if (roleA !== roleB) return roleA - roleB;
+                        return (a.name || '').localeCompare(b.name || '');
+                    });
+                }
+                return group;
+            });
+
+            setGroups(sortedData);
 
             // Update selected group if open (to reflect removals)
             if (selectedGroup) {
-                const updated = res.data.find(g => g._id === selectedGroup._id);
+                const updated = sortedData.find(g => g._id === selectedGroup._id);
                 if (updated) setSelectedGroup(updated);
             }
         } catch (err) {
@@ -2659,7 +2673,15 @@ const GroupsManager = () => {
                 params: { search: query, limit: 10 },
                 headers: { 'x-auth-token': token }
             });
-            setAllPlayersList(res.data.players || []);
+            const roleOrder = { 'BAT': 1, 'WK': 1.5, 'ALL': 2, 'BOWL': 3 };
+            const players = res.data.players || [];
+            players.sort((a, b) => {
+                const roleA = roleOrder[a.role?.toUpperCase()] || 99;
+                const roleB = roleOrder[b.role?.toUpperCase()] || 99;
+                if (roleA !== roleB) return roleA - roleB;
+                return (a.name || '').localeCompare(b.name || '');
+            });
+            setAllPlayersList(players);
         } catch (err) {
             console.error(err);
         } finally {
@@ -2693,8 +2715,8 @@ const GroupsManager = () => {
         }
 
         const TAMIL_PLANETS = {
-            'Sun': 'சூரியன் (Sun)', 'Moon': 'சந்திரன் (Moon)', 'Mars': 'செவ்வாய் (Mars)', 'Mercury': 'புதன் (Mercury)',
-            'Jupiter': 'குரு (Jupiter)', 'Venus': 'சுக்கிரன் (Venus)', 'Saturn': 'சனி (Saturn)', 'Rahu': 'ராகு (Rahu)', 'Ketu': 'கேது (Ketu)'
+            'Sun': 'சூரி', 'Moon': 'சந்', 'Mars': 'செவ்', 'Mercury': 'புத',
+            'Jupiter': 'குரு', 'Venus': 'சுக்', 'Saturn': 'சனி', 'Rahu': 'ராகு', 'Ketu': 'கேது'
         };
 
         let html = `
@@ -2709,6 +2731,7 @@ const GroupsManager = () => {
                     th { background-color: #f4f6f9; font-weight: bold; color: #333; }
                     tr:nth-child(even) { background-color: #f9fafb; }
                     .index-col { width: 40px; text-align: center; }
+                    .tick-col { width: 40px; }
                 </style>
             </head>
             <body>
@@ -2720,13 +2743,23 @@ const GroupsManager = () => {
                             <th>Player Name (வீரர்)</th>
                             <th>Rasi Athipathi (ராசி அதிபதி)</th>
                             <th>Natchathira Athipathi (நட்சத்திர அதிபதி)</th>
+                            <th class="tick-col"></th>
+                            <th class="tick-col"></th>
                         </tr>
                     </thead>
                     <tbody>
         `;
 
         if (group.players && group.players.length > 0) {
-            group.players.forEach((p, idx) => {
+            const roleOrder = { 'BAT': 1, 'WK': 1.5, 'ALL': 2, 'BOWL': 3 };
+            const sortedPlayers = [...group.players].sort((a, b) => {
+                const roleA = roleOrder[a.role?.toUpperCase()] || 99;
+                const roleB = roleOrder[b.role?.toUpperCase()] || 99;
+                if (roleA !== roleB) return roleA - roleB;
+                return (a.name || '').localeCompare(b.name || '');
+            });
+
+            sortedPlayers.forEach((p, idx) => {
                 const engNakLord = p.birthChart?.planets?.Moon?.nakshatraLord || '-';
                 const engRasiLord = p.birthChart?.planets?.Moon?.signLord || '-';
                 const nakLord = TAMIL_PLANETS[engNakLord] || engNakLord;
@@ -2735,14 +2768,16 @@ const GroupsManager = () => {
                 html += `
                     <tr>
                         <td class="index-col">${idx + 1}</td>
-                        <td style="font-weight: 600;">${p.name || '-'}</td>
+                        <td style="font-weight: 600;">${p.name || '-'} <span style="font-size: 0.8em; color: #666;">(${p.role || 'BAT'})</span></td>
                         <td>${rasiLord}</td>
                         <td>${nakLord}</td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 `;
             });
         } else {
-            html += `<tr><td colspan="4" style="text-align: center; color: #666;">No players found</td></tr>`;
+            html += `<tr><td colspan="6" style="text-align: center; color: #666;">No players found</td></tr>`;
         }
 
         html += `
@@ -3067,6 +3102,25 @@ const GroupsManager = () => {
                             onInputChange={(e, val) => searchAllPlayers(val)}
                             onChange={(e, val) => setSelectedExistingPlayer(val)}
                             loading={searchingPlayers}
+                            renderOption={(props, option) => {
+                                const { key, ...restProps } = props;
+                                return (
+                                    <li key={key || option._id} {...restProps}>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                                            <Typography variant="body2">{option.name} ({option.id})</Typography>
+                                            <Chip 
+                                                label={option.role || 'BAT'} 
+                                                size="small" 
+                                                sx={{ 
+                                                    height: 18, fontSize: '0.65rem', fontWeight: 'bold',
+                                                    bgcolor: option.role === 'BAT' ? '#e0f2fe' : option.role === 'BOWL' ? '#fce7f3' : '#fef3c7',
+                                                    color: option.role === 'BAT' ? '#0369a1' : option.role === 'BOWL' ? '#be185d' : '#b45309'
+                                                }} 
+                                            />
+                                        </Box>
+                                    </li>
+                                );
+                            }}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
@@ -3108,7 +3162,18 @@ const GroupsManager = () => {
                                     {selectedGroup.players.map((player) => (
                                         <TableRow key={player._id}>
                                             <TableCell>
-                                                <Typography variant="subtitle2">{player.name}</Typography>
+                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                    <Typography variant="subtitle2">{player.name}</Typography>
+                                                    <Chip 
+                                                        label={player.role || 'BAT'} 
+                                                        size="small" 
+                                                        sx={{ 
+                                                            height: 18, fontSize: '0.65rem', fontWeight: 'bold',
+                                                            bgcolor: player.role === 'BAT' ? '#e0f2fe' : player.role === 'BOWL' ? '#fce7f3' : '#fef3c7',
+                                                            color: player.role === 'BAT' ? '#0369a1' : player.role === 'BOWL' ? '#be185d' : '#b45309'
+                                                        }} 
+                                                    />
+                                                </Box>
                                             </TableCell>
                                             <TableCell>{player.birthPlace || '-'}</TableCell>
                                             <TableCell>
