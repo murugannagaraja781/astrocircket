@@ -1,9 +1,14 @@
 
 const express = require('express');
 const router = express.Router();
-const { register, login, getPendingUsers, approveUser, getAdminStats, getAllUsers, deleteUser, blockUser, incrementView } = require('../controllers/authController');
+const { register, login, getMe, getPendingUsers, approveUser, getAdminStats, getAllUsers, deleteUser, blockUser, incrementView } = require('../controllers/authController');
 const auth = require('../middleware/auth');
 const role = require('../middleware/role');
+
+// @route   GET api/auth/me
+// @desc    Get current user details from DB using token
+// @access  Private
+router.get('/me', auth, getMe);
 
 // @route   POST api/auth/register
 // @desc    Register user

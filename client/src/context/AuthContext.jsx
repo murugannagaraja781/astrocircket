@@ -62,27 +62,8 @@ export const AuthProvider = ({ children }) => {
         }
 
         try {
-            // We can add a specialized endpoint to get current user data or decode token if needed
-            // For now, assuming we might need to decode or just store user data from login
-            // But usually a /me endpoint is best. Let's assume we use the token data or add a /me endpoint if needed.
-            // For simplicity in this stack, let's trust the token or add a /me route.
-            // I'll keep it simple: If we have a token, we are "authenticated" but we ideally verify it.
-            // Let's decode the token for role if we don't have a /me endpoint or just use the login response.
-            // Since I didn't make a /me endpoint, I'll rely on the login response storing user data or decode JWT.
-            // Actually, best practice is to have a loadUser.
-            // I won't overcomplicate. I'll stick to basic state from Login.
-            // However, on refresh, we lose state.
-            // I'll add a simple decoding or just assume valid if token exists for this prototype,
-            // but for roles, we need to know the role.
-            // Let's decode the token client side or make a fast /me endpoint.
-            // I will implement a quick /me endpoint in the backend for robustness if I can, or just decode.
-            // I'll decoding for now using a helper or just persist user in localStorage too (less secure but faster for prototype).
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (user) {
-                dispatch({ type: 'USER_LOADED', payload: user });
-            } else {
-                dispatch({ type: 'AUTH_ERROR' });
-            }
+            const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/me`);
+            dispatch({ type: 'USER_LOADED', payload: res.data });
         } catch (err) {
             dispatch({ type: 'AUTH_ERROR' });
         }
@@ -119,19 +100,16 @@ export const AuthProvider = ({ children }) => {
         try {
             const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, formData, config);
 
-
             // Allow token to be set
             dispatch({
                 type: 'LOGIN_SUCCESS',
                 payload: res.data
             });
-            // Also store user role/info for persistence
-            // The backend returns { token, role }.
-            // We construct a user object.
-            const userPayload = { role: res.data.role, username: formData.username }; // simple user obj
-            localStorage.setItem('user', JSON.stringify(userPayload));
 
-            loadUser();
+            // Set default headers for subsequent requests
+            setAuthToken(res.data.token);
+
+            await loadUser();
         } catch (err) {
             dispatch({
                 type: 'LOGIN_FAIL',

@@ -191,6 +191,18 @@ const blockUser = async (req, res) => {
     }
 };
 
+// Get logged in user details from MongoDB using token
+const getMe = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+        if (!user) return res.status(404).json({ msg: 'User not found' });
+        res.json(user);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+};
+
 // Increment Dashboard Views
 const incrementView = async (req, res) => {
     try {
@@ -210,6 +222,7 @@ module.exports = {
     getAdminStats,
     register,
     login,
+    getMe,
     getPendingUsers,
     approveUser,
     getAllUsers,
