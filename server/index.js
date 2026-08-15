@@ -49,6 +49,22 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'UP', timestamp: new Date().toISOString() });
 });
 
+// Temporary diagnostic route to identify production database name
+app.get('/api/debug-db-uri', (req, res) => {
+    try {
+        const uri = process.env.MONGO_URI || '';
+        const host = uri.includes('@') ? uri.split('@')[1] : 'unknown';
+        res.json({
+            host: host,
+            dbName: mongoose.connection.name,
+            readyState: mongoose.connection.readyState
+        });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+
 app.get('/', (req, res) => {
     res.send('API is running');
 });
