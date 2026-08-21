@@ -4,6 +4,7 @@ const { formatPlanetaryData } = require('../utils/chartUtils');
 const path = require('path');
 const fs = require('fs');
 const ExcelJS = require('exceljs');
+const { createBackup } = require('../utils/backupHelper');
 
 // Import local astro calculator using vedic-astrology-api
 const {
@@ -193,6 +194,9 @@ const uploadPlayers = async (req, res) => {
         // Cleanup file
         fs.unlinkSync(req.file.path);
 
+        // Trigger automatic backup asynchronously
+        createBackup('auto_upload').catch(err => console.error('Auto backup on upload failed:', err.message));
+
         res.status(200).json({ message: `Processed ${count} players successfully.` });
 
     } catch (error) {
@@ -211,6 +215,10 @@ const syncPlayers = async (req, res) => {
         if (fs.existsSync(filePath)) {
             const playersData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
             const count = await processPlayersData(playersData);
+            
+            // Trigger automatic backup asynchronously
+            createBackup('auto_sync').catch(err => console.error('Auto backup on sync failed:', err.message));
+
             res.status(200).json({ message: `Sync complete. Processed ${count} players.` });
         } else {
             res.status(404).json({ message: 'Local player.json not found' });
@@ -391,8 +399,15 @@ const updatePlayer = async (req, res) => {
                 { new: true }
             );
             if (!playerById) return res.status(404).json({ msg: 'Player not found' });
+            
+            // Trigger automatic backup asynchronously
+            createBackup('auto_update').catch(err => console.error('Auto backup on update failed:', err.message));
+            
             return res.json(playerById);
         }
+
+        // Trigger automatic backup asynchronously
+        createBackup('auto_update').catch(err => console.error('Auto backup on update failed:', err.message));
 
         res.json(player);
     } catch (err) {
@@ -457,6 +472,10 @@ const addPlayer = async (req, res) => {
 
         const newPlayer = new Player(playerData);
         await newPlayer.save();
+
+        // Trigger automatic backup asynchronously
+        createBackup('auto_add').catch(err => console.error('Auto backup on add failed:', err.message));
+
         res.json(newPlayer);
     } catch (err) {
         console.error(err);
@@ -483,6 +502,9 @@ const deletePlayer = async (req, res) => {
             { $pull: { players: id } }
         );
 
+        // Trigger automatic backup asynchronously
+        createBackup('auto_delete').catch(err => console.error('Auto backup on delete failed:', err.message));
+
         res.json({ msg: 'Player deleted' });
     } catch (err) {
         console.error(err);
@@ -506,6 +528,9 @@ const deleteAllPlayers = async (req, res) => {
         // Also clear all players from groups
         const Group = require('../models/Group');
         await Group.updateMany({}, { $set: { players: [] } });
+
+        // Trigger automatic backup asynchronously
+        createBackup('auto_delete_all').catch(err => console.error('Auto backup on delete-all failed:', err.message));
 
         res.json({ msg: `Deleted ${result.deletedCount} players successfully` });
     } catch (err) {

@@ -355,6 +355,9 @@ import UserDashboard from './UserDashboard';
 import MyPredictions from './MyPredictions';
 import NotesOverlay from '../components/NotesOverlay';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import BackupIcon from '@mui/icons-material/Backup';
+import DownloadIcon from '@mui/icons-material/Download';
+import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore';
 
 
 // Rules View Component (Tamil)
@@ -1629,7 +1632,7 @@ const PlayersManager = () => {
             birthTime: player.birthTime || '',
             birthPlace: player.birthPlace || '', timezone: player.timezone || '', id: player.id,
             latitude: player.latitude, longitude: player.longitude,
-            role: player.role || 'BAT', manualStatus: player.manualStatus || ''
+            role: player.role || 'BAT', gender: player.gender || '', league: player.league || '', manualStatus: player.manualStatus || ''
         });
         setOpenEdit(true);
         setPreviewChart(player.birthChart?.data || player.birthChart); // Load existing chart logic if editing? Maybe easier to restart.
@@ -2220,6 +2223,38 @@ const PlayersManager = () => {
                                     </Button>
                                 ))}
                             </Box>
+                        </Box>
+
+                        {/* GENDER SELECTION */}
+                        <Box sx={{ mt: 1 }}>
+                            <Typography variant="caption" sx={{ mb: 0.5, display: 'block', color: '#A0AEC0' }}>Gender</Typography>
+                            <Box sx={{ display: 'flex', gap: 1 }}>
+                                {["Male", "Female", ""].map((g) => (
+                                    <Button
+                                        key={g || 'none'}
+                                        variant={playerForm.gender === g ? "contained" : "outlined"}
+                                        color={playerForm.gender === g ? "secondary" : "inherit"}
+                                        onClick={() => setPlayerForm({ ...playerForm, gender: g })}
+                                        fullWidth
+                                        size="small"
+                                        sx={{ borderRadius: "8px" }}
+                                    >
+                                        {g || "Not Set"}
+                                    </Button>
+                                ))}
+                            </Box>
+                        </Box>
+
+                        {/* LEAGUE ENTRY */}
+                        <Box sx={{ mt: 1 }}>
+                            <Typography variant="caption" sx={{ mb: 0.5, display: 'block', color: '#A0AEC0' }}>League</Typography>
+                        <TextField
+                        placeholder="e.g. IPL, BBL, PSL, SAT20, MLC, Hundred, BPL, CPL"
+                        value={playerForm.league || ""}
+                        onChange={(e) => setPlayerForm({ ...playerForm, league: e.target.value })}
+                        fullWidth
+                        size="small"
+                        />
                         </Box>
 
                         {/* MANUAL STATUS ENTRY */}
@@ -3315,6 +3350,327 @@ const GroupsManager = () => {
     );
 };
 
+const BackupsManager = () => {
+    const { token } = useContext(AuthContext);
+    const [backups, setBackups] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [creating, setCreating] = useState(false);
+    const [actionLoading, setActionLoading] = useState(false);
+    
+    // Dialogs
+    const [confirmRestoreOpen, setConfirmRestoreOpen] = useState(false);
+    const [selectedBackupForRestore, setSelectedBackupForRestore] = useState(null);
+    const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+    const [selectedBackupForDelete, setSelectedBackupForDelete] = useState(null);
+
+    // Snackbar
+    const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+    const showSnackbar = (message, severity = 'success') => {
+        setSnackbar({ open: true, message, severity });
+    };
+    const handleCloseSnackbar = () => setSnackbar(prev => ({ ...prev, open: false }));
+
+    const fetchBackups = async () => {
+        setLoading(true);
+        try {
+            const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/backups`, {
+                headers: { 'x-auth-token': token }
+            });
+            setBackups(res.data);
+        } catch (err) {
+            console.error(err);
+            showSnackbar(err.response?.data?.msg || 'Failed to fetch backups', 'error');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchBackups();
+    }, []);
+
+    const handleCreateBackup = async () => {
+        setCreating(true);
+        try {
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/backups/create`, {}, {
+                headers: { 'x-auth-token': token }
+            });
+            showSnackbar(res.data.msg || 'Backup created successfully!', 'success');
+            fetchBackups();
+        } catch (err) {
+            console.error(err);
+            showSnackbar(err.response?.data?.msg || 'Failed to create backup', 'error');
+        } finally {
+            setCreating(false);
+        }
+    };
+
+    const handleDownloadBackup = async (filename) => {
+        try {
+            const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/backups/download/${filename}`, {
+                headers: { 'x-auth-token': token },
+                responseType: 'blob'
+            });
+            const url = window.URL.createObjectURL(new Blob([res.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            showSnackbar('Download started', 'success');
+        } catch (err) {
+            console.error(err);
+            showSnackbar('Failed to download backup file', 'error');
+        }
+    };
+
+    const handleRestoreBackup = async () => {
+        if (!selectedBackupForRestore) return;
+        setActionLoading(true);
+        try {
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/backups/restore/${selectedBackupForRestore}`, {}, {
+                headers: { 'x-auth-token': token }
+            });
+            showSnackbar(res.data.msg || 'Database successfully restored!', 'success');
+            setConfirmRestoreOpen(false);
+            setSelectedBackupForRestore(null);
+            fetchBackups();
+        } catch (err) {
+            console.error(err);
+            showSnackbar(err.response?.data?.msg || 'Failed to restore database', 'error');
+        } finally {
+            setActionLoading(false);
+        }
+    };
+
+    const handleDeleteBackup = async () => {
+        if (!selectedBackupForDelete) return;
+        setActionLoading(true);
+        try {
+            const res = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/backups/${selectedBackupForDelete}`, {
+                headers: { 'x-auth-token': token }
+            });
+            showSnackbar(res.data.msg || 'Backup deleted successfully!', 'success');
+            setConfirmDeleteOpen(false);
+            setSelectedBackupForDelete(null);
+            fetchBackups();
+        } catch (err) {
+            console.error(err);
+            showSnackbar(err.response?.data?.msg || 'Failed to delete backup', 'error');
+        } finally {
+            setActionLoading(false);
+        }
+    };
+
+    const formatBytes = (bytes) => {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const dm = 2;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    };
+
+    const formatTrigger = (trigger) => {
+        switch (trigger) {
+            case 'manual':
+                return <Chip label="Manual" size="small" sx={{ bgcolor: 'rgba(37, 99, 235, 0.1)', color: '#2563eb', fontWeight: 'bold' }} />;
+            case 'auto_add':
+                return <Chip label="Auto (Add)" size="small" sx={{ bgcolor: 'rgba(34, 197, 94, 0.1)', color: '#22c55e', fontWeight: 'bold' }} />;
+            case 'auto_update':
+                return <Chip label="Auto (Update)" size="small" sx={{ bgcolor: 'rgba(14, 165, 233, 0.1)', color: '#0ea5e9', fontWeight: 'bold' }} />;
+            case 'auto_delete':
+                return <Chip label="Auto (Delete)" size="small" sx={{ bgcolor: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b', fontWeight: 'bold' }} />;
+            case 'auto_delete_all':
+                return <Chip label="Auto (Clear All)" size="small" sx={{ bgcolor: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', fontWeight: 'bold' }} />;
+            case 'auto_upload':
+                return <Chip label="Auto (Upload)" size="small" sx={{ bgcolor: 'rgba(34, 197, 94, 0.1)', color: '#22c55e', fontWeight: 'bold' }} />;
+            case 'auto_sync':
+                return <Chip label="Auto (Sync)" size="small" sx={{ bgcolor: 'rgba(99, 102, 241, 0.1)', color: '#6366f1', fontWeight: 'bold' }} />;
+            default:
+                return <Chip label={trigger} size="small" />;
+        }
+    };
+
+    return (
+        <Box sx={{ pb: 4 }}>
+            <Box sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                mb: 3
+            }}>
+                <Box>
+                    <Typography variant="h5" fontWeight="800" color="#111827">Database Backups</Typography>
+                    <Typography variant="body2" color="#6b7280">Manage database backup copies & restore operations</Typography>
+                </Box>
+                <Button
+                    variant="contained"
+                    startIcon={<BackupIcon />}
+                    onClick={handleCreateBackup}
+                    disabled={creating}
+                    sx={{
+                        background: 'linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%)',
+                        borderRadius: '12px',
+                        px: 3,
+                        py: 1,
+                        boxShadow: '0 4px 12px rgba(37, 99, 235, 0.25)',
+                        '&:hover': {
+                            boxShadow: '0 6px 20px rgba(37, 99, 235, 0.35)',
+                        }
+                    }}
+                >
+                    {creating ? 'Backing Up...' : 'Create Backup'}
+                </Button>
+            </Box>
+
+            <Paper sx={{ p: 0, borderRadius: '16px', overflow: 'hidden' }}>
+                <TableContainer sx={{ maxHeight: '70vh' }}>
+                    <Table stickyHeader>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Backup File Name</TableCell>
+                                <TableCell>Date & Time</TableCell>
+                                <TableCell>Trigger Source</TableCell>
+                                <TableCell>Size</TableCell>
+                                <TableCell align="right">Actions</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {loading ? (
+                                <TableRow>
+                                    <TableCell colSpan={5} align="center" sx={{ py: 6 }}>
+                                        <CircularProgress size={30} />
+                                        <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary' }}>Loading backups...</Typography>
+                                    </TableCell>
+                                </TableRow>
+                            ) : backups.length > 0 ? (
+                                backups.map((b) => (
+                                    <TableRow key={b.filename} hover>
+                                        <TableCell sx={{ fontWeight: '600', color: '#1f2937' }}>
+                                            {b.filename}
+                                        </TableCell>
+                                        <TableCell>
+                                            {new Date(b.createdAt).toLocaleString()}
+                                        </TableCell>
+                                        <TableCell>
+                                            {formatTrigger(b.trigger)}
+                                        </TableCell>
+                                        <TableCell>
+                                            {formatBytes(b.sizeBytes)}
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            <Tooltip title="Restore Data">
+                                                <IconButton
+                                                    color="primary"
+                                                    onClick={() => {
+                                                        setSelectedBackupForRestore(b.filename);
+                                                        setConfirmRestoreOpen(true);
+                                                    }}
+                                                    size="small"
+                                                >
+                                                    <SettingsBackupRestoreIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title="Download File">
+                                                <IconButton
+                                                    color="secondary"
+                                                    onClick={() => handleDownloadBackup(b.filename)}
+                                                    size="small"
+                                                >
+                                                    <DownloadIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title="Delete Backup">
+                                                <IconButton
+                                                    color="error"
+                                                    onClick={() => {
+                                                        setSelectedBackupForDelete(b.filename);
+                                                        setConfirmDeleteOpen(true);
+                                                    }}
+                                                    size="small"
+                                                >
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={5} align="center" sx={{ py: 8 }}>
+                                        <Typography color="textSecondary">No backups found. Click "Create Backup" to generate one.</Typography>
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Paper>
+
+            <Box sx={{ mt: 3, p: 2, bgcolor: 'rgba(37, 99, 235, 0.05)', borderRadius: '12px', border: '1px dashed rgba(37, 99, 235, 0.2)' }}>
+                <Typography variant="caption" color="primary" sx={{ fontWeight: '600', display: 'block', mb: 0.5 }}>
+                    💡 Auto-Backup System Active
+                </Typography>
+                <Typography variant="caption" color="textSecondary" display="block">
+                    The database is backed up automatically on every action (adding, updating, deleting, or uploading player data).
+                    To maintain storage efficiency, only the 15 most recent backups are preserved.
+                </Typography>
+            </Box>
+
+            {/* Restore Confirmation Dialog */}
+            <Dialog open={confirmRestoreOpen} onClose={() => !actionLoading && setConfirmRestoreOpen(false)}>
+                <DialogTitle sx={{ bgcolor: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <SettingsBackupRestoreIcon /> Restore Database
+                </DialogTitle>
+                <DialogContent sx={{ mt: 2 }}>
+                    <Typography color="error" fontWeight="bold" gutterBottom>
+                        ⚠️ WARNING: Restoring will overwrite all current players!
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        Are you sure you want to restore the player database from the file: <br />
+                        <strong>{selectedBackupForRestore}</strong>?
+                        This action cannot be undone.
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setConfirmRestoreOpen(false)} disabled={actionLoading}>Cancel</Button>
+                    <Button onClick={handleRestoreBackup} color="error" variant="contained" disabled={actionLoading}>
+                        {actionLoading ? 'Restoring...' : 'Confirm Restore'}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Delete Confirmation Dialog */}
+            <Dialog open={confirmDeleteOpen} onClose={() => !actionLoading && setConfirmDeleteOpen(false)}>
+                <DialogTitle sx={{ bgcolor: 'rgba(239, 68, 68, 0.1)', color: '#ef4444' }}>
+                    Delete Backup File
+                </DialogTitle>
+                <DialogContent sx={{ mt: 2 }}>
+                    <Typography variant="body2">
+                        Are you sure you want to permanently delete the backup file: <br />
+                        <strong>{selectedBackupForDelete}</strong>?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setConfirmDeleteOpen(false)} disabled={actionLoading}>Cancel</Button>
+                    <Button onClick={handleDeleteBackup} color="error" variant="contained" disabled={actionLoading}>
+                        {actionLoading ? 'Deleting...' : 'Delete'}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Local Snackbar */}
+            <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+                <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }} variant="filled">
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
+        </Box>
+    );
+};
+
 const drawerWidth = 240;
 
 const AdminDashboard = () => {
@@ -3378,6 +3734,7 @@ const AdminDashboard = () => {
         { id: 'clientDashboard', label: 'Client Dashboard', icon: <DashboardIcon /> },
         { id: 'kpAstrology', label: 'KP Astrology', icon: <TimelineIcon /> },
         { id: 'myPredictions', label: 'My Predictions', icon: <EmojiEventsIcon /> },
+        { id: 'backups', label: 'Backups', icon: <BackupIcon /> },
     ];
 
     const drawer = (
@@ -3511,6 +3868,7 @@ const AdminDashboard = () => {
             case 'clientDashboard': return <UserDashboard hideHeader={true} />;
             case 'kpAstrology': return <KPView />;
             case 'myPredictions': return <MyPredictions />;
+            case 'backups': return <BackupsManager />;
             default: return <DashboardHome onNavigate={setCurrentView} />;
         }
     };
