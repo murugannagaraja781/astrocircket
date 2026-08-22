@@ -2301,11 +2301,24 @@ const PlayersManager = () => {
                                     <RasiChart data={previewChart} style={{ width: '100%', height: '100%' }} />
                                 </Box>
                                 {previewChart.nakshatra && (
-                                    <Typography variant="body1" align="center" sx={{ mt: 2, fontWeight: 'bold', color: 'primary.main' }}>
-                                        Star: {previewChart.nakshatra.name} ({previewChart.nakshatra.tamil})
-                                        {/* Add Athipathi */}
-                                        {previewChart.nakshatra.lord && ` - Athipathi: ${previewChart.nakshatra.lord} (${previewChart.nakshatra.lordTamil || '-'})`}
-                                    </Typography>
+                                    <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 1, alignItems: 'center' }}>
+                                        {previewChart.moonSign && (
+                                            <Typography variant="body1" align="center" sx={{ fontWeight: 'bold', color: 'secondary.main' }}>
+                                                Rasi: {previewChart.moonSign.name} ({previewChart.moonSign.tamil})
+                                                {previewChart.moonSign.lord && ` - Rasi Athipathi (ராசி அதிபதி): ${previewChart.moonSign.lord} (${{
+                                                    'Sun': 'சூரியன்', 'Moon': 'சந்திரன்', 'Mars': 'செவ்வாய்', 'Mercury': 'புதன்',
+                                                    'Jupiter': 'குரு', 'Venus': 'சுக்கிரன்', 'Saturn': 'சனி', 'Rahu': 'ராகு', 'Ketu': 'கேது'
+                                                }[previewChart.moonSign.lord] || previewChart.moonSign.lordTamil || '-'})`}
+                                            </Typography>
+                                        )}
+                                        <Typography variant="body1" align="center" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+                                            Star: {previewChart.nakshatra.name} ({previewChart.nakshatra.tamil})
+                                            {previewChart.nakshatra.lord && ` - Star Athipathi (நட்சத்திர அதிபதி): ${previewChart.nakshatra.lord} (${{
+                                                'Sun': 'சூரியன்', 'Moon': 'சந்திரன்', 'Mars': 'செவ்வாய்', 'Mercury': 'புதன்',
+                                                'Jupiter': 'குரு', 'Venus': 'சுக்கிரன்', 'Saturn': 'சனி', 'Rahu': 'ராகு', 'Ketu': 'கேது'
+                                            }[previewChart.nakshatra.lord] || '-'})`}
+                                        </Typography>
+                                    </Box>
                                 )}
                                 <Typography variant="caption" color="textSecondary" align="center" display="block" sx={{ mt: 1 }}>
                                     Check if planets are in correct signs.
