@@ -1725,11 +1725,11 @@ const PlayersManager = () => {
 
                     formData.append('image', profilePicFile);
 
-                    await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/players/${selectedPlayer.id}`, formData, {
+                    await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/players/${selectedPlayer.id || selectedPlayer._id}`, formData, {
                         headers: { 'x-auth-token': token }
                     });
                 } else {
-                    await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/players/${selectedPlayer.id}`, playerForm, {
+                    await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/players/${selectedPlayer.id || selectedPlayer._id}`, playerForm, {
                         headers: { 'x-auth-token': token }
                     });
                 }
@@ -1952,7 +1952,7 @@ const PlayersManager = () => {
                                         <DescriptionIcon />
                                     </IconButton>
                                     <IconButton size="small" onClick={() => handleEditClick(p)} color="primary"><EditIcon /></IconButton>
-                                    <IconButton size="small" onClick={() => handleDeleteClick(p.id)} color="error"><DeleteIcon /></IconButton>
+                                    <IconButton size="small" onClick={() => handleDeleteClick(p.id || p._id)} color="error"><DeleteIcon /></IconButton>
                                 </TableCell>
                             </TableRow>
                         ))}

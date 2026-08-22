@@ -28634,7 +28634,7 @@
     "name": "Shai Hope",
     "profile": "shai_hope_1768499612015_profile.jpg",
     "dob": "1993-11-10",
-    "birthTime": "10:00",
+    "birthTime": "22:00",
     "birthPlace": "Saint Michael, Barbados",
     "latitude": 13.1182985,
     "longitude": -59.6015783,
@@ -28642,7 +28642,7 @@
     "birthChart": {
       "planets": {
         "Sun": {
-          "longitude": 204.43878660308164,
+          "longitude": 204.94159683180885,
           "sign": "Libra",
           "signTamil": "துலாம்",
           "signLord": "Venus",
@@ -28654,19 +28654,19 @@
           "dignityTamil": "நீசம்"
         },
         "Moon": {
-          "longitude": 158.2674279898876,
+          "longitude": 165.6800800409433,
           "sign": "Virgo",
           "signTamil": "கன்னி",
           "signLord": "Mercury",
-          "nakshatra": "Uttara Phalguni",
-          "nakshatraTamil": "உத்திரம்",
-          "nakshatraLord": "Sun",
-          "pada": 4,
+          "nakshatra": "Hasta",
+          "nakshatraTamil": "ஹஸ்தம்",
+          "nakshatraLord": "Moon",
+          "pada": 2,
           "dignity": "Friendly",
           "dignityTamil": "நட்பு"
         },
         "Mars": {
-          "longitude": 217.21900731013486,
+          "longitude": 217.5781355422937,
           "sign": "Scorpio",
           "signTamil": "விருச்சிகம்",
           "signLord": "Mars",
@@ -28678,7 +28678,7 @@
           "dignityTamil": "ஆட்சி"
         },
         "Mercury": {
-          "longitude": 194.85468785929703,
+          "longitude": 194.43606620431729,
           "sign": "Libra",
           "signTamil": "துலாம்",
           "signLord": "Venus",
@@ -28690,7 +28690,7 @@
           "dignityTamil": "நட்பு"
         },
         "Jupiter": {
-          "longitude": 186.29701381232044,
+          "longitude": 186.4030645748324,
           "sign": "Libra",
           "signTamil": "துலாம்",
           "signLord": "Venus",
@@ -28702,7 +28702,7 @@
           "dignityTamil": "பகை"
         },
         "Venus": {
-          "longitude": 188.1197574763273,
+          "longitude": 188.7459352235612,
           "sign": "Libra",
           "signTamil": "துலாம்",
           "signLord": "Venus",
@@ -28714,7 +28714,7 @@
           "dignityTamil": "மூலதிரிகோணம்"
         },
         "Saturn": {
-          "longitude": 300.02926672034454,
+          "longitude": 300.0410599145195,
           "sign": "Aquarius",
           "signTamil": "கும்பம்",
           "signLord": "Saturn",
@@ -28726,7 +28726,7 @@
           "dignityTamil": "மூலதிரிகோணம்"
         },
         "Rahu": {
-          "longitude": 220.03431772091295,
+          "longitude": 220.00783147792288,
           "sign": "Scorpio",
           "signTamil": "விருச்சிகம்",
           "signLord": "Mars",
@@ -28738,7 +28738,7 @@
           "dignityTamil": "நீசம்"
         },
         "Ketu": {
-          "longitude": 40.03431772091295,
+          "longitude": 40.00783147792288,
           "sign": "Taurus",
           "signTamil": "ரிஷபம்",
           "signLord": "Venus",
@@ -28751,15 +28751,15 @@
         }
       },
       "ascendant": {
-        "longitude": 259.60929090467005,
+        "longitude": 90.2020190352408,
         "sign": {
-          "id": 9,
-          "name": "Sagittarius",
-          "tamil": "தனுசு",
-          "lord": "Jupiter",
-          "lordTamil": "குரு",
-          "degreesInSign": 19.609290904670047,
-          "totalLongitude": 259.60929090467005
+          "id": 4,
+          "name": "Cancer",
+          "tamil": "கடகம்",
+          "lord": "Moon",
+          "lordTamil": "சந்திரன்",
+          "degreesInSign": 0.20201903524079512,
+          "totalLongitude": 90.2020190352408
         }
       },
       "ayanamsa": 23.758383333333335,
@@ -28774,8 +28774,8 @@
           "tamil": "விஷ்கம்பம்"
         },
         "karana": {
-          "name": "Kaulava",
-          "tamil": "கௌலவம்"
+          "name": "Taitila",
+          "tamil": "தைதுலை"
         },
         "vara": {
           "name": "Wednesday",
@@ -55340,165 +55340,6 @@
     "league": "Pakistan"
   },
   {
-    "id": "keacy_carty__1787040674265",
-    "name": "Keacy Carty ",
-    "profile": "keacy_carty__1787040674265_profile.JPG",
-    "dob": "1997-03-19",
-    "birthTime": "21:00",
-    "birthPlace": "Kingston, Kingston Parish, Jamaica",
-    "latitude": 17.99702,
-    "longitude": -76.79358,
-    "timezone": "-5",
-    "birthChart": {
-      "planets": {
-        "Sun": {
-          "longitude": 335.698419343706,
-          "sign": "Pisces",
-          "signTamil": "மீனம்",
-          "signLord": "Jupiter",
-          "nakshatra": "Uttara Bhadrapada",
-          "nakshatraTamil": "உத்திரட்டாதி",
-          "nakshatraLord": "Saturn",
-          "pada": 1,
-          "dignity": "Friendly",
-          "dignityTamil": "நட்பு"
-        },
-        "Moon": {
-          "longitude": 110.94399834895671,
-          "sign": "Cancer",
-          "signTamil": "கடகம்",
-          "signLord": "Moon",
-          "nakshatra": "Ashlesha",
-          "nakshatraTamil": "ஆயில்யம்",
-          "nakshatraLord": "Mercury",
-          "pada": 2,
-          "dignity": "Own Sign",
-          "dignityTamil": "ஆட்சி"
-        },
-        "Mars": {
-          "longitude": 151.86945872976372,
-          "sign": "Virgo",
-          "signTamil": "கன்னி",
-          "signLord": "Mercury",
-          "nakshatra": "Uttara Phalguni",
-          "nakshatraTamil": "உத்திரம்",
-          "nakshatraLord": "Sun",
-          "pada": 2,
-          "dignity": "Enemy",
-          "dignityTamil": "பகை"
-        },
-        "Mercury": {
-          "longitude": 343.9779739584058,
-          "sign": "Pisces",
-          "signTamil": "மீனம்",
-          "signLord": "Jupiter",
-          "nakshatra": "Uttara Bhadrapada",
-          "nakshatraTamil": "உத்திரட்டாதி",
-          "nakshatraLord": "Saturn",
-          "pada": 4,
-          "dignity": "Debilitated",
-          "dignityTamil": "நீசம்"
-        },
-        "Jupiter": {
-          "longitude": 288.9613863580574,
-          "sign": "Capricorn",
-          "signTamil": "மகரம்",
-          "signLord": "Saturn",
-          "nakshatra": "Shravana",
-          "nakshatraTamil": "திருவோணம்",
-          "nakshatraLord": "Moon",
-          "pada": 3,
-          "dignity": "Debilitated",
-          "dignityTamil": "நீசம்"
-        },
-        "Venus": {
-          "longitude": 332.28033955730024,
-          "sign": "Pisces",
-          "signTamil": "மீனம்",
-          "signLord": "Jupiter",
-          "nakshatra": "Purva Bhadrapada",
-          "nakshatraTamil": "பூரட்டாதி",
-          "nakshatraLord": "Jupiter",
-          "pada": 4,
-          "dignity": "Exalted",
-          "dignityTamil": "உச்சம்"
-        },
-        "Saturn": {
-          "longitude": 345.083872154569,
-          "sign": "Pisces",
-          "signTamil": "மீனம்",
-          "signLord": "Jupiter",
-          "nakshatra": "Uttara Bhadrapada",
-          "nakshatraTamil": "உத்திரட்டாதி",
-          "nakshatraLord": "Saturn",
-          "pada": 4,
-          "dignity": "Neutral",
-          "dignityTamil": "சமம்"
-        },
-        "Rahu": {
-          "longitude": 155.08039742891071,
-          "sign": "Virgo",
-          "signTamil": "கன்னி",
-          "signLord": "Mercury",
-          "nakshatra": "Uttara Phalguni",
-          "nakshatraTamil": "உத்திரம்",
-          "nakshatraLord": "Sun",
-          "pada": 3,
-          "dignity": "Neutral",
-          "dignityTamil": "சமம்"
-        },
-        "Ketu": {
-          "longitude": 335.0803974289107,
-          "sign": "Pisces",
-          "signTamil": "மீனம்",
-          "signLord": "Jupiter",
-          "nakshatra": "Uttara Bhadrapada",
-          "nakshatraTamil": "உத்திரட்டாதி",
-          "nakshatraLord": "Saturn",
-          "pada": 1,
-          "dignity": "Neutral",
-          "dignityTamil": "சமம்"
-        }
-      },
-      "ascendant": {
-        "longitude": 194.65674919748284,
-        "sign": {
-          "id": 7,
-          "name": "Libra",
-          "tamil": "துலாம்",
-          "lord": "Venus",
-          "lordTamil": "சுக்கிரன்",
-          "degreesInSign": 14.656749197482839,
-          "totalLongitude": 194.65674919748284
-        }
-      },
-      "ayanamsa": 23.814227777777777,
-      "panchangam": {
-        "tithi": {
-          "name": "Dwadashi",
-          "tamil": "துவாதசி",
-          "paksha": "Shukla"
-        },
-        "yoga": {
-          "name": "Sukarma",
-          "tamil": "சுகர்மம்"
-        },
-        "karana": {
-          "name": "Bava",
-          "tamil": "பவம்"
-        },
-        "vara": {
-          "name": "Wednesday",
-          "tamil": "புதன்"
-        }
-      }
-    },
-    "role": "BAT",
-    "manualStatus": "",
-    "gender": "Male",
-    "league": "West Indies"
-  },
-  {
     "id": "kirk_mckenzie_1787040795920",
     "name": "Kirk Mckenzie",
     "profile": "kirk_mckenzie_1787040795920_profile.JPG",
@@ -59752,7 +59593,7 @@
     "name": "Shimron Hetmyer",
     "profile": "",
     "dob": "1996-12-26",
-    "birthTime": "09:00",
+    "birthTime": "06:00",
     "birthPlace": "Georgetown, Guyana",
     "latitude": 13.0827,
     "longitude": 80.2707,
@@ -61801,6 +61642,2709 @@
     "role": "BOWL",
     "gender": "Male",
     "league": "West Indies",
+    "manualStatus": ""
+  },
+  {
+    "id": "hasan_nawaz_1787385911326",
+    "name": "Hasan Nawaz",
+    "profile": "hasan_nawaz_1787385911326_profile.JPG",
+    "dob": "2002-08-21",
+    "birthTime": "09:00",
+    "birthPlace": "Islamabad, Islamabad Capital Territory, Pakistan",
+    "latitude": 33.72148,
+    "longitude": 73.04329,
+    "timezone": "5",
+    "birthChart": {
+      "planets": {
+        "Sun": {
+          "longitude": 124.06384095456163,
+          "sign": "Leo",
+          "signTamil": "சிம்மம்",
+          "signLord": "Sun",
+          "nakshatra": "Magha",
+          "nakshatraTamil": "மகம்",
+          "nakshatraLord": "Ketu",
+          "pada": 2,
+          "dignity": "Mooltrikona",
+          "dignityTamil": "மூலதிரிகோணம்"
+        },
+        "Moon": {
+          "longitude": 283.8346870379912,
+          "sign": "Capricorn",
+          "signTamil": "மகரம்",
+          "signLord": "Saturn",
+          "nakshatra": "Shravana",
+          "nakshatraTamil": "திருவோணம்",
+          "nakshatraLord": "Moon",
+          "pada": 2,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Mars": {
+          "longitude": 120.7487642682939,
+          "sign": "Leo",
+          "signTamil": "சிம்மம்",
+          "signLord": "Sun",
+          "nakshatra": "Magha",
+          "nakshatraTamil": "மகம்",
+          "nakshatraLord": "Ketu",
+          "pada": 1,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Mercury": {
+          "longitude": 148.90732838463873,
+          "sign": "Leo",
+          "signTamil": "சிம்மம்",
+          "signLord": "Sun",
+          "nakshatra": "Uttara Phalguni",
+          "nakshatraTamil": "உத்திரம்",
+          "nakshatraLord": "Sun",
+          "pada": 1,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Jupiter": {
+          "longitude": 100.35844898332758,
+          "sign": "Cancer",
+          "signTamil": "கடகம்",
+          "signLord": "Moon",
+          "nakshatra": "Pushya",
+          "nakshatraTamil": "பூசம்",
+          "nakshatraLord": "Saturn",
+          "pada": 3,
+          "dignity": "Exalted",
+          "dignityTamil": "உச்சம்"
+        },
+        "Venus": {
+          "longitude": 170.03527355739544,
+          "sign": "Virgo",
+          "signTamil": "கன்னி",
+          "signLord": "Mercury",
+          "nakshatra": "Hasta",
+          "nakshatraTamil": "ஹஸ்தம்",
+          "nakshatraLord": "Moon",
+          "pada": 4,
+          "dignity": "Debilitated",
+          "dignityTamil": "நீசம்"
+        },
+        "Saturn": {
+          "longitude": 62.91379246251593,
+          "sign": "Gemini",
+          "signTamil": "மிதுனம்",
+          "signLord": "Mercury",
+          "nakshatra": "Mrigashirsha",
+          "nakshatraTamil": "மிருகசீரிஷம்",
+          "nakshatraLord": "Mars",
+          "pada": 3,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Rahu": {
+          "longitude": 50.153025373486884,
+          "sign": "Taurus",
+          "signTamil": "ரிஷபம்",
+          "signLord": "Venus",
+          "nakshatra": "Rohini",
+          "nakshatraTamil": "ரோகிணி",
+          "nakshatraLord": "Moon",
+          "pada": 4,
+          "dignity": "Exalted",
+          "dignityTamil": "உச்சம்"
+        },
+        "Ketu": {
+          "longitude": 230.15302537348688,
+          "sign": "Scorpio",
+          "signTamil": "விருச்சிகம்",
+          "signLord": "Mars",
+          "nakshatra": "Jyeshtha",
+          "nakshatraTamil": "கேட்டை",
+          "nakshatraLord": "Mercury",
+          "pada": 2,
+          "dignity": "Exalted",
+          "dignityTamil": "உச்சம்"
+        }
+      },
+      "ascendant": {
+        "longitude": 166.55071938561088,
+        "sign": {
+          "id": 6,
+          "name": "Virgo",
+          "tamil": "கன்னி",
+          "lord": "Mercury",
+          "lordTamil": "புதன்",
+          "degreesInSign": 16.550719385610876,
+          "totalLongitude": 166.55071938561088
+        }
+      },
+      "ayanamsa": 23.884033333333335,
+      "panchangam": {
+        "tithi": {
+          "name": "Chaturdashi",
+          "tamil": "சதுர்த்தசி",
+          "paksha": "Shukla"
+        },
+        "yoga": {
+          "name": "Saubhagya",
+          "tamil": "சௌபாக்கியம்"
+        },
+        "karana": {
+          "name": "Gara",
+          "tamil": "கரசை"
+        },
+        "vara": {
+          "name": "Wednesday",
+          "tamil": "புதன்"
+        }
+      }
+    },
+    "role": "BAT",
+    "gender": "Male",
+    "league": "",
+    "manualStatus": ""
+  },
+  {
+    "id": "amir_jangoo_1787386405395",
+    "name": "Amir Jangoo",
+    "profile": "amir_jangoo_1787386405395_profile.JPG",
+    "dob": "1997-07-14",
+    "birthTime": "09:00",
+    "birthPlace": "Trinidad, Casanare, Colombia",
+    "latitude": 5.34778,
+    "longitude": -71.20194,
+    "timezone": "-4.5",
+    "birthChart": {
+      "planets": {
+        "Sun": {
+          "longitude": 88.3309490963512,
+          "sign": "Gemini",
+          "signTamil": "மிதுனம்",
+          "signLord": "Mercury",
+          "nakshatra": "Punarvasu",
+          "nakshatraTamil": "புனர்பூசம்",
+          "nakshatraLord": "Jupiter",
+          "pada": 3,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Moon": {
+          "longitude": 197.13770832507373,
+          "sign": "Libra",
+          "signTamil": "துலாம்",
+          "signLord": "Venus",
+          "nakshatra": "Swati",
+          "nakshatraTamil": "சுவாதி",
+          "nakshatraLord": "Rahu",
+          "pada": 4,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Mars": {
+          "longitude": 168.45671028860963,
+          "sign": "Virgo",
+          "signTamil": "கன்னி",
+          "signLord": "Mercury",
+          "nakshatra": "Hasta",
+          "nakshatraTamil": "ஹஸ்தம்",
+          "nakshatraLord": "Moon",
+          "pada": 3,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Mercury": {
+          "longitude": 107.59111966504531,
+          "sign": "Cancer",
+          "signTamil": "கடகம்",
+          "signLord": "Moon",
+          "nakshatra": "Ashlesha",
+          "nakshatraTamil": "ஆயில்யம்",
+          "nakshatraLord": "Mercury",
+          "pada": 1,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Jupiter": {
+          "longitude": 296.2993788230096,
+          "sign": "Capricorn",
+          "signTamil": "மகரம்",
+          "signLord": "Saturn",
+          "nakshatra": "Dhanishta",
+          "nakshatraTamil": "அவிட்டம்",
+          "nakshatraLord": "Mars",
+          "pada": 1,
+          "dignity": "Debilitated",
+          "dignityTamil": "நீசம்"
+        },
+        "Venus": {
+          "longitude": 115.33785031008654,
+          "sign": "Cancer",
+          "signTamil": "கடகம்",
+          "signLord": "Moon",
+          "nakshatra": "Ashlesha",
+          "nakshatraTamil": "ஆயில்யம்",
+          "nakshatraLord": "Mercury",
+          "pada": 3,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Saturn": {
+          "longitude": 356.2645614669444,
+          "sign": "Pisces",
+          "signTamil": "மீனம்",
+          "signLord": "Jupiter",
+          "nakshatra": "Revati",
+          "nakshatraTamil": "ரேவதி",
+          "nakshatraLord": "Mercury",
+          "pada": 3,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Rahu": {
+          "longitude": 148.91159287785564,
+          "sign": "Leo",
+          "signTamil": "சிம்மம்",
+          "signLord": "Sun",
+          "nakshatra": "Uttara Phalguni",
+          "nakshatraTamil": "உத்திரம்",
+          "nakshatraLord": "Sun",
+          "pada": 1,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Ketu": {
+          "longitude": 328.91159287785564,
+          "sign": "Aquarius",
+          "signTamil": "கும்பம்",
+          "signLord": "Saturn",
+          "nakshatra": "Purva Bhadrapada",
+          "nakshatraTamil": "பூரட்டாதி",
+          "nakshatraLord": "Jupiter",
+          "pada": 3,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        }
+      },
+      "ascendant": {
+        "longitude": 128.97424854312473,
+        "sign": {
+          "id": 5,
+          "name": "Leo",
+          "tamil": "சிம்மம்",
+          "lord": "Sun",
+          "lordTamil": "சூரியன்",
+          "degreesInSign": 8.97424854312473,
+          "totalLongitude": 128.97424854312473
+        }
+      },
+      "ayanamsa": 23.814227777777777,
+      "panchangam": {
+        "tithi": {
+          "name": "Dashami",
+          "tamil": "தசமி",
+          "paksha": "Shukla"
+        },
+        "yoga": {
+          "name": "Sadhya",
+          "tamil": "சாத்தியம்"
+        },
+        "karana": {
+          "name": "Taitila",
+          "tamil": "தைதுலை"
+        },
+        "vara": {
+          "name": "Monday",
+          "tamil": "திங்கள்"
+        }
+      }
+    },
+    "role": "BAT",
+    "gender": "Male",
+    "league": "",
+    "manualStatus": ""
+  },
+  {
+    "id": "tajinder_singh_1787388154114",
+    "name": "Tajinder singh",
+    "profile": "tajinder_singh_1787388154114_profile.JPG",
+    "dob": "1992-05-25",
+    "birthTime": "09:00",
+    "birthPlace": "Aligarh, Uttar Pradesh, India",
+    "latitude": 27.83333,
+    "longitude": 78.16667,
+    "timezone": "5",
+    "birthChart": {
+      "planets": {
+        "Sun": {
+          "longitude": 40.45770116101946,
+          "sign": "Taurus",
+          "signTamil": "ரிஷபம்",
+          "signLord": "Venus",
+          "nakshatra": "Rohini",
+          "nakshatraTamil": "ரோகிணி",
+          "nakshatraLord": "Moon",
+          "pada": 1,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Moon": {
+          "longitude": 316.00956959855716,
+          "sign": "Aquarius",
+          "signTamil": "கும்பம்",
+          "signLord": "Saturn",
+          "nakshatra": "Shatabhisha",
+          "nakshatraTamil": "சதயம்",
+          "nakshatraLord": "Rahu",
+          "pada": 3,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Mars": {
+          "longitude": 350.9397524079578,
+          "sign": "Pisces",
+          "signTamil": "மீனம்",
+          "signLord": "Jupiter",
+          "nakshatra": "Revati",
+          "nakshatraTamil": "ரேவதி",
+          "nakshatraLord": "Mercury",
+          "pada": 2,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Mercury": {
+          "longitude": 32.61070069814717,
+          "sign": "Taurus",
+          "signTamil": "ரிஷபம்",
+          "signLord": "Venus",
+          "nakshatra": "Krittika",
+          "nakshatraTamil": "கார்த்திகை",
+          "nakshatraLord": "Sun",
+          "pada": 2,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Jupiter": {
+          "longitude": 131.7731665187526,
+          "sign": "Leo",
+          "signTamil": "சிம்மம்",
+          "signLord": "Sun",
+          "nakshatra": "Magha",
+          "nakshatraTamil": "மகம்",
+          "nakshatraLord": "Ketu",
+          "pada": 4,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Venus": {
+          "longitude": 35.17110255443289,
+          "sign": "Taurus",
+          "signTamil": "ரிஷபம்",
+          "signLord": "Venus",
+          "nakshatra": "Krittika",
+          "nakshatraTamil": "கார்த்திகை",
+          "nakshatraLord": "Sun",
+          "pada": 3,
+          "dignity": "Own Sign",
+          "dignityTamil": "ஆட்சி"
+        },
+        "Saturn": {
+          "longitude": 294.7337528057888,
+          "sign": "Capricorn",
+          "signTamil": "மகரம்",
+          "signLord": "Saturn",
+          "nakshatra": "Dhanishta",
+          "nakshatraTamil": "அவிட்டம்",
+          "nakshatraLord": "Mars",
+          "pada": 1,
+          "dignity": "Own Sign",
+          "dignityTamil": "ஆட்சி"
+        },
+        "Rahu": {
+          "longitude": 248.34858557504884,
+          "sign": "Sagittarius",
+          "signTamil": "தனுசு",
+          "signLord": "Jupiter",
+          "nakshatra": "Mula",
+          "nakshatraTamil": "மூலம்",
+          "nakshatraLord": "Ketu",
+          "pada": 3,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Ketu": {
+          "longitude": 68.34858557504884,
+          "sign": "Gemini",
+          "signTamil": "மிதுனம்",
+          "signLord": "Mercury",
+          "nakshatra": "Ardra",
+          "nakshatraTamil": "திருவாதிரை",
+          "nakshatraLord": "Rahu",
+          "pada": 1,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        }
+      },
+      "ascendant": {
+        "longitude": 96.3802655483315,
+        "sign": {
+          "id": 4,
+          "name": "Cancer",
+          "tamil": "கடகம்",
+          "lord": "Moon",
+          "lordTamil": "சந்திரன்",
+          "degreesInSign": 6.380265548331494,
+          "totalLongitude": 96.3802655483315
+        }
+      },
+      "ayanamsa": 23.744422222222223,
+      "panchangam": {
+        "tithi": {
+          "name": "Ashtami",
+          "tamil": "அஷ்டமி",
+          "paksha": "Krishna"
+        },
+        "yoga": {
+          "name": "Vaidhriti",
+          "tamil": "வைதிருதி"
+        },
+        "karana": {
+          "name": "Kaulava",
+          "tamil": "கௌலவம்"
+        },
+        "vara": {
+          "name": "Monday",
+          "tamil": "திங்கள்"
+        }
+      }
+    },
+    "role": "BAT",
+    "gender": "Male",
+    "league": "",
+    "manualStatus": ""
+  },
+  {
+    "id": "karima_gore_1787388245962",
+    "name": "Karima Gore",
+    "profile": "karima_gore_1787388245962_profile.JPG",
+    "dob": "1998-06-25",
+    "birthTime": "09:00",
+    "birthPlace": "The Bronx, New York, United States",
+    "latitude": 40.84985,
+    "longitude": -73.86641,
+    "timezone": "-5",
+    "birthChart": {
+      "planets": {
+        "Sun": {
+          "longitude": 69.99310426873373,
+          "sign": "Gemini",
+          "signTamil": "மிதுனம்",
+          "signLord": "Mercury",
+          "nakshatra": "Ardra",
+          "nakshatraTamil": "திருவாதிரை",
+          "nakshatraLord": "Rahu",
+          "pada": 1,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Moon": {
+          "longitude": 88.29396936008773,
+          "sign": "Gemini",
+          "signTamil": "மிதுனம்",
+          "signLord": "Mercury",
+          "nakshatra": "Punarvasu",
+          "nakshatraTamil": "புனர்பூசம்",
+          "nakshatraLord": "Jupiter",
+          "pada": 3,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Mars": {
+          "longitude": 58.82845992642811,
+          "sign": "Taurus",
+          "signTamil": "ரிஷபம்",
+          "signLord": "Venus",
+          "nakshatra": "Mrigashirsha",
+          "nakshatraTamil": "மிருகசீரிஷம்",
+          "nakshatraLord": "Mars",
+          "pada": 2,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Mercury": {
+          "longitude": 86.85563353603519,
+          "sign": "Gemini",
+          "signTamil": "மிதுனம்",
+          "signLord": "Mercury",
+          "nakshatra": "Punarvasu",
+          "nakshatraTamil": "புனர்பூசம்",
+          "nakshatraLord": "Jupiter",
+          "pada": 3,
+          "dignity": "Own Sign",
+          "dignityTamil": "ஆட்சி"
+        },
+        "Jupiter": {
+          "longitude": 333.4244488290092,
+          "sign": "Pisces",
+          "signTamil": "மீனம்",
+          "signLord": "Jupiter",
+          "nakshatra": "Uttara Bhadrapada",
+          "nakshatraTamil": "உத்திரட்டாதி",
+          "nakshatraLord": "Saturn",
+          "pada": 1,
+          "dignity": "Own Sign",
+          "dignityTamil": "ஆட்சி"
+        },
+        "Venus": {
+          "longitude": 37.438433291009794,
+          "sign": "Taurus",
+          "signTamil": "ரிஷபம்",
+          "signLord": "Venus",
+          "nakshatra": "Krittika",
+          "nakshatraTamil": "கார்த்திகை",
+          "nakshatraLord": "Sun",
+          "pada": 4,
+          "dignity": "Own Sign",
+          "dignityTamil": "ஆட்சி"
+        },
+        "Saturn": {
+          "longitude": 7.637816286195825,
+          "sign": "Aries",
+          "signTamil": "மேஷம்",
+          "signLord": "Mars",
+          "nakshatra": "Ashwini",
+          "nakshatraTamil": "அஸ்வினி",
+          "nakshatraLord": "Ketu",
+          "pada": 3,
+          "dignity": "Debilitated",
+          "dignityTamil": "நீசம்"
+        },
+        "Rahu": {
+          "longitude": 130.57236936409177,
+          "sign": "Leo",
+          "signTamil": "சிம்மம்",
+          "signLord": "Sun",
+          "nakshatra": "Magha",
+          "nakshatraTamil": "மகம்",
+          "nakshatraLord": "Ketu",
+          "pada": 4,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Ketu": {
+          "longitude": 310.57236936409174,
+          "sign": "Aquarius",
+          "signTamil": "கும்பம்",
+          "signLord": "Saturn",
+          "nakshatra": "Shatabhisha",
+          "nakshatraTamil": "சதயம்",
+          "nakshatraLord": "Rahu",
+          "pada": 2,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        }
+      },
+      "ascendant": {
+        "longitude": 124.33939770651205,
+        "sign": {
+          "id": 5,
+          "name": "Leo",
+          "tamil": "சிம்மம்",
+          "lord": "Sun",
+          "lordTamil": "சூரியன்",
+          "degreesInSign": 4.339397706512045,
+          "totalLongitude": 124.33939770651205
+        }
+      },
+      "ayanamsa": 23.82818888888889,
+      "panchangam": {
+        "tithi": {
+          "name": "Dwitiya",
+          "tamil": "துவிதியை",
+          "paksha": "Shukla"
+        },
+        "yoga": {
+          "name": "Dhruva",
+          "tamil": "துருவம்"
+        },
+        "karana": {
+          "name": "Kaulava",
+          "tamil": "கௌலவம்"
+        },
+        "vara": {
+          "name": "Thursday",
+          "tamil": "வியாழன்"
+        }
+      }
+    },
+    "role": "BOWL",
+    "gender": "Male",
+    "league": "",
+    "manualStatus": ""
+  },
+  {
+    "id": "anderson_mahase_1787388345593",
+    "name": "Anderson Mahase",
+    "profile": "anderson_mahase_1787388345593_profile.JPG",
+    "dob": "2003-01-24",
+    "birthTime": "09:00",
+    "birthPlace": "Trinidad, Casanare, Colombia",
+    "latitude": 5.34778,
+    "longitude": -71.20194,
+    "timezone": "-4.5",
+    "birthChart": {
+      "planets": {
+        "Sun": {
+          "longitude": 280.2450980386317,
+          "sign": "Capricorn",
+          "signTamil": "மகரம்",
+          "signLord": "Saturn",
+          "nakshatra": "Shravana",
+          "nakshatraTamil": "திருவோணம்",
+          "nakshatraLord": "Moon",
+          "pada": 1,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Moon": {
+          "longitude": 179.8303450037555,
+          "sign": "Virgo",
+          "signTamil": "கன்னி",
+          "signLord": "Mercury",
+          "nakshatra": "Chitra",
+          "nakshatraTamil": "சித்திரை",
+          "nakshatraLord": "Mars",
+          "pada": 2,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Mars": {
+          "longitude": 220.86199056161894,
+          "sign": "Scorpio",
+          "signTamil": "விருச்சிகம்",
+          "signLord": "Mars",
+          "nakshatra": "Anuradha",
+          "nakshatraTamil": "அனுஷம்",
+          "nakshatraLord": "Saturn",
+          "pada": 3,
+          "dignity": "Own Sign",
+          "dignityTamil": "ஆட்சி"
+        },
+        "Mercury": {
+          "longitude": 258.55250454220675,
+          "sign": "Sagittarius",
+          "signTamil": "தனுசு",
+          "signLord": "Jupiter",
+          "nakshatra": "Purva Ashadha",
+          "nakshatraTamil": "பூராடம்",
+          "nakshatraLord": "Venus",
+          "pada": 2,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Jupiter": {
+          "longitude": 110.36622569303641,
+          "sign": "Cancer",
+          "signTamil": "கடகம்",
+          "signLord": "Moon",
+          "nakshatra": "Ashlesha",
+          "nakshatraTamil": "ஆயில்யம்",
+          "nakshatraLord": "Mercury",
+          "pada": 2,
+          "dignity": "Exalted",
+          "dignityTamil": "உச்சம்"
+        },
+        "Venus": {
+          "longitude": 233.9019219670179,
+          "sign": "Scorpio",
+          "signTamil": "விருச்சிகம்",
+          "signLord": "Mars",
+          "nakshatra": "Jyeshtha",
+          "nakshatraTamil": "கேட்டை",
+          "nakshatraLord": "Mercury",
+          "pada": 3,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Saturn": {
+          "longitude": 58.990017256820494,
+          "sign": "Taurus",
+          "signTamil": "ரிஷபம்",
+          "signLord": "Venus",
+          "nakshatra": "Mrigashirsha",
+          "nakshatraTamil": "மிருகசீரிஷம்",
+          "nakshatraLord": "Mars",
+          "pada": 2,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Rahu": {
+          "longitude": 41.85752655302005,
+          "sign": "Taurus",
+          "signTamil": "ரிஷபம்",
+          "signLord": "Venus",
+          "nakshatra": "Rohini",
+          "nakshatraTamil": "ரோகிணி",
+          "nakshatraLord": "Moon",
+          "pada": 1,
+          "dignity": "Exalted",
+          "dignityTamil": "உச்சம்"
+        },
+        "Ketu": {
+          "longitude": 221.85752655302005,
+          "sign": "Scorpio",
+          "signTamil": "விருச்சிகம்",
+          "signLord": "Mars",
+          "nakshatra": "Anuradha",
+          "nakshatraTamil": "அனுஷம்",
+          "nakshatraLord": "Saturn",
+          "pada": 3,
+          "dignity": "Exalted",
+          "dignityTamil": "உச்சம்"
+        }
+      },
+      "ascendant": {
+        "longitude": 318.8789291841977,
+        "sign": {
+          "id": 11,
+          "name": "Aquarius",
+          "tamil": "கும்பம்",
+          "lord": "Saturn",
+          "lordTamil": "சனி",
+          "degreesInSign": 18.878929184197716,
+          "totalLongitude": 318.8789291841977
+        }
+      },
+      "ayanamsa": 23.897994444444446,
+      "panchangam": {
+        "tithi": {
+          "name": "Saptami",
+          "tamil": "சப்தமி",
+          "paksha": "Krishna"
+        },
+        "yoga": {
+          "name": "Dhriti",
+          "tamil": "திருதி"
+        },
+        "karana": {
+          "name": "Bava",
+          "tamil": "பவம்"
+        },
+        "vara": {
+          "name": "Friday",
+          "tamil": "வெள்ளி"
+        }
+      }
+    },
+    "role": "BOWL",
+    "gender": "Male",
+    "league": "",
+    "manualStatus": ""
+  },
+  {
+    "id": "sufiyan_muqeem_1787388421887",
+    "name": "Sufiyan Muqeem",
+    "profile": "sufiyan_muqeem_1787388421887_profile.JPG",
+    "dob": "1999-11-15",
+    "birthTime": "09:00",
+    "birthPlace": "Karachi, Sindh, Pakistan",
+    "latitude": 24.8608,
+    "longitude": 67.0104,
+    "timezone": "4.5",
+    "birthChart": {
+      "planets": {
+        "Sun": {
+          "longitude": 208.51888524877677,
+          "sign": "Libra",
+          "signTamil": "துலாம்",
+          "signLord": "Venus",
+          "nakshatra": "Vishakha",
+          "nakshatraTamil": "விசாகம்",
+          "nakshatraLord": "Jupiter",
+          "pada": 3,
+          "dignity": "Debilitated",
+          "dignityTamil": "நீசம்"
+        },
+        "Moon": {
+          "longitude": 285.073248380779,
+          "sign": "Capricorn",
+          "signTamil": "மகரம்",
+          "signLord": "Saturn",
+          "nakshatra": "Shravana",
+          "nakshatraTamil": "திருவோணம்",
+          "nakshatraLord": "Moon",
+          "pada": 2,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Mars": {
+          "longitude": 267.71634223570055,
+          "sign": "Sagittarius",
+          "signTamil": "தனுசு",
+          "signLord": "Jupiter",
+          "nakshatra": "Uttara Ashadha",
+          "nakshatraTamil": "உத்திராடம்",
+          "nakshatraLord": "Sun",
+          "pada": 1,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Mercury": {
+          "longitude": 210.24188425347995,
+          "sign": "Scorpio",
+          "signTamil": "விருச்சிகம்",
+          "signLord": "Mars",
+          "nakshatra": "Vishakha",
+          "nakshatraTamil": "விசாகம்",
+          "nakshatraLord": "Jupiter",
+          "pada": 4,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Jupiter": {
+          "longitude": 3.241439736574719,
+          "sign": "Aries",
+          "signTamil": "மேஷம்",
+          "signLord": "Mars",
+          "nakshatra": "Ashwini",
+          "nakshatraTamil": "அஸ்வினி",
+          "nakshatraLord": "Ketu",
+          "pada": 1,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Venus": {
+          "longitude": 162.70802518300485,
+          "sign": "Virgo",
+          "signTamil": "கன்னி",
+          "signLord": "Mercury",
+          "nakshatra": "Hasta",
+          "nakshatraTamil": "ஹஸ்தம்",
+          "nakshatraLord": "Moon",
+          "pada": 1,
+          "dignity": "Debilitated",
+          "dignityTamil": "நீசம்"
+        },
+        "Saturn": {
+          "longitude": 19.16112269836589,
+          "sign": "Aries",
+          "signTamil": "மேஷம்",
+          "signLord": "Mars",
+          "nakshatra": "Bharani",
+          "nakshatraTamil": "பரணி",
+          "nakshatraLord": "Venus",
+          "pada": 2,
+          "dignity": "Debilitated",
+          "dignityTamil": "நீசம்"
+        },
+        "Rahu": {
+          "longitude": 103.67680778199578,
+          "sign": "Cancer",
+          "signTamil": "கடகம்",
+          "signLord": "Moon",
+          "nakshatra": "Pushya",
+          "nakshatraTamil": "பூசம்",
+          "nakshatraLord": "Saturn",
+          "pada": 4,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Ketu": {
+          "longitude": 283.67680778199576,
+          "sign": "Capricorn",
+          "signTamil": "மகரம்",
+          "signLord": "Saturn",
+          "nakshatra": "Shravana",
+          "nakshatraTamil": "திருவோணம்",
+          "nakshatraLord": "Moon",
+          "pada": 2,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        }
+      },
+      "ascendant": {
+        "longitude": 243.19147098180815,
+        "sign": {
+          "id": 9,
+          "name": "Sagittarius",
+          "tamil": "தனுசு",
+          "lord": "Jupiter",
+          "lordTamil": "குரு",
+          "degreesInSign": 3.191470981808152,
+          "totalLongitude": 243.19147098180815
+        }
+      },
+      "ayanamsa": 23.84215,
+      "panchangam": {
+        "tithi": {
+          "name": "Saptami",
+          "tamil": "சப்தமி",
+          "paksha": "Shukla"
+        },
+        "yoga": {
+          "name": "Vriddhi",
+          "tamil": "விருத்தி"
+        },
+        "karana": {
+          "name": "Gara",
+          "tamil": "கரசை"
+        },
+        "vara": {
+          "name": "Monday",
+          "tamil": "திங்கள்"
+        }
+      }
+    },
+    "role": "BOWL",
+    "gender": "Male",
+    "league": "",
+    "manualStatus": ""
+  },
+  {
+    "id": "usama_mir_1787388483631",
+    "name": "Usama Mir",
+    "profile": "usama_mir_1787388483631_profile.JPG",
+    "dob": "1995-12-23",
+    "birthTime": "09:00",
+    "birthPlace": "Sialkot, Punjab, Pakistan",
+    "latitude": 32.49268,
+    "longitude": 74.53134,
+    "timezone": "5",
+    "birthChart": {
+      "planets": {
+        "Sun": {
+          "longitude": 247.05670158105232,
+          "sign": "Sagittarius",
+          "signTamil": "தனுசு",
+          "signLord": "Jupiter",
+          "nakshatra": "Mula",
+          "nakshatraTamil": "மூலம்",
+          "nakshatraLord": "Ketu",
+          "pada": 3,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Moon": {
+          "longitude": 262.34540095962154,
+          "sign": "Sagittarius",
+          "signTamil": "தனுசு",
+          "signLord": "Jupiter",
+          "nakshatra": "Purva Ashadha",
+          "nakshatraTamil": "பூராடம்",
+          "nakshatraLord": "Venus",
+          "pada": 3,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Mars": {
+          "longitude": 263.5237297438944,
+          "sign": "Sagittarius",
+          "signTamil": "தனுசு",
+          "signLord": "Jupiter",
+          "nakshatra": "Purva Ashadha",
+          "nakshatraTamil": "பூராடம்",
+          "nakshatraLord": "Venus",
+          "pada": 4,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Mercury": {
+          "longitude": 263.23255264377843,
+          "sign": "Sagittarius",
+          "signTamil": "தனுசு",
+          "signLord": "Jupiter",
+          "nakshatra": "Purva Ashadha",
+          "nakshatraTamil": "பூராடம்",
+          "nakshatraLord": "Venus",
+          "pada": 3,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Jupiter": {
+          "longitude": 243.68905285494185,
+          "sign": "Sagittarius",
+          "signTamil": "தனுசு",
+          "signLord": "Jupiter",
+          "nakshatra": "Mula",
+          "nakshatraTamil": "மூலம்",
+          "nakshatraLord": "Ketu",
+          "pada": 2,
+          "dignity": "Mooltrikona",
+          "dignityTamil": "மூலதிரிகோணம்"
+        },
+        "Venus": {
+          "longitude": 277.9491155928073,
+          "sign": "Capricorn",
+          "signTamil": "மகரம்",
+          "signLord": "Saturn",
+          "nakshatra": "Uttara Ashadha",
+          "nakshatraTamil": "உத்திராடம்",
+          "nakshatraLord": "Sun",
+          "pada": 4,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Saturn": {
+          "longitude": 325.07237223931094,
+          "sign": "Aquarius",
+          "signTamil": "கும்பம்",
+          "signLord": "Saturn",
+          "nakshatra": "Purva Bhadrapada",
+          "nakshatraTamil": "பூரட்டாதி",
+          "nakshatraLord": "Jupiter",
+          "pada": 2,
+          "dignity": "Own Sign",
+          "dignityTamil": "ஆட்சி"
+        },
+        "Rahu": {
+          "longitude": 179.09347282522367,
+          "sign": "Virgo",
+          "signTamil": "கன்னி",
+          "signLord": "Mercury",
+          "nakshatra": "Chitra",
+          "nakshatraTamil": "சித்திரை",
+          "nakshatraLord": "Mars",
+          "pada": 2,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Ketu": {
+          "longitude": 359.09347282522367,
+          "sign": "Pisces",
+          "signTamil": "மீனம்",
+          "signLord": "Jupiter",
+          "nakshatra": "Revati",
+          "nakshatraTamil": "ரேவதி",
+          "nakshatraLord": "Mercury",
+          "pada": 4,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        }
+      },
+      "ascendant": {
+        "longitude": 276.28760220253344,
+        "sign": {
+          "id": 10,
+          "name": "Capricorn",
+          "tamil": "மகரம்",
+          "lord": "Saturn",
+          "lordTamil": "சனி",
+          "degreesInSign": 6.287602202533435,
+          "totalLongitude": 276.28760220253344
+        }
+      },
+      "ayanamsa": 23.786305555555558,
+      "panchangam": {
+        "tithi": {
+          "name": "Dwitiya",
+          "tamil": "துவிதியை",
+          "paksha": "Shukla"
+        },
+        "yoga": {
+          "name": "Dhruva",
+          "tamil": "துருவம்"
+        },
+        "karana": {
+          "name": "Balava",
+          "tamil": "பாலவம்"
+        },
+        "vara": {
+          "name": "Saturday",
+          "tamil": "சனி"
+        }
+      }
+    },
+    "role": "BOWL",
+    "gender": "Male",
+    "league": "",
+    "manualStatus": ""
+  },
+  {
+    "id": "anderson_phillip_1787388600575",
+    "name": "Anderson Phillip",
+    "profile": "anderson_phillip_1787388600575_profile.JPG",
+    "dob": "1996-08-22",
+    "birthTime": "09:00",
+    "birthPlace": "Trinidad, Casanare, Colombia",
+    "latitude": 5.34778,
+    "longitude": -71.20194,
+    "timezone": "-4.5",
+    "birthChart": {
+      "planets": {
+        "Sun": {
+          "longitude": 125.92888679594408,
+          "sign": "Leo",
+          "signTamil": "சிம்மம்",
+          "signLord": "Sun",
+          "nakshatra": "Magha",
+          "nakshatraTamil": "மகம்",
+          "nakshatraLord": "Ketu",
+          "pada": 2,
+          "dignity": "Mooltrikona",
+          "dignityTamil": "மூலதிரிகோணம்"
+        },
+        "Moon": {
+          "longitude": 221.12542764156996,
+          "sign": "Scorpio",
+          "signTamil": "விருச்சிகம்",
+          "signLord": "Mars",
+          "nakshatra": "Anuradha",
+          "nakshatraTamil": "அனுஷம்",
+          "nakshatraLord": "Saturn",
+          "pada": 3,
+          "dignity": "Debilitated",
+          "dignityTamil": "நீசம்"
+        },
+        "Mars": {
+          "longitude": 84.56305221075947,
+          "sign": "Gemini",
+          "signTamil": "மிதுனம்",
+          "signLord": "Mercury",
+          "nakshatra": "Punarvasu",
+          "nakshatraTamil": "புனர்பூசம்",
+          "nakshatraLord": "Jupiter",
+          "pada": 2,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Mercury": {
+          "longitude": 153.2257251807822,
+          "sign": "Virgo",
+          "signTamil": "கன்னி",
+          "signLord": "Mercury",
+          "nakshatra": "Uttara Phalguni",
+          "nakshatraTamil": "உத்திரம்",
+          "nakshatraLord": "Sun",
+          "pada": 2,
+          "dignity": "Exalted",
+          "dignityTamil": "உச்சம்"
+        },
+        "Jupiter": {
+          "longitude": 254.24512632854757,
+          "sign": "Sagittarius",
+          "signTamil": "தனுசு",
+          "signLord": "Jupiter",
+          "nakshatra": "Purva Ashadha",
+          "nakshatraTamil": "பூராடம்",
+          "nakshatraLord": "Venus",
+          "pada": 1,
+          "dignity": "Mooltrikona",
+          "dignityTamil": "மூலதிரிகோணம்"
+        },
+        "Venus": {
+          "longitude": 80.19145583616171,
+          "sign": "Gemini",
+          "signTamil": "மிதுனம்",
+          "signLord": "Mercury",
+          "nakshatra": "Punarvasu",
+          "nakshatraTamil": "புனர்பூசம்",
+          "nakshatraLord": "Jupiter",
+          "pada": 1,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Saturn": {
+          "longitude": 342.6177897863195,
+          "sign": "Pisces",
+          "signTamil": "மீனம்",
+          "signLord": "Jupiter",
+          "nakshatra": "Uttara Bhadrapada",
+          "nakshatraTamil": "உத்திரட்டாதி",
+          "nakshatraLord": "Saturn",
+          "pada": 3,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Rahu": {
+          "longitude": 166.18968039492304,
+          "sign": "Virgo",
+          "signTamil": "கன்னி",
+          "signLord": "Mercury",
+          "nakshatra": "Hasta",
+          "nakshatraTamil": "ஹஸ்தம்",
+          "nakshatraLord": "Moon",
+          "pada": 2,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Ketu": {
+          "longitude": 346.189680394923,
+          "sign": "Pisces",
+          "signTamil": "மீனம்",
+          "signLord": "Jupiter",
+          "nakshatra": "Uttara Bhadrapada",
+          "nakshatraTamil": "உத்திரட்டாதி",
+          "nakshatraLord": "Saturn",
+          "pada": 4,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        }
+      },
+      "ascendant": {
+        "longitude": 169.18895273979555,
+        "sign": {
+          "id": 6,
+          "name": "Virgo",
+          "tamil": "கன்னி",
+          "lord": "Mercury",
+          "lordTamil": "புதன்",
+          "degreesInSign": 19.188952739795553,
+          "totalLongitude": 169.18895273979555
+        }
+      },
+      "ayanamsa": 23.80026666666667,
+      "panchangam": {
+        "tithi": {
+          "name": "Ashtami",
+          "tamil": "அஷ்டமி",
+          "paksha": "Shukla"
+        },
+        "yoga": {
+          "name": "Vaidhriti",
+          "tamil": "வைதிருதி"
+        },
+        "karana": {
+          "name": "Bava",
+          "tamil": "பவம்"
+        },
+        "vara": {
+          "name": "Thursday",
+          "tamil": "வியாழன்"
+        }
+      }
+    },
+    "role": "BOWL",
+    "gender": "Male",
+    "league": "west indian",
+    "manualStatus": ""
+  },
+  {
+    "id": "joshua_james_1787388675836",
+    "name": "Joshua James",
+    "profile": "joshua_james_1787388675836_profile.JPG",
+    "dob": "2001-02-21",
+    "birthTime": "09:00",
+    "birthPlace": "Trinidad, Casanare, Colombia",
+    "latitude": 5.34778,
+    "longitude": -71.20194,
+    "timezone": "-4.5",
+    "birthChart": {
+      "planets": {
+        "Sun": {
+          "longitude": 309.1201654645494,
+          "sign": "Aquarius",
+          "signTamil": "கும்பம்",
+          "signLord": "Saturn",
+          "nakshatra": "Shatabhisha",
+          "nakshatraTamil": "சதயம்",
+          "nakshatraLord": "Rahu",
+          "pada": 1,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Moon": {
+          "longitude": 289.6900657182258,
+          "sign": "Capricorn",
+          "signTamil": "மகரம்",
+          "signLord": "Saturn",
+          "nakshatra": "Shravana",
+          "nakshatraTamil": "திருவோணம்",
+          "nakshatraLord": "Moon",
+          "pada": 3,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Mars": {
+          "longitude": 219.60738771330097,
+          "sign": "Scorpio",
+          "signTamil": "விருச்சிகம்",
+          "signLord": "Mars",
+          "nakshatra": "Anuradha",
+          "nakshatraTamil": "அனுஷம்",
+          "nakshatraLord": "Saturn",
+          "pada": 2,
+          "dignity": "Own Sign",
+          "dignityTamil": "ஆட்சி"
+        },
+        "Mercury": {
+          "longitude": 292.5331548100769,
+          "sign": "Capricorn",
+          "signTamil": "மகரம்",
+          "signLord": "Saturn",
+          "nakshatra": "Shravana",
+          "nakshatraTamil": "திருவோணம்",
+          "nakshatraLord": "Moon",
+          "pada": 4,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Jupiter": {
+          "longitude": 38.54442703606256,
+          "sign": "Taurus",
+          "signTamil": "ரிஷபம்",
+          "signLord": "Venus",
+          "nakshatra": "Krittika",
+          "nakshatraTamil": "கார்த்திகை",
+          "nakshatraLord": "Sun",
+          "pada": 4,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Venus": {
+          "longitude": 349.5072675142261,
+          "sign": "Pisces",
+          "signTamil": "மீனம்",
+          "signLord": "Jupiter",
+          "nakshatra": "Revati",
+          "nakshatraTamil": "ரேவதி",
+          "nakshatraLord": "Mercury",
+          "pada": 1,
+          "dignity": "Exalted",
+          "dignityTamil": "உச்சம்"
+        },
+        "Saturn": {
+          "longitude": 30.897744702576045,
+          "sign": "Taurus",
+          "signTamil": "ரிஷபம்",
+          "signLord": "Venus",
+          "nakshatra": "Krittika",
+          "nakshatraTamil": "கார்த்திகை",
+          "nakshatraLord": "Sun",
+          "pada": 2,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Rahu": {
+          "longitude": 79.0589467197338,
+          "sign": "Gemini",
+          "signTamil": "மிதுனம்",
+          "signLord": "Mercury",
+          "nakshatra": "Ardra",
+          "nakshatraTamil": "திருவாதிரை",
+          "nakshatraLord": "Rahu",
+          "pada": 4,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Ketu": {
+          "longitude": 259.0589467197338,
+          "sign": "Sagittarius",
+          "signTamil": "தனுசு",
+          "signLord": "Jupiter",
+          "nakshatra": "Purva Ashadha",
+          "nakshatraTamil": "பூராடம்",
+          "nakshatraLord": "Venus",
+          "pada": 2,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        }
+      },
+      "ascendant": {
+        "longitude": 350.6568392602914,
+        "sign": {
+          "id": 12,
+          "name": "Pisces",
+          "tamil": "மீனம்",
+          "lord": "Jupiter",
+          "lordTamil": "குரு",
+          "degreesInSign": 20.656839260291406,
+          "totalLongitude": 350.6568392602914
+        }
+      },
+      "ayanamsa": 23.870072222222223,
+      "panchangam": {
+        "tithi": {
+          "name": "Chaturdashi",
+          "tamil": "சதுர்த்தசி",
+          "paksha": "Krishna"
+        },
+        "yoga": {
+          "name": "Variyan",
+          "tamil": "வரியான்"
+        },
+        "karana": {
+          "name": "Visti",
+          "tamil": "பத்ரை"
+        },
+        "vara": {
+          "name": "Wednesday",
+          "tamil": "புதன்"
+        }
+      }
+    },
+    "role": "BOWL",
+    "gender": "Male",
+    "league": "cpl",
+    "manualStatus": ""
+  },
+  {
+    "id": "dexter_sween_1787389276423",
+    "name": "Dexter sween",
+    "profile": "dexter_sween_1787389276423_profile.JPG",
+    "dob": "1998-02-09",
+    "birthTime": "09:00",
+    "birthPlace": "Kingston, Kingston Parish, Jamaica",
+    "latitude": 17.99702,
+    "longitude": -76.79358,
+    "timezone": "-5",
+    "birthChart": {
+      "planets": {
+        "Sun": {
+          "longitude": 296.79427853029017,
+          "sign": "Capricorn",
+          "signTamil": "மகரம்",
+          "signLord": "Saturn",
+          "nakshatra": "Dhanishta",
+          "nakshatraTamil": "அவிட்டம்",
+          "nakshatraLord": "Mars",
+          "pada": 2,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Moon": {
+          "longitude": 95.67466398977616,
+          "sign": "Cancer",
+          "signTamil": "கடகம்",
+          "signLord": "Moon",
+          "nakshatra": "Pushya",
+          "nakshatraTamil": "பூசம்",
+          "nakshatraLord": "Saturn",
+          "pada": 1,
+          "dignity": "Own Sign",
+          "dignityTamil": "ஆட்சி"
+        },
+        "Mars": {
+          "longitude": 318.13969141141865,
+          "sign": "Aquarius",
+          "signTamil": "கும்பம்",
+          "signLord": "Saturn",
+          "nakshatra": "Shatabhisha",
+          "nakshatraTamil": "சதயம்",
+          "nakshatraLord": "Rahu",
+          "pada": 4,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Mercury": {
+          "longitude": 287.37655198911284,
+          "sign": "Capricorn",
+          "signTamil": "மகரம்",
+          "signLord": "Saturn",
+          "nakshatra": "Shravana",
+          "nakshatraTamil": "திருவோணம்",
+          "nakshatraLord": "Moon",
+          "pada": 3,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Jupiter": {
+          "longitude": 307.39838213799476,
+          "sign": "Aquarius",
+          "signTamil": "கும்பம்",
+          "signLord": "Saturn",
+          "nakshatra": "Shatabhisha",
+          "nakshatraTamil": "சதயம்",
+          "nakshatraLord": "Rahu",
+          "pada": 1,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Venus": {
+          "longitude": 264.91586162014823,
+          "sign": "Sagittarius",
+          "signTamil": "தனுசு",
+          "signLord": "Jupiter",
+          "nakshatra": "Purva Ashadha",
+          "nakshatraTamil": "பூராடம்",
+          "nakshatraLord": "Venus",
+          "pada": 4,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Saturn": {
+          "longitude": 352.33368064686437,
+          "sign": "Pisces",
+          "signTamil": "மீனம்",
+          "signLord": "Jupiter",
+          "nakshatra": "Revati",
+          "nakshatraTamil": "ரேவதி",
+          "nakshatraLord": "Mercury",
+          "pada": 2,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Rahu": {
+          "longitude": 137.7753468441256,
+          "sign": "Leo",
+          "signTamil": "சிம்மம்",
+          "signLord": "Sun",
+          "nakshatra": "Purva Phalguni",
+          "nakshatraTamil": "பூரம்",
+          "nakshatraLord": "Venus",
+          "pada": 2,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Ketu": {
+          "longitude": 317.7753468441256,
+          "sign": "Aquarius",
+          "signTamil": "கும்பம்",
+          "signLord": "Saturn",
+          "nakshatra": "Shatabhisha",
+          "nakshatraTamil": "சதயம்",
+          "nakshatraLord": "Rahu",
+          "pada": 4,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        }
+      },
+      "ascendant": {
+        "longitude": 339.55413238270893,
+        "sign": {
+          "id": 12,
+          "name": "Pisces",
+          "tamil": "மீனம்",
+          "lord": "Jupiter",
+          "lordTamil": "குரு",
+          "degreesInSign": 9.554132382708929,
+          "totalLongitude": 339.55413238270893
+        }
+      },
+      "ayanamsa": 23.82818888888889,
+      "panchangam": {
+        "tithi": {
+          "name": "Chaturdashi",
+          "tamil": "சதுர்த்தசி",
+          "paksha": "Shukla"
+        },
+        "yoga": {
+          "name": "Ayushman",
+          "tamil": "ஆயுஷ்மான்"
+        },
+        "karana": {
+          "name": "Gara",
+          "tamil": "கரசை"
+        },
+        "vara": {
+          "name": "Monday",
+          "tamil": "திங்கள்"
+        }
+      }
+    },
+    "role": "BAT",
+    "gender": "Male",
+    "league": "",
+    "manualStatus": ""
+  },
+  {
+    "id": "jyd_goolie_1787389856723",
+    "name": "Jyd Goolie",
+    "profile": "jyd_goolie_1787389856723_profile.JPG",
+    "dob": "1997-05-11",
+    "birthTime": "09:00",
+    "birthPlace": "Kingston, Kingston Parish, Jamaica",
+    "latitude": 17.99702,
+    "longitude": -76.79358,
+    "timezone": "-5",
+    "birthChart": {
+      "planets": {
+        "Sun": {
+          "longitude": 27.10424140524302,
+          "sign": "Aries",
+          "signTamil": "மேஷம்",
+          "signLord": "Mars",
+          "nakshatra": "Krittika",
+          "nakshatraTamil": "கார்த்திகை",
+          "nakshatraLord": "Sun",
+          "pada": 1,
+          "dignity": "Exalted",
+          "dignityTamil": "உச்சம்"
+        },
+        "Moon": {
+          "longitude": 85.1241527770436,
+          "sign": "Gemini",
+          "signTamil": "மிதுனம்",
+          "signLord": "Mercury",
+          "nakshatra": "Punarvasu",
+          "nakshatraTamil": "புனர்பூசம்",
+          "nakshatraLord": "Jupiter",
+          "pada": 2,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Mars": {
+          "longitude": 144.04009149301288,
+          "sign": "Leo",
+          "signTamil": "சிம்மம்",
+          "signLord": "Sun",
+          "nakshatra": "Purva Phalguni",
+          "nakshatraTamil": "பூரம்",
+          "nakshatraLord": "Venus",
+          "pada": 4,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Mercury": {
+          "longitude": 5.976767271795069,
+          "sign": "Aries",
+          "signTamil": "மேஷம்",
+          "signLord": "Mars",
+          "nakshatra": "Ashwini",
+          "nakshatraTamil": "அஸ்வினி",
+          "nakshatraLord": "Ketu",
+          "pada": 2,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Jupiter": {
+          "longitude": 296.7787096226822,
+          "sign": "Capricorn",
+          "signTamil": "மகரம்",
+          "signLord": "Saturn",
+          "nakshatra": "Dhanishta",
+          "nakshatraTamil": "அவிட்டம்",
+          "nakshatraLord": "Mars",
+          "pada": 2,
+          "dignity": "Debilitated",
+          "dignityTamil": "நீசம்"
+        },
+        "Venus": {
+          "longitude": 37.250254472021155,
+          "sign": "Taurus",
+          "signTamil": "ரிஷபம்",
+          "signLord": "Venus",
+          "nakshatra": "Krittika",
+          "nakshatraTamil": "கார்த்திகை",
+          "nakshatraLord": "Sun",
+          "pada": 4,
+          "dignity": "Own Sign",
+          "dignityTamil": "ஆட்சி"
+        },
+        "Saturn": {
+          "longitude": 351.4483929812425,
+          "sign": "Pisces",
+          "signTamil": "மீனம்",
+          "signLord": "Jupiter",
+          "nakshatra": "Revati",
+          "nakshatraTamil": "ரேவதி",
+          "nakshatraLord": "Mercury",
+          "pada": 2,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Rahu": {
+          "longitude": 152.29891299960036,
+          "sign": "Virgo",
+          "signTamil": "கன்னி",
+          "signLord": "Mercury",
+          "nakshatra": "Uttara Phalguni",
+          "nakshatraTamil": "உத்திரம்",
+          "nakshatraLord": "Sun",
+          "pada": 2,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Ketu": {
+          "longitude": 332.29891299960036,
+          "sign": "Pisces",
+          "signTamil": "மீனம்",
+          "signLord": "Jupiter",
+          "nakshatra": "Purva Bhadrapada",
+          "nakshatraTamil": "பூரட்டாதி",
+          "nakshatraLord": "Jupiter",
+          "pada": 4,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        }
+      },
+      "ascendant": {
+        "longitude": 75.89004789499302,
+        "sign": {
+          "id": 3,
+          "name": "Gemini",
+          "tamil": "மிதுனம்",
+          "lord": "Mercury",
+          "lordTamil": "புதன்",
+          "degreesInSign": 15.890047894993018,
+          "totalLongitude": 75.89004789499302
+        }
+      },
+      "ayanamsa": 23.814227777777777,
+      "panchangam": {
+        "tithi": {
+          "name": "Panchami",
+          "tamil": "பஞ்சமி",
+          "paksha": "Shukla"
+        },
+        "yoga": {
+          "name": "Shula",
+          "tamil": "சூலம்"
+        },
+        "karana": {
+          "name": "Balava",
+          "tamil": "பாலவம்"
+        },
+        "vara": {
+          "name": "Sunday",
+          "tamil": "ஞாயிறு"
+        }
+      }
+    },
+    "role": "BAT",
+    "gender": "Male",
+    "league": "",
+    "manualStatus": ""
+  },
+  {
+    "id": "justin_greaves_1787390919553",
+    "name": "Justin GREAVES",
+    "profile": "justin_greaves_1787390919553_profile.JPG",
+    "dob": "1994-02-26",
+    "birthTime": "09:00",
+    "birthPlace": "Bridgetown, Saint Michael, Barbados",
+    "latitude": 13.10732,
+    "longitude": -59.62021,
+    "timezone": "-4",
+    "birthChart": {
+      "planets": {
+        "Sun": {
+          "longitude": 313.93514413010024,
+          "sign": "Aquarius",
+          "signTamil": "கும்பம்",
+          "signLord": "Saturn",
+          "nakshatra": "Shatabhisha",
+          "nakshatraTamil": "சதயம்",
+          "nakshatraLord": "Rahu",
+          "pada": 3,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Moon": {
+          "longitude": 140.67166377697046,
+          "sign": "Leo",
+          "signTamil": "சிம்மம்",
+          "signLord": "Sun",
+          "nakshatra": "Purva Phalguni",
+          "nakshatraTamil": "பூரம்",
+          "nakshatraLord": "Venus",
+          "pada": 3,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Mars": {
+          "longitude": 299.2211156434748,
+          "sign": "Capricorn",
+          "signTamil": "மகரம்",
+          "signLord": "Saturn",
+          "nakshatra": "Dhanishta",
+          "nakshatraTamil": "அவிட்டம்",
+          "nakshatraLord": "Mars",
+          "pada": 2,
+          "dignity": "Exalted",
+          "dignityTamil": "உச்சம்"
+        },
+        "Mercury": {
+          "longitude": 301.4297921364409,
+          "sign": "Aquarius",
+          "signTamil": "கும்பம்",
+          "signLord": "Saturn",
+          "nakshatra": "Dhanishta",
+          "nakshatraTamil": "அவிட்டம்",
+          "nakshatraLord": "Mars",
+          "pada": 3,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Jupiter": {
+          "longitude": 200.87455841401587,
+          "sign": "Libra",
+          "signTamil": "துலாம்",
+          "signLord": "Venus",
+          "nakshatra": "Vishakha",
+          "nakshatraTamil": "விசாகம்",
+          "nakshatraLord": "Jupiter",
+          "pada": 1,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Venus": {
+          "longitude": 323.68965387024235,
+          "sign": "Aquarius",
+          "signTamil": "கும்பம்",
+          "signLord": "Saturn",
+          "nakshatra": "Purva Bhadrapada",
+          "nakshatraTamil": "பூரட்டாதி",
+          "nakshatraLord": "Jupiter",
+          "pada": 2,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Saturn": {
+          "longitude": 309.6622345523472,
+          "sign": "Aquarius",
+          "signTamil": "கும்பம்",
+          "signLord": "Saturn",
+          "nakshatra": "Shatabhisha",
+          "nakshatraTamil": "சதயம்",
+          "nakshatraLord": "Rahu",
+          "pada": 1,
+          "dignity": "Mooltrikona",
+          "dignityTamil": "மூலதிரிகோணம்"
+        },
+        "Rahu": {
+          "longitude": 214.30441188192353,
+          "sign": "Scorpio",
+          "signTamil": "விருச்சிகம்",
+          "signLord": "Mars",
+          "nakshatra": "Anuradha",
+          "nakshatraTamil": "அனுஷம்",
+          "nakshatraLord": "Saturn",
+          "pada": 1,
+          "dignity": "Debilitated",
+          "dignityTamil": "நீசம்"
+        },
+        "Ketu": {
+          "longitude": 34.304411881923556,
+          "sign": "Taurus",
+          "signTamil": "ரிஷபம்",
+          "signLord": "Venus",
+          "nakshatra": "Krittika",
+          "nakshatraTamil": "கார்த்திகை",
+          "nakshatraLord": "Sun",
+          "pada": 3,
+          "dignity": "Debilitated",
+          "dignityTamil": "நீசம்"
+        }
+      },
+      "ascendant": {
+        "longitude": 1.971059686154188,
+        "sign": {
+          "id": 1,
+          "name": "Aries",
+          "tamil": "மேஷம்",
+          "lord": "Mars",
+          "lordTamil": "செவ்வாய்",
+          "degreesInSign": 1.971059686154188,
+          "totalLongitude": 1.971059686154188
+        }
+      },
+      "ayanamsa": 23.772344444444446,
+      "panchangam": {
+        "tithi": {
+          "name": "Prathama",
+          "tamil": "பிரதமை",
+          "paksha": "Krishna"
+        },
+        "yoga": {
+          "name": "Dhriti",
+          "tamil": "திருதி"
+        },
+        "karana": {
+          "name": "Kaulava",
+          "tamil": "கௌலவம்"
+        },
+        "vara": {
+          "name": "Saturday",
+          "tamil": "சனி"
+        }
+      }
+    },
+    "role": "ALL",
+    "gender": "Male",
+    "league": "",
+    "manualStatus": ""
+  },
+  {
+    "id": "amshi_desilva_1787391491859",
+    "name": "Amshi Desilva",
+    "profile": "amshi_desilva_1787391491859_profile.JPG",
+    "dob": "2001-11-11",
+    "birthTime": "09:00",
+    "birthPlace": "Colombo, Western Province, Sri Lanka",
+    "latitude": 6.93548,
+    "longitude": 79.84868,
+    "timezone": "5.5",
+    "birthChart": {
+      "planets": {
+        "Sun": {
+          "longitude": 204.93994605800273,
+          "sign": "Libra",
+          "signTamil": "துலாம்",
+          "signLord": "Venus",
+          "nakshatra": "Vishakha",
+          "nakshatraTamil": "விசாகம்",
+          "nakshatraLord": "Jupiter",
+          "pada": 2,
+          "dignity": "Debilitated",
+          "dignityTamil": "நீசம்"
+        },
+        "Moon": {
+          "longitude": 149.8753451522281,
+          "sign": "Leo",
+          "signTamil": "சிம்மம்",
+          "signLord": "Sun",
+          "nakshatra": "Uttara Phalguni",
+          "nakshatraTamil": "உத்திரம்",
+          "nakshatraLord": "Sun",
+          "pada": 1,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Mars": {
+          "longitude": 286.1608470431635,
+          "sign": "Capricorn",
+          "signTamil": "மகரம்",
+          "signLord": "Saturn",
+          "nakshatra": "Shravana",
+          "nakshatraTamil": "திருவோணம்",
+          "nakshatraLord": "Moon",
+          "pada": 2,
+          "dignity": "Exalted",
+          "dignityTamil": "உச்சம்"
+        },
+        "Mercury": {
+          "longitude": 191.28350268840094,
+          "sign": "Libra",
+          "signTamil": "துலாம்",
+          "signLord": "Venus",
+          "nakshatra": "Swati",
+          "nakshatraTamil": "சுவாதி",
+          "nakshatraLord": "Rahu",
+          "pada": 2,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Jupiter": {
+          "longitude": 81.69830651517847,
+          "sign": "Gemini",
+          "signTamil": "மிதுனம்",
+          "signLord": "Mercury",
+          "nakshatra": "Punarvasu",
+          "nakshatraTamil": "புனர்பூசம்",
+          "nakshatraLord": "Jupiter",
+          "pada": 1,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Venus": {
+          "longitude": 189.37255914759538,
+          "sign": "Libra",
+          "signTamil": "துலாம்",
+          "signLord": "Venus",
+          "nakshatra": "Swati",
+          "nakshatraTamil": "சுவாதி",
+          "nakshatraLord": "Rahu",
+          "pada": 1,
+          "dignity": "Mooltrikona",
+          "dignityTamil": "மூலதிரிகோணம்"
+        },
+        "Saturn": {
+          "longitude": 49.364325292732445,
+          "sign": "Taurus",
+          "signTamil": "ரிஷபம்",
+          "signLord": "Venus",
+          "nakshatra": "Rohini",
+          "nakshatraTamil": "ரோகிணி",
+          "nakshatraLord": "Moon",
+          "pada": 3,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Rahu": {
+          "longitude": 65.1529282459989,
+          "sign": "Gemini",
+          "signTamil": "மிதுனம்",
+          "signLord": "Mercury",
+          "nakshatra": "Mrigashirsha",
+          "nakshatraTamil": "மிருகசீரிஷம்",
+          "nakshatraLord": "Mars",
+          "pada": 4,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Ketu": {
+          "longitude": 245.1529282459989,
+          "sign": "Sagittarius",
+          "signTamil": "தனுசு",
+          "signLord": "Jupiter",
+          "nakshatra": "Mula",
+          "nakshatraTamil": "மூலம்",
+          "nakshatraLord": "Ketu",
+          "pada": 2,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        }
+      },
+      "ascendant": {
+        "longitude": 245.83394604849025,
+        "sign": {
+          "id": 9,
+          "name": "Sagittarius",
+          "tamil": "தனுசு",
+          "lord": "Jupiter",
+          "lordTamil": "குரு",
+          "degreesInSign": 5.8339460484902474,
+          "totalLongitude": 245.83394604849025
+        }
+      },
+      "ayanamsa": 23.870072222222223,
+      "panchangam": {
+        "tithi": {
+          "name": "Ekadashi",
+          "tamil": "ஏகாதசி",
+          "paksha": "Krishna"
+        },
+        "yoga": {
+          "name": "Vaidhriti",
+          "tamil": "வைதிருதி"
+        },
+        "karana": {
+          "name": "Bava",
+          "tamil": "பவம்"
+        },
+        "vara": {
+          "name": "Sunday",
+          "tamil": "ஞாயிறு"
+        }
+      }
+    },
+    "role": "ALL",
+    "gender": "Male",
+    "league": "",
+    "manualStatus": ""
+  },
+  {
+    "id": "terrance_hinds_1787391894597",
+    "name": "Terrance Hinds",
+    "profile": "terrance_hinds_1787391894597_profile.JPG",
+    "dob": "1992-11-23",
+    "birthTime": "09:00",
+    "birthPlace": "Trinidad, Beni Department, Bolivia",
+    "latitude": -14.83333,
+    "longitude": -64.9,
+    "timezone": "-4.5",
+    "birthChart": {
+      "planets": {
+        "Sun": {
+          "longitude": 217.7808958189403,
+          "sign": "Scorpio",
+          "signTamil": "விருச்சிகம்",
+          "signLord": "Mars",
+          "nakshatra": "Anuradha",
+          "nakshatraTamil": "அனுஷம்",
+          "nakshatraLord": "Saturn",
+          "pada": 2,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Moon": {
+          "longitude": 207.45219381713653,
+          "sign": "Libra",
+          "signTamil": "துலாம்",
+          "signLord": "Venus",
+          "nakshatra": "Vishakha",
+          "nakshatraTamil": "விசாகம்",
+          "nakshatraLord": "Jupiter",
+          "pada": 3,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Mars": {
+          "longitude": 93.67776136928795,
+          "sign": "Cancer",
+          "signTamil": "கடகம்",
+          "signLord": "Moon",
+          "nakshatra": "Pushya",
+          "nakshatraTamil": "பூசம்",
+          "nakshatraLord": "Saturn",
+          "pada": 1,
+          "dignity": "Debilitated",
+          "dignityTamil": "நீசம்"
+        },
+        "Mercury": {
+          "longitude": 213.93181227483848,
+          "sign": "Scorpio",
+          "signTamil": "விருச்சிகம்",
+          "signLord": "Mars",
+          "nakshatra": "Anuradha",
+          "nakshatraTamil": "அனுஷம்",
+          "nakshatraLord": "Saturn",
+          "pada": 1,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Jupiter": {
+          "longitude": 164.76875986731864,
+          "sign": "Virgo",
+          "signTamil": "கன்னி",
+          "signLord": "Mercury",
+          "nakshatra": "Hasta",
+          "nakshatraTamil": "ஹஸ்தம்",
+          "nakshatraLord": "Moon",
+          "pada": 2,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Venus": {
+          "longitude": 258.2785483649003,
+          "sign": "Sagittarius",
+          "signTamil": "தனுசு",
+          "signLord": "Jupiter",
+          "nakshatra": "Purva Ashadha",
+          "nakshatraTamil": "பூராடம்",
+          "nakshatraLord": "Venus",
+          "pada": 2,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Saturn": {
+          "longitude": 289.3075892869429,
+          "sign": "Capricorn",
+          "signTamil": "மகரம்",
+          "signLord": "Saturn",
+          "nakshatra": "Shravana",
+          "nakshatraTamil": "திருவோணம்",
+          "nakshatraLord": "Moon",
+          "pada": 3,
+          "dignity": "Own Sign",
+          "dignityTamil": "ஆட்சி"
+        },
+        "Rahu": {
+          "longitude": 238.68948980821693,
+          "sign": "Scorpio",
+          "signTamil": "விருச்சிகம்",
+          "signLord": "Mars",
+          "nakshatra": "Jyeshtha",
+          "nakshatraTamil": "கேட்டை",
+          "nakshatraLord": "Mercury",
+          "pada": 4,
+          "dignity": "Debilitated",
+          "dignityTamil": "நீசம்"
+        },
+        "Ketu": {
+          "longitude": 58.68948980821693,
+          "sign": "Taurus",
+          "signTamil": "ரிஷபம்",
+          "signLord": "Venus",
+          "nakshatra": "Mrigashirsha",
+          "nakshatraTamil": "மிருகசீரிஷம்",
+          "nakshatraLord": "Mars",
+          "pada": 2,
+          "dignity": "Debilitated",
+          "dignityTamil": "நீசம்"
+        }
+      },
+      "ascendant": {
+        "longitude": 270.62528859273857,
+        "sign": {
+          "id": 10,
+          "name": "Capricorn",
+          "tamil": "மகரம்",
+          "lord": "Saturn",
+          "lordTamil": "சனி",
+          "degreesInSign": 0.6252885927385705,
+          "totalLongitude": 270.62528859273857
+        }
+      },
+      "ayanamsa": 23.744422222222223,
+      "panchangam": {
+        "tithi": {
+          "name": "Amavasya",
+          "tamil": "அமாவாசை",
+          "paksha": "Krishna"
+        },
+        "yoga": {
+          "name": "Shobhana",
+          "tamil": "சோபனம்"
+        },
+        "karana": {
+          "name": "Chatushpada",
+          "tamil": "சதுஷ்பாதம்"
+        },
+        "vara": {
+          "name": "Monday",
+          "tamil": "திங்கள்"
+        }
+      }
+    },
+    "role": "BOWL",
+    "gender": "Male",
+    "league": "",
+    "manualStatus": ""
+  },
+  {
+    "id": "nathan_edward_1787392995307",
+    "name": "Nathan Edward",
+    "profile": "nathan_edward_1787392995307_profile.JPG",
+    "dob": "2005-05-29",
+    "birthTime": "09:00",
+    "birthPlace": "Maartensdijk, Utrecht, Netherlands",
+    "latitude": 52.155,
+    "longitude": 5.175,
+    "timezone": "0.5",
+    "birthChart": {
+      "planets": {
+        "Sun": {
+          "longitude": 44.15053449505774,
+          "sign": "Taurus",
+          "signTamil": "ரிஷபம்",
+          "signLord": "Venus",
+          "nakshatra": "Rohini",
+          "nakshatraTamil": "ரோகிணி",
+          "nakshatraLord": "Moon",
+          "pada": 2,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Moon": {
+          "longitude": 299.17363137625796,
+          "sign": "Capricorn",
+          "signTamil": "மகரம்",
+          "signLord": "Saturn",
+          "nakshatra": "Dhanishta",
+          "nakshatraTamil": "அவிட்டம்",
+          "nakshatraLord": "Mars",
+          "pada": 2,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Mars": {
+          "longitude": 326.3887249221086,
+          "sign": "Aquarius",
+          "signTamil": "கும்பம்",
+          "signLord": "Saturn",
+          "nakshatra": "Purva Bhadrapada",
+          "nakshatraTamil": "பூரட்டாதி",
+          "nakshatraLord": "Jupiter",
+          "pada": 2,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Mercury": {
+          "longitude": 38.010847722520715,
+          "sign": "Taurus",
+          "signTamil": "ரிஷபம்",
+          "signLord": "Venus",
+          "nakshatra": "Krittika",
+          "nakshatraTamil": "கார்த்திகை",
+          "nakshatraLord": "Sun",
+          "pada": 4,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Jupiter": {
+          "longitude": 165.07336122066877,
+          "sign": "Virgo",
+          "signTamil": "கன்னி",
+          "signLord": "Mercury",
+          "nakshatra": "Hasta",
+          "nakshatraTamil": "ஹஸ்தம்",
+          "nakshatraLord": "Moon",
+          "pada": 2,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Venus": {
+          "longitude": 59.614377860021506,
+          "sign": "Taurus",
+          "signTamil": "ரிஷபம்",
+          "signLord": "Venus",
+          "nakshatra": "Mrigashirsha",
+          "nakshatraTamil": "மிருகசீரிஷம்",
+          "nakshatraLord": "Mars",
+          "pada": 2,
+          "dignity": "Own Sign",
+          "dignityTamil": "ஆட்சி"
+        },
+        "Saturn": {
+          "longitude": 90.33970265118501,
+          "sign": "Cancer",
+          "signTamil": "கடகம்",
+          "signLord": "Moon",
+          "nakshatra": "Punarvasu",
+          "nakshatraTamil": "புனர்பூசம்",
+          "nakshatraLord": "Jupiter",
+          "pada": 4,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Rahu": {
+          "longitude": 356.51454677408816,
+          "sign": "Pisces",
+          "signTamil": "மீனம்",
+          "signLord": "Jupiter",
+          "nakshatra": "Revati",
+          "nakshatraTamil": "ரேவதி",
+          "nakshatraLord": "Mercury",
+          "pada": 3,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Ketu": {
+          "longitude": 176.5145467740881,
+          "sign": "Virgo",
+          "signTamil": "கன்னி",
+          "signLord": "Mercury",
+          "nakshatra": "Chitra",
+          "nakshatraTamil": "சித்திரை",
+          "nakshatraLord": "Mars",
+          "pada": 1,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        }
+      },
+      "ascendant": {
+        "longitude": 107.13466103003253,
+        "sign": {
+          "id": 4,
+          "name": "Cancer",
+          "tamil": "கடகம்",
+          "lord": "Moon",
+          "lordTamil": "சந்திரன்",
+          "degreesInSign": 17.134661030032532,
+          "totalLongitude": 107.13466103003253
+        }
+      },
+      "ayanamsa": 23.925916666666666,
+      "panchangam": {
+        "tithi": {
+          "name": "Saptami",
+          "tamil": "சப்தமி",
+          "paksha": "Krishna"
+        },
+        "yoga": {
+          "name": "Indra",
+          "tamil": "இந்திரம்"
+        },
+        "karana": {
+          "name": "Visti",
+          "tamil": "பத்ரை"
+        },
+        "vara": {
+          "name": "Sunday",
+          "tamil": "ஞாயிறு"
+        }
+      }
+    },
+    "role": "ALL",
+    "gender": "Male",
+    "league": "",
+    "manualStatus": ""
+  },
+  {
+    "id": "dominic_drakes__1787394597977",
+    "name": "Dominic Drakes ",
+    "profile": "dominic_drakes__1787394597977_profile_1787394644815.JPG",
+    "dob": "1998-02-06",
+    "birthTime": "09:00",
+    "birthPlace": "Kingston, Kingston Parish, Jamaica",
+    "latitude": 17.99702,
+    "longitude": -76.79358,
+    "timezone": "-5",
+    "birthChart": {
+      "planets": {
+        "Sun": {
+          "longitude": 293.7564238774265,
+          "sign": "Capricorn",
+          "signTamil": "மகரம்",
+          "signLord": "Saturn",
+          "nakshatra": "Dhanishta",
+          "nakshatraTamil": "அவிட்டம்",
+          "nakshatraLord": "Mars",
+          "pada": 1,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Moon": {
+          "longitude": 56.84474886559191,
+          "sign": "Taurus",
+          "signTamil": "ரிஷபம்",
+          "signLord": "Venus",
+          "nakshatra": "Mrigashirsha",
+          "nakshatraTamil": "மிருகசீரிஷம்",
+          "nakshatraLord": "Mars",
+          "pada": 2,
+          "dignity": "Exalted",
+          "dignityTamil": "உச்சம்"
+        },
+        "Mars": {
+          "longitude": 315.781637648308,
+          "sign": "Aquarius",
+          "signTamil": "கும்பம்",
+          "signLord": "Saturn",
+          "nakshatra": "Shatabhisha",
+          "nakshatraTamil": "சதயம்",
+          "nakshatraLord": "Rahu",
+          "pada": 3,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Mercury": {
+          "longitude": 282.4668077205811,
+          "sign": "Capricorn",
+          "signTamil": "மகரம்",
+          "signLord": "Saturn",
+          "nakshatra": "Shravana",
+          "nakshatraTamil": "திருவோணம்",
+          "nakshatraLord": "Moon",
+          "pada": 1,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Jupiter": {
+          "longitude": 306.68329937146973,
+          "sign": "Aquarius",
+          "signTamil": "கும்பம்",
+          "signLord": "Saturn",
+          "nakshatra": "Shatabhisha",
+          "nakshatraTamil": "சதயம்",
+          "nakshatraLord": "Rahu",
+          "pada": 1,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Venus": {
+          "longitude": 264.65623518443306,
+          "sign": "Sagittarius",
+          "signTamil": "தனுசு",
+          "signLord": "Jupiter",
+          "nakshatra": "Purva Ashadha",
+          "nakshatraTamil": "பூராடம்",
+          "nakshatraLord": "Venus",
+          "pada": 4,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Saturn": {
+          "longitude": 352.07156965356506,
+          "sign": "Pisces",
+          "signTamil": "மீனம்",
+          "signLord": "Jupiter",
+          "nakshatra": "Revati",
+          "nakshatraTamil": "ரேவதி",
+          "nakshatraLord": "Mercury",
+          "pada": 2,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Rahu": {
+          "longitude": 137.93438012947368,
+          "sign": "Leo",
+          "signTamil": "சிம்மம்",
+          "signLord": "Sun",
+          "nakshatra": "Purva Phalguni",
+          "nakshatraTamil": "பூரம்",
+          "nakshatraLord": "Venus",
+          "pada": 2,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Ketu": {
+          "longitude": 317.93438012947365,
+          "sign": "Aquarius",
+          "signTamil": "கும்பம்",
+          "signLord": "Saturn",
+          "nakshatra": "Shatabhisha",
+          "nakshatraTamil": "சதயம்",
+          "nakshatraLord": "Rahu",
+          "pada": 4,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        }
+      },
+      "ascendant": {
+        "longitude": 335.80379059186805,
+        "sign": {
+          "id": 12,
+          "name": "Pisces",
+          "tamil": "மீனம்",
+          "lord": "Jupiter",
+          "lordTamil": "குரு",
+          "degreesInSign": 5.803790591868051,
+          "totalLongitude": 335.80379059186805
+        }
+      },
+      "ayanamsa": 23.82818888888889,
+      "panchangam": {
+        "tithi": {
+          "name": "Ekadashi",
+          "tamil": "ஏகாதசி",
+          "paksha": "Shukla"
+        },
+        "yoga": {
+          "name": "Vaidhriti",
+          "tamil": "வைதிருதி"
+        },
+        "karana": {
+          "name": "Vanija",
+          "tamil": "வனிசை"
+        },
+        "vara": {
+          "name": "Friday",
+          "tamil": "வெள்ளி"
+        }
+      }
+    },
+    "role": "ALL",
+    "gender": "Male",
+    "league": "",
+    "manualStatus": ""
+  },
+  {
+    "id": "matthew_tromp_1787395260309",
+    "name": "Matthew Tromp",
+    "profile": "matthew_tromp_1787395260309_profile.JPG",
+    "dob": "2005-04-01",
+    "birthTime": "06:00",
+    "birthPlace": "Durban, KwaZulu-Natal, South Africa",
+    "latitude": -29.8579,
+    "longitude": 31.0292,
+    "timezone": "2",
+    "birthChart": {
+      "planets": {
+        "Sun": {
+          "longitude": 347.6053004318774,
+          "sign": "Pisces",
+          "signTamil": "மீனம்",
+          "signLord": "Jupiter",
+          "nakshatra": "Revati",
+          "nakshatraTamil": "ரேவதி",
+          "nakshatraLord": "Mercury",
+          "pada": 1,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Moon": {
+          "longitude": 246.19188514195784,
+          "sign": "Sagittarius",
+          "signTamil": "தனுசு",
+          "signLord": "Jupiter",
+          "nakshatra": "Mula",
+          "nakshatraTamil": "மூலம்",
+          "nakshatraLord": "Ketu",
+          "pada": 2,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Mars": {
+          "longitude": 284.33423607029283,
+          "sign": "Capricorn",
+          "signTamil": "மகரம்",
+          "signLord": "Saturn",
+          "nakshatra": "Shravana",
+          "nakshatraTamil": "திருவோணம்",
+          "nakshatraLord": "Moon",
+          "pada": 2,
+          "dignity": "Exalted",
+          "dignityTamil": "உச்சம்"
+        },
+        "Mercury": {
+          "longitude": 343.04298920937345,
+          "sign": "Pisces",
+          "signTamil": "மீனம்",
+          "signLord": "Jupiter",
+          "nakshatra": "Uttara Bhadrapada",
+          "nakshatraTamil": "உத்திரட்டாதி",
+          "nakshatraLord": "Saturn",
+          "pada": 3,
+          "dignity": "Debilitated",
+          "dignityTamil": "நீசம்"
+        },
+        "Jupiter": {
+          "longitude": 170.35671320679896,
+          "sign": "Virgo",
+          "signTamil": "கன்னி",
+          "signLord": "Mercury",
+          "nakshatra": "Hasta",
+          "nakshatraTamil": "ஹஸ்தம்",
+          "nakshatraLord": "Moon",
+          "pada": 4,
+          "dignity": "Enemy",
+          "dignityTamil": "பகை"
+        },
+        "Venus": {
+          "longitude": 347.86523043736645,
+          "sign": "Pisces",
+          "signTamil": "மீனம்",
+          "signLord": "Jupiter",
+          "nakshatra": "Revati",
+          "nakshatraTamil": "ரேவதி",
+          "nakshatraLord": "Mercury",
+          "pada": 1,
+          "dignity": "Exalted",
+          "dignityTamil": "உச்சம்"
+        },
+        "Saturn": {
+          "longitude": 86.56044073961034,
+          "sign": "Gemini",
+          "signTamil": "மிதுனம்",
+          "signLord": "Mercury",
+          "nakshatra": "Punarvasu",
+          "nakshatraTamil": "புனர்பூசம்",
+          "nakshatraLord": "Jupiter",
+          "pada": 2,
+          "dignity": "Friendly",
+          "dignityTamil": "நட்பு"
+        },
+        "Rahu": {
+          "longitude": 359.5832123924863,
+          "sign": "Pisces",
+          "signTamil": "மீனம்",
+          "signLord": "Jupiter",
+          "nakshatra": "Revati",
+          "nakshatraTamil": "ரேவதி",
+          "nakshatraLord": "Mercury",
+          "pada": 4,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        },
+        "Ketu": {
+          "longitude": 179.5832123924863,
+          "sign": "Virgo",
+          "signTamil": "கன்னி",
+          "signLord": "Mercury",
+          "nakshatra": "Chitra",
+          "nakshatraTamil": "சித்திரை",
+          "nakshatraLord": "Mars",
+          "pada": 2,
+          "dignity": "Neutral",
+          "dignityTamil": "சமம்"
+        }
+      },
+      "ascendant": {
+        "longitude": 345.35990344301484,
+        "sign": {
+          "id": 12,
+          "name": "Pisces",
+          "tamil": "மீனம்",
+          "lord": "Jupiter",
+          "lordTamil": "குரு",
+          "degreesInSign": 15.359903443014844,
+          "totalLongitude": 345.35990344301484
+        }
+      },
+      "ayanamsa": 23.925916666666666,
+      "panchangam": {
+        "tithi": {
+          "name": "Saptami",
+          "tamil": "சப்தமி",
+          "paksha": "Krishna"
+        },
+        "yoga": {
+          "name": "Variyan",
+          "tamil": "வரியான்"
+        },
+        "karana": {
+          "name": "Bava",
+          "tamil": "பவம்"
+        },
+        "vara": {
+          "name": "Friday",
+          "tamil": "வெள்ளி"
+        }
+      }
+    },
+    "role": "BOWL",
+    "gender": "Male",
+    "league": "",
     "manualStatus": ""
   }
 ]

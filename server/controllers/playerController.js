@@ -327,7 +327,10 @@ const getPlayers = async (req, res) => {
 
 const getPlayerById = async (req, res) => {
     try {
-        const player = await Player.findOne({ id: req.params.id }).lean();
+        let player = await Player.findOne({ id: req.params.id }).lean();
+        if (!player && mongoose.Types.ObjectId.isValid(req.params.id)) {
+            player = await Player.findById(req.params.id).lean();
+        }
         if (!player) return res.status(404).json({ message: 'Player not found' });
 
         if (player.birthChart) {

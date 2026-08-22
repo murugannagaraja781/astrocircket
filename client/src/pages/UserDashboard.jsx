@@ -2558,13 +2558,13 @@ const UserDashboard = ({ hideHeader = false }) => {
             const authToken = token || localStorage.getItem('token');
             // Optimistic update or wait? Wait.
 
-            // Assuming we use custom 'id' for URL parameter based on controller logic
-            await axios.put(`${baseUrl}/api/players/${editingPlayer.id}`, editForm, {
+            const targetId = editingPlayer.id || editingPlayer._id;
+            await axios.put(`${baseUrl}/api/players/${targetId}`, editForm, {
                 headers: { 'x-auth-token': authToken }
             });
 
             // Refresh list (or update locally)
-            dispatch(setPlayers(players.map(p => p.id === editingPlayer.id ? { ...p, ...editForm } : p)));
+            dispatch(setPlayers(players.map(p => (p.id || p._id) === targetId ? { ...p, ...editForm } : p)));
             setEditDialogOpen(false);
             // Optionally show success snackbar
         } catch (err) {
