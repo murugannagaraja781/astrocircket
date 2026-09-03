@@ -18,9 +18,49 @@ const signLords = {
     "Pisces": "Jupiter", "Meena": "Jupiter"
 };
 
+const SIGNS_LIST = [
+    'Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
+    'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'
+];
+
+const NAKSHATRAS_LIST = [
+    'Ashwini', 'Bharani', 'Krittika', 'Rohini', 'Mrigashirsha', 'Ardra',
+    'Punarvasu', 'Pushya', 'Ashlesha', 'Magha', 'Purva Phalguni', 'Uttara Phalguni',
+    'Hasta', 'Chitra', 'Swati', 'Vishakha', 'Anuradha', 'Jyeshtha',
+    'Mula', 'Purva Ashadha', 'Uttara Ashadha', 'Shravana', 'Dhanishta',
+    'Shatabhisha', 'Purva Bhadrapada', 'Uttara Bhadrapada', 'Revati'
+];
+
+const getSignFromDegree = (deg) => {
+    if (deg === null || deg === undefined || isNaN(deg)) return 'Unknown';
+    const norm = ((parseFloat(deg) % 360) + 360) % 360;
+    const idx = Math.floor(norm / 30);
+    return SIGNS_LIST[idx] || 'Unknown';
+};
+
+const getNakshatraFromDegree = (deg) => {
+    if (deg === null || deg === undefined || isNaN(deg)) return 'Unknown';
+    const norm = ((parseFloat(deg) % 360) + 360) % 360;
+    const idx = Math.floor(norm / (360 / 27)); // 13.333333333333334
+    return NAKSHATRAS_LIST[idx] || 'Unknown';
+};
+
+const toTitleCase = (val) => {
+    if (val === null || val === undefined) return '';
+    if (typeof val === 'number') {
+        return getSignFromDegree(val);
+    }
+    const str = String(val).trim();
+    if (!str) return '';
+    if (!isNaN(str) && str !== '') {
+        return getSignFromDegree(parseFloat(str));
+    }
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};
+
 const getStarLord = (starName) => {
     if (!starName) return null;
-    const n = starName.toLowerCase();
+    const n = String(starName).toLowerCase();
     if (['ashwini', 'magha', 'mula', 'moola'].some(s => n.includes(s))) return 'Ketu';
     if (['bharani', 'purva phalguni', 'purvaphalguni', 'purva ashadha', 'purvashada'].some(s => n.includes(s))) return 'Venus';
     if (['krittika', 'uttara phalguni', 'uttaraphalguni', 'uttara ashadha', 'uttarashada'].some(s => n.includes(s))) return 'Sun';
@@ -38,35 +78,36 @@ const normalizeChart = (chart) => {
     if (!chart) return null;
     const planets = chart.planets || {};
 
-    // Rasi (Sign) - Robust Moon extraction
-    // API might return 'Moon' or 'moon' or formattedPlanets array
-    // Check planets object first
+    // 1. Moon & Rashi Extraction
     let moonObj = planets["Moon"] || planets["moon"] || {};
+    let rashi = "Unknown";
+    let nakshatra = "Unknown";
 
-    // If moon object is empty, check structure
-    if (Object.keys(moonObj).length === 0 && chart.moonSign) {
-        // Fallback if planets map is missing but moonSign summary exists
-        moonObj = { sign: chart.moonSign.english || chart.moonSign.name || chart.moonSign.sign || "Unknown" };
+    if (typeof moonObj === 'number') {
+        rashi = getSignFromDegree(moonObj);
+        nakshatra = getNakshatraFromDegree(moonObj);
+    } else if (typeof moonObj === 'object') {
+        if (typeof moonObj.longitude === 'number') {
+            rashi = moonObj.sign || moonObj.signName || getSignFromDegree(moonObj.longitude);
+            nakshatra = moonObj.nakshatra || getNakshatraFromDegree(moonObj.longitude);
+        } else {
+            rashi = moonObj.sign || moonObj.signName || chart.moonSign?.english || chart.moonSign?.name || "Unknown";
+            nakshatra = moonObj.nakshatra || chart.moonNakshatra?.name || chart.nakshatra?.name || "Unknown";
+        }
+    } else if (typeof moonObj === 'string') {
+        rashi = moonObj;
+        nakshatra = chart.moonNakshatra?.name || chart.nakshatra?.name || "Unknown";
     }
 
-    const rashi = moonObj.sign || moonObj.signName || chart.moonSign?.english || chart.moonSign?.name || "Unknown";
-    // Nakshatra
-    const nakshatra = moonObj.nakshatra || chart.moonNakshatra?.name || chart.nakshatra?.name || "Unknown";
+    if (rashi === "Unknown" && chart.moonSign) {
+        rashi = chart.moonSign.english || chart.moonSign.name || chart.moonSign.sign || "Unknown";
+    }
 
-    // Lords
-    // Helper for Title Case (for Signs)
-    const toTitleCase = (str) => {
-        if (!str) return '';
-        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-    };
-
-    // Lords (Normalize)
+    // 2. Lords
     const rashiLord = signLords[toTitleCase(rashi)] || "Unknown";
     const nakshatraLord = getStarLord(nakshatra) || "Unknown";
 
-    // Planet Positions Map (PlanetName -> SignName)
-    // Normalize keys to TitleCase (e.g. 'Mars') to match RuleEngine 'P["Mars"]'.
-    // Robust Planet Positions Extraction
+    // 3. Planet Positions Map (PlanetName -> SignName)
     const planetPositions = {};
     const sourcePlanets = (Array.isArray(chart.formattedPlanets) && chart.formattedPlanets.length > 0)
         ? chart.formattedPlanets.reduce((acc, p) => { if (p.name) acc[p.name] = p; return acc; }, {})
@@ -76,22 +117,42 @@ const normalizeChart = (chart) => {
         let normalizedKey = toTitleCase(key);
         const val = sourcePlanets[key];
 
-        // Handle numeric keys (array index)
-        if (!isNaN(key) && val.name) normalizedKey = toTitleCase(val.name);
+        if (!isNaN(key) && val && val.name) normalizedKey = toTitleCase(val.name);
 
-        const signRaw = (typeof val === 'object') ? (val.sign || val.signName || val.currentSign || val.signTamil) : val;
-        if (signRaw && normalizedKey) {
-            planetPositions[normalizedKey] = toTitleCase(signRaw);
+        let signName = 'Unknown';
+        if (typeof val === 'number') {
+            signName = getSignFromDegree(val);
+        } else if (val && typeof val === 'object') {
+            if (typeof val.longitude === 'number') {
+                signName = val.sign || val.signName || getSignFromDegree(val.longitude);
+            } else {
+                const signRaw = val.sign || val.signName || val.currentSign || val.signTamil || 'Unknown';
+                signName = toTitleCase(signRaw);
+            }
+        } else if (val) {
+            signName = toTitleCase(val);
+        }
+
+        if (normalizedKey && signName && signName !== 'Unknown') {
+            planetPositions[normalizedKey] = toTitleCase(signName);
         }
     });
 
-    // Robust Lagna / Ascendant extraction
-    const ascSign = chart.ascendant?.name || chart.ascendant?.sign?.name || chart.ascendantSign || "Unknown";
+    // 4. Lagna / Ascendant extraction
+    let ascSign = "Unknown";
+    if (typeof chart.ascendant === 'number') {
+        ascSign = getSignFromDegree(chart.ascendant);
+    } else if (chart.ascendant && typeof chart.ascendant.longitude === 'number') {
+        ascSign = chart.ascendant.name || getSignFromDegree(chart.ascendant.longitude);
+    } else {
+        ascSign = chart.ascendant?.name || chart.ascendant?.sign?.name || chart.ascendantSign || "Unknown";
+    }
+
     const normalizedAscSign = toTitleCase(ascSign);
     const ascLord = chart.ascendant?.lord || chart.ascendant?.sign?.lord || chart.ascendantLord || signLords[normalizedAscSign] || "Unknown";
 
     return {
-        rashi: toTitleCase(rashi), // Ensure TitleCase
+        rashi: toTitleCase(rashi),
         nakshatra,
         rashiLord,
         nakshatraLord,
@@ -102,9 +163,9 @@ const normalizeChart = (chart) => {
         battingLagnaLord: toTitleCase(chart.battingLagnaLord) || toTitleCase(ascLord),
         bowlingLagnaSign: toTitleCase(chart.bowlingLagnaSign) || normalizedAscSign,
         bowlingLagnaLord: toTitleCase(chart.bowlingLagnaLord) || toTitleCase(ascLord),
-        moonNakshatraLord: nakshatraLord, // for transit.moonNakshatraLord usage
-        role: chart.role, // Pass through Role
-        matchLagnas: chart.lagnaTimeline || [] // Pass Dynamic Lagna Timeline
+        moonNakshatraLord: nakshatraLord,
+        role: chart.role,
+        matchLagnas: chart.lagnaTimeline || []
     };
 };
 
