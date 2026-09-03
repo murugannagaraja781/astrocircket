@@ -1,3 +1,18 @@
+// Polyfill File for Node.js 18 container environments (fixes undici / cheerio ReferenceError: File is not defined)
+if (typeof globalThis.File === 'undefined') {
+    try {
+        const { Blob } = require('buffer');
+        class FilePolyfill extends Blob {
+            constructor(fileBits, fileName, options = {}) {
+                super(fileBits, options);
+                this.name = String(fileName);
+                this.lastModified = options.lastModified || Date.now();
+            }
+        }
+        globalThis.File = FilePolyfill;
+    } catch (e) {}
+}
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');

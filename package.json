@@ -9,6 +9,9 @@
         "build": "npm run install-client && npm run install-server && npm run build-client",
         "start": "node server/index.js"
     },
+    "engines": {
+        "node": ">=20.0.0"
+    },
     "keywords": [],
     "author": "",
     "license": "ISC"
