@@ -14,7 +14,18 @@ const PlayerSchema = new mongoose.Schema({
  role: { type: String, enum: ['BAT', 'BOWL', 'ALL'], default: 'BAT' },
  gender: { type: String, enum: ['Male', 'Female', ''], default: '' },
  league: { type: String, default: '' },
- manualStatus: { type: String, default: '' }
+ manualStatus: { type: String, default: '' },
+ needsReview: { type: Boolean, default: false },
+ lastScrapedData: { type: Object, default: null },
+ manualOverride: { type: Boolean, default: false }
+});
+
+// Auto-generate unique custom id if missing before saving
+PlayerSchema.pre('save', function () {
+    if (!this.id) {
+        const cleanName = (this.name || 'player').trim().toLowerCase().replace(/[^a-z0-9]+/g, '_');
+        this.id = `${cleanName}_${Date.now()}`;
+    }
 });
 
 // Indexes for fast player search

@@ -5,6 +5,8 @@ const path = require('path');
 const fs = require('fs');
 const ExcelJS = require('exceljs');
 const { createBackup } = require('../utils/backupHelper');
+const liveScoreService = require('../utils/liveScoreService');
+const Group = require('../models/Group');
 
 // Import local astro calculator using vedic-astrology-api
 const {
@@ -15,19 +17,35 @@ const {
     calculatePanchang
 } = require('../utils/astroCalculator');
 
+// Helper to parse human-readable or ISO DOB strings into YYYY-MM-DD
+const parseDobToIso = (dobStr) => {
+    if (!dobStr) return '';
+    const str = String(dobStr).trim();
+    if (/^\d{4}-\d{2}-\d{2}/.test(str)) return str.slice(0, 10);
+    const m = str.match(/([a-zA-Z]+)\s+(\d{1,2}),?\s+(\d{4})/);
+    if (m) {
+        const monthMap = { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12 };
+        const mm = monthMap[m[1].toLowerCase().slice(0, 3)] || 1;
+        const dd = parseInt(m[2], 10);
+        const yyyy = parseInt(m[3], 10);
+        return `${yyyy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}`;
+    }
+    return '';
+};
+
 // Helper to calculate birth chart locally using vedic-astrology-api
 const fetchCharData = async (p) => {
     try {
-        if (!p.dob) return null;
+        if (!p || !p.dob) return null;
 
-        // Basic parsing assuming YYYY-MM-DD
-        let year, month, day;
-        if (p.dob.includes('-')) {
-            const parts = p.dob.split('-').map(Number);
-            year = parts[0]; month = parts[1]; day = parts[2];
-        } else {
-            return null;
-        }
+        const cleanDob = parseDobToIso(p.dob);
+        if (!cleanDob) return null;
+
+        const parts = cleanDob.split('-').map(Number);
+        const year = parts[0]; 
+        const month = parts[1]; 
+        const day = parts[2];
+        if (!year || !month || !day) return null;
 
         let hour = 12;
         let minute = 0;
@@ -370,6 +388,10 @@ const updatePlayer = async (req, res) => {
             updates.profile = newFilename;
         }
 
+        if (updates.dob) {
+            updates.dob = parseDobToIso(updates.dob) || updates.dob;
+        }
+
         // Check if chart-affecting fields changed to re-fetch chart
         const chartAffecting = ['dob', 'birthPlace', 'latitude', 'longitude', 'timezone', 'birthTime'];
         // FORCE UPDATE: To fix stale data (Zampa Bug)
@@ -377,7 +399,10 @@ const updatePlayer = async (req, res) => {
 
         if (needsChartUpdate) {
             // We need the full data to fetch chart (merging old and new)
-            const existingPlayer = await Player.findOne({ id: id });
+            let existingPlayer = await Player.findOne({ id: id });
+            if (!existingPlayer && mongoose.isValidObjectId(id)) {
+                existingPlayer = await Player.findById(id);
+            }
             if (existingPlayer) {
                 const mergedData = { ...existingPlayer.toObject(), ...updates };
                 const newChart = await fetchCharData(mergedData);
@@ -542,4 +567,304 @@ const deleteAllPlayers = async (req, res) => {
     }
 };
 
-module.exports = { syncPlayers, getPlayers, getPlayerById, uploadPlayers, updatePlayer, addPlayer, deletePlayer, deleteAllPlayers };
+// Sync live match squad details natively and handle comparison logic
+const syncLiveMatchSquad = async (req, res) => {
+    try {
+        const { matchId } = req.body;
+        if (!matchId) {
+            return res.status(400).json({ msg: 'Match ID is required' });
+        }
+
+        // Fetch squad directly from native liveScoreService
+        let squadData;
+        try {
+            squadData = await liveScoreService.fetchSquads(matchId, true);
+        } catch (serviceErr) {
+            console.error('Live Score Service fetch error:', serviceErr.message);
+            return res.status(500).json({ msg: 'Failed to fetch squad from live score service', error: serviceErr.message });
+        }
+
+        if (!squadData || squadData.status !== 'success' || !squadData.teams) {
+            return res.status(400).json({ msg: 'Invalid live score response', data: squadData });
+        }
+
+        // Collect all players (Playing XI, Bench, Support) from both teams
+        const allLivePlayers = [];
+        const processTeamList = (teamKey, squadKey) => {
+            const list = squadData.teams[teamKey]?.[squadKey] || [];
+            list.forEach(p => {
+                // Parse ID from profile URL (e.g. /profiles/10631/adam-zampa -> 10631)
+                const match = p.profile_url.match(/\/profiles\/(\d+)\//);
+                const id = match ? match[1] : p.name.replace(/\s+/g, '-').toLowerCase();
+                allLivePlayers.push({
+                    id,
+                    name: p.name,
+                    role: p.role?.toUpperCase()?.includes('WK-') ? 'BAT' : (p.role?.toUpperCase()?.includes('BAT') ? 'BAT' : (p.role?.toUpperCase()?.includes('BOWL') ? 'BOWL' : 'ALL')),
+                    dob: p.date_of_birth || '',
+                    birthPlace: p.birth_place || '',
+                    profile: p.profile_url || ''
+                });
+            });
+        };
+
+        ['team1', 'team2'].forEach(tk => {
+            ['playing_xi', 'bench', 'support_staff'].forEach(sk => {
+                processTeamList(tk, sk);
+            });
+        });
+
+        let updatedCount = 0;
+        let flaggedCount = 0;
+        let addedCount = 0;
+
+        for (const p of allLivePlayers) {
+            // Check if player already exists in Database
+            const existing = await Player.findOne({ id: p.id });
+
+            if (!existing) {
+                // Fetch chart data locally
+                const birthChartData = await fetchCharData({
+                    dob: p.dob,
+                    birthTime: '12:00', // default birth time
+                    birthPlace: p.birthPlace,
+                    latitude: 13.0827,
+                    longitude: 80.2707,
+                    timezone: 5.5
+                });
+
+                const newPlayer = new Player({
+                    id: p.id,
+                    name: p.name,
+                    dob: p.dob,
+                    birthTime: '12:00',
+                    birthPlace: p.birthPlace,
+                    role: p.role,
+                    profile: p.profile,
+                    birthChart: birthChartData,
+                    needsReview: false,
+                    manualOverride: false
+                });
+
+                await newPlayer.save();
+                addedCount++;
+            } else {
+                // If user set manual override, we don't auto-update or alert for mismatch
+                if (existing.manualOverride) {
+                    continue;
+                }
+
+                // Check for data mismatch in date of birth or birth place
+                const normalDob = p.dob.trim();
+                const normalPlace = p.birthPlace.trim();
+
+                const hasDobMismatch = normalDob && existing.dob && existing.dob.trim() !== normalDob;
+                const hasPlaceMismatch = normalPlace && existing.birthPlace && existing.birthPlace.trim() !== normalPlace;
+
+                if (hasDobMismatch || hasPlaceMismatch) {
+                    // Mismatch found - Flag for review instead of auto overwriting
+                    existing.needsReview = true;
+                    existing.lastScrapedData = {
+                        dob: normalDob,
+                        birthPlace: normalPlace
+                    };
+                    await existing.save();
+                    flaggedCount++;
+                } else {
+                    // No mismatch, but if fields were empty, we can auto-fill and re-calculate chart
+                    let shouldUpdateChart = false;
+                    if (!existing.dob && normalDob) {
+                        existing.dob = normalDob;
+                        shouldUpdateChart = true;
+                    }
+                    if (!existing.birthPlace && normalPlace) {
+                        existing.birthPlace = normalPlace;
+                        shouldUpdateChart = true;
+                    }
+
+                    if (shouldUpdateChart) {
+                        existing.birthChart = await fetchCharData(existing);
+                        await existing.save();
+                        updatedCount++;
+                    }
+                }
+            }
+        }
+
+        // Automatically sync both teams into Groups with their Playing XI (11 players)
+        const syncedGroups = [];
+        const titleStr = (req.body.matchTitle || '').toUpperCase();
+        let leagueType = 'T20';
+        if (titleStr.includes('ODI') || titleStr.includes('ONE DAY') || titleStr.includes('TROPHY')) {
+            leagueType = 'ODI';
+        } else if (titleStr.includes('TEST')) {
+            leagueType = 'General';
+        }
+
+        // Extract full team names from match title if present (e.g. "Ireland Women vs England Women, 2nd ODI")
+        let titleTeams = [];
+        if (req.body.matchTitle) {
+            const vsPart = req.body.matchTitle.split(',')[0].split('-')[0];
+            const parts = vsPart.split(/\s+vs\s+/i);
+            if (parts.length === 2) {
+                titleTeams = [parts[0].trim(), parts[1].trim()];
+            }
+        }
+
+        const teamKeys = ['team1', 'team2'];
+        for (let i = 0; i < teamKeys.length; i++) {
+            const tk = teamKeys[i];
+            const teamObj = squadData.teams[tk];
+            if (!teamObj || !teamObj.name) continue;
+
+            const rawName = teamObj.name.trim();
+            let groupName = rawName;
+
+            // Match full team name from title if available
+            const matchedTitleName = titleTeams.find(t => 
+                t.toLowerCase().startsWith(rawName.slice(0, 2).toLowerCase()) || 
+                rawName.toLowerCase().startsWith(t.slice(0, 2).toLowerCase())
+            );
+
+            if (matchedTitleName && matchedTitleName.length > rawName.length) {
+                groupName = `${matchedTitleName} (${rawName})`;
+            } else if (matchedTitleName) {
+                groupName = matchedTitleName;
+            }
+
+            // Get Playing XI player IDs
+            let xiPlayers = teamObj.playing_xi || [];
+            if (xiPlayers.length === 0) {
+                xiPlayers = teamObj.bench || [];
+            }
+
+            const xiPlayerIds = xiPlayers.map(p => {
+                const match = (p.profile_url || '').match(/\/profiles\/(\d+)\//);
+                return match ? match[1] : p.name.replace(/\s+/g, '-').toLowerCase();
+            }).filter(Boolean);
+
+            if (xiPlayerIds.length > 0) {
+                // Find existing group by name or abbreviations
+                const escapedName = groupName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                let group = await Group.findOne({ name: new RegExp(`^${escapedName}$`, 'i') });
+
+                if (!group && rawName) {
+                    group = await Group.findOne({ name: new RegExp(`^${rawName}$`, 'i') });
+                }
+                if (!group && matchedTitleName) {
+                    group = await Group.findOne({ name: new RegExp(`^${matchedTitleName}$`, 'i') });
+                }
+
+                if (!group) {
+                    group = new Group({
+                        name: groupName,
+                        leagueType: leagueType,
+                        players: xiPlayerIds
+                    });
+                } else {
+                    group.players = xiPlayerIds;
+                    if (!group.leagueType || group.leagueType === 'General') {
+                        group.leagueType = leagueType;
+                    }
+                }
+
+                await group.save();
+                syncedGroups.push({
+                    name: group.name,
+                    leagueType: group.leagueType,
+                    count: group.players.length
+                });
+            }
+        }
+
+        res.json({
+            status: 'success',
+            msg: `Squad synchronization complete`,
+            syncedGroups,
+            stats: {
+                totalScraped: allLivePlayers.length,
+                newPlayersAdded: addedCount,
+                autoUpdated: updatedCount,
+                flaggedForReview: flaggedCount,
+                groupsSynced: syncedGroups.length
+            }
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: 'Server Error during live squad sync', error: err.message });
+    }
+};
+
+// Fetch all players requiring manual reviews
+const getReviewRequiredPlayers = async (req, res) => {
+    try {
+        const players = await Player.find({ needsReview: true });
+        res.json({ status: 'success', players });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error fetching review list');
+    }
+};
+
+// Resolve a flagged review mismatch
+const resolvePlayerReview = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { action } = req.body; // 'accept_live' or 'keep_existing'
+
+        const player = await Player.findOne({ id });
+        if (!player) {
+            return res.status(404).json({ msg: 'Player not found' });
+        }
+
+        if (action === 'accept_live' && player.lastScrapedData) {
+            // Overwrite database with scraped live values
+            player.dob = player.lastScrapedData.dob || player.dob;
+            player.birthPlace = player.lastScrapedData.birthPlace || player.birthPlace;
+            player.birthChart = await fetchCharData(player);
+            player.needsReview = false;
+            player.lastScrapedData = null;
+            await player.save();
+            res.json({ status: 'success', msg: 'Player updated with live scraped details and chart recalculated', player });
+        } else if (action === 'keep_existing') {
+            // Lock current database settings from future automatically overwritten/flagged warnings
+            player.needsReview = false;
+            player.manualOverride = true;
+            player.lastScrapedData = null;
+            await player.save();
+            res.json({ status: 'success', msg: 'Current details kept; manual override flag activated', player });
+        } else {
+            res.status(400).json({ msg: 'Invalid action. Must be accept_live or keep_existing' });
+        }
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error resolving review');
+    }
+};
+
+// Fetch live matches directly via native liveScoreService
+const getLiveMatches = async (req, res) => {
+    try {
+        const data = await liveScoreService.fetchMatches();
+        res.json(data);
+    } catch (err) {
+        console.error('Live Score Service error:', err.message);
+        res.status(500).json({ msg: 'Failed to fetch matches from live score service', error: err.message });
+    }
+};
+
+module.exports = {
+    syncPlayers,
+    getPlayers,
+    getPlayerById,
+    uploadPlayers,
+    updatePlayer,
+    addPlayer,
+    deletePlayer,
+    deleteAllPlayers,
+    syncLiveMatchSquad,
+    getReviewRequiredPlayers,
+    resolvePlayerReview,
+    getLiveMatches
+};

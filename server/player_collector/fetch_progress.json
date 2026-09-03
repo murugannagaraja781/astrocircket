@@ -1,0 +1,9006 @@
+[
+  {
+    "name": "Ruturaj Gaikwad",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "The Economic Times",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Suresh Raina",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Matthew Hayden",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Jacob Oram",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Stephen Fleming",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "SA20",
+        "team": "Joburg Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Muttiah Muralitharan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Michael Hussey",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Kepler Wessels",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "The Hindustan Times",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Andrew Flintoff",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "The Ashes",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Murali Vijay",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Ravichandran Ashwin",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Wankhede Stadium",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Sky Sports",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Albie Morkel",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      },
+      {
+        "league": "SA20",
+        "team": "Joburg Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "The New Indian Express",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Subramaniam Badrinath",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Ravindra Jadeja",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Dwayne Bravo",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Gurunath Meiyappan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Dwayne Smith",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Ashish Nehra",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Mohit Sharma",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Irfan Pathan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Andrew Tye",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      },
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Imran Tahir",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "SA20",
+        "team": "Joburg Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Lungi Ngidi",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Mitchell Santner",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Sam Billings",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Deepak Chahar",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Shardul Thakur",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "The Indian Express",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Sam Curran",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Josh Hazlewood",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Piyush Chawla",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Business Standard",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Harbhajan Singh",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Kedar Jadhav",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Cheteshwar Pujara",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Krishnappa Gowtham",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Moeen Ali",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      },
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Robin Uthappa",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Ben Stokes",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Kyle Jamieson",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Ajinkya Rahane",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Times Now",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Lakshmipathy Balaji",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "India Today",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Sameer Rizvi",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Mustafizur Rahman",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      },
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Rachin Ravindra",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Shivam Dube",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Matheesha Pathirana",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Mukesh Choudhary",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Devon Conway",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "SA20",
+        "team": "Joburg Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Shaik Rasheed",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Noor Ahmad",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Sanju Samson",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Kartik Sharma",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Prashant Veer",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "The Hindu",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Tamil Nadu Police",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "India Cements",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Muthoot Group",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Eurogrip Tyres",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Etihad Airways",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Gulf Oil",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Reliance Jio",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Business Line",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Live Mint",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Tamil Nadu",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Madras High Court",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Telegraph India",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Matthew Short",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Dewald Brevis",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Ayush Mhatre",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Akash Madhwal",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Urvil Patel",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Akeal Hosein",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "SA20",
+        "team": "Joburg Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Aman Hakim Khan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Ramakrishna Ghosh",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Dian Forrester",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "SA20",
+        "team": "Joburg Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Anshul Kamboj",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Shreyas Gopal",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Rahul Chahar",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Nathan Ellis",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Kuldip Yadav",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Khaleel Ahmed",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Gurjapneet Singh",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Zak Foulkes",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Eric Simons",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Sridharan Sriram",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Ben Hilfenhaus",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Ambati Rayudu",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Tushar Deshpande",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Kochi Tuskers Kerala",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Chennai Super Kings"
+      },
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Hardik Pandya",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Mahela Jayawardene",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Kieron Pollard",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Lasith Malinga",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Reliance Industries",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Rohit Sharma",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Jasprit Bumrah",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Reliance Industries Ltd",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Mukesh Ambani",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Sachin Tendulkar",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Sanath Jayasuriya",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Shaun Pollock",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Lalchand Rajput",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Zaheer Khan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Shikhar Dhawan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Brabourne Stadium",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Dinesh Karthik",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Pragyan Ojha",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Thisara Perera",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      },
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Anil Kumble",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Ricky Ponting",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Aditya Tare",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Aaron Finch",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Lendl Simmons",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Parthiv Patel",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Alzarri Joseph",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Ishan Kishan",
+    "birthDate": "1998-07-18",
+    "birthPlace": "Patna",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Tilak Varma",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Suryakumar Yadav",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Hrithik Roshan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Sudarshana Chakra",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Hindustan Times",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Malaysia Airlines",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Air India",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Ola Cabs",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Jet Airways",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Mayank Markande",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Ryan Rickelton",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Corbin Bosch",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Sherfane Rutherford",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Will Jacks",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Naman Dhir",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Atharva Ankolekar",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Raj Angad Bawa",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Allah Mohammad Ghazanfar",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Rahul Sanghvi",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Paras Mhambrey",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Carl Hopkinson",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Eden Gardens",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Sourav Ganguly",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Sunil Narine",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      },
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Shah Rukh Khan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Gautam Gambhir",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Andre Russell",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Cape Cobras",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Highveld Lions",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Otago Volts",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Southern Redbacks",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Yorkshire Carnegie",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Nita Ambani",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Female",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Akash Ambani",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      }
+    ]
+  },
+  {
+    "name": "Sunrisers Eastern Cape",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Mumbai Indians"
+      },
+      {
+        "league": "SA20",
+        "team": "Joburg Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Axar Patel",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Hemang Badani",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Kiran Kumar Grandhi",
+    "birthDate": "1975-00-00",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Arun Jaitley Stadium",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Soorma Hockey Club",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Haryana Steelers",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Parth Jindal",
+    "birthDate": "1990-05-19",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "The Daily Telegraph",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Virender Sehwag",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Manish Pandey",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Daniel Vettori",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Amit Mishra",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Pradeep Sangwan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Dirk Nannes",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Glenn Maxwell",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Adam Gilchrist",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Andrew Symonds",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Kevin Pietersen",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Ross Taylor",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Deccan Herald",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Ben Rohrer",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Virat Kohli",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Sir Vivian Richards",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Jeremy Snape",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Yuvraj Singh",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Angelo Mathews",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Pawan Negi",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Karun Nair",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Joel Paris",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Rishabh Pant",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Mahipal Lomror",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Gary Kirsten",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Paddy Upton",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Rahul Dravid",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Mohammed Shami",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Pat Cummins",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Kagiso Rabada",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Shahbaz Nadeem",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Jayant Yadav",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Shreyas Iyer",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Abhishek Sharma",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Prithvi Shaw",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Avesh Khan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Harshal Patel",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Rahul Tewatia",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Manjot Kalra",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Colin Munro",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      },
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Sandeep Lamichhane",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Colin Ingram",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Hanuma Vihari",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Ishant Sharma",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Keemo Paul",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Jalaj Saxena",
+    "birthDate": "1986-12-15",
+    "birthPlace": "Indore",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Ankush Bains",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Bandaru Ayyappa",
+    "birthDate": "1992-10-27",
+    "birthPlace": "Q15338",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Jason Roy",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      },
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Chris Woakes",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Alex Carey",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Shimron Hetmyer",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Marcus Stoinis",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Anrich Nortje",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "United Arab Emirates",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Tillakaratne Dilshan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Farveez Maharoof",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Doug Bracewell",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Morne Morkel",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Mitchell Starc",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Nitish Rana",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Ben Duckett",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Pathum Nissanka",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Tristan Stubbs",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "Abishek Porel",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Ajay Mandal",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Auqib Nabi",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Tripurana Vijay",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Rehan Ahmed",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Dushmantha Chameera",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Vipraj Nigam",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Ian Bell",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Munaf Patel",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Vijay Bharadwaj",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Iqbal Abdulla",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "IPL",
+        "team": "Delhi Capitals"
+      }
+    ]
+  },
+  {
+    "name": "Usman Khawaja",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "James Hopes",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "The Gabba",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Queensland Bulls",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Darren Lehmann",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Wade Seccombe",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Peter Forrest",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Chris Lynn",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Brad Haddin",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Daniel Christian",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Chris Hartley",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Jason Behrendorff",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Adam Voges",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Kemar Roach",
+    "birthDate": "1988-06-30",
+    "birthPlace": "Saint Lucy",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Nathan Hauritz",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Luke Pomersbach",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Ben Cutting",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Cameron Gannon",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Stuart Law",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Ryan Duffield",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Josh Lalor",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Alex Doolan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Samuel Badree",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Jack Wildermuth",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Mitchell Swepson",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Blundstone Arena",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Marnus Labuschagne",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Tymal Mills",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      },
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      },
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Spotless Stadium",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Matt Renshaw",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Shadab Khan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "James Pattinson",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Mujeeb Ur Rahman",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Max Bryant",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Jack Prestwidge",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Metricon Stadium",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Optus Stadium",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Zahir Khan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Tom Banton",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Lewis Gregory",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "Dan Lawrence",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "James Bazley",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Joe Denly",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Jimmy Peirson",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Mark Steketee",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Marvel Stadium",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Sam Heazlett",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Dan Christian",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Yasir Shah",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Michael Neser",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Xavier Bartlett",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Cazalys Stadium",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Lachlan Hearne",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Hugh Weibgen",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Tom Alsop",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Shaheen Afridi",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Thomas Balkin",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Liam Haskett",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Callum Vidler",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Shane Watson",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Nathan Reardon",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Matthew Renshaw",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Matthew Kuhnemann",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Craig Kieswetter",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Tom Abell",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "Ross Whiteley",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Sam Hain",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      },
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Paul Walter",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Alex Ross",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Brisbane Heat"
+      }
+    ]
+  },
+  {
+    "name": "Jeff Vaughan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Traeger Park",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Alice Springs",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Northern Territory",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Tim Paine",
+    "birthDate": "1984-12-08",
+    "birthPlace": "Hobart",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Boxing Day Test",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Craig Simmons",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Xavier Doherty",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Travis Birt",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Damien Wright",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Ben Dunk",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Stuart Broad",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Jofra Archer",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Adam Griffith",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Matthew Wade",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Scott Boland",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Peter Handscomb",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Tim David",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Riley Meredith",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Mitchell Owen",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Jake Weatherald",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Beau Webster",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Rishad Hossain",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      },
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Iain Carlisle",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Billy Stanlake",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Mark Cosgrove",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Phil Jaques",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Jason Krejza",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Doug Bollinger",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Shaun Tait",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Owais Shah",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Scott Styris",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Shoaib Malik",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Tim Bresnan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Alex Hales",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Daren Sammy",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Kumar Sangakkara",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Qais Ahmad",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Dawid Malan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      },
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Harry Brook",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Tom Lammonby",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Faheem Ashraf",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Zak Crawley",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "James Neesham",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Shai Hope",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      }
+    ]
+  },
+  {
+    "name": "Waqar Salamkheil",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Caleb Jewell",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Hobart Hurricanes"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Will Sutherland",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Luke Ronchi",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Cameron White",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Victorian Bushrangers",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Simon Helmot",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Brad Hodge",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      },
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Shahid Afridi",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Peter Nevill",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Peter Siddle",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Callum Ferguson",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "David Saker",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Chris Gayle",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Brad Hogg",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Mohammad Nabi",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      },
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Tim Ludeman",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Kane Richardson",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Mackenzie Harvey",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Harry Gurney",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Usman Shinwari",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Sean Abbott",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Ben Dwarshuis",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      },
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Adam Zampa",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Michael Klinger",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Richard Gleeson",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Zak Evans",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Mitchell Perry",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Peter Hatzoglou",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Nic Maddinson",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Docklands Stadium",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Carrara Stadium",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Oliver Peake",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Will Salzmann",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Matthew Spoors",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Tim Seifert",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Brendan Doggett",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Gurinder Sandhu",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Nathan Lyon",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Callum Stow",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Shaun Marsh",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Nathan Rimmington",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "David Hussey",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Luke Wright",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Liam Hatcher",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Shane Harwood",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Graham Manou",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Fawad Ahmed",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Jon Holland",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Joe Mennie",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Marlon Samuels",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Jos Buttler",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Shakib Al Hasan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Samit Patel",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Benny Howell",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Rilee Rossouw",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      },
+      {
+        "league": "SA20",
+        "team": "Joburg Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Imad Wasim",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Unmukt Chand",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Reece Topley",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Matt Critchley",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Martin Guptill",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Ruwantha Kellepotha",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Jacob Bethell",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      },
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Tawanda Muyeye",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Mohammad Rizwan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Renegades"
+      }
+    ]
+  },
+  {
+    "name": "Rob Quiney",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Greg Shipperd",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Shane Warne",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Jackson Bird",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Haris Rauf",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Brody Couch",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Hilton Cartwright",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Cooper Connolly",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Lavington Sports Ground",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Campbell Kellaway",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Austin Anlezark",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Daniel Worrall",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Jade Dernbach",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Dimitri Mascarenhas",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Mohammad Hafeez",
+    "birthDate": "1980-10-17",
+    "birthPlace": "Sargodha",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Liam Plunkett",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Dilbar Hussain",
+    "birthDate": "1993-02-20",
+    "birthPlace": "Q173985",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Dale Steyn",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "Andre Fletcher",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Nicholas Pooran",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Ahmed Daniyal",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Syed Faridoun",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Liam Dawson",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      },
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Usama Mir",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Olly Stone",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Adam Milne",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      },
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      },
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "Nick Larkin",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Jackson Coleman",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Melbourne Stars"
+      }
+    ]
+  },
+  {
+    "name": "Ashton Turner",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Simon Katich",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Herschelle Gibbs",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Paul Collingwood",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Justin Langer",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Alfonso Thomas",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Tom Triffitt",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Mitchell Marsh",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      },
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "Marcus North",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Evan Gulbis",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Mick Martell",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Michael Carberry",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Brett Lee",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Moises Henriques",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Jhye Richardson",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Usman Qadir",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Ashton Agar",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Nick Hobson",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Kurtis Patterson",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Liam Livingstone",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      },
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Josh Inglis",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "James Vince",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      },
+      {
+        "league": "SA20",
+        "team": "Joburg Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Sam Nogajski",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Phillip Gillespie",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Phil Salt",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Adam Lyth",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Stephen Eskinazi",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Aaron Hardie",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Mickey Arthur",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Mitch Marsh",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Ben Edmondson",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Yasir Arafat",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Mitchell Johnson",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Finn Allen",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Sam Fanning",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Mahli Beardman",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Bryce Jackson",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Lance Morris",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Kade Harvey",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Tim Macdonald",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Beau Casson",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Cameron Bancroft",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Cameron Green",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Matthew Hurst",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Keaton Jennings",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BBL",
+        "team": "Perth Scorchers"
+      }
+    ]
+  },
+  {
+    "name": "Saud Shakeel",
+    "birthDate": "1995-09-05",
+    "birthPlace": "Karachi",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Moin Khan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Sohail Tanvir",
+    "birthDate": "1984-12-12",
+    "birthPlace": "Rawalpindi",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Nadeem Omar",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Bugti Stadium",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Sarfaraz Ahmed",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Viv Richards",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Grant Elliott",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Ahmed Shehzad",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      },
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      },
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Darren Sammy",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Sarfraz Ahmad",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Babar Azam",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Baloch Regiment",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Faakhir Mehmood",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Aima Baig",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Bilal Maqsood",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Annie Khalid",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Bilal Ashraf",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Adnan Siddiqui",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Ushna Shah",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Syed Shafaat Ali",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Soneri Bank",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "United Bank Limited",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Shamyl Hussain",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Bevon Jacobs",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Khawaja Nafay",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Brett Hampton",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Kashif Bhatti",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Usman Tariq",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      },
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Iqbal Imam",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Mohammad Hasnain",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "PSL",
+        "team": "Quetta Gladiators"
+      }
+    ]
+  },
+  {
+    "name": "Alistair Maiden",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Shane Bond",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Ellyse Perry",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Donovan Ferreira",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      },
+      {
+        "league": "SA20",
+        "team": "Joburg Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Annerie Dercksen",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Fatima Sana",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Alana King",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Kayla Reyneke",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Jude Bellingham",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Jim Troughton",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Alex Gidman",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Ben Sawyer",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Kirstie Gordon",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Emma Lamb",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Tammy Beaumont",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Davina Perrin",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Meg Austin",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Cordelia Griffith",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Alice Capsey",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Jemima Spence",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Lauren Filer",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Phoebe Brett",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Linsey Smith",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Joe Weatherley",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Will Smeed",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Sean Dickson",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Ethan Brookes",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Saqib Mahmood",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Scott Currie",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Birmingham Phoenix"
+      }
+    ]
+  },
+  {
+    "name": "Charlie Dean",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Andy Flower",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Deandra Dottin",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Grace Harris",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Marizanne Kapp",
+    "birthDate": "1990-01-04",
+    "birthPlace": "Gqeberha",
+    "gender": "Female",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Lisa Keightley",
+    "birthDate": "1971-08-26",
+    "birthPlace": "Q59819",
+    "gender": "Female",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Rory Burns",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Eoin Morgan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Freya Davies",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Sterre Kalis",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Marie Kelly",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Seren Smale",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Trudy Johnson",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Hannah Rainey",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Mahika Gaur",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Phoebe Turner",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Josie Groves",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Charis Pavely",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Lucy Higham",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Olivia Barnes",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Kiran Carlson",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Adam Hose",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "James Coles",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      },
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "Joe Moores",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Jonny Bairstow",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "James Rew",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Henry Crocombe",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Mason Crane",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "London Spirit"
+      }
+    ]
+  },
+  {
+    "name": "Sunrisers Leeds",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "The Hundred",
+        "team": "Northern Superchargers"
+      }
+    ]
+  },
+  {
+    "name": "Adrian Birrell",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "Sun Group",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "Kavya Maran",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "Eastern Cape",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "Kalanithi Maran",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "Wanderers Stadium",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      },
+      {
+        "league": "SA20",
+        "team": "Joburg Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Jordan Hermann",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "Marco Jansen",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "Patrick Kruger",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "Senuran Muthusamy",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "Lutho Sipamla",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "Russell Domingo",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "Charl Langeveldt",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "Aiden Markram",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "Ottniel Baartman",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "David Bedingham",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Sunrisers Eastern Cape"
+      }
+    ]
+  },
+  {
+    "name": "Leus Du Plooy",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Joburg Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Jason Holder",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Joburg Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Jarren Bacher",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Joburg Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Duan Jansen",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Joburg Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Janco Smit",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Joburg Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Prenelan Subrayen",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Joburg Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Gerald Coetzee",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Joburg Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Lizaad Williams",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Joburg Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Donavon Ferreira",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Joburg Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Reeza Hendricks",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Joburg Super Kings"
+      }
+    ]
+  },
+  {
+    "name": "Nandre Burger",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "SA20",
+        "team": "Joburg Super Kings"
+      },
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Litton Das",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Nafisa Kamal",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Shaheed Dhirendranath Datta Stadium",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Imrul Kayes",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Liton Das",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Mashrafe Mortaza",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Dhaka Dynamites",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      },
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Barisal Bulls",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Alok Kapali",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Abu Hider",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      },
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Ashar Zaidi",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Tamim Iqbal",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      },
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Mohammad Salahuddin",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Mahedi Hasan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Mehedi Hasan Rana",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Solomon Mire",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Mohammad Saifuddin",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Asela Gunaratne",
+    "birthDate": "1986-01-08",
+    "birthPlace": "Kandy",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Anamul Haque",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "West Indian",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Evin Lewis",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      },
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Sheikh Mujibur Rahman",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Mushfiqur Rahim",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      },
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Soumya Sarkar",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Sabbir Rahman",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      },
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Dasun Shanaka",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Towhid Hridoy",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      },
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Johnson Charles",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Comilla Victorians"
+      }
+    ]
+  },
+  {
+    "name": "Barisal Divisional Stadium",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Graham Ford",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Mahmudullah Riyad",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Dav Whatmore",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Shahriar Nafees",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Mominul Haque",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Suhrawadi Shuvo",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Phil Mustard",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Brendan Taylor",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Kevon Cooper",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Mohammad Sami",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Sohag Gazi",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Taijul Islam",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Rumman Raees",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Kyle Mayers",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Keshav Maharaj",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Ibrahim Zadran",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Dunith Wellalage",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Nazmul Hossain Shanto",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Pritom Kumar",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Ripon Mondol",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Ebadot Hossain",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Shohidul Islam",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Iqbal Hossain Emon",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Tanvir Islam",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Nayeem Hasan",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  },
+  {
+    "name": "Nafees Iqbal",
+    "birthDate": "",
+    "birthPlace": "",
+    "gender": "Male",
+    "leagues": [
+      {
+        "league": "BPL",
+        "team": "Fortune Barishal"
+      }
+    ]
+  }
+]

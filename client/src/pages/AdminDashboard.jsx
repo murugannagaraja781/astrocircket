@@ -2629,9 +2629,9 @@ const GroupsManager = () => {
         }
     };
 
-    const handleClearGroup = async (groupName) => {
+    const handleClearGroup = async (id) => {
         try {
-            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/clear`, { groupName }, {
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/groups/clear`, { id }, {
                 headers: { 'x-auth-token': token }
             });
             fetchGroups();
@@ -2663,8 +2663,31 @@ const GroupsManager = () => {
     const [openEdit, setOpenEdit] = useState(false);
     const [editingPlayer, setEditingPlayer] = useState(null);
 
+    const parseDobToIso = (dobStr) => {
+        if (!dobStr) return '';
+        const str = String(dobStr).trim();
+        if (/^\d{4}-\d{2}-\d{2}/.test(str)) return str.slice(0, 10);
+        const m = str.match(/([a-zA-Z]+)\s+(\d{1,2}),?\s+(\d{4})/);
+        if (m) {
+            const monthMap = { jan: '01', feb: '02', mar: '03', apr: '04', may: '05', jun: '06', jul: '07', aug: '08', sep: '09', oct: '10', nov: '11', dec: '12' };
+            const mm = monthMap[m[1].toLowerCase().slice(0, 3)] || '01';
+            const dd = String(m[2]).padStart(2, '0');
+            return `${m[3]}-${mm}-${dd}`;
+        }
+        return '';
+    };
+
     const handleEditClick = (player) => {
-        setEditingPlayer(player);
+        setEditingPlayer({
+            ...player,
+            dob: parseDobToIso(player.dob),
+            birthTime: player.birthTime || '12:00',
+            birthPlace: player.birthPlace || '',
+            latitude: player.latitude || 13.0827,
+            longitude: player.longitude || 80.2707,
+            timezone: player.timezone || 5.5,
+            role: player.role || 'BAT'
+        });
         setOpenEdit(true);
     };
 
@@ -2988,7 +3011,7 @@ const GroupsManager = () => {
                                                 <Tooltip title="Clear Group">
                                                     <IconButton
                                                         size="small"
-                                                        onClick={() => convertConfirmAction('Clear Group', `Clear all players from ${g.name}?`, () => handleClearGroup(g.name))}
+                                                        onClick={() => convertConfirmAction('Clear Group', `Clear all players from ${g.name}?`, () => handleClearGroup(g._id))}
                                                         sx={{ color: '#f59e0b', bgcolor: 'rgba(245, 158, 11, 0.08)', '&:hover': { bgcolor: 'rgba(245, 158, 11, 0.15)' } }}
                                                     >
                                                         <DeleteIcon sx={{ fontSize: 18, color: '#f59e0b' }} />
@@ -3115,7 +3138,7 @@ const GroupsManager = () => {
             </Dialog>
 
             {/* Manage Players Dialog */}
-            <Dialog open={openManage} onClose={() => setOpenManage(false)} fullWidth maxWidth="md">
+            <Dialog open={openManage} onClose={() => setOpenManage(false)} fullWidth maxWidth="lg">
                 <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Box>Manage Team: {selectedGroup?.name} <Chip label={selectedGroup?.leagueType} size="small" sx={{ ml: 1 }} /></Box>
                     <Button
@@ -3197,21 +3220,24 @@ const GroupsManager = () => {
                     </Box>
 
                     {selectedGroup && selectedGroup.players.length > 0 ? (
-                        <TableContainer component={Paper} elevation={0} variant="outlined" sx={{ maxHeight: '400px', overflow: 'auto' }}>
+                        <TableContainer component={Paper} elevation={0} variant="outlined" sx={{ maxHeight: '450px', overflow: 'auto' }}>
                             <Table size="small">
-                                <TableHead>
+                                <TableHead sx={{ bgcolor: '#f8fafc' }}>
                                     <TableRow>
-                                        <TableCell>Name</TableCell>
-                                        <TableCell>Place</TableCell>
-                                        <TableCell>Actions</TableCell>
+                                        <TableCell sx={{ fontWeight: 700 }}>NAME & ROLE</TableCell>
+                                        <TableCell sx={{ fontWeight: 700 }}>DOB</TableCell>
+                                        <TableCell sx={{ fontWeight: 700 }}>TIME</TableCell>
+                                        <TableCell sx={{ fontWeight: 700 }}>PLACE</TableCell>
+                                        <TableCell sx={{ fontWeight: 700 }}>ASTRO STATUS</TableCell>
+                                        <TableCell sx={{ fontWeight: 700, textAlign: 'center' }}>ACTIONS</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     {selectedGroup.players.map((player) => (
-                                        <TableRow key={player._id}>
+                                        <TableRow key={player._id} hover>
                                             <TableCell>
                                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                    <Typography variant="subtitle2">{player.name}</Typography>
+                                                    <Typography variant="subtitle2" fontWeight="600">{player.name}</Typography>
                                                     <Chip 
                                                         label={player.role || 'BAT'} 
                                                         size="small" 
@@ -3223,13 +3249,50 @@ const GroupsManager = () => {
                                                     />
                                                 </Box>
                                             </TableCell>
-                                            <TableCell>{player.birthPlace || '-'}</TableCell>
                                             <TableCell>
-                                                <IconButton size="small" color="primary" onClick={() => handleEditClick(player)}>
-                                                    <EditIcon />
+                                                {player.dob ? (
+                                                    <Typography variant="body2" sx={{ fontWeight: 500, color: '#1f2937' }}>
+                                                        {player.dob}
+                                                    </Typography>
+                                                ) : (
+                                                    <Chip label="Missing DOB" size="small" sx={{ bgcolor: '#fee2e2', color: '#dc2626', fontSize: '0.68rem', height: 20, fontWeight: 600 }} />
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                {player.birthTime ? (
+                                                    <Typography variant="body2" sx={{ fontFamily: 'monospace', fontWeight: 600, color: '#4b5563' }}>
+                                                        {player.birthTime}
+                                                    </Typography>
+                                                ) : (
+                                                    <Typography variant="caption" color="text.secondary">-</Typography>
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                <Typography variant="body2" color="text.secondary" sx={{ maxWidth: '180px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                                    {player.birthPlace || '-'}
+                                                </Typography>
+                                            </TableCell>
+                                            <TableCell>
+                                                {player.birthChart ? (
+                                                    <Chip 
+                                                        label="✓ Chart Ready" 
+                                                        size="small" 
+                                                        sx={{ bgcolor: '#dcfce7', color: '#15803d', fontSize: '0.68rem', height: 20, fontWeight: 600 }} 
+                                                    />
+                                                ) : (
+                                                    <Chip 
+                                                        label="No Chart" 
+                                                        size="small" 
+                                                        sx={{ bgcolor: '#fef3c7', color: '#b45309', fontSize: '0.68rem', height: 20, fontWeight: 600 }} 
+                                                    />
+                                                )}
+                                            </TableCell>
+                                            <TableCell sx={{ textAlign: 'center' }}>
+                                                <IconButton size="small" color="primary" onClick={() => handleEditClick(player)} title="Edit details">
+                                                    <EditIcon fontSize="small" />
                                                 </IconButton>
-                                                <IconButton size="small" color="error" onClick={() => convertConfirmAction('Remove Player', 'Remove this player from the group?', () => handleRemovePlayer(selectedGroup.name, player.id))}>
-                                                    <DeleteIcon />
+                                                <IconButton size="small" color="error" onClick={() => convertConfirmAction('Remove Player', 'Remove this player from the group?', () => handleRemovePlayer(selectedGroup.name, player.id))} title="Remove from group">
+                                                    <DeleteIcon fontSize="small" />
                                                 </IconButton>
                                             </TableCell>
                                         </TableRow>
@@ -3288,7 +3351,7 @@ const GroupsManager = () => {
                                 <TextField
                                     label="Date of Birth"
                                     type="date"
-                                    value={editingPlayer.dob ? editingPlayer.dob.split('T')[0] : ''}
+                                    value={editingPlayer.dob ? parseDobToIso(editingPlayer.dob) : ''}
                                     onChange={(e) => setEditingPlayer({ ...editingPlayer, dob: e.target.value })}
                                     fullWidth
                                     size="small"
@@ -3684,6 +3747,241 @@ const BackupsManager = () => {
     );
 };
 
+const LiveSyncManager = () => {
+    const { token } = useContext(AuthContext);
+    const [matches, setMatches] = useState([]);
+    const [reviews, setReviews] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [syncingMatchId, setSyncingMatchId] = useState(null);
+    const [actionLoadingId, setActionLoadingId] = useState(null);
+
+    // Snackbar State
+    const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+    const showSnackbar = (message, severity = 'success') => {
+        setSnackbar({ open: true, message, severity });
+    };
+
+    const fetchMatches = async () => {
+        setLoading(true);
+        try {
+            const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/players/live-matches`, {
+                headers: { 'x-auth-token': token }
+            });
+            setMatches(res.data.matches || []);
+        } catch (err) {
+            console.error(err);
+            showSnackbar('Failed to load active matches. Please check network connection.', 'error');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchReviews = async () => {
+        try {
+            const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/players/review-list`, {
+                headers: { 'x-auth-token': token }
+            });
+            setReviews(res.data.players || []);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    useEffect(() => {
+        fetchMatches();
+        fetchReviews();
+    }, []);
+
+    const handleSyncSquad = async (matchId, matchTitle) => {
+        setSyncingMatchId(matchId);
+        try {
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/players/sync-live-squad`, 
+                { matchId, matchTitle },
+                { headers: { 'x-auth-token': token } }
+            );
+            const { stats, syncedGroups } = res.data;
+            const groupsText = syncedGroups && syncedGroups.length > 0 
+                ? ` | 🏏 Teams added to Groups: ${syncedGroups.map(g => `${g.name} (${g.count} players)`).join(' & ')}`
+                : '';
+            showSnackbar(
+                `Squad & Playing XI Synced! Added: ${stats.newPlayersAdded}, Updated: ${stats.autoUpdated}${groupsText}`,
+                'success'
+            );
+            fetchReviews();
+            if (typeof fetchGroups === 'function') fetchGroups();
+        } catch (err) {
+            console.error(err);
+            showSnackbar(err.response?.data?.msg || 'Failed to sync squad', 'error');
+        } finally {
+            setSyncingMatchId(null);
+        }
+    };
+
+    const handleResolve = async (playerId, action) => {
+        setActionLoadingId(playerId);
+        try {
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/players/resolve-review/${playerId}`, 
+                { action },
+                { headers: { 'x-auth-token': token } }
+            );
+            showSnackbar('Review resolved successfully', 'success');
+            fetchReviews();
+        } catch (err) {
+            console.error(err);
+            showSnackbar('Failed to resolve review', 'error');
+        } finally {
+            setActionLoadingId(null);
+        }
+    };
+
+    const liveMatches = matches.filter(m => m.status === 'live');
+    const upcomingMatches = matches.filter(m => m.status === 'upcoming');
+    const completedMatches = matches.filter(m => m.status === 'completed');
+
+    const renderMatchGroup = (title, list, color) => {
+        if (list.length === 0) return null;
+        return (
+            <Box sx={{ mb: 4 }}>
+                <Typography variant="h6" fontWeight="bold" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: color }} />
+                    {title} Matches ({list.length})
+                </Typography>
+                <Grid container spacing={3}>
+                    {list.map(match => (
+                        <Grid item xs={12} sm={6} md={4} key={match.match_id}>
+                            <Paper sx={{ p: 3, display: 'flex', flexDirection: 'column', height: '100%', gap: 1.5 }}>
+                                <Typography variant="caption" sx={{ textTransform: 'uppercase', fontWeight: 'bold', color }}>
+                                    {match.status}
+                                </Typography>
+                                <Typography variant="subtitle1" fontWeight="bold" color="text.primary" sx={{ flexGrow: 1 }}>
+                                    {match.title}
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary">
+                                    ID: {match.match_id}
+                                </Typography>
+                                <Button
+                                    variant="contained"
+                                    size="small"
+                                    onClick={() => handleSyncSquad(match.match_id, match.title)}
+                                    disabled={syncingMatchId !== null}
+                                    sx={{ 
+                                        borderRadius: '8px', 
+                                        bgcolor: color,
+                                        '&:hover': { bgcolor: color, opacity: 0.9 }
+                                    }}
+                                >
+                                    {syncingMatchId === match.match_id ? 'Syncing...' : '⚡ Sync Squad & 11s to Groups'}
+                                </Button>
+                            </Paper>
+                        </Grid>
+                    ))}
+                </Grid>
+            </Box>
+        );
+    };
+
+    return (
+        <Box sx={{ pb: 4 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                <Box>
+                    <Typography variant="h5" fontWeight="800" color="#111827">Live Score Match & Squad Sync</Typography>
+                    <Typography variant="body2" color="#6b7280">Fetch live rosters and player profiles from Cricbuzz</Typography>
+                </Box>
+                <Button variant="outlined" startIcon={<SettingsBackupRestoreIcon />} onClick={fetchMatches} disabled={loading}>
+                    Refresh Matches
+                </Button>
+            </Box>
+
+            {loading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+                    <CircularProgress />
+                </Box>
+            ) : (
+                <Box>
+                    {renderMatchGroup('Live', liveMatches, '#ef4444')}
+                    {renderMatchGroup('Upcoming', upcomingMatches, '#3b82f6')}
+                    {renderMatchGroup('Completed', completedMatches, '#22c55e')}
+                    {matches.length === 0 && (
+                        <Typography sx={{ py: 4, textAlign: 'center' }} color="textSecondary">
+                            No active matches found. Please refresh or check connection.
+                        </Typography>
+                    )}
+                </Box>
+            )}
+
+            {/* Mismatches Review Section */}
+            <Typography variant="h5" fontWeight="800" color="#111827" sx={{ mt: 5, mb: 2 }}>
+                ⚠️ Flags Awaiting Review ({reviews.length})
+            </Typography>
+            <Paper sx={{ borderRadius: '16px', overflow: 'hidden' }}>
+                <TableContainer>
+                    <Table>
+                        <TableHead sx={{ bgcolor: '#1e293b' }}>
+                            <TableRow>
+                                <TableCell sx={{ color: 'white' }}>Player</TableCell>
+                                <TableCell sx={{ color: 'white' }}>DB Details</TableCell>
+                                <TableCell sx={{ color: 'white' }}>Scraped Live Details</TableCell>
+                                <TableCell sx={{ color: 'white' }} align="right">Actions</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {reviews.length > 0 ? (
+                                reviews.map(p => (
+                                    <TableRow key={p.id} hover>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>{p.name}</TableCell>
+                                        <TableCell>
+                                            <Typography variant="caption" display="block">🎂 DOB: {p.dob || 'N/A'}</Typography>
+                                            <Typography variant="caption" display="block">📍 Place: {p.birthPlace || 'N/A'}</Typography>
+                                        </TableCell>
+                                        <TableCell sx={{ bgcolor: 'rgba(245, 158, 11, 0.05)' }}>
+                                            <Typography variant="caption" display="block" fontWeight="bold">🎂 DOB: {p.lastScrapedData?.dob || 'N/A'}</Typography>
+                                            <Typography variant="caption" display="block" fontWeight="bold">📍 Place: {p.lastScrapedData?.birthPlace || 'N/A'}</Typography>
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
+                                                <Button 
+                                                    variant="contained" 
+                                                    color="success" 
+                                                    size="small"
+                                                    onClick={() => handleResolve(p.id, 'accept_live')}
+                                                    disabled={actionLoadingId !== null}
+                                                >
+                                                    Accept Live
+                                                </Button>
+                                                <Button 
+                                                    variant="outlined" 
+                                                    color="warning" 
+                                                    size="small"
+                                                    onClick={() => handleResolve(p.id, 'keep_existing')}
+                                                    disabled={actionLoadingId !== null}
+                                                >
+                                                    Keep DB
+                                                </Button>
+                                            </Box>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={4} align="center" sx={{ py: 4 }}>
+                                        <Typography color="textSecondary">No mismatches flagged. Database is perfectly in sync.</Typography>
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Paper>
+
+            <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={() => setSnackbar({ ...snackbar, open: false })} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+                <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} variant="filled">
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
+        </Box>
+    );
+};
+
 const drawerWidth = 240;
 
 const AdminDashboard = () => {
@@ -3744,6 +4042,7 @@ const AdminDashboard = () => {
         { id: 'users', label: 'Users', icon: <PeopleIcon /> },
         { id: 'players', label: 'Players', icon: <SportsCricketIcon /> },
         { id: 'groups', label: 'Groups', icon: <GroupIcon /> },
+        { id: 'liveSync', label: 'Live Match Sync', icon: <SportsCricketIcon /> },
         { id: 'clientDashboard', label: 'Client Dashboard', icon: <DashboardIcon /> },
         { id: 'kpAstrology', label: 'KP Astrology', icon: <TimelineIcon /> },
         { id: 'myPredictions', label: 'My Predictions', icon: <EmojiEventsIcon /> },
@@ -3878,6 +4177,7 @@ const AdminDashboard = () => {
             case 'users': return <UsersManager />;
             case 'players': return <PlayersManager />;
             case 'groups': return <GroupsManager />;
+            case 'liveSync': return <LiveSyncManager />;
             case 'clientDashboard': return <UserDashboard hideHeader={true} />;
             case 'kpAstrology': return <KPView />;
             case 'myPredictions': return <MyPredictions />;
