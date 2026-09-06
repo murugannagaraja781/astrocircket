@@ -1,35 +1,5 @@
 import React from 'react';
-import { tamilSigns, signLords, signLordsTamil, nakshatraTamilMap, planetFullTamilMap, getSignId } from './RasiChart';
-
-// Helper to find Star Lord if missing from API
-const getNakshatraLordHelper = (nakName) => {
-    if (!nakName) return '-';
-    const lordMap = {
-        'Ashwini': 'Ketu', 'Bharani': 'Venus', 'Krittika': 'Sun',
-        'Rohini': 'Moon', 'Mrigashirsha': 'Mars', 'Ardra': 'Rahu',
-        'Punarvasu': 'Jupiter', 'Pushya': 'Saturn', 'Ashlesha': 'Mercury',
-        'Magha': 'Ketu', 'Purva Phalguni': 'Venus', 'Uttara Phalguni': 'Sun',
-        'Hasta': 'Moon', 'Chitra': 'Mars', 'Swati': 'Rahu',
-        'Vishakha': 'Jupiter', 'Anuradha': 'Saturn', 'Jyeshtha': 'Mercury',
-        'Mula': 'Ketu', 'Purva Ashadha': 'Venus', 'Uttara Ashadha': 'Sun',
-        'Shravana': 'Moon', 'Dhanishta': 'Mars', 'Shatabhisha': 'Rahu',
-        'Purva Bhadrapada': 'Jupiter', 'Uttara Bhadrapada': 'Saturn', 'Revati': 'Mercury',
-        // Tamil spellings
-        'அசுவினி': 'Ketu', 'பரணி': 'Venus', 'கார்த்திகை': 'Sun',
-        'ரோகிணி': 'Moon', 'மிருகசீரிடம்': 'Mars', 'திருவாதிரை': 'Rahu',
-        'புனர்பூசம்': 'Jupiter', 'பூசம்': 'Saturn', 'ஆயில்யம்': 'Mercury',
-        'மகம்': 'Ketu', 'பூரம்': 'Venus', 'உத்திரம்': 'Sun',
-        'அஸ்தம்': 'Moon', 'சித்திரை': 'Mars', 'சுவாதி': 'Rahu',
-        'விசாகம்': 'Jupiter', 'அனுஷம்': 'Saturn', 'கேட்டை': 'Mercury',
-        'மூலம்': 'Ketu', 'பூராடம்': 'Venus', 'உத்திராடம்': 'Sun',
-        'திருவோணம்': 'Moon', 'அவிட்டம்': 'Mars', 'சதயம்': 'Rahu',
-        'பூரட்டாதி': 'Jupiter', 'உத்திரட்டாதி': 'Saturn', 'ரேவதி': 'Mercury'
-    };
-    for (const [key, val] of Object.entries(lordMap)) {
-        if (nakName.includes(key)) return val;
-    }
-    return '-';
-};
+import { tamilSigns, signLords, signLordsTamil, nakshatraTamilMap, planetFullTamilMap, getSignId, getNakshatraLordHelper } from './RasiChart';
 
 // Translate Lord or Planet name to Tamil
 const translateLordToTamil = (lord) => {
