@@ -17,7 +17,9 @@ const PlayerSchema = new mongoose.Schema({
  manualStatus: { type: String, default: '' },
  needsReview: { type: Boolean, default: false },
  lastScrapedData: { type: Object, default: null },
- manualOverride: { type: Boolean, default: false }
+ manualOverride: { type: Boolean, default: false },
+ isTobLocked: { type: Boolean, default: false },
+ reviewedAt: { type: Date, default: null }
 });
 
 // Auto-generate unique custom id if missing before saving

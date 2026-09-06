@@ -86,6 +86,7 @@ const fetchPlayerDetails = async (player) => {
         const $ = cheerio.load(response.data);
         let dob = null;
         let birth_place = null;
+        let role = player.role || null;
 
         $('div').each((_, el) => {
             const className = $(el).attr('class') || '';
@@ -96,21 +97,22 @@ const fetchPlayerDetails = async (player) => {
                     const val = clean($(cols[1]).text());
                     if (label === 'born') dob = val;
                     if (label === 'birth place') birth_place = val;
+                    if (label === 'role') role = val;
                 }
             }
         });
 
         playerCache.set(player.profile_url, {
             name: player.name,
-            role: player.role,
+            role: role,
             date_of_birth: dob,
             birth_place: birth_place,
             lastUpdated: Date.now()
         });
 
-        return { date_of_birth: dob, birth_place: birth_place };
+        return { role: role, date_of_birth: dob, birth_place: birth_place };
     } catch (err) {
-        return { date_of_birth: null, birth_place: null };
+        return { role: player.role || null, date_of_birth: null, birth_place: null };
     }
 };
 

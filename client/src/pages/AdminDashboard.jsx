@@ -1588,11 +1588,20 @@ const PlayersManager = () => {
     const handleCloseSnackbar = () => setSnackbar({ ...snackbar, open: false });
     const showSnackbar = (message, severity = 'success') => setSnackbar({ open: true, message, severity });
 
+    // Role Filter State
+    const [filterRole, setFilterRole] = useState('ALL_ROLES');
+
     const fetchPlayers = async () => {
         setLoading(true);
         try {
             const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/players`, {
-                params: { page: page + 1, limit: rowsPerPage, search: searchTerm, place: filterPlace },
+                params: { 
+                    page: page + 1, 
+                    limit: rowsPerPage, 
+                    search: searchTerm, 
+                    place: filterPlace,
+                    role: filterRole !== 'ALL_ROLES' ? filterRole : undefined
+                },
                 headers: { 'x-auth-token': token }
             });
             setPlayers(res.data.players);
@@ -1613,13 +1622,19 @@ const PlayersManager = () => {
         } catch (err) { console.error(err); }
     };
 
-    useEffect(() => { fetchPlayers(); }, [page, rowsPerPage, filterPlace]);
+    useEffect(() => { fetchPlayers(); }, [page, rowsPerPage, filterPlace, filterRole]);
 
     const handleSearch = () => { setPage(0); fetchPlayers(); };
 
     const handleAddClick = () => {
         setSelectedPlayer(null);
-        setPlayerForm({});
+        setPlayerForm({
+            role: 'BAT',
+            gender: 'Male',
+            birthTime: '12:00',
+            isTobLocked: false,
+            manualOverride: true
+        });
         setProfilePicFile(null);
         setPreviewChart(null); // Reset preview
         setOpenEdit(true);
@@ -1632,17 +1647,12 @@ const PlayersManager = () => {
             birthTime: player.birthTime || '',
             birthPlace: player.birthPlace || '', timezone: player.timezone || '', id: player.id,
             latitude: player.latitude, longitude: player.longitude,
-            role: player.role || 'BAT', gender: player.gender || '', league: player.league || '', manualStatus: player.manualStatus || ''
+            role: player.role || 'BAT', gender: player.gender || '', league: player.league || '', manualStatus: player.manualStatus || '',
+            isTobLocked: !!(player.isTobLocked || (player.birthTime && player.birthTime !== '12:00' && player.birthTime !== '09:00')),
+            manualOverride: !!player.manualOverride
         });
         setOpenEdit(true);
-        setPreviewChart(player.birthChart?.data || player.birthChart); // Load existing chart logic if editing? Maybe easier to restart.
-        // Actually user wants to CHECK. If editing, they might change details.
-        // Let's reset preview on Edit too, ensuring they re-generate if they change params. Or show existing if valid.
-        // For simplicity: If editing, show existing chart as preview initially?
-        // User workflow: "change Gentrate rasi chart call rasicahrt api then below rasikadm show".
-        // If they change details, they MUST re-generate.
-        // If I populate previewChart with existing data, handleGeneratePreview must update it.
-        // Let's set previewChart to null to force Re-generation if they want to check.
+        setPreviewChart(player.birthChart?.data || player.birthChart);
         setPreviewChart(null);
     };
 
@@ -1717,7 +1727,7 @@ const PlayersManager = () => {
                 if (profilePicFile) {
                     // Use FormData if file exists
                     const formData = new FormData();
-                    ['name', 'birthPlace', 'dob', 'birthTime', 'latitude', 'longitude', 'timezone', 'manualTimezone', 'role', 'manualStatus'].forEach(key => {
+                    ['name', 'birthPlace', 'dob', 'birthTime', 'latitude', 'longitude', 'timezone', 'manualTimezone', 'role', 'gender', 'league', 'manualStatus', 'isTobLocked', 'manualOverride'].forEach(key => {
                         if (playerForm[key] !== undefined && playerForm[key] !== null) {
                             formData.append(key, playerForm[key]);
                         }
@@ -1897,9 +1907,24 @@ const PlayersManager = () => {
                 <Typography variant="h5">Player Management</Typography>
 
                 {/* Search & Actions */}
-                <Box sx={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 1, width: isMobile ? '100%' : 'auto' }}>
+                <Box sx={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 1, width: isMobile ? '100%' : 'auto', flexWrap: 'wrap' }}>
                     <TextField size="small" label="Search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} fullWidth={isMobile} />
                     <TextField size="small" label="Place" value={filterPlace} onChange={(e) => setFilterPlace(e.target.value)} fullWidth={isMobile} />
+                    <TextField 
+                        select 
+                        size="small" 
+                        label="Role" 
+                        value={filterRole} 
+                        onChange={(e) => { setFilterRole(e.target.value); setPage(0); }} 
+                        fullWidth={isMobile}
+                        sx={{ minWidth: 140 }}
+                        SelectProps={{ native: true }}
+                    >
+                        <option value="ALL_ROLES">All Roles</option>
+                        <option value="BAT">🏏 Batsman</option>
+                        <option value="BOWL">🥎 Bowler</option>
+                        <option value="ALL">⚔️ All-Rounder</option>
+                    </TextField>
                     <Button variant="contained" onClick={handleSearch} fullWidth={isMobile}>Search</Button>
                 </Box>
             </Box>
@@ -1941,8 +1966,39 @@ const PlayersManager = () => {
                                             sx={{ width: 40, height: 40, border: '2px solid rgba(255,255,255,0.2)' }}
                                         />
                                         <Box>
-                                            <Typography variant="body2" fontWeight="bold" color="#08101cff">{p.name}</Typography>
-                                            {isMobile && <Typography variant="caption" color="textSecondary">{p.birthPlace}</Typography>}
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8, flexWrap: 'wrap' }}>
+                                                <Typography variant="body2" fontWeight="bold" color="#08101cff">{p.name}</Typography>
+                                                <Chip 
+                                                    label={p.role || 'BAT'} 
+                                                    size="small" 
+                                                    sx={{ 
+                                                        height: 18, fontSize: '0.62rem', fontWeight: 700,
+                                                        bgcolor: p.role === 'BAT' ? '#e0f2fe' : p.role === 'BOWL' ? '#fce7f3' : '#fef3c7',
+                                                        color: p.role === 'BAT' ? '#0369a1' : p.role === 'BOWL' ? '#be185d' : '#b45309'
+                                                    }} 
+                                                />
+                                                {p.manualOverride && (
+                                                    <Tooltip title="Reviewed & Locked in DB (Protected from Live Scrape overwrite)">
+                                                        <Chip 
+                                                            label="🛡️ DB Locked" 
+                                                            size="small" 
+                                                            sx={{ height: 18, fontSize: '0.62rem', fontWeight: 700, bgcolor: '#f3e8ff', color: '#7e22ce' }} 
+                                                        />
+                                                    </Tooltip>
+                                                )}
+                                                {(p.isTobLocked || (p.birthTime && p.birthTime !== '12:00' && p.birthTime !== '09:00')) && (
+                                                    <Tooltip title={`Custom TOB: ${p.birthTime || '12:00'} (Locked & Protected)`}>
+                                                        <Chip 
+                                                            label={`🔒 ${p.birthTime || '12:00'}`} 
+                                                            size="small" 
+                                                            sx={{ height: 18, fontSize: '0.62rem', fontWeight: 700, bgcolor: '#e0f2fe', color: '#0369a1' }} 
+                                                        />
+                                                    </Tooltip>
+                                                )}
+                                            </Box>
+                                            <Typography variant="caption" color="textSecondary">
+                                                {p.dob || 'No DOB'} {p.birthTime ? `• 🕒 ${p.birthTime}` : ''} {isMobile && p.birthPlace ? `• 📍 ${p.birthPlace}` : ''}
+                                            </Typography>
                                         </Box>
                                     </Box>
                                 </TableCell>
@@ -2199,11 +2255,37 @@ const PlayersManager = () => {
                             label="Birth Time"
                             type="time"
                             value={playerForm.birthTime || ''}
-                            onChange={(e) => setPlayerForm({ ...playerForm, birthTime: e.target.value })}
+                            onChange={(e) => setPlayerForm({ ...playerForm, birthTime: e.target.value, isTobLocked: true })}
                             fullWidth
                             size="small"
                             InputLabelProps={{ shrink: true }}
                         />
+
+                        {/* Lock & Protection Controls */}
+                        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', p: 1.5, bgcolor: '#f8fafc', borderRadius: '10px', border: '1px solid rgba(0,0,0,0.06)' }}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={!!playerForm.isTobLocked}
+                                        onChange={(e) => setPlayerForm({ ...playerForm, isTobLocked: e.target.checked })}
+                                        size="small"
+                                        color="primary"
+                                    />
+                                }
+                                label={<Typography variant="body2" fontWeight="600" color="#0369a1">🔒 Lock Custom TOB</Typography>}
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={!!playerForm.manualOverride}
+                                        onChange={(e) => setPlayerForm({ ...playerForm, manualOverride: e.target.checked })}
+                                        size="small"
+                                        color="secondary"
+                                    />
+                                }
+                                label={<Typography variant="body2" fontWeight="600" color="#7e22ce">🛡️ Manual DB Locked</Typography>}
+                            />
+                        </Box>
 
                         {/* ROLE SELECTION */}
                         <Box sx={{ mt: 1 }}>
@@ -2475,7 +2557,19 @@ const PlayersManager = () => {
                 fullScreen={isMobile}
             >
                 <DialogTitle>
-                    {selectedPlayerForChart?.name}'s Horoscope ({selectedPlayerForChart?.dob} {selectedPlayerForChart?.birthTime ? `| ${selectedPlayerForChart.birthTime}` : ''})
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1 }}>
+                        <Typography variant="h6" fontWeight="bold" sx={{ color: '#1a202c' }}>
+                            {selectedPlayerForChart?.name}'s Horoscope ({selectedPlayerForChart?.dob} {selectedPlayerForChart?.birthTime ? `| 🕒 ${selectedPlayerForChart.birthTime}` : ''})
+                        </Typography>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                            {selectedPlayerForChart?.manualOverride && (
+                                <Chip label="🛡️ DB Locked" size="small" sx={{ bgcolor: '#f3e8ff', color: '#7e22ce', fontWeight: 700, fontSize: '0.72rem' }} />
+                            )}
+                            {(selectedPlayerForChart?.isTobLocked || (selectedPlayerForChart?.birthTime && selectedPlayerForChart?.birthTime !== '12:00' && selectedPlayerForChart?.birthTime !== '09:00')) && (
+                                <Chip label={`🔒 TOB Locked: ${selectedPlayerForChart?.birthTime || '12:00'}`} size="small" sx={{ bgcolor: '#e0f2fe', color: '#0369a1', fontWeight: 700, fontSize: '0.72rem' }} />
+                            )}
+                        </Box>
+                    </Box>
                 </DialogTitle>
                 <DialogContent>
                     {selectedPlayerForChart && (
@@ -3236,7 +3330,7 @@ const GroupsManager = () => {
                                     {selectedGroup.players.map((player) => (
                                         <TableRow key={player._id} hover>
                                             <TableCell>
-                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8, flexWrap: 'wrap' }}>
                                                     <Typography variant="subtitle2" fontWeight="600">{player.name}</Typography>
                                                     <Chip 
                                                         label={player.role || 'BAT'} 
@@ -3247,6 +3341,11 @@ const GroupsManager = () => {
                                                             color: player.role === 'BAT' ? '#0369a1' : player.role === 'BOWL' ? '#be185d' : '#b45309'
                                                         }} 
                                                     />
+                                                    {player.manualOverride && (
+                                                        <Tooltip title="Reviewed / Locked in DB">
+                                                            <Chip label="🛡️ Locked" size="small" sx={{ height: 18, fontSize: '0.62rem', fontWeight: 700, bgcolor: '#f3e8ff', color: '#7e22ce' }} />
+                                                        </Tooltip>
+                                                    )}
                                                 </Box>
                                             </TableCell>
                                             <TableCell>
@@ -3260,9 +3359,16 @@ const GroupsManager = () => {
                                             </TableCell>
                                             <TableCell>
                                                 {player.birthTime ? (
-                                                    <Typography variant="body2" sx={{ fontFamily: 'monospace', fontWeight: 600, color: '#4b5563' }}>
-                                                        {player.birthTime}
-                                                    </Typography>
+                                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                                        <Typography variant="body2" sx={{ fontFamily: 'monospace', fontWeight: 600, color: '#4b5563' }}>
+                                                            {player.birthTime}
+                                                        </Typography>
+                                                        {(player.isTobLocked || (player.birthTime !== '12:00' && player.birthTime !== '09:00')) && (
+                                                            <Tooltip title="Custom TOB Locked">
+                                                                <Typography variant="caption" sx={{ color: '#0369a1', cursor: 'help' }}>🔒</Typography>
+                                                            </Tooltip>
+                                                        )}
+                                                    </Box>
                                                 ) : (
                                                     <Typography variant="caption" color="text.secondary">-</Typography>
                                                 )}
@@ -3928,13 +4034,31 @@ const LiveSyncManager = () => {
                             {reviews.length > 0 ? (
                                 reviews.map(p => (
                                     <TableRow key={p.id} hover>
-                                        <TableCell sx={{ fontWeight: 'bold' }}>{p.name}</TableCell>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8, flexWrap: 'wrap' }}>
+                                                <span>{p.name}</span>
+                                                {p.manualOverride && (
+                                                    <Tooltip title="Manually Reviewed & Locked in DB">
+                                                        <Chip label="🛡️ DB Locked" size="small" sx={{ height: 18, fontSize: '0.62rem', fontWeight: 700, bgcolor: '#f3e8ff', color: '#7e22ce' }} />
+                                                    </Tooltip>
+                                                )}
+                                                {(p.isTobLocked || (p.birthTime && p.birthTime !== '12:00' && p.birthTime !== '09:00')) && (
+                                                    <Tooltip title={`Custom TOB Locked: ${p.birthTime || '12:00'} (Will not be overwritten)`}>
+                                                        <Chip label={`🔒 TOB: ${p.birthTime || '12:00'}`} size="small" sx={{ height: 18, fontSize: '0.62rem', fontWeight: 700, bgcolor: '#e0f2fe', color: '#0369a1' }} />
+                                                    </Tooltip>
+                                                )}
+                                            </Box>
+                                        </TableCell>
                                         <TableCell>
                                             <Typography variant="caption" display="block">🎂 DOB: {p.dob || 'N/A'}</Typography>
+                                            <Typography variant="caption" display="block" sx={{ fontWeight: (p.isTobLocked || (p.birthTime && p.birthTime !== '12:00')) ? 'bold' : 'normal', color: (p.isTobLocked || (p.birthTime && p.birthTime !== '12:00')) ? '#0369a1' : 'inherit' }}>
+                                                🕒 Time: {p.birthTime || '12:00'} {(p.isTobLocked || (p.birthTime && p.birthTime !== '12:00' && p.birthTime !== '09:00')) ? '🔒 (Locked)' : ''}
+                                            </Typography>
                                             <Typography variant="caption" display="block">📍 Place: {p.birthPlace || 'N/A'}</Typography>
                                         </TableCell>
                                         <TableCell sx={{ bgcolor: 'rgba(245, 158, 11, 0.05)' }}>
                                             <Typography variant="caption" display="block" fontWeight="bold">🎂 DOB: {p.lastScrapedData?.dob || 'N/A'}</Typography>
+                                            <Typography variant="caption" display="block" color="text.secondary">🕒 Time: (Not in Cricbuzz)</Typography>
                                             <Typography variant="caption" display="block" fontWeight="bold">📍 Place: {p.lastScrapedData?.birthPlace || 'N/A'}</Typography>
                                         </TableCell>
                                         <TableCell align="right">

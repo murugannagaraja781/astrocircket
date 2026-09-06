@@ -39,12 +39,23 @@ const parseDobToIso = (dobStr) => {
         return `${yyyy}-${String(p2).padStart(2, '0')}-${String(p1).padStart(2, '0')}`;
     }
 
+    const monthMap = { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12 };
+
+    // Format: Month Day, Year (e.g., "November 10, 2003 (22 years)", "Nov 10 2003")
     const m = str.match(/([a-zA-Z]+)\s+(\d{1,2}),?\s+(\d{4})/);
     if (m) {
-        const monthMap = { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12 };
         const mm = monthMap[m[1].toLowerCase().slice(0, 3)] || 1;
         const dd = parseInt(m[2], 10);
         const yyyy = parseInt(m[3], 10);
+        return `${yyyy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}`;
+    }
+
+    // Format: Day Month Year (e.g., "10 November 2003", "10 Nov 2003")
+    const dmy = str.match(/(\d{1,2})\s+([a-zA-Z]+),?\s+(\d{4})/);
+    if (dmy) {
+        const dd = parseInt(dmy[1], 10);
+        const mm = monthMap[dmy[2].toLowerCase().slice(0, 3)] || 1;
+        const yyyy = parseInt(dmy[3], 10);
         return `${yyyy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}`;
     }
 
@@ -53,6 +64,41 @@ const parseDobToIso = (dobStr) => {
         return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     }
     return '';
+};
+
+// Check if two DOBs represent the exact same date
+const isDobMatching = (dob1, dob2) => {
+    if (!dob1 || !dob2) return true;
+    const iso1 = parseDobToIso(dob1);
+    const iso2 = parseDobToIso(dob2);
+    if (!iso1 || !iso2) return true;
+    return iso1 === iso2;
+};
+
+// Check if two birth places match or are compatible
+const isPlaceMatching = (p1, p2) => {
+    const s1 = (p1 || '').trim().toLowerCase();
+    const s2 = (p2 || '').trim().toLowerCase();
+    if (!s1 || !s2 || s1 === 'n/a' || s2 === 'n/a') return true;
+    if (s1 === s2) return true;
+    if (s1.includes(s2) || s2.includes(s1)) return true;
+    return false;
+};
+
+// Helper to normalize cricket roles into 'BAT', 'BOWL', or 'ALL'
+const normalizeRole = (roleStr) => {
+    if (!roleStr) return 'BAT';
+    const r = String(roleStr).toUpperCase().trim();
+    if (r.includes('ALLROUND') || r.includes('ALL-ROUND') || r.includes('ALL ROUND') || r === 'ALL') {
+        return 'ALL';
+    }
+    if (r.includes('BOWL')) {
+        return 'BOWL';
+    }
+    if (r.includes('BAT') || r.includes('WK') || r.includes('WICKET') || r.includes('KEEPER')) {
+        return 'BAT';
+    }
+    return 'BAT';
 };
 
 // Helper to calculate birth chart locally using vedic-astrology-api
@@ -334,6 +380,14 @@ const getPlayers = async (req, res) => {
             }
         }
 
+        if (req.query.role && req.query.role !== 'ALL_ROLES') {
+            if (query.$and) {
+                query.$and.push({ role: req.query.role });
+            } else {
+                query.role = req.query.role;
+            }
+        }
+
         const totalPlayers = await Player.countDocuments(query);
         const totalPages = Math.ceil(totalPlayers / limit);
 
@@ -420,6 +474,15 @@ const updatePlayer = async (req, res) => {
         if (updates.dob) {
             updates.dob = parseDobToIso(updates.dob) || updates.dob;
         }
+
+        // Lock TOB if birthTime is provided and non-default, or explicitly set
+        if (updates.birthTime && updates.birthTime !== '12:00' && updates.birthTime !== '09:00') {
+            updates.isTobLocked = true;
+        }
+        if (updates.manualOverride === undefined) {
+            updates.manualOverride = true;
+        }
+        updates.reviewedAt = new Date();
 
         // Check if chart-affecting fields changed to re-fetch chart
         const chartAffecting = ['dob', 'birthPlace', 'latitude', 'longitude', 'timezone', 'birthTime'];
@@ -527,6 +590,12 @@ const addPlayer = async (req, res) => {
             playerData.birthChart = chartData;
         }
 
+        if (playerData.birthTime && playerData.birthTime !== '12:00' && playerData.birthTime !== '09:00') {
+            playerData.isTobLocked = true;
+        }
+        playerData.manualOverride = true;
+        playerData.reviewedAt = new Date();
+
         const newPlayer = new Player(playerData);
         await newPlayer.save();
 
@@ -623,12 +692,12 @@ const syncLiveMatchSquad = async (req, res) => {
             const list = squadData.teams[teamKey]?.[squadKey] || [];
             list.forEach(p => {
                 // Parse ID from profile URL (e.g. /profiles/10631/adam-zampa -> 10631)
-                const match = p.profile_url.match(/\/profiles\/(\d+)\//);
+                const match = (p.profile_url || '').match(/\/profiles\/(\d+)\//);
                 const id = match ? match[1] : p.name.replace(/\s+/g, '-').toLowerCase();
                 allLivePlayers.push({
                     id,
                     name: p.name,
-                    role: p.role?.toUpperCase()?.includes('WK-') ? 'BAT' : (p.role?.toUpperCase()?.includes('BAT') ? 'BAT' : (p.role?.toUpperCase()?.includes('BOWL') ? 'BOWL' : 'ALL')),
+                    role: normalizeRole(p.role),
                     dob: p.date_of_birth || '',
                     birthPlace: p.birth_place || '',
                     profile: p.profile_url || ''
@@ -650,12 +719,16 @@ const syncLiveMatchSquad = async (req, res) => {
             // Check if player already exists in Database
             const existing = await Player.findOne({ id: p.id });
 
+            const isoScrapedDob = parseDobToIso(p.dob);
+            const cleanScrapedPlace = (p.birthPlace || '').trim();
+
             if (!existing) {
+                const finalDob = isoScrapedDob || p.dob;
                 // Fetch chart data locally
                 const birthChartData = await fetchCharData({
-                    dob: p.dob,
+                    dob: finalDob,
                     birthTime: '12:00', // default birth time
-                    birthPlace: p.birthPlace,
+                    birthPlace: cleanScrapedPlace,
                     latitude: 13.0827,
                     longitude: 80.2707,
                     timezone: 5.5
@@ -664,10 +737,10 @@ const syncLiveMatchSquad = async (req, res) => {
                 const newPlayer = new Player({
                     id: p.id,
                     name: p.name,
-                    dob: p.dob,
+                    dob: finalDob,
                     birthTime: '12:00',
-                    birthPlace: p.birthPlace,
-                    role: p.role,
+                    birthPlace: cleanScrapedPlace,
+                    role: p.role || 'BAT',
                     profile: p.profile,
                     birthChart: birthChartData,
                     needsReview: false,
@@ -682,36 +755,48 @@ const syncLiveMatchSquad = async (req, res) => {
                     continue;
                 }
 
-                // Check for data mismatch in date of birth or birth place
-                const normalDob = p.dob.trim();
-                const normalPlace = p.birthPlace.trim();
-
-                const hasDobMismatch = normalDob && existing.dob && existing.dob.trim() !== normalDob;
-                const hasPlaceMismatch = normalPlace && existing.birthPlace && existing.birthPlace.trim() !== normalPlace;
+                const isoExistingDob = parseDobToIso(existing.dob);
+                // Flag mismatch only if both have values and they truly differ
+                const hasDobMismatch = isoScrapedDob && isoExistingDob && !isDobMatching(existing.dob, p.dob);
+                const hasPlaceMismatch = !isPlaceMatching(existing.birthPlace, cleanScrapedPlace);
 
                 if (hasDobMismatch || hasPlaceMismatch) {
                     // Mismatch found - Flag for review instead of auto overwriting
                     existing.needsReview = true;
                     existing.lastScrapedData = {
-                        dob: normalDob,
-                        birthPlace: normalPlace
+                        dob: p.dob,
+                        birthPlace: cleanScrapedPlace
                     };
                     await existing.save();
                     flaggedCount++;
                 } else {
-                    // No mismatch, but if fields were empty, we can auto-fill and re-calculate chart
+                    // No real mismatch! Auto-resolve false review flag if present
                     let shouldUpdateChart = false;
-                    if (!existing.dob && normalDob) {
-                        existing.dob = normalDob;
+                    let shouldSave = false;
+
+                    if (existing.needsReview) {
+                        existing.needsReview = false;
+                        existing.lastScrapedData = null;
+                        shouldSave = true;
+                    }
+                    if (p.role && existing.role !== p.role) {
+                        existing.role = p.role;
+                        shouldSave = true;
+                    }
+                    if (!isoExistingDob && isoScrapedDob) {
+                        existing.dob = isoScrapedDob;
                         shouldUpdateChart = true;
                     }
-                    if (!existing.birthPlace && normalPlace) {
-                        existing.birthPlace = normalPlace;
+                    if ((!existing.birthPlace || existing.birthPlace === 'N/A') && cleanScrapedPlace && cleanScrapedPlace !== 'N/A') {
+                        existing.birthPlace = cleanScrapedPlace;
                         shouldUpdateChart = true;
                     }
 
                     if (shouldUpdateChart) {
                         existing.birthChart = await fetchCharData(existing);
+                        await existing.save();
+                        updatedCount++;
+                    } else if (shouldSave) {
                         await existing.save();
                         updatedCount++;
                     }
@@ -824,11 +909,34 @@ const syncLiveMatchSquad = async (req, res) => {
     }
 };
 
-// Fetch all players requiring manual reviews
+// Fetch all players requiring manual reviews (auto-resolves false alarms where normalized DOB/place match)
 const getReviewRequiredPlayers = async (req, res) => {
     try {
         const players = await Player.find({ needsReview: true });
-        res.json({ status: 'success', players });
+        const validReviews = [];
+
+        for (const player of players) {
+            if (player.lastScrapedData) {
+                const dobMatch = isDobMatching(player.dob, player.lastScrapedData.dob);
+                const placeMatch = isPlaceMatching(player.birthPlace, player.lastScrapedData.birthPlace);
+
+                if (dobMatch && placeMatch) {
+                    // False positive! Auto-resolve silently
+                    const normScrapedDob = parseDobToIso(player.lastScrapedData.dob);
+                    if (!player.dob && normScrapedDob) player.dob = normScrapedDob;
+                    if ((!player.birthPlace || player.birthPlace === 'N/A') && player.lastScrapedData.birthPlace && player.lastScrapedData.birthPlace !== 'N/A') {
+                        player.birthPlace = player.lastScrapedData.birthPlace;
+                    }
+                    player.needsReview = false;
+                    player.lastScrapedData = null;
+                    await player.save();
+                    continue;
+                }
+            }
+            validReviews.push(player);
+        }
+
+        res.json({ status: 'success', players: validReviews });
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error fetching review list');
@@ -847,9 +955,12 @@ const resolvePlayerReview = async (req, res) => {
         }
 
         if (action === 'accept_live' && player.lastScrapedData) {
-            // Overwrite database with scraped live values
-            player.dob = player.lastScrapedData.dob || player.dob;
-            player.birthPlace = player.lastScrapedData.birthPlace || player.birthPlace;
+            // Overwrite database with scraped live values (normalized DOB)
+            const normalizedDob = parseDobToIso(player.lastScrapedData.dob);
+            player.dob = normalizedDob || player.lastScrapedData.dob || player.dob;
+            if (player.lastScrapedData.birthPlace && player.lastScrapedData.birthPlace !== 'N/A') {
+                player.birthPlace = player.lastScrapedData.birthPlace;
+            }
             player.birthChart = await fetchCharData(player);
             player.needsReview = false;
             player.lastScrapedData = null;
@@ -859,9 +970,11 @@ const resolvePlayerReview = async (req, res) => {
             // Lock current database settings from future automatically overwritten/flagged warnings
             player.needsReview = false;
             player.manualOverride = true;
+            player.isTobLocked = true;
+            player.reviewedAt = new Date();
             player.lastScrapedData = null;
             await player.save();
-            res.json({ status: 'success', msg: 'Current details kept; manual override flag activated', player });
+            res.json({ status: 'success', msg: 'Current details kept; manual override flag & TOB lock activated', player });
         } else {
             res.status(400).json({ msg: 'Invalid action. Must be accept_live or keep_existing' });
         }
