@@ -2283,7 +2283,7 @@ const MatchWizardDialog = (props) => {
                         <Tab value="WAVE" label="📈 Trading Waveform Chart" />
                     </Tabs>
 
-                    {/* Quick Toss & Chart Visibility Controls */}
+                    {/* Quick Toss Control */}
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Button
                             size="small"
@@ -2303,41 +2303,32 @@ const MatchWizardDialog = (props) => {
                         >
                             Toss: <strong>{batFirstTeam === 'teamA' ? (groups.find(g => g._id === teamA)?.name || 'Team A') : (groups.find(g => g._id === teamB)?.name || 'Team B')} Bat 1st</strong>
                         </Button>
-
-                        {activeInningsTab !== 'WAVE' && timelineData && (
-                            <Button
-                                size="small"
-                                variant="text"
-                                onClick={() => setShowMomentumWave(!showMomentumWave)}
-                                startIcon={<TrendingUpIcon sx={{ color: showMomentumWave ? '#10B981' : '#94A3B8' }} />}
-                                sx={{
-                                    fontSize: '0.72rem',
-                                    color: showMomentumWave ? '#059669' : '#6B7280',
-                                    textTransform: 'none',
-                                    fontWeight: 'bold'
-                                }}
-                            >
-                                {showMomentumWave ? 'Hide Wave' : 'Show Wave'}
-                            </Button>
-                        )}
                     </Box>
                 </Box>
             )}
 
-            {/* DYNAMIC MOMENTUM WAVEFORM CHART (Standalone or Accordion view) */}
-            {timelineData && (activeInningsTab === 'WAVE' || (showMomentumWave && activeInningsTab !== 'WAVE' && teamA && teamB)) && (
-                <Box sx={{ p: 1.5, pb: activeInningsTab === 'WAVE' ? 2 : 0, overflow: 'auto', maxHeight: activeInningsTab === 'WAVE' ? 'calc(100vh - 160px)' : '380px' }}>
-                    <MatchMomentumChart
-                        timelineData={timelineData}
-                        teamAName={groups.find(g => g._id === teamA)?.name || 'Team A'}
-                        teamBName={groups.find(g => g._id === teamB)?.name || 'Team B'}
-                        onTossToggle={handleTossToggle}
-                        batFirstTeam={batFirstTeam}
-                    />
+            {/* DYNAMIC MOMENTUM WAVEFORM CHART (Dedicated Tab View) */}
+            {activeInningsTab === 'WAVE' && (
+                <Box sx={{ p: 2, flexGrow: 1, overflow: 'auto', maxHeight: 'calc(100vh - 160px)' }}>
+                    {timelineData && teamA && teamB ? (
+                        <MatchMomentumChart
+                            timelineData={timelineData}
+                            teamAName={groups.find(g => g._id === teamA)?.name || 'Team A'}
+                            teamBName={groups.find(g => g._id === teamB)?.name || 'Team B'}
+                            onTossToggle={handleTossToggle}
+                            batFirstTeam={batFirstTeam}
+                        />
+                    ) : (
+                        <Paper sx={{ p: 6, textAlign: 'center', borderRadius: '16px', bgcolor: 'rgba(0,0,0,0.02)' }}>
+                            <Typography variant="h6" color="text.secondary">
+                                Please select both teams above to view the Trading-Style Momentum Waveform Chart.
+                            </Typography>
+                        </Paper>
+                    )}
                 </Box>
             )}
 
-            {/* SIDE BY SIDE PLAYER TABLES - Only show when both teams selected and not in standalone WAVE view */}
+            {/* SIDE BY SIDE PLAYER TABLES - Full height on Complete Match & Innings Tabs */}
             {activeInningsTab !== 'WAVE' && (
                 <Box sx={{
                     flexGrow: 1,
@@ -2345,7 +2336,7 @@ const MatchWizardDialog = (props) => {
                     gap: 1,
                     p: 1,
                     overflow: 'hidden',
-                    height: showMomentumWave && timelineData ? 'calc(100vh - 480px)' : 'calc(100vh - 170px)'
+                    height: 'calc(100vh - 170px)'
                 }}>
                     {teamA && teamB ? (
                         <>
