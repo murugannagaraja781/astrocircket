@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { runPrediction } from '../../utils/predictionAdapter';
+import { generateMatchTimelineData } from '../../utils/timelineEngine';
 
 const predictionSlice = createSlice({
     name: 'predictions',
@@ -7,16 +8,32 @@ const predictionSlice = createSlice({
         matchChart: null,
         playerPredictions: {}, // Map of playerId -> { bat: result, bowl: result }
         teamB_Ids: [], // Store team B IDs for consistent predictions
+        batFirstTeam: 'teamA', // 'teamA' or 'teamB'
+        timelineData: null, // 4-hour dynamic momentum wave & innings breakdown
+        matchResults: null,
         loading: false,
     },
     reducers: {
         setMatchChart: (state, action) => {
             state.matchChart = action.payload;
         },
+        setBatFirstTeam: (state, action) => {
+            state.batFirstTeam = action.payload;
+        },
         calculatePredictions: (state, action) => {
-            const { players, matchChart, teamB_Ids = [] } = action.payload;
+            const {
+                players = [],
+                matchChart,
+                teamB_Ids = [],
+                teamAPlayers = [],
+                teamBPlayers = [],
+                batFirstTeam = state.batFirstTeam || 'teamA',
+                matchStartTime = '19:30'
+            } = action.payload;
+
             if (!matchChart) return;
 
+            state.batFirstTeam = batFirstTeam;
             const predictions = {};
             let scoreA = 0, scoreB = 0, countA = 0, countB = 0;
             let batA = 0, bowlA = 0, batB = 0, bowlB = 0;
@@ -28,7 +45,6 @@ const predictionSlice = createSlice({
                 if (!playerChart) return;
 
                 let mChartToUse = mChartOriginal;
-                // Normalize ID: UserDashboard uses p.id, so we must use it here for mapping consistency
                 const pid = player.id || player._id;
 
                 // Team B Inning Swap Logic
@@ -48,7 +64,6 @@ const predictionSlice = createSlice({
 
                 predictions[pid] = { bat, bowl };
 
-                // Aggregate Logic: Only count players who are actually in Team A or Team B list
                 if (bat && bowl) {
                     const contrib = Math.max(bat.score, bowl.score);
                     if (!isTeamB) {
@@ -59,7 +74,20 @@ const predictionSlice = createSlice({
                 }
             });
 
+            // Calculate 4-hour Timeline & Innings 1 vs 2 data
+            const playersA = teamAPlayers.length > 0 ? teamAPlayers : players.filter(p => !teamB_Ids.includes(p.id || p._id));
+            const playersB = teamBPlayers.length > 0 ? teamBPlayers : players.filter(p => teamB_Ids.includes(p.id || p._id));
+
+            const timelineData = generateMatchTimelineData(
+                playersA,
+                playersB,
+                matchChart,
+                batFirstTeam,
+                matchStartTime
+            );
+
             state.playerPredictions = predictions;
+            state.timelineData = timelineData;
             state.matchResults = {
                 scoreA: (countA > 0 ? (scoreA / countA).toFixed(1) : 0),
                 scoreB: (countB > 0 ? (scoreB / countB).toFixed(1) : 0),
@@ -70,9 +98,12 @@ const predictionSlice = createSlice({
         clearPredictions: (state) => {
             state.playerPredictions = {};
             state.matchChart = null;
+            state.timelineData = null;
+            state.matchResults = null;
         },
         clearMatchChart: (state) => {
             state.matchChart = null;
+            state.timelineData = null;
         },
         setLoading: (state, action) => {
             state.loading = action.payload;
@@ -82,6 +113,7 @@ const predictionSlice = createSlice({
         },
         resetPredictions: (state) => {
             state.playerPredictions = {};
+            state.timelineData = null;
             state.matchResults = null;
         }
     }
@@ -89,6 +121,7 @@ const predictionSlice = createSlice({
 
 export const { 
     setMatchChart, 
+    setBatFirstTeam,
     calculatePredictions, 
     clearPredictions, 
     clearMatchChart, 

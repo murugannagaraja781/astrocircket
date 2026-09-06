@@ -5,11 +5,12 @@ import axios from 'axios';
 import AuthContext from '../context/AuthContext';
 import RasiChart from '../components/RasiChart';
 import MatchPredictionControl from '../components/MatchPredictionControl';
+import MatchMomentumChart from '../components/MatchMomentumChart';
 import LeagueManager from '../components/LeagueManager';
 import AdminPredictionManager from '../components/AdminPredictionManager';
 import { runPrediction } from '../utils/predictionAdapter';
 import { setPlayers } from '../redux/slices/playerSlice';
-import { calculatePredictions, clearPredictions, clearMatchChart } from '../redux/slices/predictionSlice';
+import { calculatePredictions, clearPredictions, clearMatchChart, setBatFirstTeam } from '../redux/slices/predictionSlice';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     Paper, Typography, Box, TextField, InputAdornment, TablePagination,
@@ -42,6 +43,8 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import ErrorBoundary from '../components/ErrorBoundary';
 
 // --- COLOR PALETTE (YELLOW + ORANGE PURE APP THEME) ---
@@ -1367,6 +1370,8 @@ const MatchWizardDialog = (props) => {
     const dispatch = useDispatch();
     const results = useSelector(state => state.predictions.matchResults);
     const playerPredictions = useSelector(state => state.predictions.playerPredictions);
+    const timelineData = useSelector(state => state.predictions.timelineData);
+    const batFirstTeam = useSelector(state => state.predictions.batFirstTeam || 'teamA');
 
     const {
         teamA, setTeamA,
@@ -1379,6 +1384,8 @@ const MatchWizardDialog = (props) => {
     const [matchChart, setMatchChart] = useState(null);
     const [filterA, setFilterA] = useState(false);
     const [filterB, setFilterB] = useState(false);
+    const [activeInningsTab, setActiveInningsTab] = useState('ALL'); // 'ALL', 'INN1', 'INN2', 'WAVE'
+    const [showMomentumWave, setShowMomentumWave] = useState(true);
     const [matchDetails, setMatchDetails] = useState({
         date: new Date().toISOString().split('T')[0],
         time: '19:30',
@@ -1430,6 +1437,26 @@ const MatchWizardDialog = (props) => {
         dispatch(clearPredictions());
     }, [teamA, teamB, groups, setSelectedPlayers, dispatch]);
 
+    const handleTossToggle = () => {
+        const nextBatFirst = batFirstTeam === 'teamA' ? 'teamB' : 'teamA';
+        dispatch(setBatFirstTeam(nextBatFirst));
+        if (matchChart) {
+            const grpA = (groups && Array.isArray(groups)) ? groups.find(g => g._id === teamA) : null;
+            const grpB = (groups && Array.isArray(groups)) ? groups.find(g => g._id === teamB) : null;
+            const playersA = grpA?.players || [];
+            const playersB = grpB?.players || [];
+            dispatch(calculatePredictions({
+                players: [...playersA, ...playersB],
+                matchChart,
+                teamB_Ids: playersB.map(p => p.id),
+                teamAPlayers: playersA,
+                teamBPlayers: playersB,
+                batFirstTeam: nextBatFirst,
+                matchStartTime: matchDetails.time || '19:30'
+            }));
+        }
+    };
+
     const handleMatchReady = async (chart, details) => {
         console.log("=== MATCH CHART JSON ===", chart);
         console.log("=== MATCH DETAILS ===", details);
@@ -1464,7 +1491,11 @@ const MatchWizardDialog = (props) => {
         dispatch(calculatePredictions({
             players: allPlayers,
             matchChart: chart,
-            teamB_Ids
+            teamB_Ids,
+            teamAPlayers: playersA,
+            teamBPlayers: playersB,
+            batFirstTeam,
+            matchStartTime: details?.time || '19:30'
         }));
 
         // 4. Close Rule Dialog
@@ -1486,6 +1517,32 @@ const MatchWizardDialog = (props) => {
         const grp = Array.isArray(groups) ? groups.find(g => g._id === teamId) : null;
         if (!grp) return null;
 
+        // Inning Focus Logic
+        const isTeamA = teamId === teamA;
+        const isBattingFirst = (isTeamA && batFirstTeam === 'teamA') || (!isTeamA && batFirstTeam === 'teamB');
+
+        let inningRoleLabel = '';
+        let isBattingFocus = false;
+        let isBowlingFocus = false;
+
+        if (activeInningsTab === 'INN1') {
+            if (isBattingFirst) {
+                inningRoleLabel = ' (🏏 1st Inn Batting)';
+                isBattingFocus = true;
+            } else {
+                inningRoleLabel = ' (🎯 1st Inn Bowling)';
+                isBowlingFocus = true;
+            }
+        } else if (activeInningsTab === 'INN2') {
+            if (!isBattingFirst) {
+                inningRoleLabel = ' (🏏 2nd Inn Batting)';
+                isBattingFocus = true;
+            } else {
+                inningRoleLabel = ' (🎯 2nd Inn Bowling)';
+                isBowlingFocus = true;
+            }
+        }
+
         // Guard against missing properties in results
         const myScore = teamId === teamA ? (results?.totalA ?? 0) : (results?.totalB ?? 0);
         const myBat = teamId === teamA ? (results?.batA ?? 0) : (results?.batB ?? 0);
@@ -1502,13 +1559,13 @@ const MatchWizardDialog = (props) => {
                 flexDirection: 'column',
                 bgcolor: isWinner
                     ? (hideHeader ? 'rgba(76, 175, 80, 0.1)' : 'rgba(16, 185, 129, 0.1)')
-                    : (hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.02)'), // Slightly darker bg for visibility
+                    : (hideHeader ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.02)'),
                 borderColor: isWinner
                     ? (hideHeader ? 'success.main' : '#10B981')
                     : (hideHeader ? 'rgba(255, 255, 255, 0.1)' : 'rgba(167, 243, 208, 0.5)'),
                 borderWidth: isWinner ? 2 : 1,
                 borderRadius: '16px',
-                color: hideHeader ? 'white' : '#1F2937' // Darker text for table readability
+                color: hideHeader ? 'white' : '#1F2937'
             }}>
                 <Box sx={{
                     mb: 2,
@@ -1522,7 +1579,12 @@ const MatchWizardDialog = (props) => {
                     gap: 1
                 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Typography variant="subtitle1" fontWeight="bold" sx={{ color: '#FF6F00', fontSize: isMobile ? '0.8rem' : '1rem' }}>{teamName}</Typography>
+                        <Typography variant="subtitle1" fontWeight="bold" sx={{ color: '#FF6F00', fontSize: isMobile ? '0.8rem' : '1rem' }}>
+                            {teamName}
+                            <span style={{ fontSize: '0.75rem', color: isBattingFocus ? '#059669' : (isBowlingFocus ? '#DC2626' : '#6B7280'), fontWeight: 'normal', marginLeft: '6px' }}>
+                                {inningRoleLabel}
+                            </span>
+                        </Typography>
                         <Button
                             variant="contained"
                             size="small"
@@ -1546,7 +1608,19 @@ const MatchWizardDialog = (props) => {
                         </Button>
                     </Box>
                     {results && (
-                        <Chip label={`Score: ${myScore} (b=${myBat}, bw=${myBowl})`} color={isWinner ? "success" : "default"} variant={isWinner ? "filled" : "outlined"} size="small" />
+                        <Chip
+                            label={
+                                activeInningsTab === 'INN1'
+                                    ? (isBattingFocus ? `1st Inn Bat: ${myBat} pts` : `1st Inn Bowl: ${myBowl} pts`)
+                                    : activeInningsTab === 'INN2'
+                                        ? (isBattingFocus ? `2nd Inn Bat: ${myBat} pts` : `2nd Inn Bowl: ${myBowl} pts`)
+                                        : `Score: ${myScore} (b=${myBat}, bw=${myBowl})`
+                            }
+                            color={isWinner ? "success" : "default"}
+                            variant={isWinner ? "filled" : "outlined"}
+                            size="small"
+                            sx={{ fontWeight: 'bold' }}
+                        />
                     )}
                 </Box>
 
@@ -2014,9 +2088,6 @@ const MatchWizardDialog = (props) => {
                 display: { xs: (teamA && teamB) ? 'flex' : 'none', sm: 'flex' },
                 flexDirection: 'row',
                 alignItems: 'center',
-                display: { xs: (teamA && teamB) ? 'flex' : 'none', sm: 'flex' },
-                flexDirection: 'row',
-                alignItems: 'center',
                 justifyContent: 'space-between',
                 gap: { xs: 1, sm: 2 },
                 py: 1.5,
@@ -2104,37 +2175,144 @@ const MatchWizardDialog = (props) => {
                 </Box>
             </Box>
 
-            {/* SIDE BY SIDE PLAYER TABLES - Only show when both teams selected */}
-            <Box sx={{
-                flexGrow: 1,
-                display: (teamA && teamB) ? 'flex' : 'none',
-                gap: 1,
-                p: 1,
-                overflow: 'hidden',
-                height: 'calc(100vh - 130px)'
-            }}>
-                {teamA && teamB ? (
-                    <>
-                        {/* TEAM A - LEFT */}
-                        <Box sx={{ flex: 1, overflow: 'auto' }}>
-                            {renderPlayerList(teamA, groups.find(g => g._id === teamA)?.name || 'Team A', filterA, setFilterA)}
-                        </Box>
-                        {/* TEAM B - RIGHT */}
-                        <Box sx={{ flex: 1, overflow: 'auto' }}>
-                            {renderPlayerList(teamB, groups.find(g => g._id === teamB)?.name || 'Team B', filterB, setFilterB)}
-                        </Box>
-                    </>
-                ) : (
-                    <Box sx={{
-                        flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        flexDirection: 'column', gap: 2, color: 'text.secondary'
-                    }}>
-                        <SportsCricketIcon sx={{ fontSize: 80, opacity: 0.3 }} />
-                        <Typography variant="h6" color="text.secondary">Select both teams to view players</Typography>
-                        <Typography variant="body2" color="text.secondary">இரண்டு அணிகளையும் தேர்வு செய்யவும்</Typography>
+            {/* INNINGS & MOMENTUM SWITCHER TABS (Desktop & Mobile) */}
+            {results && teamA && teamB && (
+                <Box sx={{
+                    px: { xs: 1, sm: 2 },
+                    py: 1,
+                    bgcolor: '#FFFDF9',
+                    borderBottom: `1px solid ${visionPro.border}`,
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 1
+                }}>
+                    <Tabs
+                        value={activeInningsTab}
+                        onChange={(e, val) => setActiveInningsTab(val)}
+                        variant="scrollable"
+                        scrollButtons="auto"
+                        sx={{
+                            minHeight: 34,
+                            '& .MuiTab-root': {
+                                minHeight: 34,
+                                py: 0.5,
+                                px: 1.5,
+                                fontSize: '0.78rem',
+                                fontWeight: 'bold',
+                                textTransform: 'none',
+                                borderRadius: '10px',
+                                mr: 1,
+                                bgcolor: 'rgba(0,0,0,0.03)',
+                                color: '#4B5563'
+                            },
+                            '& .Mui-selected': {
+                                bgcolor: '#FF6F00 !important',
+                                color: 'white !important'
+                            },
+                            '& .MuiTabs-indicator': { display: 'none' }
+                        }}
+                    >
+                        <Tab value="ALL" label="📊 Complete Match" />
+                        <Tab
+                            value="INN1"
+                            label={`1️⃣ 1st Innings: ${batFirstTeam === 'teamA' ? (groups.find(g => g._id === teamA)?.name || 'Team A') : (groups.find(g => g._id === teamB)?.name || 'Team B')} (Bat) vs ${batFirstTeam === 'teamA' ? (groups.find(g => g._id === teamB)?.name || 'Team B') : (groups.find(g => g._id === teamA)?.name || 'Team A')} (Bowl)`}
+                        />
+                        <Tab
+                            value="INN2"
+                            label={`2️⃣ 2nd Innings: ${batFirstTeam === 'teamA' ? (groups.find(g => g._id === teamB)?.name || 'Team B') : (groups.find(g => g._id === teamA)?.name || 'Team A')} (Bat) vs ${batFirstTeam === 'teamA' ? (groups.find(g => g._id === teamA)?.name || 'Team A') : (groups.find(g => g._id === teamB)?.name || 'Team B')} (Bowl)`}
+                        />
+                        <Tab value="WAVE" label="📈 Trading Waveform Chart" />
+                    </Tabs>
+
+                    {/* Quick Toss & Chart Visibility Controls */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Button
+                            size="small"
+                            variant="outlined"
+                            onClick={handleTossToggle}
+                            startIcon={<SwapHorizIcon sx={{ color: '#FF6F00' }} />}
+                            sx={{
+                                fontSize: '0.72rem',
+                                borderRadius: '20px',
+                                borderColor: 'rgba(255, 111, 0, 0.4)',
+                                color: '#FF6F00',
+                                textTransform: 'none',
+                                fontWeight: 'bold',
+                                bgcolor: 'rgba(255, 111, 0, 0.05)',
+                                '&:hover': { bgcolor: 'rgba(255, 111, 0, 0.12)', borderColor: '#FF6F00' }
+                            }}
+                        >
+                            Toss: <strong>{batFirstTeam === 'teamA' ? (groups.find(g => g._id === teamA)?.name || 'Team A') : (groups.find(g => g._id === teamB)?.name || 'Team B')} Bat 1st</strong>
+                        </Button>
+
+                        {activeInningsTab !== 'WAVE' && timelineData && (
+                            <Button
+                                size="small"
+                                variant="text"
+                                onClick={() => setShowMomentumWave(!showMomentumWave)}
+                                startIcon={<TrendingUpIcon sx={{ color: showMomentumWave ? '#10B981' : '#94A3B8' }} />}
+                                sx={{
+                                    fontSize: '0.72rem',
+                                    color: showMomentumWave ? '#059669' : '#6B7280',
+                                    textTransform: 'none',
+                                    fontWeight: 'bold'
+                                }}
+                            >
+                                {showMomentumWave ? 'Hide Wave' : 'Show Wave'}
+                            </Button>
+                        )}
                     </Box>
-                )}
-            </Box>
+                </Box>
+            )}
+
+            {/* DYNAMIC MOMENTUM WAVEFORM CHART (Standalone or Accordion view) */}
+            {timelineData && (activeInningsTab === 'WAVE' || (showMomentumWave && activeInningsTab !== 'WAVE' && teamA && teamB)) && (
+                <Box sx={{ p: 1.5, pb: activeInningsTab === 'WAVE' ? 2 : 0, overflow: 'auto', maxHeight: activeInningsTab === 'WAVE' ? 'calc(100vh - 160px)' : '380px' }}>
+                    <MatchMomentumChart
+                        timelineData={timelineData}
+                        teamAName={groups.find(g => g._id === teamA)?.name || 'Team A'}
+                        teamBName={groups.find(g => g._id === teamB)?.name || 'Team B'}
+                        onTossToggle={handleTossToggle}
+                        batFirstTeam={batFirstTeam}
+                    />
+                </Box>
+            )}
+
+            {/* SIDE BY SIDE PLAYER TABLES - Only show when both teams selected and not in standalone WAVE view */}
+            {activeInningsTab !== 'WAVE' && (
+                <Box sx={{
+                    flexGrow: 1,
+                    display: (teamA && teamB) ? 'flex' : 'none',
+                    gap: 1,
+                    p: 1,
+                    overflow: 'hidden',
+                    height: showMomentumWave && timelineData ? 'calc(100vh - 480px)' : 'calc(100vh - 170px)'
+                }}>
+                    {teamA && teamB ? (
+                        <>
+                            {/* TEAM A - LEFT */}
+                            <Box sx={{ flex: 1, overflow: 'auto' }}>
+                                {renderPlayerList(teamA, groups.find(g => g._id === teamA)?.name || 'Team A', filterA, setFilterA)}
+                            </Box>
+                            {/* TEAM B - RIGHT */}
+                            <Box sx={{ flex: 1, overflow: 'auto' }}>
+                                {renderPlayerList(teamB, groups.find(g => g._id === teamB)?.name || 'Team B', filterB, setFilterB)}
+                            </Box>
+                        </>
+                    ) : (
+                        <Box sx={{
+                            flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            flexDirection: 'column', gap: 2, color: 'text.secondary'
+                        }}>
+                            <SportsCricketIcon sx={{ fontSize: 80, opacity: 0.3 }} />
+                            <Typography variant="h6" color="text.secondary">Select both teams to view players</Typography>
+                            <Typography variant="body2" color="text.secondary">இரண்டு அணிகளையும் தேர்வு செய்யவும்</Typography>
+                        </Box>
+                    )}
+                </Box>
+            )}
 
             {/* MATCH CHART POPUP */}
             {matchChart && (
