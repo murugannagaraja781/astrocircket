@@ -32,28 +32,29 @@ const getNakshatraLordHelper = (nakshatraName) => {
 const oddSigns = new Set(['Aries', 'Gemini', 'Leo', 'Libra', 'Sagittarius', 'Aquarius']);
 
 const calculateAvastha = (signName, degree) => {
-    if (!signName || degree === undefined || degree === null) return { english: '-', tamil: '-' };
+    if (!signName || degree === undefined || degree === null || isNaN(degree)) return { english: '-', tamil: '-' };
+
+    // Baaladi Avasthas based on degree within the sign (0 - 30 deg)
+    const degInSign = ((parseFloat(degree) % 30) + 30) % 30;
 
     // Normalize sign name check
-    const isOdd = oddSigns.has(signName) || oddSigns.has(signName.split(' ')[0]); // Handle cases like "Aries (Mesha)" if any
+    const isOdd = oddSigns.has(signName) || oddSigns.has(signName.split(' ')[0]);
 
-    // Baaladi Avasthas based on degree
     // Odd: 0-6 Infant, 6-12 Adolescent, 12-18 Youth, 18-24 Old, 24-30 Dead
     // Even: 0-6 Dead, 6-12 Old, 12-18 Youth, 18-24 Adolescent, 24-30 Infant
 
     let state = '';
-
     if (isOdd) {
-        if (degree < 6) state = 'Infant';
-        else if (degree < 12) state = 'Adolescent';
-        else if (degree < 18) state = 'Youth';
-        else if (degree < 24) state = 'Old';
+        if (degInSign < 6) state = 'Infant';
+        else if (degInSign < 12) state = 'Adolescent';
+        else if (degInSign < 18) state = 'Youth';
+        else if (degInSign < 24) state = 'Old';
         else state = 'Dead';
     } else {
-        if (degree < 6) state = 'Dead';
-        else if (degree < 12) state = 'Old';
-        else if (degree < 18) state = 'Youth';
-        else if (degree < 24) state = 'Adolescent';
+        if (degInSign < 6) state = 'Dead';
+        else if (degInSign < 12) state = 'Old';
+        else if (degInSign < 18) state = 'Youth';
+        else if (degInSign < 24) state = 'Adolescent';
         else state = 'Infant';
     }
 
@@ -74,21 +75,24 @@ const calculateAvastha = (signName, degree) => {
 const { calculateSign, calculateNakshatra, calculateDignity, formatDegree } = require('./astroCalculator');
 
 const processSinglePlanet = (pRaw, houseContext) => {
-    const pName = typeof pRaw === 'string' ? pRaw : (pRaw.name || pRaw.englishName);
+    const pName = typeof pRaw === 'string' ? pRaw : (pRaw.name || pRaw.planetName || pRaw.planet || pRaw.englishName);
     if (!pName) return null;
 
     // Direct Props from API or House Context
     let signName = (houseContext && houseContext.sign) || (typeof pRaw === 'object' ? (pRaw.sign?.name || pRaw.sign) : null);
     let signTamil = (houseContext && houseContext.signTamil) || (typeof pRaw === 'object' ? pRaw.signTamil : null);
-    let lordName = (houseContext && houseContext.lord) || (typeof pRaw === 'object' ? (pRaw.lord?.name || pRaw.lord) : null);
-    let lordTamil = (houseContext && houseContext.lordTamil) || (typeof pRaw === 'object' ? pRaw.lordTamil : null);
+    let lordName = (houseContext && houseContext.lord) || (typeof pRaw === 'object' ? (pRaw.signLord || pRaw.lord?.name || pRaw.lord) : null);
+    let lordTamil = (houseContext && houseContext.lordTamil) || (typeof pRaw === 'object' ? (pRaw.signLordTamil || pRaw.lordTamil || (lordName ? (planetTamilMap[lordName] || lordName) : null)) : null);
 
     let nakshatraName = (typeof pRaw === 'object' ? (pRaw.nakshatra?.name || pRaw.nakshatra) : null);
-    let nakshatraTamil = (typeof pRaw === 'object' ? pRaw.nakshatraTamil : null);
-    let nakLord = (typeof pRaw === 'object' ? pRaw.nakshatraLord : null);
+    let nakshatraTamil = (typeof pRaw === 'object' ? (pRaw.nakshatraTamil || pRaw.nakshatra?.tamil) : null);
+    let nakLord = (typeof pRaw === 'object' ? (pRaw.nakshatraLord || pRaw.nakLord || pRaw.starLord) : null);
+    let nakLordTamil = (typeof pRaw === 'object' ? (pRaw.nakshatraLordTamil || pRaw.nakLordTamil || (nakLord ? (planetTamilMap[nakLord] || nakLord) : null)) : null);
     let pada = (typeof pRaw === 'object' ? pRaw.pada : null);
 
-    let degreeVal = (typeof pRaw === 'object' && pRaw.degree !== undefined) ? parseFloat(pRaw.degree) : 0;
+    let degreeVal = (typeof pRaw === 'object' && (pRaw.longitude !== undefined || pRaw.degree !== undefined))
+        ? parseFloat(pRaw.longitude !== undefined ? pRaw.longitude : pRaw.degree)
+        : 0;
 
     // --- NATIVE CALCULATION FALLBACK ---
     // If degree is present but other details are missing, calculate them
@@ -116,8 +120,12 @@ const processSinglePlanet = (pRaw, houseContext) => {
     if (!nakLord && nakshatraName) {
         nakLord = getNakshatraLordHelper(nakshatraName);
     }
+    if (!nakLordTamil && nakLord) {
+        nakLordTamil = planetTamilMap[nakLord] || nakLord;
+    }
 
-    const degreeStr = !isNaN(degreeVal) && degreeVal > 0 ? formatDegree(degreeVal) : '-';
+    const degInSign = ((degreeVal % 30) + 30) % 30;
+    const degreeStr = !isNaN(degreeVal) && degreeVal > 0 ? (typeof formatDegree === 'function' ? formatDegree(degInSign) : `${degInSign.toFixed(2)}°`) : (pRaw.degreeFormatted || '-');
 
     let dignityEnglish = (typeof pRaw === 'object' ? (pRaw.dignity?.english || pRaw.dignity) : null);
     let dignityTamil = dignityEnglish ? (dignityTamilMap[dignityEnglish] || dignityEnglish) : null;
@@ -138,7 +146,7 @@ const processSinglePlanet = (pRaw, houseContext) => {
     nakshatraTamil = nakshatraTamil || '-';
 
     // Calculate Avastha
-    const avastha = calculateAvastha(signName, degreeVal);
+    const avastha = calculateAvastha(signName, degInSign);
 
     // Calculate State (Retrograde/Direct)
     const isRetro = (typeof pRaw === 'object' ? pRaw.isRetro : false);
@@ -217,8 +225,12 @@ const formatPlanetaryData = (rawPlanets) => {
             }
         });
     } else {
-        Object.values(rawPlanets).forEach(pRaw => {
-            const obj = processSinglePlanet(pRaw, null);
+        Object.entries(rawPlanets).forEach(([pKey, pRaw]) => {
+            if (pKey === 'ascendant' || pKey === 'ayanamsa' || pKey === 'panchangam') return;
+            const pObj = typeof pRaw === 'object' && pRaw !== null 
+                ? { name: pRaw.name || pRaw.planetName || pKey, ...pRaw }
+                : { name: pKey, longitude: pRaw };
+            const obj = processSinglePlanet(pObj, null);
             if (obj) planetList.push(obj);
         });
     }

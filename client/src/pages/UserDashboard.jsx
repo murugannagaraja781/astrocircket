@@ -9,6 +9,7 @@ import MatchMomentumChart from '../components/MatchMomentumChart';
 import LeagueManager from '../components/LeagueManager';
 import AdminPredictionManager from '../components/AdminPredictionManager';
 import { runPrediction } from '../utils/predictionAdapter';
+import { setPlayers } from '../redux/slices/playerSlice';
 import { calculatePredictions, clearPredictions, clearMatchChart, setBatFirstTeam } from '../redux/slices/predictionSlice';
 import { isBatEligible, isBowlEligible } from '../utils/timelineEngine';
 import {
@@ -240,7 +241,7 @@ const PredictionChip = ({ score, type, report = [] }) => {
     );
 };
 
-// Helper to get Star Lord if missing from API
+// Helper to find Star Lord if missing from API
 const getNakshatraLordHelper = (nakshatraName) => {
     if (!nakshatraName) return '-';
 
@@ -253,22 +254,114 @@ const getNakshatraLordHelper = (nakshatraName) => {
         'Vishakha': 'Jupiter', 'Anuradha': 'Saturn', 'Jyeshtha': 'Mercury',
         'Mula': 'Ketu', 'Purva Ashadha': 'Venus', 'Uttara Ashadha': 'Sun',
         'Shravana': 'Moon', 'Dhanishta': 'Mars', 'Shatabhisha': 'Rahu',
-        'Purva Bhadrapada': 'Jupiter', 'Uttara Bhadrapada': 'Saturn', 'Revati': 'Mercury'
+        'Purva Bhadrapada': 'Jupiter', 'Uttara Bhadrapada': 'Saturn', 'Revati': 'Mercury',
+        // Tamil spellings
+        'அசுவினி': 'Ketu', 'பரணி': 'Venus', 'கார்த்திகை': 'Sun',
+        'ரோகிணி': 'Moon', 'மிருகசீரிடம்': 'Mars', 'திருவாதிரை': 'Rahu',
+        'புனர்பூசம்': 'Jupiter', 'பூசம்': 'Saturn', 'ஆயில்யம்': 'Mercury',
+        'மகம்': 'Ketu', 'பூரம்': 'Venus', 'உத்திரம்': 'Sun',
+        'அஸ்தம்': 'Moon', 'சித்திரை': 'Mars', 'சுவாதி': 'Rahu',
+        'விசாகம்': 'Jupiter', 'அனுஷம்': 'Saturn', 'கேட்டை': 'Mercury',
+        'மூலம்': 'Ketu', 'பூராடம்': 'Venus', 'உத்திராடம்': 'Sun',
+        'திருவோணம்': 'Moon', 'அவிட்டம்': 'Mars', 'சதயம்': 'Rahu',
+        'பூரட்டாதி': 'Jupiter', 'உத்திரட்டாதி': 'Saturn', 'ரேவதி': 'Mercury'
     };
 
-    // Handle partial matches or different spellings if needed
     for (const [key, val] of Object.entries(lordMap)) {
         if (nakshatraName.includes(key)) return val;
     }
     return '-';
 };
 
-// 1. Planetary Details Table
-// 1. Planetary Details Table
+const translateLordToTamil = (lord) => {
+    if (!lord || lord === '-') return '-';
+    const str = String(lord).trim();
+    if (signLordsTamil[str]) return signLordsTamil[str];
+    if (planetFullTamilMap[str]) return planetFullTamilMap[str];
+    return str;
+};
+
+const dignityTamilMap = {
+    'Exalted': 'உச்சம்',
+    'Debilitated': 'நீசம்',
+    'Own House': 'ஆட்சி',
+    'Own': 'ஆட்சி',
+    'Moolatrikona': 'மூலத்திரிகோணம்',
+    'Friendly': 'நட்பு',
+    'Friend': 'நட்பு',
+    'Enemy': 'பகை',
+    'Neutral': 'சமம்',
+    'Great Friend': 'அதி நட்பு',
+    'Great Enemy': 'அதி பகை'
+};
+
 // 1. Planetary Details Table
 const PlanetaryTable = ({ planets, hideHeader = false }) => {
-    // If planets is undefined or not an array, show empty state
-    if (!planets || !Array.isArray(planets) || planets.length === 0) {
+    let pList = [];
+    if (!planets) {
+        return (
+            <Box sx={{ p: 2, textAlign: 'center' }}>
+                <Typography color="text.secondary">
+                    No Planetary Data Available (தரவு இல்லை)
+                </Typography>
+            </Box>
+        );
+    }
+
+    if (Array.isArray(planets)) {
+        pList = [...planets];
+    } else if (typeof planets === 'object') {
+        const root = planets.data || planets;
+
+        if (Array.isArray(root.formattedPlanets) && root.formattedPlanets.length > 0) {
+            pList = [...root.formattedPlanets];
+        } else if (Array.isArray(planets.formattedPlanets) && planets.formattedPlanets.length > 0) {
+            pList = [...planets.formattedPlanets];
+        } else if (Array.isArray(root.planets) && root.planets.length > 0) {
+            pList = [...root.planets];
+        } else if (root.planets && typeof root.planets === 'object') {
+            const entries = Object.entries(root.planets).filter(([k]) => k !== 'ascendant' && k !== 'ayanamsa' && k !== 'panchangam' && k !== 'data');
+            pList = entries.map(([k, v]) => ({
+                name: k,
+                planetName: k,
+                ...(typeof v === 'object' ? v : { longitude: v })
+            }));
+        } else {
+            const entries = Object.entries(root).filter(([k]) => k !== 'ascendant' && k !== 'ayanamsa' && k !== 'panchangam' && k !== 'data' && k !== 'formattedPlanets' && k !== 'planets');
+            pList = entries.map(([k, v]) => ({
+                name: k,
+                planetName: k,
+                ...(typeof v === 'object' ? v : { longitude: v })
+            }));
+        }
+
+        const asc = root.ascendant || planets.ascendant || (planets.data && planets.data.ascendant);
+        if (asc && !pList.some(p => p.name === 'Ascendant' || p.name === 'Lagna' || p.name === 'Asc' || p.planetName === 'Ascendant' || p.planetName === 'Lagna' || p.planetName === 'Asc' || p.planetTamil === 'லக்னம்')) {
+            const ascSign = typeof asc.sign === 'object' ? asc.sign : { name: asc.sign };
+            pList.unshift({
+                name: 'Ascendant',
+                planetName: 'Ascendant',
+                planetTamil: 'லக்னம்',
+                signName: ascSign.name || ascSign.tamil,
+                signTamil: ascSign.tamil,
+                signLord: ascSign.lord,
+                signLordTamil: ascSign.lordTamil || translateLordToTamil(ascSign.lord),
+                nakshatraName: asc.nakshatra?.name || asc.nakshatra || '-',
+                nakshatraTamil: asc.nakshatra?.tamil || asc.nakshatraTamil || (asc.nakshatra ? nakshatraTamilMap[asc.nakshatra] : '-'),
+                nakshatraLord: asc.nakshatra?.lord || asc.nakshatraLord || getNakshatraLordHelper(asc.nakshatra?.name || asc.nakshatra),
+                nakshatraLordTamil: asc.nakshatra?.lordTamil || translateLordToTamil(asc.nakshatra?.lord || asc.nakshatraLord),
+                degreeFormatted: ascSign.degreesInSign !== undefined ? `${Number(ascSign.degreesInSign).toFixed(2)}°` : (asc.longitude !== undefined ? `${(Number(asc.longitude) % 30).toFixed(2)}°` : '-'),
+                dignityName: '-',
+                dignityTamil: '-',
+                avasthaName: '-',
+                avasthaTamil: '-',
+                stateName: 'Direct',
+                stateTamil: 'நேர்கதி'
+            });
+        }
+    }
+
+    if (!pList || pList.length === 0) {
         return (
             <Box sx={{ p: 2, textAlign: 'center' }}>
                 <Typography color="text.secondary">
@@ -290,103 +383,64 @@ const PlanetaryTable = ({ planets, hideHeader = false }) => {
                 <Table size="small">
                     <TableHead sx={{ backgroundColor: hideHeader ? '#D1FAE5' : '#D1FAE5' }}>
                         <TableRow>
-                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>கிரகம்</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>ராசி</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>ராசி நாதன்</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>நட்சத்திர நாதன்</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>நட்சத்திரம்</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>பாகை</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>அந்தஸ்து</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>நிலை</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>தன்மை</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Debug</TableCell>
+                            <TableCell sx={{ color: '#064E3B', fontWeight: 'bold' }}>கிரகம்</TableCell>
+                            <TableCell sx={{ color: '#064E3B', fontWeight: 'bold' }}>ராசி</TableCell>
+                            <TableCell sx={{ color: '#064E3B', fontWeight: 'bold' }}>ராசி அதிபதி</TableCell>
+                            <TableCell sx={{ color: '#064E3B', fontWeight: 'bold' }}>நட்சத்திரம்</TableCell>
+                            <TableCell sx={{ color: '#064E3B', fontWeight: 'bold' }}>நட்சத்திர அதிபதி</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {planets.map((p, i) => (
-                            <TableRow key={i} hover sx={{ '&:nth-of-type(odd)': { bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.02)' : 'rgba(110, 231, 183, 0.03)' } }}>
-                                <TableCell>
-                                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                        <span className={`font-bold ${hideHeader ? 'text-green-600' : 'text-gray-800'}`}>{p.planetName}</span>
-                                        <span className={`text-xs ${hideHeader ? 'text-green-500' : 'text-green-700'}`}>{p.planetTamil}</span>
-                                    </Box>
-                                </TableCell>
-                                <TableCell>
-                                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                        <span className="font-medium">{p.signName}</span>
-                                        <span className={`text-xs ${hideHeader ? 'text-gray-400' : 'text-gray-500'}`}>{p.signTamil}</span>
-                                    </Box>
-                                </TableCell>
-                                <TableCell>
-                                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                        <span className={`font-medium ${hideHeader ? 'text-green-600' : 'text-gray-700'}`}>{p.lordName}</span>
-                                        <span className={`text-xs ${hideHeader ? 'text-gray-400' : 'text-gray-500'}`}>{p.lordTamil}</span>
-                                    </Box>
-                                </TableCell>
-                                <TableCell>
-                                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                        <span className={`font-medium ${hideHeader ? 'text-green-600' : 'text-gray-700'}`}>{p.nakshatraLord}</span>
-                                        <span className={`text-xs ${hideHeader ? 'text-gray-400' : 'text-gray-500'}`}>{p.nakshatraLordTamil}</span>
-                                    </Box>
-                                </TableCell>
-                                <TableCell>
-                                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                        <span>{p.nakshatraName}</span>
-                                        <span className={`text-xs ${hideHeader ? 'text-gray-400' : 'text-gray-500'}`}>{p.nakshatraTamil}</span>
-                                    </Box>
-                                </TableCell>
-                                <TableCell>
-                                    <Chip label={p.degreeFormatted} size="small" variant="outlined" sx={{ minWidth: 60 }} />
-                                </TableCell>
-                                <TableCell>
-                                    <Chip
-                                        label={p.dignityTamil}
-                                        size="small"
-                                        color={p.dignityName === 'Exalted' ? 'success' : p.dignityName === 'Debilitated' ? 'error' : 'default'}
-                                        variant="filled"
-                                        sx={{ minWidth: 80 }}
-                                    />
-                                </TableCell>
-                                <TableCell>
-                                    <Chip
-                                        label={p.avasthaTamil || '-'}
-                                        size="small"
-                                        variant="outlined"
-                                        color="primary"
-                                        sx={{ minWidth: 70 }}
-                                    />
-                                </TableCell>
-                                <TableCell>
-                                    <Box sx={{ display: 'flex', gap: 0.5 }}>
-                                        {p.isRetro && <Chip label="வக்ரம்" size="small" color="secondary" sx={{ height: 24, fontSize: 10 }} />}
-                                        {p.isCombust && <Chip label="அஸ்தமனம்" size="small" color="warning" sx={{ height: 24, fontSize: 10 }} />}
-                                        {!p.isRetro && !p.isCombust && <Chip label="நேர்கதி" size="small" variant="outlined" sx={{ height: 24, fontSize: 10, opacity: 0.6 }} />}
-                                    </Box>
-                                </TableCell>
-                                <TableCell>
-                                    <Tooltip title={<pre style={{ fontSize: '10px', color: hideHeader ? '#fff' : '#000', maxHeight: '300px', overflow: 'auto' }}>{JSON.stringify(p.raw || {}, null, 2)}</pre>} arrow>
-                                        <Chip
-                                            label="JSON"
-                                            size="small"
-                                            variant="outlined"
-                                            sx={{
-                                                cursor: 'help',
-                                                height: 20,
-                                                fontSize: '9px',
-                                                borderColor: hideHeader ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)',
-                                                color: hideHeader ? '#A7F3D0' : '#059669'
-                                            }}
-                                        />
-                                    </Tooltip>
-                                </TableCell>
+                        {pList.map((p, i) => {
+                            const pName = p.name || p.planetName || p.planet;
+                            const pTamil = p.planetTamil || p.tamilName || planetFullTamilMap[pName] || pName;
+                            
+                            const sId = getSignId(p.signId || p.signNumber || p.sign || p.signTamil || p.signName || p.longitude);
+                            const sTamil = p.signTamil || (sId ? tamilSigns[sId] : (p.sign || p.signName || '-'));
+                            
+                            const rawLord = p.signLord || p.lordName || p.lord || (sId ? signLords[sId] : null);
+                            const lordTamil = p.signLordTamil || p.lordTamil || translateLordToTamil(rawLord) || (sId ? signLordsTamil[signLords[sId]] : '-');
+                            
+                            const rawNak = p.nakshatraTamil || p.nakshatra || p.nakshatraName;
+                            const nakTamil = nakshatraTamilMap[rawNak] || p.nakshatraTamil || rawNak || '-';
+                            
+                            const rawNakLord = p.nakshatraLord || p.nakLord || p.starLord || (rawNak ? getNakshatraLordHelper(rawNak) : null);
+                            const nakLordTamil = p.nakshatraLordTamil || translateLordToTamil(rawNakLord);
 
-                            </TableRow>
-                        ))}
+                            return (
+                                <TableRow key={i} hover sx={{ '&:nth-of-type(odd)': { bgcolor: hideHeader ? 'rgba(255, 255, 255, 0.02)' : 'rgba(110, 231, 183, 0.03)' } }}>
+                                    <TableCell>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                            <span className={`font-bold ${hideHeader ? 'text-green-600' : 'text-gray-800'}`}>{pTamil}</span>
+                                            <span className={`text-xs ${hideHeader ? 'text-gray-400' : 'text-gray-500'}`}>{pName}</span>
+                                        </Box>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                            <span className="font-medium">{sTamil}</span>
+                                        </Box>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                            <span className="font-bold text-emerald-700" style={{ color: '#047857', fontWeight: 'bold' }}>{lordTamil}</span>
+                                        </Box>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                            <span className="font-medium">{nakTamil}</span>
+                                        </Box>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                            <span className="font-bold text-blue-700" style={{ color: '#1D4ED8', fontWeight: 'bold' }}>{nakLordTamil}</span>
+                                        </Box>
+                                    </TableCell>
+                                </TableRow>
+                            );
+                        })}
                     </TableBody>
                 </Table>
             </TableContainer>
-
-
         </Box>
     );
 };

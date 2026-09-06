@@ -80,8 +80,11 @@ export const signLords = {
 export const signLordsTamil = {
     "Mars": "செவ்வாய்", "Venus": "சுக்கிரன்", "Mercury": "புதன்", "Moon": "சந்திரன்",
     "Sun": "சூரியன்", "Jupiter": "குரு", "Saturn": "சனி",
+    "Rahu": "ராகு", "Ketu": "கேது", "Kethu": "கேது",
+    "Asc": "லக்னம்", "Lagna": "லக்னம்", "Ascendant": "லக்னம்",
     "செவ்வாய்": "செவ்வாய்", "சுக்கிரன்": "சுக்கிரன்", "சுக்ரன்": "சுக்கிரன்", "புதன்": "புதன்",
-    "சந்திரன்": "சந்திரன்", "சூரியன்": "சூரியன்", "குரு": "குரு", "சனி": "சனி"
+    "சந்திரன்": "சந்திரன்", "சூரியன்": "சூரியன்", "குரு": "குரு", "சனி": "சனி",
+    "ராகு": "ராகு", "கேது": "கேது", "லக்னம்": "லக்னம்"
 };
 
 export const nakshatraTamilMap = {
@@ -388,25 +391,33 @@ const RasiChart = ({ data, style = {}, planetsData = null }) => {
             }
         }
 
-        // Moon Sign
+        // Moon Sign & Lord
         const moonObj = raw.moonSign || raw.planets?.Moon || {};
         const moonSignTamil = moonObj.tamil || moonObj.signTamil || (moonObj.name ? tamilSigns[getSignId(moonObj.name)] : '') || (moonObj.sign ? tamilSigns[getSignId(moonObj.sign)] : '');
+        const moonSignId = getSignId(moonObj.name || moonObj.sign || moonObj.signTamil || moonSignTamil || moonObj.longitude);
+        const moonLord = moonObj.lord || moonObj.signLord || (moonSignId ? signLords[moonSignId] : null);
+        const moonSignLordTamil = moonObj.lordTamil || moonObj.signLordTamil || (moonLord ? (signLordsTamil[moonLord] || moonLord) : '');
 
-        // Nakshatra
+        // Nakshatra & Lord
         const nakObj = raw.nakshatra || raw.moonNakshatra || raw.planets?.Moon?.nakshatra || {};
         const nakName = typeof nakObj === 'string' ? nakObj : (nakObj.name || nakObj.tamil || raw.planets?.Moon?.nakshatraTamil || '');
         const nakshatraTamil = nakshatraTamilMap[nakName] || nakName;
+        const nakLord = typeof nakObj === 'object' ? (nakObj.lord || nakObj.nakshatraLord || raw.planets?.Moon?.nakshatraLord) : null;
+        const resolvedNakLord = nakLord || (nakName ? getNakshatraLordHelper(nakName) : null);
+        const nakshatraLordTamil = nakObj.lordTamil || raw.planets?.Moon?.nakshatraLordTamil || (resolvedNakLord ? (signLordsTamil[resolvedNakLord] || resolvedNakLord) : '');
 
         return {
             signsMap,
             formattedDate,
             timeStr,
             moonSignTamil,
-            nakshatraTamil
+            moonSignLordTamil,
+            nakshatraTamil,
+            nakshatraLordTamil
         };
     }, [data, planetsData]);
 
-    const { signsMap, formattedDate, timeStr, moonSignTamil, nakshatraTamil } = normalizedChart;
+    const { signsMap, formattedDate, timeStr, moonSignTamil, moonSignLordTamil, nakshatraTamil, nakshatraLordTamil } = normalizedChart;
 
     // Styles
     const containerStyle = {
@@ -545,24 +556,38 @@ const RasiChart = ({ data, style = {}, planetsData = null }) => {
                                                     </span>
                                                 </div>
 
-                                                {/* Rasi & Nakshatra */}
+                                                {/* Rasi & Nakshatra with Lords */}
                                                 {(moonSignTamil || nakshatraTamil) && (
-                                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1px' }}>
+                                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', width: '100%' }}>
                                                         {moonSignTamil && (
-                                                            <div style={{ fontSize: '11px', color: '#1F2937' }}>
+                                                            <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#1F2937', lineHeight: 1.2 }}>
                                                                 {moonSignTamil}
+                                                                {moonSignLordTamil && (
+                                                                    <span style={{ color: '#047857', fontSize: '9.5px', marginLeft: '3px' }}>
+                                                                        ({moonSignLordTamil})
+                                                                    </span>
+                                                                )}
                                                             </div>
                                                         )}
                                                         {nakshatraTamil && (
                                                             <div style={{
                                                                 fontSize: '10px',
+                                                                fontWeight: 'bold',
                                                                 color: '#B91C1C',
-                                                                backgroundColor: 'rgba(255, 237, 213, 0.7)',
-                                                                padding: '1px 6px',
+                                                                backgroundColor: 'rgba(255, 237, 213, 0.85)',
+                                                                padding: '1px 5px',
                                                                 borderRadius: '4px',
-                                                                border: '1px solid #FED7AA'
+                                                                border: '1px solid #FED7AA',
+                                                                display: 'inline-flex',
+                                                                alignItems: 'center',
+                                                                gap: '2px'
                                                             }}>
-                                                                {nakshatraTamil}
+                                                                <span>{nakshatraTamil}</span>
+                                                                {nakshatraLordTamil && (
+                                                                    <span style={{ color: '#1D4ED8', fontSize: '9px' }}>
+                                                                        ({nakshatraLordTamil})
+                                                                    </span>
+                                                                )}
                                                             </div>
                                                         )}
                                                     </div>

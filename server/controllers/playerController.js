@@ -407,12 +407,19 @@ const getPlayers = async (req, res) => {
             return chart;
         };
 
-        const updatedPlayers = players.map(p => {
+        const updatedPlayers = await Promise.all(players.map(async (p) => {
+            if ((!p.birthChart || Object.keys(p.birthChart).length === 0) && p.dob) {
+                const computed = await fetchCharData(p);
+                if (computed) {
+                    p.birthChart = computed;
+                    Player.updateOne({ _id: p._id }, { $set: { birthChart: computed } }).catch(() => {});
+                }
+            }
             if (p.birthChart) {
                 p.birthChart = formatChartHelper(p.birthChart);
             }
             return p;
-        });
+        }));
 
         res.json({
             players: updatedPlayers,
@@ -433,6 +440,14 @@ const getPlayerById = async (req, res) => {
             player = await Player.findById(req.params.id).lean();
         }
         if (!player) return res.status(404).json({ message: 'Player not found' });
+
+        if ((!player.birthChart || Object.keys(player.birthChart).length === 0) && player.dob) {
+            const computed = await fetchCharData(player);
+            if (computed) {
+                player.birthChart = computed;
+                Player.updateOne({ _id: player._id }, { $set: { birthChart: computed } }).catch(() => {});
+            }
+        }
 
         if (player.birthChart) {
             const root = player.birthChart.data || player.birthChart;

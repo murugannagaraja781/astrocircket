@@ -1578,9 +1578,20 @@ const PlayersManager = () => {
     const [previewChart, setPreviewChart] = useState(null);
     const [generatingChart, setGeneratingChart] = useState(false);
 
-    const handleViewChart = (player) => {
+    const handleViewChart = async (player) => {
         setSelectedPlayerForChart(player);
         setOpenChartDialog(true);
+        if ((!player.birthChart || Object.keys(player.birthChart).length === 0) && (player.id || player._id)) {
+            try {
+                const pid = player.id || player._id;
+                const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/players/${pid}`);
+                if (res.data && res.data.birthChart) {
+                    setSelectedPlayerForChart(res.data);
+                }
+            } catch (e) {
+                console.error("Failed to load full player chart", e);
+            }
+        }
     };
 
     // Snackbar (Designed Alert)
@@ -2586,7 +2597,7 @@ const PlayersManager = () => {
                             {/* Planetary Table */}
                             <Box sx={{ width: '100%', mt: 2 }}>
                                 <Typography variant="h6" gutterBottom color="text.primary">Planetary Positions</Typography>
-                                <PlanetaryTable planets={selectedPlayerForChart.birthChart?.formattedPlanets || []} />
+                                <PlanetaryTable planets={selectedPlayerForChart.birthChart} />
                             </Box>
                         </Box>
                     )}
