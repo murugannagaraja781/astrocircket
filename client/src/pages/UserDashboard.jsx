@@ -6,6 +6,7 @@ import AuthContext from '../context/AuthContext';
 import RasiChart, { tamilSigns, signLords, signLordsTamil, nakshatraTamilMap, getSignId } from '../components/RasiChart';
 import MatchPredictionControl from '../components/MatchPredictionControl';
 import MatchMomentumChart from '../components/MatchMomentumChart';
+import HeadToHeadAnalysis from '../components/HeadToHeadAnalysis';
 import LeagueManager from '../components/LeagueManager';
 import AdminPredictionManager from '../components/AdminPredictionManager';
 import { runPrediction } from '../utils/predictionAdapter';
@@ -2379,6 +2380,7 @@ const MatchWizardDialog = (props) => {
                             label={`2️⃣ 2nd Innings: ${batFirstTeam === 'teamA' ? (groups.find(g => g._id === teamB)?.name || 'Team B') : (groups.find(g => g._id === teamA)?.name || 'Team A')} (Bat) vs ${batFirstTeam === 'teamA' ? (groups.find(g => g._id === teamA)?.name || 'Team A') : (groups.find(g => g._id === teamB)?.name || 'Team B')} (Bowl)`}
                         />
                         <Tab value="WAVE" label="📈 Trading Waveform Chart" />
+                        <Tab value="H2H" label="⚔️ Head to Head" />
                     </Tabs>
 
                     {/* Quick Toss Control */}
@@ -2426,8 +2428,32 @@ const MatchWizardDialog = (props) => {
                 </Box>
             )}
 
+            {/* HEAD TO HEAD (2 Batsmen vs 1 Bowler) TAB VIEW */}
+            {activeInningsTab === 'H2H' && (
+                <Box sx={{ p: { xs: 1, sm: 2 }, flexGrow: 1, overflow: 'auto', maxHeight: 'calc(100vh - 160px)' }}>
+                    {teamA && teamB ? (
+                        <HeadToHeadAnalysis
+                            teamAPlayers={(groups.find(g => g._id === teamA)?.players || [])}
+                            teamBPlayers={(groups.find(g => g._id === teamB)?.players || [])}
+                            teamAName={groups.find(g => g._id === teamA)?.name || 'Team A'}
+                            teamBName={groups.find(g => g._id === teamB)?.name || 'Team B'}
+                            matchChart={matchChart}
+                            timelineData={timelineData}
+                            batFirstTeam={batFirstTeam}
+                            matchStartTime={matchDetails?.time || '19:30'}
+                        />
+                    ) : (
+                        <Paper sx={{ p: 6, textAlign: 'center', borderRadius: '16px', bgcolor: 'rgba(0,0,0,0.02)' }}>
+                            <Typography variant="h6" color="text.secondary">
+                                Please select both teams above to use Head-to-Head Analysis.
+                            </Typography>
+                        </Paper>
+                    )}
+                </Box>
+            )}
+
             {/* SIDE BY SIDE PLAYER TABLES - Full height on Complete Match & Innings Tabs */}
-            {activeInningsTab !== 'WAVE' && (
+            {activeInningsTab !== 'WAVE' && activeInningsTab !== 'H2H' && (
                 <Box sx={{
                     flexGrow: 1,
                     display: (teamA && teamB) ? 'flex' : 'none',
