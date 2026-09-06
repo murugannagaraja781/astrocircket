@@ -347,6 +347,7 @@ import DescriptionIcon from '@mui/icons-material/Description'; // New Icon for V
 import GavelIcon from '@mui/icons-material/Gavel'; // Rules Icon
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'; // Chevron for Quick Actions
 import StickyNote2Icon from '@mui/icons-material/StickyNote2'; // Notes Icon
+import TimelineIcon from '@mui/icons-material/Timeline'; // KP Timeline Icon
 import RasiChart, { tamilSigns, signLords, signLordsTamil, nakshatraTamilMap, getSignId, getNakshatraLordHelper } from '../components/RasiChart';
 import PlanetaryTable from '../components/PlanetaryTable';
 import AuthContext from '../context/AuthContext';
