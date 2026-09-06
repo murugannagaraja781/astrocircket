@@ -1,7 +1,19 @@
 import React from 'react';
+import { tamilSigns, signLords, signLordsTamil, nakshatraTamilMap, planetFullTamilMap, getSignId } from './RasiChart';
 
 const PlanetaryTable = ({ planets, style = {} }) => {
-    if (!planets || planets.length === 0) return <div>No planetary data available</div>;
+    let pList = [];
+    if (Array.isArray(planets)) {
+        pList = planets;
+    } else if (planets && typeof planets === 'object') {
+        pList = Object.entries(planets).map(([k, v]) => ({
+            name: k,
+            planetName: k,
+            ...(typeof v === 'object' ? v : { longitude: v })
+        }));
+    }
+
+    if (!pList || pList.length === 0) return <div>No planetary data available</div>;
 
     // Inline Styles for Portability
     const tableStyle = {
@@ -54,19 +66,32 @@ const PlanetaryTable = ({ planets, style = {} }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {planets.map((p, index) => (
-                        <tr key={index} style={index % 2 === 0 ? trEvenStyle : trOddStyle}>
-                            <td style={tdStyle}>{p.planetTamil || p.planetName}</td>
-                            <td style={tdStyle}>{p.signTamil || p.signName}</td>
-                            <td style={tdStyle}>{p.lordTamil || p.lordName}</td>
-                            <td style={tdStyle}>{p.nakshatraLordTamil || p.nakshatraLord}</td>
-                            <td style={tdStyle}>{p.nakshatraTamil || p.nakshatraName}</td>
-                            <td style={tdStyle}>{p.degreeFormatted}</td>
-                            <td style={tdStyle}>{p.dignityTamil || p.dignityName}</td>
-                            <td style={tdStyle}>{p.avasthaTamil || p.avasthaName}</td>
-                            <td style={tdStyle}>{p.stateTamil || p.stateName}</td>
-                        </tr>
-                    ))}
+                    {pList.map((p, index) => {
+                        const pName = p.name || p.planetName || p.planet;
+                        const pTamil = p.planetTamil || p.tamilName || planetFullTamilMap[pName] || pName;
+                        const sId = getSignId(p.signId || p.signNumber || p.sign || p.signTamil || p.longitude);
+                        const sTamil = p.signTamil || (sId ? tamilSigns[sId] : (p.sign || p.signName || '-'));
+                        const lordTamil = p.lordTamil || p.signLordTamil || (sId ? signLordsTamil[signLords[sId]] : (p.signLord || p.lordName || '-'));
+                        const rawNak = p.nakshatraTamil || p.nakshatra || p.nakshatraName;
+                        const nakTamil = nakshatraTamilMap[rawNak] || rawNak || '-';
+                        const nakLordTamil = p.nakshatraLordTamil || p.nakshatraLord || '-';
+                        const degree = p.degreeFormatted || p.formattedDegree || (typeof p.degreesInSign === 'number' ? `${p.degreesInSign.toFixed(2)}°` : (typeof p.longitude === 'number' ? `${(p.longitude % 30).toFixed(2)}°` : '-'));
+                        const dignity = p.dignityTamil || p.dignityName || p.dignity || '-';
+
+                        return (
+                            <tr key={index} style={index % 2 === 0 ? trEvenStyle : trOddStyle}>
+                                <td style={tdStyle}>{pTamil}</td>
+                                <td style={tdStyle}>{sTamil}</td>
+                                <td style={tdStyle}>{lordTamil}</td>
+                                <td style={tdStyle}>{nakLordTamil}</td>
+                                <td style={tdStyle}>{nakTamil}</td>
+                                <td style={tdStyle}>{degree}</td>
+                                <td style={tdStyle}>{dignity}</td>
+                                <td style={tdStyle}>{p.avasthaTamil || p.avasthaName || '-'}</td>
+                                <td style={tdStyle}>{p.stateTamil || p.stateName || '-'}</td>
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </table>
         </div>

@@ -3,7 +3,7 @@ import React, { useContext, useState, useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import AuthContext from '../context/AuthContext';
-import RasiChart from '../components/RasiChart';
+import RasiChart, { tamilSigns, signLords, signLordsTamil, nakshatraTamilMap, getSignId } from '../components/RasiChart';
 import MatchPredictionControl from '../components/MatchPredictionControl';
 import MatchMomentumChart from '../components/MatchMomentumChart';
 import LeagueManager from '../components/LeagueManager';
@@ -761,29 +761,8 @@ const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = fa
                         {/* Rasi Chart Component with Dignity Colors */}
                         <RasiChart
                             data={chartData}
-                            planetsData={(() => {
-                                if (!chartData) return null;
-                                const pList = Array.isArray(chartData.formattedPlanets)
-                                    ? chartData.formattedPlanets
-                                    : (chartData.planets && Array.isArray(chartData.planets) ? chartData.planets : []);
-                                const styleMap = {};
-                                pList.forEach(p => {
-                                    const name = p.name || p.planetName;
-                                    const dignity = p.dignityName || p.dignity;
-                                    let color = '#000';
-                                    if (dignity) {
-                                        if (['Exalted', 'Uchcham', 'உச்சம்'].some(v => dignity.includes(v))) color = '#059669'; // Green
-                                        else if (['Own', 'Atchi', 'ஆட்சி', 'Moolatrikona'].some(v => dignity.includes(v))) color = '#d97706'; // Orange
-                                        else if (['Debilitated', 'Neecham', 'நீசம்'].some(v => dignity.includes(v))) color = '#dc2626'; // Red
-                                        else if (['Friendly', 'Natpu', 'நட்பு'].some(v => dignity.includes(v))) color = '#2563eb'; // Blue
-                                    }
-
-                                    if (name) styleMap[name] = { dignityColor: color };
-                                });
-                                return styleMap;
-                            })()}
                         />
-                        {/* Summary Table mimicking Match Prediction Control */}
+                        {/* Summary Table */}
                         <Box sx={{ mt: 3 }}>
                             <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '12px', border: '1px solid rgba(255, 111, 0, 0.2)' }}>
                                 <Table size="small">
@@ -799,21 +778,37 @@ const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = fa
                                             const summary = [];
                                             // 1. Lagna
                                             const asc = chartData?.ascendant || {};
-                                            const ascSign = asc.tamil || "Not Found";
-                                            const ascLord = asc.lordTamil || asc.lord || "-";
-                                            summary.push({ label: "லக்னம்", sign: ascSign, lord: ascLord });
+                                            let ascSignTamil = asc.sign?.tamil || asc.tamil;
+                                            if (!ascSignTamil) {
+                                                const ascSignName = asc.sign?.name || asc.name || (typeof asc.sign === 'string' ? asc.sign : null);
+                                                const sId = ascSignName ? getSignId(ascSignName) : (typeof asc.longitude === 'number' ? getSignId(asc.longitude) : (typeof asc === 'number' ? getSignId(asc) : null));
+                                                if (sId) ascSignTamil = tamilSigns[sId];
+                                            }
+                                            ascSignTamil = ascSignTamil || "-";
+                                            const ascLord = asc.sign?.lordTamil || asc.sign?.lord || asc.lordTamil || asc.lord || (ascSignTamil !== "-" && getSignId(ascSignTamil) ? signLordsTamil[signLords[getSignId(ascSignTamil)]] : "-") || "-";
+                                            summary.push({ label: "லக்னம்", sign: ascSignTamil, lord: ascLord });
+
                                             // 2. Moon
-                                            const moon = chartData?.moonSign || {};
-                                            const moonSign = moon.tamil || "Not Found";
-                                            const moonLord = moon.lordTamil || moon.lord || "-";
-                                            summary.push({ label: "சந்திரன்", sign: moonSign, lord: moonLord });
+                                            const moonPlanet = chartData?.planets?.Moon || (Array.isArray(chartData?.planets) ? chartData.planets.find(p => (p.name || p.planetName) === 'Moon') : null) || (Array.isArray(chartData?.formattedPlanets) ? chartData.formattedPlanets.find(p => (p.name || p.planetName) === 'Moon') : null);
+                                            const moonObj = chartData?.moonSign || {};
+                                            let moonSignTamil = moonObj.tamil || moonPlanet?.signTamil;
+                                            if (!moonSignTamil) {
+                                                const mName = moonObj.name || moonPlanet?.sign || (typeof moonObj === 'string' ? moonObj : null);
+                                                const sId = mName ? getSignId(mName) : (typeof moonPlanet?.longitude === 'number' ? getSignId(moonPlanet.longitude) : null);
+                                                if (sId) moonSignTamil = tamilSigns[sId];
+                                            }
+                                            moonSignTamil = moonSignTamil || "-";
+                                            const moonLord = moonObj.lordTamil || moonObj.lord || moonPlanet?.signLordTamil || moonPlanet?.signLord || (moonSignTamil !== "-" && getSignId(moonSignTamil) ? signLordsTamil[signLords[getSignId(moonSignTamil)]] : "-") || "-";
+                                            summary.push({ label: "சந்திரன்", sign: moonSignTamil, lord: moonLord });
+
                                             // 3. Nakshatra
-                                            const nak = chartData?.nakshatra || chartData?.moonNakshatra || {};
-                                            const nakName = nak.tamil || nak.name || "Not Found";
-                                            let nakLord = nak.lordTamil || nak.lord || "-";
+                                            const nakObj = chartData?.nakshatra || chartData?.moonNakshatra || {};
+                                            const rawNak = typeof nakObj === 'string' ? nakObj : (nakObj.name || nakObj.tamil || moonPlanet?.nakshatraTamil || moonPlanet?.nakshatra);
+                                            const nakTamil = nakshatraTamilMap[rawNak] || rawNak || "-";
+                                            let nakLord = nakObj.lordTamil || nakObj.lord || moonPlanet?.nakshatraLordTamil || moonPlanet?.nakshatraLord || "-";
                                             const tamilLords = { 'Ketu': 'கேது', 'Venus': 'சுக்கிரன்', 'Sun': 'சூரியன்', 'Moon': 'சந்திரன்', 'Mars': 'செவ்வாய்', 'Rahu': 'ராகு', 'Jupiter': 'குரு', 'Saturn': 'சனி', 'Mercury': 'புதன்' };
                                             if (tamilLords[nakLord]) nakLord = tamilLords[nakLord];
-                                            summary.push({ label: "நட்சத்திரம்", sign: nakName, lord: nakLord });
+                                            summary.push({ label: "நட்சத்திரம்", sign: nakTamil, lord: nakLord });
 
                                             return summary.map((row, index) => (
                                                 <TableRow key={index}>
@@ -846,31 +841,57 @@ const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = fa
                                     </TableHead>
                                     <TableBody>
                                         {(() => {
-                                            const pList = chartData?.formattedPlanets || chartData?.planets || [];
-                                            return Array.isArray(pList) ? pList.map((p, i) => {
-                                                const name = p.name || p.planetName;
+                                            let pList = [];
+                                            if (Array.isArray(chartData?.formattedPlanets) && chartData.formattedPlanets.length > 0) {
+                                                pList = chartData.formattedPlanets;
+                                            } else if (Array.isArray(chartData?.planets) && chartData.planets.length > 0) {
+                                                pList = chartData.planets;
+                                            } else if (chartData?.planets && typeof chartData.planets === 'object') {
+                                                pList = Object.entries(chartData.planets).map(([k, v]) => ({
+                                                    name: k,
+                                                    ...(typeof v === 'object' ? v : { longitude: v })
+                                                }));
+                                            }
+
+                                            if (pList.length === 0) {
+                                                return (
+                                                    <TableRow><TableCell colSpan={5} align="center">No details available</TableCell></TableRow>
+                                                );
+                                            }
+
+                                            const tamilPlanetNames = {
+                                                Sun: 'சூரியன்', Moon: 'சந்திரன்', Mars: 'செவ்வாய்', Mercury: 'புதன்',
+                                                Jupiter: 'குரு', Venus: 'சுக்கிரன்', Saturn: 'சனி', Rahu: 'ராகு', Ketu: 'கேது'
+                                            };
+
+                                            return pList.map((p, i) => {
+                                                const name = p.name || p.planetName || p.planet;
                                                 if (!name) return null;
+                                                const displayName = p.tamilName || p.planetTamil || tamilPlanetNames[name] || name;
+                                                const signDisplay = p.signTamil || (p.sign ? (tamilSigns[getSignId(p.sign)] || p.sign) : (typeof p.longitude === 'number' ? tamilSigns[getSignId(p.longitude)] : '-'));
+                                                const rawNak = p.nakshatraTamil || p.nakshatra;
+                                                const nakDisplay = nakshatraTamilMap[rawNak] || rawNak || '-';
+                                                const nakLordDisplay = p.nakshatraLordTamil || p.nakshatraLord || '-';
 
                                                 // Dignity Color Logic
-                                                const dignity = p.dignityName || p.dignity || '-';
+                                                const dignity = p.dignityTamil || p.dignityName || p.dignity || '-';
                                                 let dColor = 'text.primary';
-                                                if (['Exalted', 'Uchcham', 'உச்சம்'].some(v => dignity.toLowerCase().includes(v.toLowerCase()))) dColor = '#059669'; // Green
-                                                else if (['Own', 'Atchi', 'ஆட்சி', 'Moolatrikona'].some(v => dignity.toLowerCase().includes(v.toLowerCase()))) dColor = '#d97706'; // Orange
-                                                else if (['Debilitated', 'Neecham', 'நீசம்'].some(v => dignity.toLowerCase().includes(v.toLowerCase()))) dColor = '#dc2626'; // Red
-                                                else if (['Friendly', 'Natpu', 'நட்பு'].some(v => dignity.toLowerCase().includes(v.toLowerCase()))) dColor = '#2563eb'; // Blue
+                                                const dLower = String(dignity).toLowerCase();
+                                                if (['exalted', 'uchcham', 'உச்சம்'].some(v => dLower.includes(v))) dColor = '#059669'; // Green
+                                                else if (['own', 'atchi', 'ஆட்சி', 'moolatrikona'].some(v => dLower.includes(v))) dColor = '#d97706'; // Orange
+                                                else if (['debilitated', 'neecham', 'நீசம்'].some(v => dLower.includes(v))) dColor = '#dc2626'; // Red
+                                                else if (['friendly', 'natpu', 'நட்பு'].some(v => dLower.includes(v))) dColor = '#2563eb'; // Blue
 
                                                 return (
                                                     <TableRow key={i} hover sx={{ '& td': { fontSize: '0.75rem', py: 0.8 } }}>
-                                                        <TableCell sx={{ fontWeight: 'bold' }}>{p.tamilName || name}</TableCell>
-                                                        <TableCell>{p.signTamil || p.signName || p.currentSign || '-'}</TableCell>
-                                                        <TableCell>{p.nakshatraTamil || p.nakshatra || '-'}</TableCell>
-                                                        <TableCell>{p.nakshatraLordTamil || p.nakshatraLord || '-'}</TableCell>
+                                                        <TableCell sx={{ fontWeight: 'bold' }}>{displayName}</TableCell>
+                                                        <TableCell>{signDisplay}</TableCell>
+                                                        <TableCell>{nakDisplay}</TableCell>
+                                                        <TableCell>{nakLordDisplay}</TableCell>
                                                         <TableCell sx={{ color: dColor, fontWeight: 'bold' }}>{dignity}</TableCell>
                                                     </TableRow>
                                                 );
-                                            }) : (
-                                                <TableRow><TableCell colSpan={4} align="center">No details available</TableCell></TableRow>
-                                            );
+                                            });
                                         })()}
                                     </TableBody>
                                 </Table>
@@ -880,7 +901,7 @@ const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = fa
                 </Grid>
             )}
 
-            {tabIndex === 1 && <QuickSummaryTable data={player.birthChart} hideHeader={hideHeader} />}
+            {tabIndex === 1 && <QuickSummaryTable data={chartData || player.birthChart} hideHeader={hideHeader} />}
             {tabIndex === 2 && <PanchangamGrid panchangam={chartData?.panchangam || player.birthChart?.panchangam} birthData={player.birthData} hideHeader={hideHeader} />}
         </Box>
     );
@@ -1038,17 +1059,53 @@ const ChartPopup = ({ open, onClose, player, matchChart, initialTab = 0, hideHea
 
     useEffect(() => {
         if (open && player) {
-            setLoading(true);
             setFetchedChart(null);
 
-            // Per User Request: "take call /birth-chart api"
-            const dobParts = player.dob ? player.dob.split('-') : [];
-            const timeParts = player.birthTime ? player.birthTime.split(':') : ['12', '00'];
+            // Parse Date of Birth
+            let rawDob = player.birthData?.date || player.dob || '';
+            let rawTime = player.birthData?.time || player.birthTime || '12:00';
 
-            if (dobParts.length === 3) {
+            let year, month, day;
+            if (rawDob) {
+                if (typeof rawDob === 'string' && rawDob.includes('-')) {
+                    const parts = rawDob.split('T')[0].split('-');
+                    if (parts.length === 3) {
+                        if (parts[0].length === 4) {
+                            year = parts[0]; month = parts[1]; day = parts[2];
+                        } else if (parts[2].length === 4) {
+                            year = parts[2]; month = parts[1]; day = parts[0];
+                        }
+                    }
+                }
+                if (!year) {
+                    const d = new Date(rawDob);
+                    if (!isNaN(d.getTime())) {
+                        year = String(d.getFullYear());
+                        month = String(d.getMonth() + 1);
+                        day = String(d.getDate());
+                    }
+                }
+            }
+
+            let hour = '12', minute = '00';
+            if (rawTime) {
+                const timeParts = String(rawTime).split(':');
+                if (timeParts.length >= 2) {
+                    hour = timeParts[0];
+                    minute = timeParts[1].substring(0, 2);
+                }
+            }
+
+            if (year && month && day) {
+                const hasFullChart = player.birthChart && (player.birthChart.planets || player.birthChart.houses);
+                if (!hasFullChart) setLoading(true);
+
                 const payload = {
-                    year: dobParts[0], month: dobParts[1], day: dobParts[2],
-                    hour: timeParts[0], minute: timeParts[1],
+                    year: parseInt(year, 10),
+                    month: parseInt(month, 10),
+                    day: parseInt(day, 10),
+                    hour: parseInt(hour, 10),
+                    minute: parseInt(minute, 10),
                     latitude: player.latitude || 13.0827,
                     longitude: player.longitude || 80.2707,
                     timezone: player.timezone || 5.5
