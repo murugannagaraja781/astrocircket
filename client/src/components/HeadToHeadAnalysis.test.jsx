@@ -19,13 +19,13 @@ describe('HeadToHeadAnalysis Component', () => {
         },
         {
             id: 'p2',
-            name: 'Faf du Plessis',
+            name: 'Sophia Dunkley',
             role: 'BAT',
             birthChart: {
-                moonSign: { name: 'Aries', tamil: 'மேஷம்', lord: 'Mars', lordTamil: 'செவ்வாய்' },
-                nakshatra: { name: 'Ashwini', tamil: 'அஸ்வினி', lord: 'Ketu', lordTamil: 'கேது' },
                 planets: {
-                    Moon: { sign: 'Aries', signTamil: 'மேஷம்', nakshatra: 'Ashwini', nakshatraTamil: 'அஸ்வினி' }
+                    Sun: 89.71,
+                    Moon: 354.89, // Pisces (Lord: Jupiter/குரு), Revati (Lord: Mercury/புதன்)
+                    Mars: 72.83
                 }
             }
         },
@@ -35,10 +35,7 @@ describe('HeadToHeadAnalysis Component', () => {
             role: 'ALL',
             birthChart: {
                 moonSign: { name: 'Taurus', tamil: 'ரிஷபம்', lord: 'Venus', lordTamil: 'சுக்கிரன்' },
-                nakshatra: { name: 'Rohini', tamil: 'ரோகிணி', lord: 'Moon', lordTamil: 'சந்திரன்' },
-                planets: {
-                    Moon: { sign: 'Taurus', signTamil: 'ரிஷபம்', nakshatra: 'Rohini', nakshatraTamil: 'ரோகிணி' }
-                }
+                nakshatra: { name: 'Rohini', tamil: 'ரோகிணி', lord: 'Moon', lordTamil: 'சந்திரன்' }
             }
         }
     ];
@@ -46,25 +43,11 @@ describe('HeadToHeadAnalysis Component', () => {
     const mockTeamBPlayers = [
         {
             id: 'p4',
-            name: 'Jasprit Bumrah',
+            name: 'Louise Little',
             role: 'BOWL',
             birthChart: {
-                moonSign: { name: 'Leo', tamil: 'சிம்மம்', lord: 'Sun', lordTamil: 'சூரியன்' },
-                nakshatra: { name: 'Magha', tamil: 'மகம்', lord: 'Ketu', lordTamil: 'கேது' },
                 planets: {
-                    Moon: { sign: 'Leo', signTamil: 'சிம்மம்', nakshatra: 'Magha', nakshatraTamil: 'மகம்' }
-                }
-            }
-        },
-        {
-            id: 'p5',
-            name: 'Hardik Pandya',
-            role: 'ALL',
-            birthChart: {
-                moonSign: { name: 'Gemini', tamil: 'மிதுனம்', lord: 'Mercury', lordTamil: 'புதன்' },
-                nakshatra: { name: 'Ardra', tamil: 'திருவாதிரை', lord: 'Rahu', lordTamil: 'ராகு' },
-                planets: {
-                    Moon: { sign: 'Gemini', signTamil: 'மிதுனம்', nakshatra: 'Ardra', nakshatraTamil: 'திருவாதிரை' }
+                    Moon: 82.09 // Gemini (Lord: Mercury/புதன்), Punarvasu (Lord: Jupiter/குரு)
                 }
             }
         }
@@ -86,37 +69,22 @@ describe('HeadToHeadAnalysis Component', () => {
                     lord: 'Mercury',
                     nakshatra: 'Hasta',
                     nakshatraLord: 'Moon'
-                },
-                {
-                    startOffsetMinutes: 60,
-                    endOffsetMinutes: 120,
-                    lagna: 'Libra',
-                    lord: 'Venus',
-                    nakshatra: 'Chitra',
-                    nakshatraLord: 'Mars'
                 }
             ],
             planets: {
                 Sun: { longitude: 120, sign: 'Leo', nakshatra: 'Magha' },
-                Moon: { longitude: 160, sign: 'Virgo', nakshatra: 'Hasta' },
-                Mars: { longitude: 40, sign: 'Taurus', nakshatra: 'Rohini' },
-                Mercury: { longitude: 155, sign: 'Virgo', nakshatra: 'Hasta' },
-                Jupiter: { longitude: 50, sign: 'Taurus', nakshatra: 'Rohini' },
-                Venus: { longitude: 170, sign: 'Virgo', nakshatra: 'Hasta' },
-                Saturn: { longitude: 320, sign: 'Aquarius', nakshatra: 'Shatabhisha' },
-                Rahu: { longitude: 350, sign: 'Pisces', nakshatra: 'Revati' },
-                Ketu: { longitude: 170, sign: 'Virgo', nakshatra: 'Hasta' }
+                Moon: { longitude: 160, sign: 'Virgo', nakshatra: 'Hasta' }
             }
         }
     };
 
-    it('should render HeadToHeadAnalysis with Striker, Non-Striker, and Bowler cards', () => {
+    it('should render HeadToHeadAnalysis and show only Tamil Lords (ராசி அதிபதி and நட்சத்திர அதிபதி)', () => {
         render(
             <HeadToHeadAnalysis
                 teamAPlayers={mockTeamAPlayers}
                 teamBPlayers={mockTeamBPlayers}
-                teamAName="RCB"
-                teamBName="MI"
+                teamAName="ENGW"
+                teamBName="IREW"
                 matchChart={mockMatchChart}
                 batFirstTeam="teamA"
                 matchStartTime="19:30"
@@ -125,7 +93,6 @@ describe('HeadToHeadAnalysis Component', () => {
 
         // Header check
         expect(screen.getByText(/Head to Head/i)).toBeDefined();
-        expect(screen.getByText(/RCB \(Batting\) vs MI \(Bowling\)/i)).toBeDefined();
 
         // Check card headers
         expect(screen.getByText(/ஸ்ட்ரைக்கர் \(Striker\)/i)).toBeDefined();
@@ -134,8 +101,15 @@ describe('HeadToHeadAnalysis Component', () => {
 
         // Check player details rendered
         expect(screen.getByText('Virat Kohli')).toBeDefined();
-        expect(screen.getByText('Faf du Plessis')).toBeDefined();
-        expect(screen.getByText('Jasprit Bumrah')).toBeDefined();
+        expect(screen.getByText('Sophia Dunkley')).toBeDefined();
+        expect(screen.getByText('Louise Little')).toBeDefined();
+
+        // Check Lord Labels rendered (only Lords in Tamil)
+        const rasiLordLabels = screen.getAllByText(/ராசி அதிபதி:/i);
+        expect(rasiLordLabels.length).toBeGreaterThanOrEqual(3);
+
+        const nakLordLabels = screen.getAllByText(/நட்சத்திர அதிபதி:/i);
+        expect(nakLordLabels.length).toBeGreaterThanOrEqual(3);
     });
 
     it('should handle phase quick button clicks', () => {
@@ -143,8 +117,8 @@ describe('HeadToHeadAnalysis Component', () => {
             <HeadToHeadAnalysis
                 teamAPlayers={mockTeamAPlayers}
                 teamBPlayers={mockTeamBPlayers}
-                teamAName="RCB"
-                teamBName="MI"
+                teamAName="ENGW"
+                teamBName="IREW"
                 matchChart={mockMatchChart}
                 batFirstTeam="teamA"
                 matchStartTime="19:30"

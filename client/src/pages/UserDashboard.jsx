@@ -2441,6 +2441,7 @@ const MatchWizardDialog = (props) => {
                             timelineData={timelineData}
                             batFirstTeam={batFirstTeam}
                             matchStartTime={matchDetails?.time || '19:30'}
+                            token={token}
                         />
                     ) : (
                         <Paper sx={{ p: 6, textAlign: 'center', borderRadius: '16px', bgcolor: 'rgba(0,0,0,0.02)' }}>

@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import axios from 'axios';
 import {
     Box,
     Typography,
@@ -24,6 +25,19 @@ import { runPrediction } from '../utils/predictionAdapter';
 import { getActiveLagnaSlot, formatTimeOffset, isBatEligible, isBowlEligible } from '../utils/timelineEngine';
 import { tamilSigns, signLords, signLordsTamil, nakshatraTamilMap, getSignId, getNakshatraLordHelper } from './RasiChart';
 
+const SIGNS_LIST = [
+    'Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
+    'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'
+];
+
+const NAKSHATRAS_LIST = [
+    'Ashwini', 'Bharani', 'Krittika', 'Rohini', 'Mrigashirsha', 'Ardra',
+    'Punarvasu', 'Pushya', 'Ashlesha', 'Magha', 'Purva Phalguni', 'Uttara Phalguni',
+    'Hasta', 'Chitra', 'Swati', 'Vishakha', 'Anuradha', 'Jyeshtha',
+    'Mula', 'Purva Ashadha', 'Uttara Ashadha', 'Shravana', 'Dhanishta',
+    'Shatabhisha', 'Purva Bhadrapada', 'Uttara Bhadrapada', 'Revati'
+];
+
 // VisionPro Theme Colors
 const themeColors = {
     primary: '#FF6F00',
@@ -48,7 +62,8 @@ const HeadToHeadAnalysis = ({
     matchChart = null,
     timelineData = null,
     batFirstTeam = 'teamA',
-    matchStartTime = '19:30'
+    matchStartTime = '19:30',
+    token = null
 }) => {
     // Determine batting & bowling teams based on toss/innings
     const isTeamABatting = batFirstTeam === 'teamA';
@@ -56,6 +71,48 @@ const HeadToHeadAnalysis = ({
     const bowlingTeamPlayers = isTeamABatting ? teamBPlayers : teamAPlayers;
     const battingTeamName = isTeamABatting ? teamAName : teamBName;
     const bowlingTeamName = isTeamABatting ? teamBName : teamAName;
+
+    // Local match chart state for automatic fallback when matchChart is not yet ready
+    const [localMatchChart, setLocalMatchChart] = useState(null);
+
+    useEffect(() => {
+        if (matchChart) {
+            setLocalMatchChart(matchChart);
+            return;
+        }
+
+        // If no matchChart is provided, auto-fetch for the match time and date
+        const fetchAutoChart = async () => {
+            try {
+                const now = new Date();
+                const [hour, minute] = (matchStartTime || '19:30').split(':');
+                const payload = {
+                    day: now.getDate(),
+                    month: now.getMonth() + 1,
+                    year: now.getFullYear(),
+                    hour: parseInt(hour, 10) || 19,
+                    minute: parseInt(minute, 10) || 30,
+                    latitude: 19.0760,
+                    longitude: 72.8777,
+                    timezone: 5.5,
+                    ayanamsa: localStorage.getItem('preferredAyanamsa') || 'Lahiri'
+                };
+                const baseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
+                const res = await axios.post(`${baseUrl}/api/charts/birth-chart`, payload, {
+                    headers: { 'x-auth-token': token || localStorage.getItem('token') }
+                });
+                if (res.data) {
+                    setLocalMatchChart(res.data);
+                }
+            } catch (err) {
+                console.warn('Auto match chart fetch warning:', err);
+            }
+        };
+
+        fetchAutoChart();
+    }, [matchChart, matchStartTime, token]);
+
+    const effectiveMatchChart = matchChart || localMatchChart;
 
     // Filter eligible players
     const eligibleBatsmen = useMemo(() => {
@@ -98,16 +155,16 @@ const HeadToHeadAnalysis = ({
 
     // Get Active Transit for the selected timeline minute
     const activeTransitSlot = useMemo(() => {
-        if (!matchChart) return null;
-        const root = matchChart.data || matchChart;
+        if (!effectiveMatchChart) return null;
+        const root = effectiveMatchChart.data || effectiveMatchChart;
         const timeline = root.lagnaTimeline || [];
         return getActiveLagnaSlot(timeline, timeOffsetMinutes);
-    }, [matchChart, timeOffsetMinutes]);
+    }, [effectiveMatchChart, timeOffsetMinutes]);
 
     // Create transit chart for real-time slot evaluation
     const slotTransitChart = useMemo(() => {
-        if (!matchChart || !activeTransitSlot) return null;
-        const root = matchChart.data || matchChart;
+        if (!effectiveMatchChart || !activeTransitSlot) return null;
+        const root = effectiveMatchChart.data || effectiveMatchChart;
         return {
             ...root,
             ascendant: {
@@ -124,7 +181,7 @@ const HeadToHeadAnalysis = ({
             moonNakshatraLord: activeTransitSlot.nakshatraLord,
             planets: root.planets || {}
         };
-    }, [matchChart, activeTransitSlot]);
+    }, [effectiveMatchChart, activeTransitSlot]);
 
     // Find Selected Player Objects
     const striker = useMemo(() => battingTeamPlayers.find(p => p.id === strikerId), [battingTeamPlayers, strikerId]);
@@ -134,34 +191,106 @@ const HeadToHeadAnalysis = ({
     // Compute Live Predictions for the 3 players at this exact slot
     const strikerPred = useMemo(() => {
         if (!striker || !slotTransitChart) return null;
-        return runPrediction(striker.birthChart || striker, slotTransitChart, "BAT");
+        const chartData = striker.birthChart?.data || striker.birthChart || striker;
+        return runPrediction({ ...chartData, role: striker.role }, slotTransitChart, "BAT");
     }, [striker, slotTransitChart]);
 
     const nonStrikerPred = useMemo(() => {
         if (!nonStriker || !slotTransitChart) return null;
-        return runPrediction(nonStriker.birthChart || nonStriker, slotTransitChart, "BAT");
+        const chartData = nonStriker.birthChart?.data || nonStriker.birthChart || nonStriker;
+        return runPrediction({ ...chartData, role: nonStriker.role }, slotTransitChart, "BAT");
     }, [nonStriker, slotTransitChart]);
 
     const bowlerPred = useMemo(() => {
         if (!bowler || !slotTransitChart) return null;
-        return runPrediction(bowler.birthChart || bowler, slotTransitChart, "BOWL");
+        const chartData = bowler.birthChart?.data || bowler.birthChart || bowler;
+        return runPrediction({ ...chartData, role: bowler.role }, slotTransitChart, "BOWL");
     }, [bowler, slotTransitChart]);
 
-    // Helper to get player Rasi & Nakshatra in Tamil
+    // Helper to get player Rasi Lord & Nakshatra Lord in Tamil
     const getPlayerAstroDetails = (player) => {
-        if (!player) return { rasi: '-', rasiLord: '-', nak: '-', nakLord: '-' };
+        if (!player) return { rasiLord: '-', nakLord: '-' };
         const chart = player.birthChart?.data || player.birthChart || player;
-        const moonObj = chart.moonSign || chart.planets?.Moon || {};
-        const sId = getSignId(moonObj.name || moonObj.sign || moonObj.signTamil || moonObj.longitude);
-        const rasi = moonObj.tamil || moonObj.signTamil || (sId ? tamilSigns[sId] : '-');
-        const rasiLord = moonObj.lordTamil || (sId ? signLordsTamil[signLords[sId]] : '-');
+        if (!chart) return { rasiLord: '-', nakLord: '-' };
 
-        const nakObj = chart.nakshatra || chart.moonNakshatra || chart.planets?.Moon?.nakshatra || {};
-        const nakName = typeof nakObj === 'string' ? nakObj : (nakObj.name || nakObj.tamil || chart.planets?.Moon?.nakshatraTamil || '');
-        const nak = nakshatraTamilMap[nakName] || nakName || '-';
-        const nakLord = nakObj.lordTamil || (nakName ? signLordsTamil[getNakshatraLordHelper(nakName)] : '-');
+        let moonVal = null;
+        if (chart.planets && (chart.planets.Moon !== undefined || chart.planets.moon !== undefined)) {
+            moonVal = chart.planets.Moon !== undefined ? chart.planets.Moon : chart.planets.moon;
+        } else if (chart.moonSign || chart.moonNakshatra) {
+            moonVal = chart.moonSign;
+        }
 
-        return { rasi, rasiLord, nak, nakLord };
+        let rasiLordName = '-';
+        let nakLordName = '-';
+
+        // 1. If Moon is a number (degree longitude)
+        if (typeof moonVal === 'number') {
+            const norm = ((moonVal % 360) + 360) % 360;
+            const signIdx = Math.floor(norm / 30);
+            const signNum = signIdx + 1;
+            const nakIdx = Math.floor(norm / (360 / 27));
+            const signName = SIGNS_LIST[signIdx];
+            const nakName = NAKSHATRAS_LIST[nakIdx];
+
+            const rLordEng = signLords[signNum] || signLords[signName] || '-';
+            const nLordEng = getNakshatraLordHelper(nakName);
+
+            rasiLordName = signLordsTamil[rLordEng] || rLordEng;
+            nakLordName = signLordsTamil[nLordEng] || nLordEng;
+        }
+        // 2. If Moon is an object with properties
+        else if (moonVal && typeof moonVal === 'object') {
+            if (typeof moonVal.longitude === 'number') {
+                const norm = ((moonVal.longitude % 360) + 360) % 360;
+                const signIdx = Math.floor(norm / 30);
+                const signNum = signIdx + 1;
+                const nakIdx = Math.floor(norm / (360 / 27));
+                const signName = SIGNS_LIST[signIdx];
+                const nakName = NAKSHATRAS_LIST[nakIdx];
+
+                const rLordEng = moonVal.signLord || signLords[signNum] || signLords[signName] || '-';
+                const nLordEng = moonVal.nakshatraLord || getNakshatraLordHelper(nakName);
+
+                rasiLordName = moonVal.signLordTamil || signLordsTamil[rLordEng] || rLordEng;
+                nakLordName = moonVal.nakshatraLordTamil || signLordsTamil[nLordEng] || nLordEng;
+            } else {
+                const signName = moonVal.sign || moonVal.name || moonVal.english || '';
+                const nakName = moonVal.nakshatra || chart.nakshatra?.name || chart.moonNakshatra?.name || chart.nakshatra || '';
+                const rLordEng = moonVal.signLord || moonVal.lord || signLords[signName] || (getSignId(signName) ? signLords[getSignId(signName)] : '-');
+                const nLordEng = moonVal.nakshatraLord || getNakshatraLordHelper(typeof nakName === 'string' ? nakName : (nakName.name || ''));
+
+                rasiLordName = moonVal.lordTamil || moonVal.signLordTamil || signLordsTamil[rLordEng] || rLordEng;
+                nakLordName = moonVal.nakshatraLordTamil || signLordsTamil[nLordEng] || nLordEng;
+            }
+        } else if (typeof moonVal === 'string') {
+            const sId = getSignId(moonVal);
+            if (sId) {
+                const rLordEng = signLords[sId];
+                rasiLordName = signLordsTamil[rLordEng] || rLordEng;
+            }
+        }
+
+        // Direct fallback from chart properties
+        if ((!rasiLordName || rasiLordName === '-') && chart.rasiLord) {
+            rasiLordName = signLordsTamil[chart.rasiLord] || chart.rasiLord;
+        }
+        if ((!rasiLordName || rasiLordName === '-') && chart.rasiSign) {
+            const sId = getSignId(chart.rasiSign);
+            if (sId) {
+                const rLordEng = signLords[sId];
+                rasiLordName = signLordsTamil[rLordEng] || rLordEng;
+            }
+        }
+        if ((!nakLordName || nakLordName === '-') && chart.nakshatraLord) {
+            nakLordName = signLordsTamil[chart.nakshatraLord] || chart.nakshatraLord;
+        }
+        if ((!nakLordName || nakLordName === '-') && (chart.nakshatra || chart.moonNakshatra)) {
+            const nName = typeof chart.nakshatra === 'string' ? chart.nakshatra : (chart.nakshatra?.name || chart.moonNakshatra?.name || chart.moonNakshatra || '');
+            const nLordEng = getNakshatraLordHelper(nName);
+            nakLordName = signLordsTamil[nLordEng] || nLordEng;
+        }
+
+        return { rasiLord: rasiLordName || '-', nakLord: nakLordName || '-' };
     };
 
     const strikerAstro = getPlayerAstroDetails(striker);
@@ -380,13 +509,13 @@ const HeadToHeadAnalysis = ({
                                 <Typography variant="body2" fontWeight="bold" color="#1E293B">
                                     {striker.name}
                                 </Typography>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem' }}>
-                                    <span style={{ color: '#4B5563' }}>ராசி: <b>{strikerAstro.rasi}</b></span>
-                                    <span style={{ color: '#047857', fontWeight: 'bold' }}>அதிபதி: {strikerAstro.rasiLord}</span>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.82rem' }}>
+                                    <span style={{ color: '#4B5563', fontWeight: 600 }}>ராசி அதிபதி:</span>
+                                    <span style={{ color: '#047857', fontWeight: 'bold', fontSize: '0.88rem' }}>{strikerAstro.rasiLord}</span>
                                 </Box>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem' }}>
-                                    <span style={{ color: '#4B5563' }}>நட்சத்திரம்: <b>{strikerAstro.nak}</b></span>
-                                    <span style={{ color: '#1D4ED8', fontWeight: 'bold' }}>அதிபதி: {strikerAstro.nakLord}</span>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.82rem' }}>
+                                    <span style={{ color: '#4B5563', fontWeight: 600 }}>நட்சத்திர அதிபதி:</span>
+                                    <span style={{ color: '#1D4ED8', fontWeight: 'bold', fontSize: '0.88rem' }}>{strikerAstro.nakLord}</span>
                                 </Box>
                             </Box>
                         )}
@@ -457,13 +586,13 @@ const HeadToHeadAnalysis = ({
                                 <Typography variant="body2" fontWeight="bold" color="#1E293B">
                                     {nonStriker.name}
                                 </Typography>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem' }}>
-                                    <span style={{ color: '#4B5563' }}>ராசி: <b>{nonStrikerAstro.rasi}</b></span>
-                                    <span style={{ color: '#047857', fontWeight: 'bold' }}>அதிபதி: {nonStrikerAstro.rasiLord}</span>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.82rem' }}>
+                                    <span style={{ color: '#4B5563', fontWeight: 600 }}>ராசி அதிபதி:</span>
+                                    <span style={{ color: '#047857', fontWeight: 'bold', fontSize: '0.88rem' }}>{nonStrikerAstro.rasiLord}</span>
                                 </Box>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem' }}>
-                                    <span style={{ color: '#4B5563' }}>நட்சத்திரம்: <b>{nonStrikerAstro.nak}</b></span>
-                                    <span style={{ color: '#1D4ED8', fontWeight: 'bold' }}>அதிபதி: {nonStrikerAstro.nakLord}</span>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.82rem' }}>
+                                    <span style={{ color: '#4B5563', fontWeight: 600 }}>நட்சத்திர அதிபதி:</span>
+                                    <span style={{ color: '#1D4ED8', fontWeight: 'bold', fontSize: '0.88rem' }}>{nonStrikerAstro.nakLord}</span>
                                 </Box>
                             </Box>
                         )}
@@ -522,13 +651,13 @@ const HeadToHeadAnalysis = ({
                                 <Typography variant="body2" fontWeight="bold" color="#1E293B">
                                     {bowler.name}
                                 </Typography>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem' }}>
-                                    <span style={{ color: '#4B5563' }}>ராசி: <b>{bowlerAstro.rasi}</b></span>
-                                    <span style={{ color: '#047857', fontWeight: 'bold' }}>அதிபதி: {bowlerAstro.rasiLord}</span>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.82rem' }}>
+                                    <span style={{ color: '#4B5563', fontWeight: 600 }}>ராசி அதிபதி:</span>
+                                    <span style={{ color: '#047857', fontWeight: 'bold', fontSize: '0.88rem' }}>{bowlerAstro.rasiLord}</span>
                                 </Box>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem' }}>
-                                    <span style={{ color: '#4B5563' }}>நட்சத்திரம்: <b>{bowlerAstro.nak}</b></span>
-                                    <span style={{ color: '#1D4ED8', fontWeight: 'bold' }}>அதிபதி: {bowlerAstro.nakLord}</span>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.82rem' }}>
+                                    <span style={{ color: '#4B5563', fontWeight: 600 }}>நட்சத்திர அதிபதி:</span>
+                                    <span style={{ color: '#1D4ED8', fontWeight: 'bold', fontSize: '0.88rem' }}>{bowlerAstro.nakLord}</span>
                                 </Box>
                             </Box>
                         )}
@@ -595,18 +724,24 @@ const HeadToHeadAnalysis = ({
                         <Typography variant="subtitle2" fontWeight="bold" sx={{ color: '#1E293B', mb: 1 }}>
                             📋 ஜோதிடப் பொருத்தம் (Astrological Synergy Summary)
                         </Typography>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.8, fontSize: '0.8rem' }}>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 0.8, bgcolor: '#F8FAFC', borderRadius: '6px' }}>
-                                <span>ஸ்ட்ரைக்கர் ராசி அதிபதி:</span>
-                                <strong style={{ color: '#047857' }}>{strikerAstro.rasiLord}</strong>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, fontSize: '0.8rem' }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1, bgcolor: '#F8FAFC', borderRadius: '8px' }}>
+                                <span style={{ fontWeight: 600 }}>🏏 ஸ்ட்ரைக்கர் ({striker?.name || 'Player'}):</span>
+                                <span>
+                                    ராசி அதிபதி: <strong style={{ color: '#047857' }}>{strikerAstro.rasiLord}</strong> | நட்சத்திர அதிபதி: <strong style={{ color: '#1D4ED8' }}>{strikerAstro.nakLord}</strong>
+                                </span>
                             </Box>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 0.8, bgcolor: '#F8FAFC', borderRadius: '6px' }}>
-                                <span>நான்-ஸ்ட்ரைக்கர் ராசி அதிபதி:</span>
-                                <strong style={{ color: '#1D4ED8' }}>{nonStrikerAstro.rasiLord}</strong>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1, bgcolor: '#F8FAFC', borderRadius: '8px' }}>
+                                <span style={{ fontWeight: 600 }}>🏃 நான்-ஸ்ட்ரைக்கர் ({nonStriker?.name || 'Player'}):</span>
+                                <span>
+                                    ராசி அதிபதி: <strong style={{ color: '#047857' }}>{nonStrikerAstro.rasiLord}</strong> | நட்சத்திர அதிபதி: <strong style={{ color: '#1D4ED8' }}>{nonStrikerAstro.nakLord}</strong>
+                                </span>
                             </Box>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 0.8, bgcolor: '#F8FAFC', borderRadius: '6px' }}>
-                                <span>பவுலர் ராசி அதிபதி:</span>
-                                <strong style={{ color: '#7C3AED' }}>{bowlerAstro.rasiLord}</strong>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1, bgcolor: '#F8FAFC', borderRadius: '8px' }}>
+                                <span style={{ fontWeight: 600 }}>🥎 பவுலர் ({bowler?.name || 'Player'}):</span>
+                                <span>
+                                    ராசி அதிபதி: <strong style={{ color: '#7C3AED' }}>{bowlerAstro.rasiLord}</strong> | நட்சத்திர அதிபதி: <strong style={{ color: '#1D4ED8' }}>{bowlerAstro.nakLord}</strong>
+                                </span>
                             </Box>
                         </Box>
                     </Paper>
