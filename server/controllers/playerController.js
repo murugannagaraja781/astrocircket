@@ -7,6 +7,7 @@ const ExcelJS = require('exceljs');
 const { createBackup } = require('../utils/backupHelper');
 const liveScoreService = require('../utils/liveScoreService');
 const Group = require('../models/Group');
+const mongoose = require('mongoose');
 
 // Import local astro calculator using vedic-astrology-api
 const {
@@ -22,6 +23,22 @@ const parseDobToIso = (dobStr) => {
     if (!dobStr) return '';
     const str = String(dobStr).trim();
     if (/^\d{4}-\d{2}-\d{2}/.test(str)) return str.slice(0, 10);
+    
+    // Support DD/MM/YYYY, MM/DD/YYYY, DD-MM-YYYY
+    const slashOrDash = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+    if (slashOrDash) {
+        let p1 = parseInt(slashOrDash[1], 10);
+        let p2 = parseInt(slashOrDash[2], 10);
+        const yyyy = slashOrDash[3];
+        if (p1 > 12) {
+            return `${yyyy}-${String(p2).padStart(2, '0')}-${String(p1).padStart(2, '0')}`;
+        }
+        if (p2 > 12) {
+            return `${yyyy}-${String(p1).padStart(2, '0')}-${String(p2).padStart(2, '0')}`;
+        }
+        return `${yyyy}-${String(p2).padStart(2, '0')}-${String(p1).padStart(2, '0')}`;
+    }
+
     const m = str.match(/([a-zA-Z]+)\s+(\d{1,2}),?\s+(\d{4})/);
     if (m) {
         const monthMap = { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12 };
@@ -29,6 +46,11 @@ const parseDobToIso = (dobStr) => {
         const dd = parseInt(m[2], 10);
         const yyyy = parseInt(m[3], 10);
         return `${yyyy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}`;
+    }
+
+    const d = new Date(str);
+    if (!isNaN(d.getTime())) {
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     }
     return '';
 };
@@ -49,11 +71,18 @@ const fetchCharData = async (p) => {
 
         let hour = 12;
         let minute = 0;
-        if (p.birthTime && p.birthTime.includes(':')) {
-            const timeParts = p.birthTime.split(':').map(Number);
-            if (timeParts.length >= 2) {
-                hour = isNaN(timeParts[0]) ? 12 : timeParts[0];
+        if (p.birthTime) {
+            const timeStr = String(p.birthTime).trim().toLowerCase();
+            const isPM = timeStr.includes('pm');
+            const isAM = timeStr.includes('am');
+            const cleanTime = timeStr.replace(/[^\d:]/g, '');
+            if (cleanTime.includes(':')) {
+                const timeParts = cleanTime.split(':').map(Number);
+                let h = isNaN(timeParts[0]) ? 12 : timeParts[0];
                 minute = isNaN(timeParts[1]) ? 0 : timeParts[1];
+                if (isPM && h < 12) h += 12;
+                if (isAM && h === 12) h = 0;
+                hour = h;
             }
         }
 
