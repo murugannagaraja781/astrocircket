@@ -347,8 +347,7 @@ import DescriptionIcon from '@mui/icons-material/Description'; // New Icon for V
 import GavelIcon from '@mui/icons-material/Gavel'; // Rules Icon
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'; // Chevron for Quick Actions
 import StickyNote2Icon from '@mui/icons-material/StickyNote2'; // Notes Icon
-import TimelineIcon from '@mui/icons-material/Timeline'; // KP Timeline Icon
-import RasiChart from '../components/RasiChart';
+import RasiChart, { tamilSigns, signLords, signLordsTamil, nakshatraTamilMap, getSignId, getNakshatraLordHelper } from '../components/RasiChart';
 import PlanetaryTable from '../components/PlanetaryTable';
 import AuthContext from '../context/AuthContext';
 import UserDashboard from './UserDashboard';
@@ -2584,7 +2583,7 @@ const PlayersManager = () => {
                 </DialogTitle>
                 <DialogContent>
                     {selectedPlayerForChart && (
-                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, mt: 2 }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, mt: 1 }}>
                             {/* Rasi Chart */}
                             <Box sx={{ p: 1, backgroundColor: '#fff', borderRadius: 2, boxShadow: 1 }}>
                                 {selectedPlayerForChart.birthChart ? (
@@ -2594,11 +2593,59 @@ const PlayersManager = () => {
                                 )}
                             </Box>
 
-                            {/* Planetary Table */}
-                            <Box sx={{ width: '100%', mt: 2 }}>
-                                <Typography variant="h6" gutterBottom color="text.primary">Planetary Positions</Typography>
-                                <PlanetaryTable planets={selectedPlayerForChart.birthChart} />
-                            </Box>
+                            {/* Rasi Athipathi & Nakshatra Athipathi Summary */}
+                            {(() => {
+                                const chart = selectedPlayerForChart.birthChart?.data || selectedPlayerForChart.birthChart;
+                                if (!chart) return null;
+
+                                // Moon Sign & Rasi Athipathi
+                                const moonObj = chart.moonSign || chart.planets?.Moon || {};
+                                const sId = getSignId(moonObj.name || moonObj.sign || moonObj.signTamil || moonObj.longitude);
+                                const rasiName = moonObj.tamil || moonObj.signTamil || (sId ? tamilSigns[sId] : (moonObj.name || moonObj.sign || '-'));
+                                const rasiLordRaw = moonObj.lord || moonObj.signLord || (sId ? signLords[sId] : null);
+                                const rasiLord = moonObj.lordTamil || moonObj.signLordTamil || (rasiLordRaw ? (signLordsTamil[rasiLordRaw] || rasiLordRaw) : '-');
+
+                                // Nakshatra & Nakshatra Athipathi
+                                const nakObj = chart.nakshatra || chart.moonNakshatra || chart.planets?.Moon?.nakshatra || {};
+                                const nakNameRaw = typeof nakObj === 'string' ? nakObj : (nakObj.name || nakObj.tamil || chart.planets?.Moon?.nakshatraTamil || '');
+                                const nakName = nakshatraTamilMap[nakNameRaw] || nakNameRaw || '-';
+                                const nakLordRaw = typeof nakObj === 'object' ? (nakObj.lord || nakObj.nakshatraLord || chart.planets?.Moon?.nakshatraLord) : null;
+                                const resolvedNakLord = nakLordRaw || (nakNameRaw ? getNakshatraLordHelper(nakNameRaw) : null);
+                                const nakLord = nakObj.lordTamil || chart.planets?.Moon?.nakshatraLordTamil || (resolvedNakLord ? (signLordsTamil[resolvedNakLord] || resolvedNakLord) : '-');
+
+                                return (
+                                    <Box sx={{
+                                        width: '100%',
+                                        maxWidth: 340,
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 1.2,
+                                        p: 2,
+                                        bgcolor: '#f8fafc',
+                                        borderRadius: '12px',
+                                        border: '1px solid #e2e8f0',
+                                        boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+                                    }}>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 1.2, bgcolor: '#ffffff', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                                            <Typography variant="body2" color="text.secondary" fontWeight="500">
+                                                ராசி: <strong style={{ color: '#1e293b' }}>{rasiName}</strong>
+                                            </Typography>
+                                            <Typography variant="body2" fontWeight="700" sx={{ color: '#047857' }}>
+                                                ராசி அதிபதி: {rasiLord}
+                                            </Typography>
+                                        </Box>
+
+                                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 1.2, bgcolor: '#ffffff', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                                            <Typography variant="body2" color="text.secondary" fontWeight="500">
+                                                நட்சத்திரம்: <strong style={{ color: '#1e293b' }}>{nakName}</strong>
+                                            </Typography>
+                                            <Typography variant="body2" fontWeight="700" sx={{ color: '#1d4ed8' }}>
+                                                நட்சத்திர அதிபதி: {nakLord}
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                );
+                            })()}
                         </Box>
                     )}
                 </DialogContent>
