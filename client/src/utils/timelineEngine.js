@@ -27,10 +27,31 @@ export const formatTimeOffset = (startTimeStr, offsetMinutes) => {
  * Check if a player role is batsman/allrounder/bowler
  */
 export const getPlayerCategory = (role = '') => {
-    const r = role.toUpperCase();
+    const r = (role || '').toUpperCase();
+    if (r.includes('ALL') || r.includes('ROUNDER')) return 'ALL_ROUNDER';
     if (r.includes('BAT') || r.includes('WK')) return 'BATSMAN';
     if (r.includes('BOWL')) return 'BOWLER';
-    return 'ALL_ROUNDER';
+    return 'BATSMAN';
+};
+
+/**
+ * Batting eligibility: Batters + All-Rounders
+ */
+export const isBatEligible = (role = '') => {
+    const r = (role || '').toUpperCase();
+    if (r.includes('ALL') || r.includes('ROUNDER')) return true;
+    if (r.includes('BOWL')) return false;
+    return true; // BAT, WK, etc.
+};
+
+/**
+ * Bowling eligibility: Bowlers + All-Rounders
+ */
+export const isBowlEligible = (role = '') => {
+    const r = (role || '').toUpperCase();
+    if (r.includes('ALL') || r.includes('ROUNDER')) return true;
+    if (r.includes('BAT') || r.includes('WK')) return false;
+    return r.includes('BOWL');
 };
 
 /**
@@ -157,12 +178,13 @@ export const generateMatchTimelineData = (
         const currentPredsBat = (isInnings1 === isTeamABattingFirst) ? predictionsA : predictionsB;
         const currentPredsBowl = (isInnings1 === isTeamABattingFirst) ? predictionsB : predictionsA;
 
-        // Calculate Batting power in this slot
+        // Calculate Batting power in this slot (Batters + All-Rounders only)
         let slotBatScore = 0;
         let topBatsman = null;
         let maxBatScore = -999;
 
         currentBatTeam.forEach(player => {
+            if (!isBatEligible(player.role)) return; // Bowlers do not bat
             const pid = player.id || player._id;
             const pred = currentPredsBat[pid];
             if (pred?.bat) {
@@ -191,12 +213,13 @@ export const generateMatchTimelineData = (
             }
         });
 
-        // Calculate Bowling threat in this slot
+        // Calculate Bowling threat in this slot (Bowlers + All-Rounders only)
         let slotBowlScore = 0;
         let topBowler = null;
         let maxBowlScore = -999;
 
         currentBowlTeam.forEach(player => {
+            if (!isBowlEligible(player.role)) return; // Batters do not bowl
             const pid = player.id || player._id;
             const pred = currentPredsBowl[pid];
             if (pred?.bowl) {

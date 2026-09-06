@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { runPrediction } from '../../utils/predictionAdapter';
-import { generateMatchTimelineData } from '../../utils/timelineEngine';
+import { generateMatchTimelineData, isBatEligible, isBowlEligible } from '../../utils/timelineEngine';
 
 const predictionSlice = createSlice({
     name: 'predictions',
@@ -59,17 +59,37 @@ const predictionSlice = createSlice({
                     mChartToUse.bowlingLagnaLord = tempBatLord;
                 }
 
+                const canBat = isBatEligible(player.role);
+                const canBowl = isBowlEligible(player.role);
+
                 const bat = runPrediction({ ...playerChart, role: player.role }, mChartToUse, "BAT");
                 const bowl = runPrediction({ ...playerChart, role: player.role }, mChartToUse, "BOWL");
 
                 predictions[pid] = { bat, bowl };
 
                 if (bat && bowl) {
-                    const contrib = Math.max(bat.score, bowl.score);
+                    const pBatScore = canBat ? (bat.score || 0) : 0;
+                    const pBowlScore = canBowl ? (bowl.score || 0) : 0;
+
+                    let contrib = 0;
+                    if (canBat && canBowl) {
+                        contrib = Math.max(pBatScore, pBowlScore);
+                    } else if (canBat) {
+                        contrib = pBatScore;
+                    } else if (canBowl) {
+                        contrib = pBowlScore;
+                    }
+
                     if (!isTeamB) {
-                        scoreA += contrib; batA += bat.score; bowlA += bowl.score; countA++;
+                        scoreA += contrib;
+                        batA += pBatScore;
+                        bowlA += pBowlScore;
+                        countA++;
                     } else {
-                        scoreB += contrib; batB += bat.score; bowlB += bowl.score; countB++;
+                        scoreB += contrib;
+                        batB += pBatScore;
+                        bowlB += pBowlScore;
+                        countB++;
                     }
                 }
             });

@@ -9,8 +9,8 @@ import MatchMomentumChart from '../components/MatchMomentumChart';
 import LeagueManager from '../components/LeagueManager';
 import AdminPredictionManager from '../components/AdminPredictionManager';
 import { runPrediction } from '../utils/predictionAdapter';
-import { setPlayers } from '../redux/slices/playerSlice';
 import { calculatePredictions, clearPredictions, clearMatchChart, setBatFirstTeam } from '../redux/slices/predictionSlice';
+import { isBatEligible, isBowlEligible } from '../utils/timelineEngine';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     Paper, Typography, Box, TextField, InputAdornment, TablePagination,
@@ -1600,13 +1600,46 @@ const MatchWizardDialog = (props) => {
             }
         }
 
-        // Guard against missing properties in results
-        const myScore = teamId === teamA ? (results?.totalA ?? 0) : (results?.totalB ?? 0);
-        const myBat = teamId === teamA ? (results?.batA ?? 0) : (results?.batB ?? 0);
-        const myBowl = teamId === teamA ? (results?.bowlA ?? 0) : (results?.bowlB ?? 0);
+        // Calculate dynamic role-based points from displayed/filtered players
+        const activePlayers = (grp.players || []).filter(p => !filterActive || selectedPlayers.includes(p.id));
+        let dynamicBat = 0;
+        let dynamicBowl = 0;
+        let batCount = 0;
+        let bowlCount = 0;
 
+        activePlayers.forEach(p => {
+            const res = playerPredictions?.[p.id];
+            if (res) {
+                if (isBatEligible(p.role) && res.bat) {
+                    dynamicBat += (res.bat.score || 0);
+                    batCount++;
+                }
+                if (isBowlEligible(p.role) && res.bowl) {
+                    dynamicBowl += (res.bowl.score || 0);
+                    bowlCount++;
+                }
+            }
+        });
+
+        // Use filtered dynamic sum if filter is active, otherwise use redux results or fallback
+        const myBat = filterActive ? dynamicBat : (teamId === teamA ? (results?.batA ?? dynamicBat) : (results?.batB ?? dynamicBat));
+        const myBowl = filterActive ? dynamicBowl : (teamId === teamA ? (results?.bowlA ?? dynamicBowl) : (results?.bowlB ?? dynamicBowl));
+        const myScore = teamId === teamA ? (results?.totalA ?? (myBat + myBowl)) : (results?.totalB ?? (myBat + myBowl));
+
+        const oppBat = filterActive ? 0 : (teamId === teamA ? (results?.batB ?? 0) : (results?.batA ?? 0));
+        const oppBowl = filterActive ? 0 : (teamId === teamA ? (results?.bowlB ?? 0) : (results?.bowlA ?? 0));
         const opponentScore = teamId === teamA ? (results?.totalB ?? 0) : (results?.totalA ?? 0);
-        const isWinner = results && Number(myScore) > Number(opponentScore);
+
+        let isWinner = false;
+        if (activeInningsTab === 'INN1' || activeInningsTab === 'INN2') {
+            if (isBattingFocus) {
+                isWinner = myBat > oppBowl;
+            } else {
+                isWinner = myBowl > oppBat;
+            }
+        } else {
+            isWinner = results && Number(myScore) > Number(opponentScore);
+        }
 
         return (
             <Paper variant="outlined" sx={{
@@ -1665,19 +1698,30 @@ const MatchWizardDialog = (props) => {
                         </Button>
                     </Box>
                     {results && (
-                        <Chip
-                            label={
-                                activeInningsTab === 'INN1'
-                                    ? (isBattingFocus ? `1st Inn Bat: ${myBat} pts` : `1st Inn Bowl: ${myBowl} pts`)
-                                    : activeInningsTab === 'INN2'
-                                        ? (isBattingFocus ? `2nd Inn Bat: ${myBat} pts` : `2nd Inn Bowl: ${myBowl} pts`)
-                                        : `Score: ${myScore} (b=${myBat}, bw=${myBowl})`
+                        <Tooltip
+                            title={
+                                activeInningsTab === 'INN1' || activeInningsTab === 'INN2'
+                                    ? (isBattingFocus
+                                        ? `Batting: Batters + All-Rounders (${batCount} players)`
+                                        : `Bowling: Bowlers + All-Rounders (${bowlCount} players)`)
+                                    : `Batting (Bat+All): ${myBat} pts | Bowling (Bowl+All): ${myBowl} pts`
                             }
-                            color={isWinner ? "success" : "default"}
-                            variant={isWinner ? "filled" : "outlined"}
-                            size="small"
-                            sx={{ fontWeight: 'bold' }}
-                        />
+                            arrow
+                        >
+                            <Chip
+                                label={
+                                    activeInningsTab === 'INN1'
+                                        ? (isBattingFocus ? `1st Inn Bat: ${myBat} pts (Bat+All)` : `1st Inn Bowl: ${myBowl} pts (Bowl+All)`)
+                                        : activeInningsTab === 'INN2'
+                                            ? (isBattingFocus ? `2nd Inn Bat: ${myBat} pts (Bat+All)` : `2nd Inn Bowl: ${myBowl} pts (Bowl+All)`)
+                                            : `Score: ${myScore} (b=${myBat}, bw=${myBowl})`
+                                }
+                                color={isWinner ? "success" : "default"}
+                                variant={isWinner ? "filled" : "outlined"}
+                                size="small"
+                                sx={{ fontWeight: 'bold' }}
+                            />
+                        </Tooltip>
                     )}
                 </Box>
 
