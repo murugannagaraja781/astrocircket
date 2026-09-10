@@ -8,8 +8,25 @@ const UserSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+        required: false
     },
+    googleId: {
+        type: String,
+        sparse: true
+    },
+    email: {
+        type: String,
+        sparse: true
+    },
+    displayName: {
+        type: String
+    },
+    avatar: {
+        type: String
+    },
+    fcmTokens: [{
+        type: String
+    }],
     role: {
         type: String,
         enum: ['user', 'superadmin'],
@@ -17,12 +34,14 @@ const UserSchema = new mongoose.Schema({
     },
     isApproved: {
         type: Boolean,
-        default: false
+        default: true
     },
     isBlocked: {
         type: Boolean,
         default: false
     }
+}, {
+    timestamps: true
 });
 
 // Add index for faster role-based lookups

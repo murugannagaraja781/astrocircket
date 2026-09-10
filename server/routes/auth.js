@@ -1,9 +1,22 @@
 
 const express = require('express');
 const router = express.Router();
-const { register, login, getMe, getPendingUsers, approveUser, getAdminStats, getAllUsers, deleteUser, blockUser, incrementView } = require('../controllers/authController');
+const { register, login, googleLogin, saveFcmToken, getMe, getPendingUsers, approveUser, getAdminStats, getAllUsers, deleteUser, blockUser, incrementView } = require('../controllers/authController');
 const auth = require('../middleware/auth');
 const role = require('../middleware/role');
+
+// Optional auth helper
+const optionalAuth = (req, res, next) => {
+    let token = req.header('x-auth-token') || (req.header('Authorization')?.startsWith('Bearer ') ? req.header('Authorization').substring(7) : null);
+    if (token) {
+        try {
+            const jwtSecret = process.env.JWT_SECRET || 'astrocricket_secure_jwt_secret_2025';
+            const decoded = require('jsonwebtoken').verify(token, jwtSecret);
+            req.user = decoded.user;
+        } catch (_) {}
+    }
+    next();
+};
 
 // @route   GET api/auth/me
 // @desc    Get current user details from DB using token
@@ -19,6 +32,16 @@ router.post('/register', register);
 // @desc    Login user & get token
 // @access  Public
 router.post('/login', login);
+
+// @route   POST api/auth/google
+// @desc    Google OAuth Login
+// @access  Public
+router.post('/google', googleLogin);
+
+// @route   POST api/auth/save-fcm-token
+// @desc    Save Device FCM Token for Push Notifications
+// @access  Public (Optional User Auth)
+router.post('/save-fcm-token', optionalAuth, saveFcmToken);
 
 // @route   GET api/auth/pending
 // @desc    Get pending users

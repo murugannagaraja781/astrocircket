@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "722820496843",
+    "project_id": "sbastro-cccec",
+    "storage_bucket": "sbastro-cccec.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:722820496843:android:f416ee8ebb17d0680b0a4e",
+        "android_client_info": {
+          "package_name": "com.spastro.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "722820496843-5n6h1d2n3ten0rrvo5s8h5tujuo4jdku.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.spastro.app",
+            "certificate_hash": "fd22cd16b9a9b1354202381cb4ed9b0a5f860fe4"
+          }
+        },
+        {
+          "client_id": "722820496843-i1vha1di714tnd5t7bu51ikdf10iuk1b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEBTzdpAsxqEXHZr5hHfdlOWlGWs4UGDM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "722820496843-i1vha1di714tnd5t7bu51ikdf10iuk1b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

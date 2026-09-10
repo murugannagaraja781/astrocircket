@@ -218,10 +218,134 @@ const incrementView = async (req, res) => {
     }
 };
 
+// Google OAuth Login
+const googleLogin = async (req, res) => {
+    try {
+        const { idToken, email, displayName, photoUrl } = req.body;
+        if (!idToken && !email) {
+            return res.status(400).json({ msg: 'ID Token or Email is required' });
+        }
+
+        const fcmService = require('../utils/fcmService');
+        let verifiedEmail = email;
+        let verifiedGoogleId = null;
+        let verifiedName = displayName;
+        let verifiedAvatar = photoUrl;
+
+        // Verify Google token with Firebase Admin
+        if (idToken) {
+            const verification = await fcmService.verifyGoogleIdToken(idToken);
+            if (verification.success && verification.user) {
+                verifiedEmail = verification.user.email || verifiedEmail;
+                verifiedGoogleId = verification.user.uid;
+                verifiedName = verification.user.name || verifiedName;
+                verifiedAvatar = verification.user.picture || verifiedAvatar;
+            } else {
+                console.warn('⚠️ Firebase token verification notice (using client profile):', verification.error);
+            }
+        }
+
+        if (!verifiedEmail && !verifiedGoogleId) {
+            return res.status(400).json({ msg: 'Unable to authenticate Google account' });
+        }
+
+        const lookupKey = verifiedEmail || `google_${verifiedGoogleId}`;
+
+        // Find existing user by googleId, email or username
+        let user = await User.findOne({
+            $or: [
+                ...(verifiedGoogleId ? [{ googleId: verifiedGoogleId }] : []),
+                ...(verifiedEmail ? [{ email: verifiedEmail }, { username: verifiedEmail }] : []),
+                { username: lookupKey }
+            ]
+        });
+
+        if (!user) {
+            // Auto create new Google user
+            user = new User({
+                username: lookupKey,
+                email: verifiedEmail || `${lookupKey}@spastro.app`,
+                googleId: verifiedGoogleId,
+                displayName: verifiedName || lookupKey.split('@')[0],
+                avatar: verifiedAvatar || '',
+                role: 'user',
+                isApproved: true,
+                isBlocked: false
+            });
+            await user.save();
+            console.log('✅ Created new Google user:', user.username);
+        } else {
+            // Update profile fields if missing
+            let updated = false;
+            if (verifiedGoogleId && !user.googleId) { user.googleId = verifiedGoogleId; updated = true; }
+            if (verifiedEmail && !user.email) { user.email = verifiedEmail; updated = true; }
+            if (verifiedName && !user.displayName) { user.displayName = verifiedName; updated = true; }
+            if (verifiedAvatar && !user.avatar) { user.avatar = verifiedAvatar; updated = true; }
+            if (updated) await user.save();
+        }
+
+        if (user.isBlocked) {
+            return res.status(403).json({ msg: 'Account is blocked by administrator' });
+        }
+
+        const payload = {
+            user: {
+                id: user.id,
+                role: user.role
+            }
+        };
+
+        const jwtSecret = process.env.JWT_SECRET || 'astrocricket_secure_jwt_secret_2025';
+
+        jwt.sign(payload, jwtSecret, { expiresIn: '30d' }, (err, token) => {
+            if (err) throw err;
+            res.json({
+                success: true,
+                token,
+                role: user.role,
+                user: {
+                    id: user._id,
+                    username: user.username,
+                    email: user.email,
+                    displayName: user.displayName,
+                    avatar: user.avatar,
+                    role: user.role
+                }
+            });
+        });
+    } catch (err) {
+        console.error('❌ Error in googleLogin:', err.message);
+        res.status(500).json({ msg: 'Server error during Google Login' });
+    }
+};
+
+// Save Device FCM Token
+const saveFcmToken = async (req, res) => {
+    try {
+        const { fcmToken } = req.body;
+        if (!fcmToken) {
+            return res.status(400).json({ msg: 'fcmToken is required' });
+        }
+
+        if (req.user && req.user.id) {
+            await User.findByIdAndUpdate(req.user.id, {
+                $addToSet: { fcmTokens: fcmToken }
+            });
+        }
+
+        res.json({ success: true, msg: 'FCM Token registered successfully' });
+    } catch (err) {
+        console.error('❌ Error in saveFcmToken:', err.message);
+        res.status(500).json({ msg: 'Server error saving FCM token' });
+    }
+};
+
 module.exports = {
     getAdminStats,
     register,
     login,
+    googleLogin,
+    saveFcmToken,
     getMe,
     getPendingUsers,
     approveUser,
@@ -230,3 +354,4 @@ module.exports = {
     blockUser,
     incrementView
 };
+

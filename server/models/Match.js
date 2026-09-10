@@ -43,6 +43,36 @@ const MatchSchema = new mongoose.Schema({
         },
         publishedAt: Date
     },
+    insightData: {
+        astrologicalAdvantage: String, // Team A or Team B or Even
+        keyBatsmen: [{
+            name: String,
+            team: String,
+            role: String,
+            rating: Number,
+            astroScore: Number,
+            rationale: String
+        }],
+        keyBowlers: [{
+            name: String,
+            team: String,
+            role: String,
+            rating: Number,
+            astroScore: Number,
+            rationale: String
+        }],
+        insightsSummary: String,
+        price: {
+            type: Number,
+            default: 49
+        },
+        isPublished: {
+            type: Boolean,
+            default: false
+        },
+        publishedAt: Date,
+        notifiedAt: Date
+    },
     status: {
         type: String,
         enum: ['upcoming', 'live', 'completed', 'cancelled'],

@@ -358,6 +358,8 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import BackupIcon from '@mui/icons-material/Backup';
 import DownloadIcon from '@mui/icons-material/Download';
 import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore';
+import SendIcon from '@mui/icons-material/Send';
+import AdminPredictionManager from '../components/AdminPredictionManager';
 
 
 // Rules View Component (Tamil)
@@ -1215,6 +1217,7 @@ const DashboardHome = ({ onNavigate }) => {
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                 {[
+                    { title: 'Post Match Insights', desc: 'Publish Key Players & Astrological Edge to Mobile App', icon: <SendIcon />, color: '#8b5cf6', viewId: 'matchInsights' },
                     { title: 'Active Teams', desc: 'Manage your cricket teams', icon: <GroupIcon />, color: '#2563eb', viewId: 'groups' },
                     { title: 'Manage Players', desc: 'Add, edit or remove players', icon: <SportsCricketIcon />, color: '#22c55e', viewId: 'players' },
                     { title: 'User Approvals', desc: `${stats.pendingUsers} pending requests`, icon: <PeopleIcon />, color: '#f59e0b', viewId: 'users' },
@@ -4222,6 +4225,7 @@ const AdminDashboard = () => {
 
     const menuItems = [
         { id: 'dashboard', label: 'Dashboard', icon: <DashboardIcon /> },
+        { id: 'matchInsights', label: 'Post Match Insights', icon: <SendIcon /> },
         { id: 'users', label: 'Users', icon: <PeopleIcon /> },
         { id: 'players', label: 'Players', icon: <SportsCricketIcon /> },
         { id: 'groups', label: 'Groups', icon: <GroupIcon /> },
@@ -4357,6 +4361,7 @@ const AdminDashboard = () => {
     const renderContent = () => {
         switch (currentView) {
             case 'dashboard': return <DashboardHome onNavigate={setCurrentView} />;
+            case 'matchInsights': return <AdminPredictionManager />;
             case 'users': return <UsersManager />;
             case 'players': return <PlayersManager />;
             case 'groups': return <GroupsManager />;

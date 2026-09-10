@@ -35,3 +35,26 @@ yarn-error.log*
 
 # Backups
 server/backups/
+
+# Firebase & Secrets
+*firebase-adminsdk*.json
+firebase-service-account.json
+
+# Flutter & Android Binaries (No APK in git)
+*.apk
+*.aab
+*.aar
+*.keystore
+*.jks
+**/build/
+**/android/.gradle/
+**/android/app/build/
+**/android/local.properties
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Scraper dumps & temporary test files
+server/cb_matches.json
+server/cb_sample.txt
+server/test_cb.js
