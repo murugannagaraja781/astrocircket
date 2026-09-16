@@ -11,6 +11,7 @@ const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const UserDashboard = lazy(() => import('./pages/UserDashboard'));
 const MyPredictions = lazy(() => import('./pages/MyPredictions'));
 const TestChart = lazy(() => import('./pages/TestChart'));
+const ClientH2HDashboard = lazy(() => import('./pages/ClientH2HDashboard'));
 
 // Private Route logic can be handled here or inside components,
 // strictly creating a wrapper is cleaner.
@@ -67,6 +68,16 @@ function App() {
                                 element={
                                     <PrivateRoute roles={['user', 'superadmin']}>
                                         <MyPredictions />
+                                    </PrivateRoute>
+                                }
+                            />
+
+                            {/* Client Head to Head Hub */}
+                            <Route
+                                path="/client-h2h"
+                                element={
+                                    <PrivateRoute roles={['client', 'user', 'superadmin']}>
+                                        <ClientH2HDashboard />
                                     </PrivateRoute>
                                 }
                             />

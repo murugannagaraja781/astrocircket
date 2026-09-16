@@ -9,7 +9,7 @@ import {
     Dialog, DialogTitle, DialogContent, DialogActions, TextField, Autocomplete, CircularProgress,
     useTheme, useMediaQuery, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination,
     Snackbar, Alert, Checkbox, FormControlLabel, Chip, Avatar, Tooltip,
-    Radio, RadioGroup, FormControl, FormLabel
+    Radio, RadioGroup, FormControl, FormLabel, Select, MenuItem, InputLabel
 } from '@mui/material';
 import { CRICKET_TEAMS } from '../utils/teams';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -1403,62 +1403,244 @@ const UsersManager = () => {
         }
     };
 
+    const [openAddUserDialog, setOpenAddUserDialog] = useState(false);
+    const [newUserForm, setNewUserForm] = useState({ username: '', password: '', displayName: '', role: 'client' });
+
+    const handleCreateUser = async () => {
+        try {
+            if (!newUserForm.username || !newUserForm.password) {
+                showSnackbar('Username and password are required', 'error');
+                return;
+            }
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/create-user`, newUserForm, {
+                headers: { 'x-auth-token': token }
+            });
+            showSnackbar(`${newUserForm.role === 'client' ? 'Client' : 'User'} Created Successfully!`, 'success');
+            setOpenAddUserDialog(false);
+            setNewUserForm({ username: '', password: '', displayName: '', role: 'client' });
+            fetchUsers();
+        } catch (err) {
+            console.error(err);
+            showSnackbar(err.response?.data?.msg || 'Failed to create user', 'error');
+        }
+    };
+
+    const [openResetPasswordDialog, setOpenResetPasswordDialog] = useState(false);
+    const [selectedUserForReset, setSelectedUserForReset] = useState(null);
+    const [newPasswordVal, setNewPasswordVal] = useState('');
+
+    const handleOpenResetDialog = (userObj) => {
+        setSelectedUserForReset(userObj);
+        setNewPasswordVal('');
+        setOpenResetPasswordDialog(true);
+    };
+
+    const handleExecutePasswordReset = async () => {
+        try {
+            if (!newPasswordVal || newPasswordVal.length < 4) {
+                showSnackbar('Password must be at least 4 characters long', 'error');
+                return;
+            }
+            await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/auth/reset-password/${selectedUserForReset._id}`, {
+                newPassword: newPasswordVal
+            }, {
+                headers: { 'x-auth-token': token }
+            });
+            showSnackbar(`Password updated successfully for ${selectedUserForReset.username}!`, 'success');
+            setOpenResetPasswordDialog(false);
+            setNewPasswordVal('');
+        } catch (err) {
+            console.error(err);
+            showSnackbar(err.response?.data?.msg || 'Failed to reset password', 'error');
+        }
+    };
+
+    const handleRoleChange = async (userId, newRole) => {
+        try {
+            await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/auth/role/${userId}`, { role: newRole }, {
+                headers: { 'x-auth-token': token }
+            });
+            showSnackbar(`User role updated to ${newRole}`, 'success');
+            fetchUsers();
+        } catch (err) {
+            console.error(err);
+            showSnackbar('Failed to update role', 'error');
+        }
+    };
+
     return (
         <Box>
-            <Typography variant="h5" gutterBottom>User Management</Typography>
-            <Box sx={{ mb: 2 }}>
-                <Button variant={filter === 'pending' ? "contained" : "outlined"} onClick={() => setFilter('pending')} sx={{ mr: 1 }}>
-                    Pending Approvals
-                </Button>
-                <Button variant={filter === 'all' ? "contained" : "outlined"} onClick={() => setFilter('all')}>
-                    All Users
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap: 1 }}>
+                <Typography variant="h5" fontWeight="bold">User & Client Management</Typography>
+                <Button variant="contained" color="warning" onClick={() => setOpenAddUserDialog(true)} sx={{ borderRadius: '20px', fontWeight: 'bold' }}>
+                    + Add New Client / User
                 </Button>
             </Box>
-            <Paper>
-                <List>
-                    <ListItem sx={{ bgcolor: 'rgba(255, 255, 255, 0.05)', fontWeight: 'bold' }}>
-                        <Grid container>
-                            <Grid item xs={3}>Username</Grid>
-                            <Grid item xs={2}>Role</Grid>
-                            <Grid item xs={2}>Status</Grid>
-                            <Grid item xs={5}>Action</Grid>
-                        </Grid>
-                    </ListItem>
-                    {users.length === 0 ? (
-                        <ListItem><Typography sx={{ p: 2 }}>No users found.</Typography></ListItem>
-                    ) : (
-                        users.map(u => (
-                            <ListItem key={u._id} divider>
-                                <Grid container alignItems="center">
-                                    <Grid item xs={3}>{u.username}</Grid>
-                                    <Grid item xs={2}>{u.role}</Grid>
-                                    <Grid item xs={2}>
-                                        {u.isBlocked ? <Chip label="Blocked" color="error" size="small" /> : <Chip label="Active" color="success" size="small" />}
-                                        {!u.isApproved && <Chip label="Pending" color="warning" size="small" sx={{ ml: 1 }} />}
-                                    </Grid>
-                                    <Grid item xs={5} sx={{ display: 'flex', gap: 1 }}>
-                                        {filter === 'pending' && !u.isApproved && (
-                                            <Button variant="contained" color="success" size="small" onClick={() => approveUser(u._id)}>
-                                                Approve
+            <Box sx={{ mb: 2 }}>
+                <Button variant={filter === 'pending' ? "contained" : "outlined"} onClick={() => setFilter('pending')} sx={{ mr: 1, borderRadius: '20px' }}>
+                    Pending Approvals
+                </Button>
+                <Button variant={filter === 'all' ? "contained" : "outlined"} onClick={() => setFilter('all')} sx={{ borderRadius: '20px' }}>
+                    All Users ({users.length})
+                </Button>
+            </Box>
+            <TableContainer component={Paper} sx={{ borderRadius: '16px', overflow: 'hidden', boxShadow: '0 2px 10px rgba(0,0,0,0.04)' }}>
+                <Table>
+                    <TableHead sx={{ bgcolor: 'rgba(0, 0, 0, 0.04)' }}>
+                        <TableRow>
+                            <TableCell sx={{ fontWeight: 'bold', fontSize: '0.9rem' }}>Username / Name</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', fontSize: '0.9rem' }}>Role</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', fontSize: '0.9rem' }}>Status</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', fontSize: '0.9rem', textAlign: 'right' }}>Actions</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {users.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={4} sx={{ textAlign: 'center', py: 4, color: 'text.secondary' }}>
+                                    No users found.
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            users.map((u) => (
+                                <TableRow key={u._id} hover>
+                                    <TableCell>
+                                        <Typography variant="body2" fontWeight="700">{u.username}</Typography>
+                                        {u.displayName && <Typography variant="caption" color="text.secondary">{u.displayName}</Typography>}
+                                    </TableCell>
+                                    <TableCell>
+                                        {u.role === 'superadmin' ? (
+                                            <Chip label="Super Admin" color="primary" size="small" />
+                                        ) : (
+                                            <Select
+                                                size="small"
+                                                value={u.role || 'user'}
+                                                onChange={(e) => handleRoleChange(u._id, e.target.value)}
+                                                sx={{ height: 32, fontSize: '0.82rem', bgcolor: u.role === 'client' ? '#FEF3C7' : '#EFF6FF', borderRadius: '8px' }}
+                                            >
+                                                <MenuItem value="client">Client (H2H Only)</MenuItem>
+                                                <MenuItem value="user">Standard User</MenuItem>
+                                            </Select>
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
+                                            {u.isBlocked ? <Chip label="Blocked" color="error" size="small" /> : <Chip label="Active" color="success" size="small" />}
+                                            {!u.isApproved && <Chip label="Pending" color="warning" size="small" />}
+                                        </Box>
+                                    </TableCell>
+                                    <TableCell sx={{ textAlign: 'right' }}>
+                                        <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+                                            {filter === 'pending' && !u.isApproved && (
+                                                <Button variant="contained" color="success" size="small" onClick={() => approveUser(u._id)} sx={{ borderRadius: '16px', textTransform: 'none' }}>
+                                                    Approve
+                                                </Button>
+                                            )}
+                                            <Button
+                                                variant="outlined"
+                                                color="info"
+                                                size="small"
+                                                onClick={() => handleOpenResetDialog(u)}
+                                                sx={{ borderRadius: '16px', textTransform: 'none' }}
+                                            >
+                                                Reset Password
                                             </Button>
-                                        )}
-                                        {u.role !== 'superadmin' && (
-                                            <>
-                                                <Button variant="outlined" color={u.isBlocked ? "success" : "warning"} size="small" onClick={() => blockUser(u._id)}>
-                                                    {u.isBlocked ? "Unblock" : "Block"}
-                                                </Button>
-                                                <Button variant="outlined" color="error" size="small" onClick={() => convertConfirmAction('Delete User', `Delete user ${u.username}?`, () => deleteUser(u._id))}>
-                                                    Delete
-                                                </Button>
-                                            </>
-                                        )}
-                                    </Grid>
-                                </Grid>
-                            </ListItem>
-                        ))
-                    )}
-                </List>
-            </Paper>
+                                            {u.role !== 'superadmin' && (
+                                                <>
+                                                    <Button variant="outlined" color={u.isBlocked ? "success" : "warning"} size="small" onClick={() => blockUser(u._id)} sx={{ borderRadius: '16px', textTransform: 'none' }}>
+                                                        {u.isBlocked ? "Unblock" : "Block"}
+                                                    </Button>
+                                                    <Button variant="outlined" color="error" size="small" onClick={() => convertConfirmAction('Delete User', `Delete user ${u.username}?`, () => deleteUser(u._id))} sx={{ borderRadius: '16px', textTransform: 'none' }}>
+                                                        Delete
+                                                    </Button>
+                                                </>
+                                            )}
+                                        </Box>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+
+            {/* Create Client / User Dialog */}
+            <Dialog open={openAddUserDialog} onClose={() => setOpenAddUserDialog(false)} maxWidth="xs" fullWidth>
+                <DialogTitle sx={{ fontWeight: 'bold' }}>Add New User / Client</DialogTitle>
+                <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 2 }}>
+                    <TextField
+                        label="Username / Email"
+                        fullWidth
+                        size="small"
+                        value={newUserForm.username}
+                        onChange={(e) => setNewUserForm({ ...newUserForm, username: e.target.value })}
+                        required
+                    />
+                    <TextField
+                        label="Password"
+                        type="password"
+                        fullWidth
+                        size="small"
+                        value={newUserForm.password}
+                        onChange={(e) => setNewUserForm({ ...newUserForm, password: e.target.value })}
+                        required
+                    />
+                    <TextField
+                        label="Display Name (Optional)"
+                        fullWidth
+                        size="small"
+                        value={newUserForm.displayName}
+                        onChange={(e) => setNewUserForm({ ...newUserForm, displayName: e.target.value })}
+                    />
+                    <FormControl fullWidth size="small">
+                        <InputLabel>User Role</InputLabel>
+                        <Select
+                            value={newUserForm.role}
+                            label="User Role"
+                            onChange={(e) => setNewUserForm({ ...newUserForm, role: e.target.value })}
+                        >
+                            <MenuItem value="client">Client (H2H Screen Only)</MenuItem>
+                            <MenuItem value="user">Standard User (Dashboard)</MenuItem>
+                            <MenuItem value="superadmin">Super Admin</MenuItem>
+                        </Select>
+                    </FormControl>
+                </DialogContent>
+                <DialogActions sx={{ p: 2 }}>
+                    <Button onClick={() => setOpenAddUserDialog(false)}>Cancel</Button>
+                    <Button onClick={handleCreateUser} variant="contained" color="warning" sx={{ fontWeight: 'bold' }}>
+                        Create User
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Reset Password Dialog */}
+            <Dialog open={openResetPasswordDialog} onClose={() => setOpenResetPasswordDialog(false)} maxWidth="xs" fullWidth>
+                <DialogTitle sx={{ fontWeight: 'bold' }}>
+                    Reset Password for {selectedUserForReset?.username}
+                </DialogTitle>
+                <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 2 }}>
+                    <Typography variant="body2" color="text.secondary">
+                        Enter a new password for this user ({selectedUserForReset?.role === 'superadmin' ? 'Super Admin' : selectedUserForReset?.role === 'client' ? 'Client' : 'User'}).
+                    </Typography>
+                    <TextField
+                        label="New Password"
+                        type="password"
+                        fullWidth
+                        size="small"
+                        value={newPasswordVal}
+                        onChange={(e) => setNewPasswordVal(e.target.value)}
+                        placeholder="Min 4 characters"
+                        required
+                        autoFocus
+                    />
+                </DialogContent>
+                <DialogActions sx={{ p: 2 }}>
+                    <Button onClick={() => setOpenResetPasswordDialog(false)}>Cancel</Button>
+                    <Button onClick={handleExecutePasswordReset} variant="contained" color="primary" sx={{ fontWeight: 'bold' }}>
+                        Update Password
+                    </Button>
+                </DialogActions>
+            </Dialog>
 
             <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
                 <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }} variant="filled">

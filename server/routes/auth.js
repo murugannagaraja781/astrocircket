@@ -1,7 +1,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { register, login, googleLogin, saveFcmToken, getMe, getPendingUsers, approveUser, getAdminStats, getAllUsers, deleteUser, blockUser, incrementView } = require('../controllers/authController');
+const { register, login, googleLogin, saveFcmToken, getMe, getPendingUsers, approveUser, getAdminStats, getAllUsers, deleteUser, blockUser, incrementView, createUserByAdmin, updateUserRole, resetUserPasswordByAdmin } = require('../controllers/authController');
 const auth = require('../middleware/auth');
 const role = require('../middleware/role');
 
@@ -62,6 +62,21 @@ router.get('/stats', getAdminStats);
 // @desc    Get all users
 // @access  Private (Admin)
 router.get('/users', auth, role(['superadmin']), getAllUsers);
+
+// @route   POST api/auth/create-user
+// @desc    Create User/Client directly by Admin
+// @access  Private (Admin)
+router.post('/create-user', auth, role(['superadmin']), createUserByAdmin);
+
+// @route   PUT api/auth/role/:id
+// @desc    Update user role
+// @access  Private (Admin)
+router.put('/role/:id', auth, role(['superadmin']), updateUserRole);
+
+// @route   PUT api/auth/reset-password/:id
+// @desc    Reset user password by Admin
+// @access  Private (Admin)
+router.put('/reset-password/:id', auth, role(['superadmin']), resetUserPasswordByAdmin);
 
 // @route   DELETE api/auth/users/:id
 // @desc    Delete user

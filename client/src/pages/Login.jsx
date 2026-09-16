@@ -21,6 +21,8 @@ const Login = () => {
         if (isAuthenticated && user) {
             if (user.role === 'superadmin') {
                 navigate('/admin-dashboard');
+            } else if (user.role === 'client') {
+                navigate('/client-h2h');
             } else {
                 navigate('/dashboard');
             }

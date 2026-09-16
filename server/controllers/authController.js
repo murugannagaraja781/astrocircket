@@ -340,6 +340,89 @@ const saveFcmToken = async (req, res) => {
     }
 };
 
+// Create User / Client by Admin
+const createUserByAdmin = async (req, res) => {
+    try {
+        const { username, password, role = 'client', displayName } = req.body;
+        if (!username || !password) {
+            return res.status(400).json({ msg: 'Username and password are required' });
+        }
+
+        let existingUser = await User.findOne({ username });
+        if (existingUser) {
+            return res.status(400).json({ msg: 'User already exists with this username/email' });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const newUser = new User({
+            username,
+            password: hashedPassword,
+            displayName: displayName || username,
+            role: ['user', 'superadmin', 'client'].includes(role) ? role : 'client',
+            isApproved: true
+        });
+
+        await newUser.save();
+        res.status(201).json({
+            success: true,
+            msg: `User (${newUser.role}) created successfully`,
+            user: {
+                id: newUser._id,
+                username: newUser.username,
+                role: newUser.role,
+                displayName: newUser.displayName
+            }
+        });
+    } catch (err) {
+        console.error('❌ Error in createUserByAdmin:', err.message);
+        res.status(500).json({ msg: 'Server error creating user' });
+    }
+};
+
+// Update User Role
+const updateUserRole = async (req, res) => {
+    try {
+        const { role } = req.body;
+        if (!['user', 'superadmin', 'client'].includes(role)) {
+            return res.status(400).json({ msg: 'Invalid role specified' });
+        }
+
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ msg: 'User not found' });
+
+        user.role = role;
+        await user.save();
+        res.json({ success: true, msg: `User role updated to ${role}`, user });
+    } catch (err) {
+        console.error('❌ Error in updateUserRole:', err.message);
+        res.status(500).json({ msg: 'Server error updating user role' });
+    }
+};
+
+// Reset User Password by Admin
+const resetUserPasswordByAdmin = async (req, res) => {
+    try {
+        const { newPassword } = req.body;
+        if (!newPassword || newPassword.length < 4) {
+            return res.status(400).json({ msg: 'Password must be at least 4 characters long' });
+        }
+
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ msg: 'User not found' });
+
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(newPassword, salt);
+        await user.save();
+
+        res.json({ success: true, msg: `Password reset successfully for ${user.username}` });
+    } catch (err) {
+        console.error('❌ Error in resetUserPasswordByAdmin:', err.message);
+        res.status(500).json({ msg: 'Server error resetting password' });
+    }
+};
+
 module.exports = {
     getAdminStats,
     register,
@@ -352,6 +435,9 @@ module.exports = {
     getAllUsers,
     deleteUser,
     blockUser,
-    incrementView
+    incrementView,
+    createUserByAdmin,
+    updateUserRole,
+    resetUserPasswordByAdmin
 };
 

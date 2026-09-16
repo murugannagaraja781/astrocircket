@@ -70,10 +70,11 @@ class RuleContext {
         this.matchLagnaSignBowl = transit.ascendantSign;
         this.matchLagnaLordBowl = transit.ascendantLord;
 
-        // Store Dynamic Lagnas from params or default to single
-        this.matchLagnas = transit.matchLagnas || [
+        // Store Dynamic Lagnas from params or default to single (clone slots to avoid frozen object errors)
+        const rawLagnas = transit.matchLagnas || [
             { lagna: transit.ascendantSign, lord: transit.ascendantLord, isMain: true }
         ];
+        this.matchLagnas = rawLagnas.map(slot => ({ ...slot }));
 
         // Pre-compute global sequential indices for L# and N# labels
         let lCount = 0;
