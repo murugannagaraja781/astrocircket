@@ -727,4 +727,45 @@ router.get('/my-purchases', requireAuth, async (req, res) => {
     }
 });
 
+/**
+ * @route   GET /api/insights/fcm-status
+ * @desc    Check Firebase Admin SDK initialization status
+ * @access  Public
+ */
+router.get('/fcm-status', (req, res) => {
+    const { getApps } = require('firebase-admin/app');
+    const isReady = getApps().length > 0;
+    res.json({
+        success: true,
+        fcmInitialized: isReady,
+        hasEnvJson: !!process.env.FIREBASE_SERVICE_ACCOUNT_JSON,
+        hasEnvBase64: !!process.env.FIREBASE_SERVICE_ACCOUNT_BASE64,
+        message: isReady
+            ? 'Firebase Admin SDK is active and ready to broadcast push notifications.'
+            : 'Firebase Admin SDK is NOT initialized. Please set FIREBASE_SERVICE_ACCOUNT_BASE64 or FIREBASE_SERVICE_ACCOUNT_JSON in Railway environment variables.'
+    });
+});
+
+/**
+ * @route   POST /api/insights/test-notification
+ * @desc    Send a test broadcast notification to all app users
+ * @access  Admin
+ */
+router.post('/test-notification', adminAuth, async (req, res) => {
+    try {
+        const { title = '🏏 AstroCricket Test Notification', body = 'Push notifications are working perfectly!' } = req.body;
+        const result = await fcmService.sendMatchInsightNotification({
+            matchId: 'test_alert',
+            teamA: 'Team Alpha',
+            teamB: 'Team Beta',
+            advantage: 'Live Test Alert',
+            summary: body
+        });
+        res.json({ success: true, result });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
 module.exports = router;
+

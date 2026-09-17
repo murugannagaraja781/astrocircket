@@ -13,7 +13,7 @@ let isInitialized = false;
 function initFirebase() {
     if (isInitialized || getApps().length > 0) {
         isInitialized = true;
-        return;
+        return true;
     }
 
     try {
@@ -21,25 +21,51 @@ function initFirebase() {
 
         if (fs.existsSync(localServiceAccountPath)) {
             const serviceAccount = require(localServiceAccountPath);
+            if (serviceAccount.private_key) {
+                serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+            }
             initializeApp({
                 credential: cert(serviceAccount)
             });
             isInitialized = true;
             console.log('✅ Firebase Admin SDK initialized from config/firebase-service-account.json');
+            return true;
+        } else if (process.env.FIREBASE_SERVICE_ACCOUNT_BASE64) {
+            const decoded = Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64, 'base64').toString('utf8');
+            const serviceAccount = JSON.parse(decoded);
+            if (serviceAccount.private_key) {
+                serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+            }
+            initializeApp({
+                credential: cert(serviceAccount)
+            });
+            isInitialized = true;
+            console.log('✅ Firebase Admin SDK initialized from FIREBASE_SERVICE_ACCOUNT_BASE64');
+            return true;
         } else if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
-            const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
+            let serviceAccountRaw = process.env.FIREBASE_SERVICE_ACCOUNT_JSON.trim();
+            const serviceAccount = JSON.parse(serviceAccountRaw);
+            if (serviceAccount.private_key) {
+                serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+            }
             initializeApp({
                 credential: cert(serviceAccount)
             });
             isInitialized = true;
             console.log('✅ Firebase Admin SDK initialized from FIREBASE_SERVICE_ACCOUNT_JSON');
+            return true;
         } else if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
             initializeApp();
             isInitialized = true;
             console.log('✅ Firebase Admin SDK initialized from GOOGLE_APPLICATION_CREDENTIALS');
+            return true;
+        } else {
+            console.log('⚠️ [FCM] No Firebase credentials found in env (FIREBASE_SERVICE_ACCOUNT_JSON or FIREBASE_SERVICE_ACCOUNT_BASE64). Push notifications will be simulated.');
+            return false;
         }
     } catch (e) {
-        console.log('⚠️ Firebase Admin SDK initialization notice:', e.message);
+        console.error('❌ Firebase Admin SDK initialization error:', e.message);
+        return false;
     }
 }
 
