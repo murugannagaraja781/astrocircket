@@ -66,9 +66,11 @@ class FCMService {
       );
 
       // Create Android Notification Channel
-      await _localNotifications
-          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-          ?.createNotificationChannel(_channel);
+      final androidPlugin = _localNotifications.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+      if (androidPlugin != null) {
+        await androidPlugin.createNotificationChannel(_channel);
+        await androidPlugin.requestNotificationsPermission();
+      }
 
       // 4. Foreground Message Handler
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -82,22 +84,24 @@ class FCMService {
         }
 
         final RemoteNotification? notification = message.notification;
-        final AndroidNotification? android = message.notification?.android;
+        final String title = notification?.title ?? message.data['title'] ?? 'AstroCricket Update';
+        final String body = notification?.body ?? message.data['body'] ?? 'New match insights are available.';
 
-        if (notification != null && !kIsWeb) {
+        if (!kIsWeb) {
           _localNotifications.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
+            notification?.hashCode ?? DateTime.now().millisecondsSinceEpoch.remainder(100000),
+            title,
+            body,
             NotificationDetails(
               android: AndroidNotificationDetails(
                 _channel.id,
                 _channel.name,
                 channelDescription: _channel.description,
-                icon: android?.smallIcon ?? '@mipmap/ic_launcher',
+                icon: '@mipmap/ic_launcher',
                 importance: Importance.max,
                 priority: Priority.high,
                 playSound: true,
+                enableVibration: true,
               ),
             ),
             payload: jsonEncode(message.data),

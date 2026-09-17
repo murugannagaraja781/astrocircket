@@ -94,11 +94,40 @@ class FCMService {
                 type: 'MATCH_INSIGHT',
                 teamA: String(teamA || ''),
                 teamB: String(teamB || ''),
+                title: String(title),
+                body: String(body),
                 click_action: 'FLUTTER_NOTIFICATION_CLICK'
+            },
+            android: {
+                priority: 'high',
+                notification: {
+                    channelId: 'astrocricket_high_importance_channel',
+                    priority: 'max',
+                    defaultSound: true,
+                    defaultVibrateTimings: true,
+                    visibility: 'public',
+                    sound: 'default'
+                }
+            },
+            apns: {
+                headers: {
+                    'apns-priority': '10'
+                },
+                payload: {
+                    aps: {
+                        alert: {
+                            title: title,
+                            body: body
+                        },
+                        sound: 'default',
+                        badge: 1,
+                        contentAvailable: true
+                    }
+                }
             }
         };
 
-        console.log(`[FCM Notification] Prepared topic notification:`, payload);
+        console.log(`[FCM Notification] Sending topic notification:`, JSON.stringify(payload));
 
         if (getApps().length > 0) {
             try {

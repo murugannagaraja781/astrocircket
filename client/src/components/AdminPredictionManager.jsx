@@ -446,6 +446,27 @@ const AdminPredictionManager = () => {
         }
     };
 
+    const handleSendTestNotification = async () => {
+        try {
+            const authToken = token || localStorage.getItem('token');
+            setStatusMsg({ type: 'info', text: 'Dispatching test push notification to mobile app...' });
+            const res = await axios.post(`${baseUrl}/api/insights/test-notification`, {
+                title: '🏏 S&B Astro Test Alert',
+                body: 'Firebase Cloud Messaging push alert is working live!'
+            }, {
+                headers: { 'x-auth-token': authToken }
+            });
+            if (res.data?.success) {
+                setStatusMsg({ type: 'success', text: '✅ Test Notification broadcasted to all mobile app users!' });
+            } else {
+                setStatusMsg({ type: 'error', text: 'FCM Error: ' + (res.data?.error || 'Failed to dispatch') });
+            }
+        } catch (err) {
+            console.error('Error sending test notification:', err);
+            setStatusMsg({ type: 'error', text: 'Failed to send test push notification: ' + (err.response?.data?.error || err.message) });
+        }
+    };
+
     const handleDeleteMatch = async (id) => {
         if (!window.confirm("Are you sure you want to delete this match?")) return;
         try {
@@ -518,7 +539,22 @@ const AdminPredictionManager = () => {
                             </Box>
                         </Box>
 
-                        <Stack direction="row" spacing={1.5} alignItems="center">
+                        <Stack direction="row" spacing={1.5} alignItems="center" flexWrap="wrap">
+                            <Button
+                                variant="outlined"
+                                startIcon={<NotificationsActiveIcon />}
+                                onClick={handleSendTestNotification}
+                                sx={{
+                                    color: '#F59E0B',
+                                    borderColor: 'rgba(245, 158, 11, 0.4)',
+                                    borderRadius: '12px',
+                                    textTransform: 'none',
+                                    fontWeight: 600,
+                                    '&:hover': { borderColor: '#F59E0B', background: 'rgba(245, 158, 11, 0.1)' }
+                                }}
+                            >
+                                Test Push Notification
+                            </Button>
                             <Button
                                 variant="outlined"
                                 startIcon={<RefreshIcon />}
