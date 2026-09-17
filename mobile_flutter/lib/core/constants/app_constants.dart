@@ -2,10 +2,9 @@ class AppConstants {
   static const String appName = 'AstroCricket Insights';
   static const String appTagline = 'KP Astrological Match Analysis & Player Analytics';
 
-  // Backend API Base URL
-  // Real device connects via PC Wi-Fi IP (192.168.1.3:5001)
-  static const String defaultBaseUrl = 'http://192.168.1.3:5001';
-  static const String productionBaseUrl = 'https://astrocircket-production.up.railway.app';
+  // Backend API Base URL (Railway Production)
+  static const String defaultBaseUrl = 'https://mindful-enchantment-production.up.railway.app';
+  static const String productionBaseUrl = 'https://mindful-enchantment-production.up.railway.app';
 
   // Website Payment Gateway (sbastro.com PhonePe Integration)
   static const String paymentSiteUrl = 'https://sbastro.com';

@@ -20,7 +20,12 @@ class ApiService {
     final prefs = await SharedPreferences.getInstance();
     _token = prefs.getString(AppConstants.keyToken);
     final savedBaseUrl = prefs.getString(AppConstants.keyBaseUrl);
-    if (savedBaseUrl != null && savedBaseUrl.isNotEmpty && !savedBaseUrl.contains('10.0.2.2')) {
+    if (savedBaseUrl != null &&
+        savedBaseUrl.isNotEmpty &&
+        !savedBaseUrl.contains('10.0.2.2') &&
+        !savedBaseUrl.contains('192.168.') &&
+        !savedBaseUrl.contains('localhost') &&
+        !savedBaseUrl.contains('astrocircket-production')) {
       _baseUrl = savedBaseUrl;
     } else {
       _baseUrl = AppConstants.defaultBaseUrl;
