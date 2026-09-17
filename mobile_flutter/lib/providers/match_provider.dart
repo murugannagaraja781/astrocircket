@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,6 +8,7 @@ import '../services/api_service.dart';
 class MatchProvider with ChangeNotifier {
   static const String _cacheKey = 'astro_cached_matches_v1';
   final ApiService _apiService = ApiService();
+  Timer? _autoRefreshTimer;
 
   List<MatchModel> _allMatches = [];
   List<MatchModel> _liveMatches = [];
@@ -110,6 +112,20 @@ class MatchProvider with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  /// Start silent auto-refresh polling (default: every 6 seconds)
+  void startAutoRefresh({int intervalSeconds = 6}) {
+    _autoRefreshTimer?.cancel();
+    _autoRefreshTimer = Timer.periodic(Duration(seconds: intervalSeconds), (_) {
+      fetchAllMatches(silent: true);
+    });
+  }
+
+  /// Stop auto-refresh polling
+  void stopAutoRefresh() {
+    _autoRefreshTimer?.cancel();
+    _autoRefreshTimer = null;
   }
 
   /// Update match when an FCM push notification arrives (with zero full-page reload)

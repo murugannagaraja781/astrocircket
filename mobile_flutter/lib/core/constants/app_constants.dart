@@ -7,6 +7,11 @@ class AppConstants {
   static const String defaultBaseUrl = 'http://192.168.1.3:5001';
   static const String productionBaseUrl = 'https://astrocircket-production.up.railway.app';
 
+  // Website Payment Gateway (sbastro.com PhonePe Integration)
+  static const String paymentSiteUrl = 'https://sbastro.com';
+  static const String paymentApiUrl = 'https://sbastro.com/app/payment_api.php';
+  static const String paymentVerifyUrl = 'https://sbastro.com/app/verify_payment.php';
+
   // SharedPreferences Keys
   static const String keyToken = 'auth_token';
   static const String keyUser = 'user_data';

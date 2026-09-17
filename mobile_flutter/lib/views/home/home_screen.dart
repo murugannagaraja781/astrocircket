@@ -7,6 +7,7 @@ import '../tabs/live_matches_tab.dart';
 import '../tabs/upcoming_matches_tab.dart';
 import '../tabs/finished_matches_tab.dart';
 import '../profile/profile_screen.dart';
+import '../../services/fcm_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -27,11 +28,21 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       final provider = Provider.of<MatchProvider>(context, listen: false);
       await provider.loadCachedMatches();
       provider.fetchAllMatches(silent: provider.liveMatches.isNotEmpty || provider.upcomingMatches.isNotEmpty);
+      provider.startAutoRefresh(intervalSeconds: 15);
+
+      FCMService().onDataNotificationReceived = (data) {
+        provider.updateMatchFromNotification(data);
+        provider.fetchAllMatches(silent: true);
+      };
     });
   }
 
   @override
   void dispose() {
+    try {
+      final provider = Provider.of<MatchProvider>(context, listen: false);
+      provider.stopAutoRefresh();
+    } catch (_) {}
     _tabController.dispose();
     super.dispose();
   }

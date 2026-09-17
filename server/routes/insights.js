@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const Match = require('../models/Match');
 const Purchase = require('../models/Purchase');
 const User = require('../models/User');
@@ -151,12 +152,13 @@ router.get('/matches', async (req, res) => {
         const dbMatchesMap = new Map();
         const formattedDbMatches = dbMatches.map(match => {
             const matchObj = match.toObject();
-            const isUnlocked = isAdmin || purchasedMatchIds.has(match._id.toString());
+            const matchPrice = matchObj.insightData?.price !== undefined ? matchObj.insightData.price : 49;
+            const isUnlocked = isAdmin || (matchPrice === 0) || purchasedMatchIds.has(match._id.toString());
             const hasInsight = !!(matchObj.insightData && matchObj.insightData.isPublished);
 
             const safeInsight = {
                 isPublished: hasInsight,
-                price: matchObj.insightData?.price || 49,
+                price: matchPrice,
                 publishedAt: matchObj.insightData?.publishedAt || null,
                 isUnlocked: isUnlocked
             };
@@ -199,59 +201,64 @@ router.get('/matches', async (req, res) => {
             return item;
         });
 
-        // 2. Fetch Real-time Live & Upcoming matches from liveScoreService
+        // 2. Only fetch Cricbuzz matches if requested by Admin in the Admin Panel
         let realTimeMatches = [];
-        try {
-            const liveResult = await liveScoreService.fetchMatches();
-            if (liveResult && Array.isArray(liveResult.matches)) {
-                for (const m of liveResult.matches) {
-                    const parsed = parseMatchTitle(m.title, m.status, m.url);
-                    const key = `${parsed.teamA.toLowerCase()}_vs_${parsed.teamB.toLowerCase()}`;
+        const shouldScrapeForAdmin = isAdmin && (req.query.source === 'admin' || req.query.includeLiveScrape === 'true');
 
-                    // If match status filter was requested
-                    if (status) {
-                        const targetStatus = (status === 'finished' ? 'completed' : status).toLowerCase();
-                        if (parsed.status !== targetStatus) {
-                            continue;
+        if (shouldScrapeForAdmin) {
+            try {
+                const liveResult = await liveScoreService.fetchMatches();
+                if (liveResult && Array.isArray(liveResult.matches)) {
+                    for (const m of liveResult.matches) {
+                        const parsed = parseMatchTitle(m.title, m.status, m.url);
+                        const key = `${parsed.teamA.toLowerCase()}_vs_${parsed.teamB.toLowerCase()}`;
+
+                        // If match status filter was requested
+                        if (status) {
+                            const targetStatus = (status === 'finished' ? 'completed' : status).toLowerCase();
+                            if (parsed.status !== targetStatus) {
+                                continue;
+                            }
                         }
+
+                        // If this match already has DB insights / was saved
+                        if (dbMatchesMap.has(key) || dbMatchesMap.has(m.match_id)) {
+                            continue; // Already included from DB
+                        }
+
+                        const isUnlocked = isAdmin || purchasedMatchIds.has(m.match_id);
+
+                        realTimeMatches.push({
+                            id: m.match_id,
+                            _id: m.match_id,
+                            teamA: parsed.teamA,
+                            teamB: parsed.teamB,
+                            matchDate: new Date().toISOString().split('T')[0],
+                            matchTime: parsed.matchTime,
+                            venue: parsed.venue,
+                            status: parsed.status,
+                            gender: parsed.gender,
+                            format: parsed.format,
+                            subStatus: parsed.subStatus,
+                            url: m.url,
+                            insight: {
+                                isPublished: false,
+                                price: 49,
+                                publishedAt: null,
+                                isUnlocked: isUnlocked,
+                                previewText: 'Awaiting Astrological Calculation'
+                            },
+                            isUnlocked: isUnlocked
+                        });
                     }
-
-                    // If this match already has DB insights / was saved
-                    if (dbMatchesMap.has(key) || dbMatchesMap.has(m.match_id)) {
-                        continue; // Already included from DB
-                    }
-
-                    const isUnlocked = isAdmin || purchasedMatchIds.has(m.match_id);
-
-                    realTimeMatches.push({
-                        id: m.match_id,
-                        _id: m.match_id,
-                        teamA: parsed.teamA,
-                        teamB: parsed.teamB,
-                        matchDate: new Date().toISOString().split('T')[0],
-                        matchTime: parsed.matchTime,
-                        venue: parsed.venue,
-                        status: parsed.status,
-                        gender: parsed.gender,
-                        format: parsed.format,
-                        subStatus: parsed.subStatus,
-                        url: m.url,
-                        insight: {
-                            isPublished: false,
-                            price: 49,
-                            publishedAt: null,
-                            isUnlocked: isUnlocked,
-                            previewText: 'Awaiting Astrological Calculation'
-                        },
-                        isUnlocked: isUnlocked
-                    });
                 }
+            } catch (liveErr) {
+                console.warn('Admin live scrape warning:', liveErr.message);
             }
-        } catch (liveErr) {
-            console.warn('Realtime live matches warning:', liveErr.message);
         }
 
-        // Combine DB matches and real-time live matches
+        // For mobile/client users: strictly Admin published/saved MongoDB matches (0 Cricbuzz load)
+        // For Admin Panel: DB matches + Cricbuzz live matches to pick & predict
         const allMatches = [...formattedDbMatches, ...realTimeMatches];
 
         res.json({
@@ -331,10 +338,11 @@ router.get('/match/:id', async (req, res) => {
         }
 
         const hasInsight = !!(matchObj.insightData && matchObj.insightData.isPublished);
+        const matchPrice = matchObj.insightData?.price !== undefined ? matchObj.insightData.price : 49;
 
         const safeInsight = {
             isPublished: hasInsight,
-            price: matchObj.insightData?.price || 49,
+            price: matchPrice,
             publishedAt: matchObj.insightData?.publishedAt || null,
             isUnlocked: isUnlocked
         };
@@ -356,15 +364,15 @@ router.get('/match/:id', async (req, res) => {
                 matchDate: matchObj.matchDate,
                 matchTime: matchObj.matchTime,
                 venue: matchObj.venue || '',
-                location: matchObj.location || {},
                 status: matchObj.status,
-                result: matchObj.result || {},
+                gender: matchObj.gender,
+                format: matchObj.format,
                 insight: safeInsight,
                 isUnlocked: isUnlocked
             }
         });
     } catch (err) {
-        console.error('Error fetching match detail:', err);
+        console.error('Error fetching match details:', err);
         res.status(500).json({ success: false, msg: 'Server Error' });
     }
 });
@@ -377,25 +385,59 @@ router.get('/match/:id', async (req, res) => {
 router.post('/publish/:id', adminAuth, async (req, res) => {
     try {
         const {
+            teamA,
+            teamB,
+            matchDate,
+            matchTime,
+            venue,
+            status: matchStatus,
+            gender,
+            format,
             astrologicalAdvantage,
             keyBatsmen,
             keyBowlers,
             insightsSummary,
-            price = 49,
+            price,
             notifyUsers = true
         } = req.body;
 
-        const match = await Match.findById(req.params.id);
-        if (!match) return res.status(404).json({ success: false, msg: 'Match not found' });
+        let match = null;
+
+        // 1. Try finding by MongoDB ObjectId if valid
+        if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+            match = await Match.findById(req.params.id);
+        }
+
+        // 2. If not found by ID, try matching by team names
+        if (!match && teamA && teamB) {
+            const escapeRegex = (s) => s.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+            match = await Match.findOne({
+                teamA: { $regex: new RegExp(`^${escapeRegex(teamA.trim())}$`, 'i') },
+                teamB: { $regex: new RegExp(`^${escapeRegex(teamB.trim())}$`, 'i') }
+            });
+        }
+
+        // 3. If still not in DB, create new Match document
+        if (!match) {
+            match = new Match({
+                teamA: teamA || 'Team A',
+                teamB: teamB || 'Team B',
+                matchDate: matchDate || new Date().toISOString().split('T')[0],
+                matchTime: matchTime || '19:30',
+                venue: venue || 'Cricket Arena',
+                status: matchStatus || 'upcoming'
+            });
+        }
 
         const publishedAt = new Date();
+        const safePrice = (price !== undefined && price !== null && price !== '') ? Math.max(0, Number(price)) : 49;
 
         match.insightData = {
             astrologicalAdvantage,
             keyBatsmen: Array.isArray(keyBatsmen) ? keyBatsmen : [],
             keyBowlers: Array.isArray(keyBowlers) ? keyBowlers : [],
             insightsSummary: insightsSummary || '',
-            price: Number(price) || 49,
+            price: safePrice,
             isPublished: true,
             publishedAt: publishedAt,
             notifiedAt: notifyUsers ? publishedAt : null
@@ -608,6 +650,52 @@ router.post('/payment/verify', requireAuth, async (req, res) => {
         });
     } catch (err) {
         console.error('Error verifying payment:', err);
+        res.status(500).json({ success: false, msg: 'Server Error' });
+    }
+});
+
+/**
+ * @route   POST /api/insights/purchase/record-completed
+ * @desc    Record completed payment made via sbastro.com in-app browser
+ * @access  Private / Auth optional
+ */
+router.post('/purchase/record-completed', async (req, res) => {
+    try {
+        const { matchId, orderId, amount, userId } = req.body;
+        const currentUser = await getUserFromToken(req);
+        const resolvedUserId = currentUser ? currentUser.id : (userId || 'guest_user');
+
+        if (!matchId) {
+            return res.status(400).json({ success: false, msg: 'matchId is required' });
+        }
+
+        let purchase = await Purchase.findOne({
+            userId: resolvedUserId,
+            matchId: matchId,
+            status: 'SUCCESS'
+        });
+
+        if (!purchase) {
+            purchase = new Purchase({
+                userId: resolvedUserId,
+                userEmail: currentUser ? (currentUser.email || currentUser.username) : 'mobile_user@sbastro.com',
+                matchId: matchId,
+                merchantTransactionId: orderId || `SBA_${Date.now()}`,
+                amount: amount || 49,
+                currency: 'INR',
+                status: 'SUCCESS'
+            });
+            await purchase.save();
+        }
+
+        res.json({
+            success: true,
+            isUnlocked: true,
+            matchId: matchId,
+            msg: 'Purchase successfully recorded'
+        });
+    } catch (err) {
+        console.error('Error recording completed purchase:', err);
         res.status(500).json({ success: false, msg: 'Server Error' });
     }
 });

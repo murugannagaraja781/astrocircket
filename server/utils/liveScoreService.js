@@ -13,6 +13,7 @@ const HEADERS = {
 
 const playerCache = new Map(); // profileUrl -> { name, role, date_of_birth, birth_place, lastUpdated }
 const squadCache = new Map();  // matchId -> { data, lastUpdated }
+let matchesCache = { data: null, lastUpdated: 0 };
 
 const clean = (text) => {
     if (!text) return '';
@@ -22,7 +23,12 @@ const clean = (text) => {
 /**
  * Fetch all live, upcoming, and completed cricket matches from Cricbuzz
  */
-const fetchMatches = async () => {
+const fetchMatches = async (forceRefresh = false) => {
+    // 60-second cache to prevent spamming Cricbuzz
+    if (!forceRefresh && matchesCache.data && (Date.now() - matchesCache.lastUpdated < 60000)) {
+        return matchesCache.data;
+    }
+
     try {
         const url = 'https://www.cricbuzz.com/cricket-match/live-scores';
         const response = await axios.get(url, { headers: HEADERS, timeout: 12000 });
@@ -59,10 +65,13 @@ const fetchMatches = async () => {
             };
         });
 
-        return {
+        const result = {
             status: 'success',
             matches: Object.values(matches)
         };
+        matchesCache = { data: result, lastUpdated: Date.now() };
+
+        return result;
     } catch (err) {
         console.error('Error in fetchMatches:', err.message);
         throw err;

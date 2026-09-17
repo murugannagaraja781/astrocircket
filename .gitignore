@@ -58,3 +58,5 @@ firebase-service-account.json
 server/cb_matches.json
 server/cb_sample.txt
 server/test_cb.js
+public_html/logs/
+

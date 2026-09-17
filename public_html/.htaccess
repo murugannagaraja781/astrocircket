@@ -1,0 +1,24 @@
+# Prevent directory listing
+Options -Indexes
+
+# Block access to .env files
+<Files ".env">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Block access to hidden files/folders
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Block access to helper/config files directly
+<Files "config.php">
+    Order allow,deny
+    Deny from all
+</Files>
+<Files "phonepe_helper.php">
+    Order allow,deny
+    Deny from all
+</Files>

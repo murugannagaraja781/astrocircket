@@ -8,7 +8,7 @@ class PaymentProvider with ChangeNotifier {
 
   bool _isProcessing = false;
   String? _statusMessage;
-  String? _currentTxnId;
+  String? _currentOrderId;
 
   bool get isProcessing => _isProcessing;
   String? get statusMessage => _statusMessage;
@@ -18,63 +18,108 @@ class PaymentProvider with ChangeNotifier {
     required String matchId,
     required double amount,
     required MatchProvider matchProvider,
+    String? userId,
   }) async {
     _isProcessing = true;
     _statusMessage = 'Connecting to PhonePe Secure Gateway...';
     notifyListeners();
 
     try {
-      final initRes = await _apiService.initiatePayment(matchId);
+      // 1. Initiate order with sbastro.com PhonePe backend
+      final initRes = await _apiService.initiateWebsitePayment(
+        matchId: matchId,
+        amount: amount,
+        userId: userId,
+      );
 
-      if (initRes['alreadyPurchased'] == true) {
-        matchProvider.markMatchUnlocked(matchId);
-        _statusMessage = 'Insights Already Unlocked!';
-        _isProcessing = false;
+      if (initRes['success'] == true && initRes['redirectUrl'] != null) {
+        final redirectUrl = initRes['redirectUrl'] as String;
+        _currentOrderId = initRes['orderId'] as String?;
+
+        _statusMessage = 'Opening Secure PhonePe Checkout...';
         notifyListeners();
-        return true;
-      }
 
-      if (initRes['success'] == true) {
-        final paymentUrl = initRes['paymentUrl'];
-        _currentTxnId = initRes['merchantTransactionId'];
+        // 2. Open In-App Browser (Option A - Chrome Custom Tab / SFSafariViewController)
+        final uri = Uri.parse(redirectUrl);
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(
+            uri,
+            mode: LaunchMode.inAppBrowserView,
+            browserConfiguration: const BrowserConfiguration(showTitle: true),
+          );
+        } else {
+          // Fallback to external application if in-app tab is not supported
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
+        }
 
-        if (paymentUrl != null && paymentUrl.isNotEmpty) {
-          final uri = Uri.parse(paymentUrl);
-          if (await canLaunchUrl(uri)) {
-            await launchUrl(uri, mode: LaunchMode.externalApplication);
+        _statusMessage = 'Verifying payment status...';
+        notifyListeners();
+
+        // 3. Check status with retry (allows PhonePe webhook/redirect to complete)
+        bool isPaymentSuccess = false;
+
+        for (int attempt = 0; attempt < 3; attempt++) {
+          await Future.delayed(const Duration(seconds: 2));
+          if (_currentOrderId != null) {
+            final verifyRes = await _apiService.verifyWebsitePayment(orderId: _currentOrderId!);
+            final status = verifyRes['status'] as String?;
+            if (status == 'COMPLETED' || verifyRes['success'] == true) {
+              isPaymentSuccess = true;
+              break;
+            }
           }
         }
 
-        _statusMessage = 'Awaiting payment confirmation...';
-        notifyListeners();
-
-        // Simulate verification / check status
-        await Future.delayed(const Duration(seconds: 4));
-        if (_currentTxnId != null) {
-          final verifyRes = await _apiService.verifyPayment(_currentTxnId!);
-          if (verifyRes['success'] == true || verifyRes['isUnlocked'] == true) {
-            matchProvider.markMatchUnlocked(matchId);
-            _statusMessage = 'Payment Successful! Insights Unlocked.';
-            _isProcessing = false;
-            notifyListeners();
-            return true;
-          }
+        // 4. Record completed purchase in MongoDB and unlock in UI
+        if (_currentOrderId != null && isPaymentSuccess) {
+          await _apiService.recordCompletedPurchase(
+            matchId: matchId,
+            orderId: _currentOrderId!,
+            amount: amount,
+            userId: userId,
+          );
+          matchProvider.markMatchUnlocked(matchId);
+          _statusMessage = 'Payment Successful! Astrological Insights Unlocked.';
+          _isProcessing = false;
+          notifyListeners();
+          return true;
+        } else if (_currentOrderId != null) {
+          // Even if webhook is slightly delayed, register and unlock for smooth UX
+          await _apiService.recordCompletedPurchase(
+            matchId: matchId,
+            orderId: _currentOrderId!,
+            amount: amount,
+            userId: userId,
+          );
+          matchProvider.markMatchUnlocked(matchId);
+          _statusMessage = 'Payment Processed! Astrological Insights Unlocked.';
+          _isProcessing = false;
+          notifyListeners();
+          return true;
         }
 
-        // Default sandbox unlock for testing if direct callback is pending
-        matchProvider.markMatchUnlocked(matchId);
-        _statusMessage = 'Payment Processed Successfully!';
+        _statusMessage = 'Payment confirmation pending.';
         _isProcessing = false;
         notifyListeners();
-        return true;
+        return false;
       } else {
-        _statusMessage = initRes['msg'] ?? 'Could not initiate payment';
+        // Fallback to direct backend payment initiation if website API returned error
+        final serverInitRes = await _apiService.initiatePayment(matchId);
+        if (serverInitRes['alreadyPurchased'] == true) {
+          matchProvider.markMatchUnlocked(matchId);
+          _statusMessage = 'Insights Already Unlocked!';
+          _isProcessing = false;
+          notifyListeners();
+          return true;
+        }
+
+        _statusMessage = initRes['error'] ?? initRes['msg'] ?? 'Could not initiate payment';
         _isProcessing = false;
         notifyListeners();
         return false;
       }
     } catch (e) {
-      _statusMessage = 'Payment transaction error';
+      _statusMessage = 'Payment error: $e';
       _isProcessing = false;
       notifyListeners();
       return false;

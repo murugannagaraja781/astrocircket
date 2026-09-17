@@ -4,6 +4,7 @@ import '../../core/constants/app_colors.dart';
 import '../../models/match_model.dart';
 import '../../providers/match_provider.dart';
 import '../../providers/payment_provider.dart';
+import '../../providers/auth_provider.dart';
 
 class MatchInsightsScreen extends StatelessWidget {
   final MatchModel match;
@@ -350,12 +351,14 @@ class MatchInsightsScreen extends StatelessWidget {
                     ),
                     onPressed: () async {
                       final matchProvider = Provider.of<MatchProvider>(context, listen: false);
+                      final authProvider = Provider.of<AuthProvider>(context, listen: false);
                       final scaffoldMessenger = ScaffoldMessenger.of(context);
                       final success = await paymentProvider.processPhonePePayment(
                         context: context,
                         matchId: match.id,
                         amount: match.insight.price,
                         matchProvider: matchProvider,
+                        userId: authProvider.currentUser?.id,
                       );
                       if (success) {
                         scaffoldMessenger.showSnackBar(

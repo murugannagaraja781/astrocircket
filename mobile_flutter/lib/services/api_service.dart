@@ -102,7 +102,81 @@ class ApiService {
     }
   }
 
-  // --- PhonePe Payment Gateway API ---
+  // --- PhonePe Payment Gateway API (via sbastro.com In-App Browser) ---
+
+  Future<Map<String, dynamic>> initiateWebsitePayment({
+    required String matchId,
+    required double amount,
+    String? userId,
+  }) async {
+    try {
+      final amountPaisa = (amount * 100).toInt();
+      final response = await http.post(
+        Uri.parse(AppConstants.paymentApiUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'amount': amountPaisa,
+          'userId': userId ?? 'app_user',
+          'matchId': matchId,
+          'planType': 'match_prediction',
+        }),
+      ).timeout(const Duration(seconds: 15));
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        return {'success': false, 'error': 'Failed to connect to payment gateway'};
+      }
+    } catch (e) {
+      return {'success': false, 'error': 'Network error: $e'};
+    }
+  }
+
+  Future<Map<String, dynamic>> verifyWebsitePayment({required String orderId}) async {
+    try {
+      final response = await http.post(
+        Uri.parse(AppConstants.paymentVerifyUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'orderId': orderId,
+        }),
+      ).timeout(const Duration(seconds: 15));
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+      return {'success': false, 'error': 'Verification failed'};
+    } catch (e) {
+      return {'success': false, 'error': 'Network error: $e'};
+    }
+  }
+
+  Future<Map<String, dynamic>> recordCompletedPurchase({
+    required String matchId,
+    required String orderId,
+    required double amount,
+    String? userId,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$_baseUrl/api/insights/purchase/record-completed'),
+        headers: _getHeaders(),
+        body: jsonEncode({
+          'matchId': matchId,
+          'orderId': orderId,
+          'amount': amount,
+          'userId': userId,
+        }),
+      ).timeout(const Duration(seconds: 12));
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+      return {'success': false, 'msg': 'Could not record purchase in database'};
+    } catch (e) {
+      return {'success': false, 'msg': 'Network error recording purchase'};
+    }
+  }
 
   Future<Map<String, dynamic>> initiatePayment(String matchId, {String mobileNumber = '9999999999'}) async {
     try {

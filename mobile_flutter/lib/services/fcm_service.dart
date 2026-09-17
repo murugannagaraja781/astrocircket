@@ -31,6 +31,7 @@ class FCMService {
   );
 
   bool _isInitialized = false;
+  void Function(Map<String, dynamic>)? onDataNotificationReceived;
 
   Future<void> init() async {
     if (_isInitialized) return;
@@ -75,6 +76,11 @@ class FCMService {
           print('🔔 [FCM Foreground Message]: ${message.notification?.title} - ${message.notification?.body}');
         }
 
+        // Trigger immediate silent data synchronization in app
+        if (message.data.isNotEmpty) {
+          onDataNotificationReceived?.call(message.data);
+        }
+
         final RemoteNotification? notification = message.notification;
         final AndroidNotification? android = message.notification?.android;
 
@@ -103,6 +109,9 @@ class FCMService {
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
         if (kDebugMode) {
           print('🔔 [FCM Opened App]: ${message.data}');
+        }
+        if (message.data.isNotEmpty) {
+          onDataNotificationReceived?.call(message.data);
         }
       });
 
