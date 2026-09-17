@@ -109,7 +109,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
             }
 
             // Fetch Match Chart
-            const baseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
+            const baseUrl = import.meta.env.VITE_BACKEND_URL || (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' ? '' : 'http://localhost:5001');
             const res = await axios.post(`${baseUrl}/api/charts/birth-chart`, payload, {
                 headers: { 'x-auth-token': token }
             });
@@ -151,7 +151,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                 ayanamsa: matchDetails.ayanamsa || 'Lahiri'
             };
 
-            const baseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
+            const baseUrl = import.meta.env.VITE_BACKEND_URL || (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' ? '' : 'http://localhost:5001');
             const res = await axios.post(`${baseUrl}/api/charts/birth-chart`, payload, {
                 headers: { 'x-auth-token': token }
             });

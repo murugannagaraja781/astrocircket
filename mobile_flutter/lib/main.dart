@@ -12,13 +12,13 @@ import 'views/home/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await ApiService().init();
   try {
     await Firebase.initializeApp();
     await FCMService().init();
   } catch (e) {
     debugPrint('Firebase init error: $e');
   }
-  await ApiService().init();
   runApp(const AstroCricketApp());
 }
 

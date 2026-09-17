@@ -97,7 +97,7 @@ const HeadToHeadAnalysis = ({
                     timezone: 5.5,
                     ayanamsa: localStorage.getItem('preferredAyanamsa') || 'Lahiri'
                 };
-                const baseUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
+                const baseUrl = import.meta.env.VITE_BACKEND_URL || (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' ? '' : 'http://localhost:5001');
                 const res = await axios.post(`${baseUrl}/api/charts/birth-chart`, payload, {
                     headers: { 'x-auth-token': token || localStorage.getItem('token') }
                 });
