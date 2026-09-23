@@ -360,6 +360,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore';
 import SendIcon from '@mui/icons-material/Send';
 import AdminPredictionManager from '../components/AdminPredictionManager';
+import CaptainMatchAstro from '../components/CaptainMatchAstro';
 
 
 // Rules View Component (Tamil)
@@ -4413,6 +4414,7 @@ const AdminDashboard = () => {
         { id: 'groups', label: 'Groups', icon: <GroupIcon /> },
         { id: 'liveSync', label: 'Live Match Sync', icon: <SportsCricketIcon /> },
         { id: 'clientDashboard', label: 'Client Dashboard', icon: <DashboardIcon /> },
+        { id: 'captainAstro', label: 'Captain Match Astro', icon: <EmojiEventsIcon /> },
         { id: 'kpAstrology', label: 'KP Astrology', icon: <TimelineIcon /> },
         { id: 'myPredictions', label: 'My Predictions', icon: <EmojiEventsIcon /> },
         { id: 'backups', label: 'Backups', icon: <BackupIcon /> },
@@ -4549,6 +4551,7 @@ const AdminDashboard = () => {
             case 'groups': return <GroupsManager />;
             case 'liveSync': return <LiveSyncManager />;
             case 'clientDashboard': return <UserDashboard hideHeader={true} />;
+            case 'captainAstro': return <CaptainMatchAstro />;
             case 'kpAstrology': return <KPView />;
             case 'myPredictions': return <MyPredictions />;
             case 'backups': return <BackupsManager />;

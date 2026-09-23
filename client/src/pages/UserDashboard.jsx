@@ -9,6 +9,7 @@ import MatchMomentumChart from '../components/MatchMomentumChart';
 import HeadToHeadAnalysis from '../components/HeadToHeadAnalysis';
 import LeagueManager from '../components/LeagueManager';
 import AdminPredictionManager from '../components/AdminPredictionManager';
+import CaptainMatchAstro from '../components/CaptainMatchAstro';
 import { runPrediction } from '../utils/predictionAdapter';
 import { setPlayers } from '../redux/slices/playerSlice';
 import { calculatePredictions, clearPredictions, clearMatchChart, setBatFirstTeam } from '../redux/slices/predictionSlice';
@@ -3019,6 +3020,13 @@ const UserDashboard = ({ hideHeader = false }) => {
                 color: '#FF9800'
             },
             {
+                id: 'captainAstro',
+                title: 'Captain Astro',
+                desc: 'Tara Balam & History',
+                icon: '👑',
+                color: '#7928CA'
+            },
+            {
                 id: 'leagues',
                 title: 'Leagues',
                 desc: `${leagues.length} leagues`,
@@ -3652,6 +3660,13 @@ const UserDashboard = ({ hideHeader = false }) => {
                         {currentView === 'admin' && user?.role === 'superadmin' && (
                             <Paper sx={{ borderRadius: 2, p: 2, bgcolor: hideHeader ? 'rgba(255,255,255,0.05)' : 'white' }}>
                                 <AdminPredictionManager />
+                            </Paper>
+                        )}
+
+                        {/* CAPTAIN MATCH ASTRO VIEW */}
+                        {currentView === 'captainAstro' && (
+                            <Paper sx={{ borderRadius: 2, p: { xs: 1, sm: 2 }, bgcolor: hideHeader ? 'transparent' : 'white', boxShadow: 'none' }}>
+                                <CaptainMatchAstro />
                             </Paper>
                         )}
                     </>

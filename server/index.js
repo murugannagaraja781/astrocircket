@@ -95,6 +95,7 @@ app.use('/api/user-predictions', require('./routes/userPredictions'));
 app.use('/api/leagues', require('./routes/leagues'));
 app.use('/api/matches', require('./routes/matches'));
 app.use('/api/insights', require('./routes/insights'));
+app.use('/api/captain-astro', require('./routes/captainAstro'));
 
 // Serve Static Assets (Frontend)
 const possibleBuildPaths = [
