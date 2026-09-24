@@ -98,13 +98,13 @@ const CaptainMatchAstro = () => {
     const [venuesList, setVenuesList] = useState([]);
     const [metaLoading, setMetaLoading] = useState(true);
 
-    // Live Predictor Form State
-    const [matchDate, setMatchDate] = useState('2026-03-28');
+    // Live Predictor Form State (Starts fresh and empty)
+    const [matchDate, setMatchDate] = useState(() => new Date().toISOString().slice(0, 10));
     const [matchTime, setMatchTime] = useState('19:30');
-    const [venueInput, setVenueInput] = useState('M Chinnaswamy Stadium, Bengaluru, India');
-    const [team1Name, setTeam1Name] = useState('Royal Challengers Bangalore');
+    const [venueInput, setVenueInput] = useState('');
+    const [team1Name, setTeam1Name] = useState('');
     const [team1CaptainObj, setTeam1CaptainObj] = useState(null);
-    const [team2Name, setTeam2Name] = useState('Sunrisers Hyderabad');
+    const [team2Name, setTeam2Name] = useState('');
     const [team2CaptainObj, setTeam2CaptainObj] = useState(null);
     
     // Calculation Result
@@ -137,26 +137,15 @@ const CaptainMatchAstro = () => {
         const loadInitialData = async () => {
             setMetaLoading(true);
             try {
-                // Fetch players list
-                const pRes = await axios.get(`${backendUrl}/api/players`);
-                const players = Array.isArray(pRes.data) ? pRes.data : (pRes.data.players || []);
+                // Fetch all players list without pagination limit
+                const pRes = await axios.get(`${backendUrl}/api/players`, { params: { all: 'true' } });
+                const players = Array.isArray(pRes.data) ? pRes.data : (pRes.data?.players || []);
                 setPlayersList(players);
 
                 // Fetch global venues
                 const mRes = await axios.get(`${backendUrl}/api/captain-astro/metadata`);
                 if (mRes.data?.venues) {
                     setVenuesList(mRes.data.venues.map(v => v.name));
-                }
-
-                // Default initial captains
-                const p1 = players.find(p => p.name?.toLowerCase().includes('patidar')) || players[0];
-                const p2 = players.find(p => p.name?.toLowerCase().includes('cummins')) || players[1];
-                if (p1) setTeam1CaptainObj(p1);
-                if (p2) setTeam2CaptainObj(p2);
-
-                // Initial calculation
-                if (p1 && p2) {
-                    triggerCalculation('2026-03-28', '19:30', 'M Chinnaswamy Stadium, Bengaluru, India', 'Royal Challengers Bangalore', p1, 'Sunrisers Hyderabad', p2);
                 }
             } catch (err) {
                 console.error('Error loading players/venues:', err);
@@ -198,7 +187,22 @@ const CaptainMatchAstro = () => {
     };
 
     const handleCalculate = () => {
-        triggerCalculation();
+        if (!team1CaptainObj || !team2CaptainObj) {
+            setSnackbar({ open: true, message: 'Please select both Team 1 Captain and Team 2 Captain before calculating', severity: 'warning' });
+            return;
+        }
+        triggerCalculation(matchDate, matchTime, venueInput, team1Name, team1CaptainObj, team2Name, team2CaptainObj);
+    };
+
+    const handleClearForm = () => {
+        setTeam1Name('');
+        setTeam1CaptainObj(null);
+        setTeam2Name('');
+        setTeam2CaptainObj(null);
+        setVenueInput('');
+        setCalcResult(null);
+        setWinnerInput('');
+        setResultNotes('');
     };
 
     // Load History
@@ -426,10 +430,7 @@ const CaptainMatchAstro = () => {
                                         fullWidth
                                         type="date"
                                         value={matchDate}
-                                        onChange={(e) => {
-                                            setMatchDate(e.target.value);
-                                            triggerCalculation(e.target.value, matchTime, venueInput, team1Name, team1CaptainObj, team2Name, team2CaptainObj);
-                                        }}
+                                        onChange={(e) => setMatchDate(e.target.value)}
                                         InputLabelProps={{ shrink: true }}
                                         sx={{ bgcolor: '#FFFFFF', borderRadius: '10px' }}
                                     />
@@ -444,10 +445,7 @@ const CaptainMatchAstro = () => {
                                         fullWidth
                                         type="time"
                                         value={matchTime}
-                                        onChange={(e) => {
-                                            setMatchTime(e.target.value);
-                                            triggerCalculation(matchDate, e.target.value, venueInput, team1Name, team1CaptainObj, team2Name, team2CaptainObj);
-                                        }}
+                                        onChange={(e) => setMatchTime(e.target.value)}
                                         InputLabelProps={{ shrink: true }}
                                         sx={{ bgcolor: '#FFFFFF', borderRadius: '10px' }}
                                     />
@@ -471,11 +469,7 @@ const CaptainMatchAstro = () => {
                                 fullWidth
                                 options={venuesList}
                                 value={venueInput}
-                                onChange={(e, newValue) => {
-                                    const v = newValue || '';
-                                    setVenueInput(v);
-                                    triggerCalculation(matchDate, matchTime, v, team1Name, team1CaptainObj, team2Name, team2CaptainObj);
-                                }}
+                                onChange={(e, newValue) => setVenueInput(newValue || '')}
                                 onInputChange={(e, newInputValue) => setVenueInput(newInputValue)}
                                 componentsProps={{
                                     popper: {
@@ -562,21 +556,32 @@ const CaptainMatchAstro = () => {
                                         fullWidth
                                         label="Team 1 Name"
                                         value={team1Name}
-                                        onChange={(e) => {
-                                            setTeam1Name(e.target.value);
-                                            triggerCalculation(matchDate, matchTime, venueInput, e.target.value, team1CaptainObj, team2Name, team2CaptainObj);
-                                        }}
+                                        onChange={(e) => setTeam1Name(e.target.value)}
                                         placeholder="e.g. Royal Challengers Bangalore"
                                     />
 
                                     <Autocomplete
                                         options={playersList}
-                                        getOptionLabel={(option) => typeof option === 'string' ? option : `${option.name || ''} (${option.dob || 'DOB N/A'})`}
-                                        value={team1CaptainObj}
-                                        onChange={(e, newValue) => {
-                                            setTeam1CaptainObj(newValue);
-                                            triggerCalculation(matchDate, matchTime, venueInput, team1Name, newValue, team2Name, team2CaptainObj);
+                                        getOptionLabel={(option) => {
+                                            if (!option) return '';
+                                            if (typeof option === 'string') return option;
+                                            return `${option.name || ''} (${option.dob || 'DOB N/A'})`;
                                         }}
+                                        filterOptions={(options, state) => {
+                                            const input = (state.inputValue || '').toLowerCase().trim();
+                                            if (!input) return options;
+                                            const words = input.split(/\s+/).filter(Boolean);
+                                            return options.filter(opt => {
+                                                const name = (opt.name || '').toLowerCase();
+                                                const dob = (opt.dob || '').toLowerCase();
+                                                const place = (opt.birthPlace || '').toLowerCase();
+                                                const role = (opt.role || '').toLowerCase();
+                                                const target = `${name} ${dob} ${place} ${role}`;
+                                                return words.every(w => target.includes(w));
+                                            });
+                                        }}
+                                        value={team1CaptainObj}
+                                        onChange={(e, newValue) => setTeam1CaptainObj(newValue)}
                                         isOptionEqualToValue={(option, value) => option._id === value?._id || option.name === value?.name}
                                         componentsProps={{
                                             popper: {
@@ -641,21 +646,32 @@ const CaptainMatchAstro = () => {
                                         fullWidth
                                         label="Team 2 Name"
                                         value={team2Name}
-                                        onChange={(e) => {
-                                            setTeam2Name(e.target.value);
-                                            triggerCalculation(matchDate, matchTime, venueInput, team1Name, team1CaptainObj, e.target.value, team2CaptainObj);
-                                        }}
+                                        onChange={(e) => setTeam2Name(e.target.value)}
                                         placeholder="e.g. Sunrisers Hyderabad"
                                     />
 
                                     <Autocomplete
                                         options={playersList}
-                                        getOptionLabel={(option) => typeof option === 'string' ? option : `${option.name || ''} (${option.dob || 'DOB N/A'})`}
-                                        value={team2CaptainObj}
-                                        onChange={(e, newValue) => {
-                                            setTeam2CaptainObj(newValue);
-                                            triggerCalculation(matchDate, matchTime, venueInput, team1Name, team1CaptainObj, team2Name, newValue);
+                                        getOptionLabel={(option) => {
+                                            if (!option) return '';
+                                            if (typeof option === 'string') return option;
+                                            return `${option.name || ''} (${option.dob || 'DOB N/A'})`;
                                         }}
+                                        filterOptions={(options, state) => {
+                                            const input = (state.inputValue || '').toLowerCase().trim();
+                                            if (!input) return options;
+                                            const words = input.split(/\s+/).filter(Boolean);
+                                            return options.filter(opt => {
+                                                const name = (opt.name || '').toLowerCase();
+                                                const dob = (opt.dob || '').toLowerCase();
+                                                const place = (opt.birthPlace || '').toLowerCase();
+                                                const role = (opt.role || '').toLowerCase();
+                                                const target = `${name} ${dob} ${place} ${role}`;
+                                                return words.every(w => target.includes(w));
+                                            });
+                                        }}
+                                        value={team2CaptainObj}
+                                        onChange={(e, newValue) => setTeam2CaptainObj(newValue)}
                                         isOptionEqualToValue={(option, value) => option._id === value?._id || option.name === value?.name}
                                         componentsProps={{
                                             popper: {
@@ -699,25 +715,46 @@ const CaptainMatchAstro = () => {
                             </Grid>
                         </Grid>
 
-                        {/* Calculate Button */}
-                        <Button
-                            fullWidth
-                            variant="contained"
-                            onClick={handleCalculate}
-                            disabled={calcLoading || !team1CaptainObj || !team2CaptainObj}
-                            startIcon={calcLoading ? <CircularProgress size={20} color="inherit" /> : <AutoAwesomeIcon />}
-                            sx={{
-                                py: 1.5,
-                                borderRadius: '14px',
-                                fontSize: '1rem',
-                                fontWeight: '800',
-                                background: 'linear-gradient(135deg, #FF6F00 0%, #FF8F00 100%)',
-                                boxShadow: '0 6px 20px rgba(255, 111, 0, 0.35)',
-                                '&:hover': { background: 'linear-gradient(135deg, #E65100 0%, #FF6F00 100%)' }
-                            }}
-                        >
-                            Calculate Captain Tara Balam (கணக்கிடு)
-                        </Button>
+                        {/* Action Buttons: Calculate & Clear */}
+                        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                onClick={handleCalculate}
+                                disabled={calcLoading || !team1CaptainObj || !team2CaptainObj}
+                                startIcon={calcLoading ? <CircularProgress size={20} color="inherit" /> : <AutoAwesomeIcon />}
+                                sx={{
+                                    flex: { sm: 1 },
+                                    py: 1.5,
+                                    borderRadius: '14px',
+                                    fontSize: '1rem',
+                                    fontWeight: '800',
+                                    background: 'linear-gradient(135deg, #FF6F00 0%, #FF8F00 100%)',
+                                    boxShadow: '0 6px 20px rgba(255, 111, 0, 0.35)',
+                                    '&:hover': { background: 'linear-gradient(135deg, #E65100 0%, #FF6F00 100%)' }
+                                }}
+                            >
+                                Calculate Captain Tara Balam (கணக்கிடு)
+                            </Button>
+
+                            <Button
+                                variant="outlined"
+                                onClick={handleClearForm}
+                                startIcon={<RefreshIcon />}
+                                sx={{
+                                    py: 1.5,
+                                    px: 3,
+                                    borderRadius: '14px',
+                                    fontWeight: 'bold',
+                                    textTransform: 'none',
+                                    borderColor: 'rgba(0,0,0,0.2)',
+                                    color: 'text.secondary',
+                                    '&:hover': { borderColor: 'error.main', color: 'error.main', bgcolor: 'rgba(239,68,68,0.05)' }
+                                }}
+                            >
+                                Clear Form (அழிக்க)
+                            </Button>
+                        </Box>
                     </Paper>
 
                     {/* Results Section */}

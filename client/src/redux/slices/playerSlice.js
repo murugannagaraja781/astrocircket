@@ -5,12 +5,13 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || (typeof window !== 'unde
 
 export const fetchPlayers = createAsyncThunk(
     'players/fetchPlayers',
-    async (_, { rejectWithValue }) => {
+    async (params = { all: 'true' }, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`${BACKEND_URL}/api/players`);
-            return response.data;
+            const response = await axios.get(`${BACKEND_URL}/api/players`, { params });
+            const data = response.data;
+            return Array.isArray(data) ? data : (data.players || []);
         } catch (error) {
-            return rejectWithValue(error.response.data);
+            return rejectWithValue(error.response?.data || error.message);
         }
     }
 );

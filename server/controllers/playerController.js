@@ -337,9 +337,10 @@ function convertTimezone(tzString) {
 
 const getPlayers = async (req, res) => {
     try {
+        const isAll = req.query.all === 'true' || req.query.limit === '0' || req.query.limit === 'all';
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 11;
-        const skip = (page - 1) * limit;
+        const limit = isAll ? 0 : (parseInt(req.query.limit) || 11);
+        const skip = isAll ? 0 : ((page - 1) * limit);
 
         // Build Filter
         const query = {};
@@ -389,13 +390,16 @@ const getPlayers = async (req, res) => {
         }
 
         const totalPlayers = await Player.countDocuments(query);
-        const totalPages = Math.ceil(totalPlayers / limit);
+        const totalPages = isAll ? 1 : Math.ceil(totalPlayers / limit);
 
-        const players = await Player.find(query)
-            .sort({ _id: -1 }) // Recent first
-            .skip(skip)
-            .limit(limit)
-            .lean();
+        let queryBuilder = Player.find(query);
+        if (isAll) {
+            queryBuilder = queryBuilder.sort({ name: 1 });
+        } else {
+            queryBuilder = queryBuilder.sort({ _id: -1 }).skip(skip).limit(limit);
+        }
+
+        const players = await queryBuilder.lean();
 
         const formatChartHelper = (chart) => {
             if (!chart) return chart;
@@ -407,19 +411,26 @@ const getPlayers = async (req, res) => {
             return chart;
         };
 
-        const updatedPlayers = await Promise.all(players.map(async (p) => {
-            if ((!p.birthChart || Object.keys(p.birthChart).length === 0) && p.dob) {
-                const computed = await fetchCharData(p);
-                if (computed) {
-                    p.birthChart = computed;
-                    Player.updateOne({ _id: p._id }, { $set: { birthChart: computed } }).catch(() => {});
+        const updatedPlayers = isAll
+            ? players.map(p => {
+                if (p.birthChart) {
+                    p.birthChart = formatChartHelper(p.birthChart);
                 }
-            }
-            if (p.birthChart) {
-                p.birthChart = formatChartHelper(p.birthChart);
-            }
-            return p;
-        }));
+                return p;
+            })
+            : await Promise.all(players.map(async (p) => {
+                if ((!p.birthChart || Object.keys(p.birthChart).length === 0) && p.dob) {
+                    const computed = await fetchCharData(p);
+                    if (computed) {
+                        p.birthChart = computed;
+                        Player.updateOne({ _id: p._id }, { $set: { birthChart: computed } }).catch(() => {});
+                    }
+                }
+                if (p.birthChart) {
+                    p.birthChart = formatChartHelper(p.birthChart);
+                }
+                return p;
+            }));
 
         res.json({
             players: updatedPlayers,
