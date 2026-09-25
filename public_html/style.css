@@ -226,3 +226,302 @@ section {
     .hero h1 { font-size: 2.5rem; }
     .btn-whatsapp { margin-left: 0; margin-top: 15px; display: block; }
 }
+
+/* ==========================================================================
+   Cricket Player Registration Form & UI Components
+   ========================================================================== */
+.form-card {
+    background: #141424;
+    border: 1px solid #2a2a44;
+    border-radius: 16px;
+    padding: 35px 30px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+    max-width: 780px;
+    margin: 0 auto;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-header h1, .form-header h2 {
+    font-size: 2rem;
+    color: var(--accent-gold);
+    margin-bottom: 8px;
+}
+
+.form-header p {
+    color: var(--text-gray);
+    font-size: 0.95rem;
+}
+
+.form-section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    color: var(--accent-gold);
+    border-bottom: 1px solid #2a2a44;
+    padding-bottom: 8px;
+    margin: 25px 0 15px 0;
+}
+
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.form-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+}
+
+@media (max-width: 640px) {
+    .form-grid-2, .form-grid-3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #c0c0d8;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-group label span.req {
+    color: #ff5e5e;
+}
+
+.form-control {
+    width: 100%;
+    padding: 13px 15px;
+    background: #1e1e32;
+    border: 1px solid #333355;
+    color: #ffffff;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: var(--font-main);
+    transition: all 0.2s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 3px rgba(201, 163, 93, 0.15);
+    background: #23233c;
+}
+
+.form-control::placeholder {
+    color: #6c6c8a;
+}
+
+select.form-control {
+    cursor: pointer;
+}
+
+/* Photo Upload Box */
+.photo-upload-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: #1a1a2e;
+    border: 2px dashed #3a3a5a;
+    border-radius: 12px;
+    padding: 18px;
+    transition: border-color 0.2s;
+    cursor: pointer;
+}
+
+.photo-upload-wrapper:hover {
+    border-color: var(--accent-gold);
+}
+
+.photo-preview {
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    background: #25253e;
+    border: 2px solid var(--accent-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.photo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+}
+
+.photo-preview span {
+    font-size: 2rem;
+}
+
+.photo-upload-info {
+    flex-grow: 1;
+}
+
+.photo-upload-info h4 {
+    color: #ffffff;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+}
+
+.photo-upload-info p {
+    color: var(--text-gray);
+    font-size: 0.8rem;
+}
+
+/* Role Selector Badges */
+.role-options {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+@media (max-width: 540px) {
+    .role-options {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.role-radio-label {
+    background: #1e1e32;
+    border: 1px solid #333355;
+    border-radius: 8px;
+    padding: 12px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.role-radio-label:hover {
+    border-color: var(--accent-gold);
+}
+
+.role-radio-label input {
+    display: none;
+}
+
+.role-radio-label .role-icon {
+    font-size: 1.4rem;
+}
+
+.role-radio-label .role-text {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #e0e0f0;
+}
+
+.role-radio-label.selected {
+    background: rgba(201, 163, 93, 0.15);
+    border-color: var(--accent-gold);
+}
+
+.role-radio-label.selected .role-text {
+    color: var(--accent-gold);
+}
+
+/* Success Confirmation Card */
+.success-card {
+    background: #141424;
+    border: 1px solid #2a2a44;
+    border-radius: 16px;
+    padding: 40px 30px;
+    max-width: 650px;
+    margin: 40px auto;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+}
+
+.success-badge {
+    width: 70px;
+    height: 70px;
+    background: #25d36622;
+    border: 2px solid var(--cta-green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    margin: 0 auto 20px auto;
+    color: var(--cta-green);
+}
+
+.player-profile-badge {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: #1c1c30;
+    border: 1px solid #323250;
+    border-radius: 12px;
+    padding: 18px;
+    margin: 25px 0;
+    text-align: left;
+}
+
+.player-profile-badge img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent-gold);
+}
+
+.player-meta h3 {
+    color: #ffffff;
+    font-size: 1.25rem;
+    margin-bottom: 5px;
+}
+
+.player-meta p {
+    color: var(--text-gray);
+    font-size: 0.85rem;
+    margin: 2px 0;
+}
+
+.details-table {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.details-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #25253c;
+}
+
+.details-table td:first-child {
+    color: var(--text-gray);
+    font-weight: 600;
+    width: 40%;
+}
+
+.details-table td:last-child {
+    color: #ffffff;
+    font-weight: 500;
+}
+

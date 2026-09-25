@@ -95,7 +95,10 @@ const normalizeRole = (roleStr) => {
     if (r.includes('BOWL')) {
         return 'BOWL';
     }
-    if (r.includes('BAT') || r.includes('WK') || r.includes('WICKET') || r.includes('KEEPER')) {
+    if (r.includes('WK') || r.includes('WICKET') || r.includes('KEEPER')) {
+        return 'WK';
+    }
+    if (r.includes('BAT')) {
         return 'BAT';
     }
     return 'BAT';
@@ -600,9 +603,11 @@ const addPlayer = async (req, res) => {
             // The bulk upload deletes the file. Here we want to KEEP it.
             // Let's assume we serve 'uploads' statically or similar.
             // But 'dest: uploads/' just saves a hash. We should give it an extension.
-            const ext = path.extname(req.file.originalname);
+            const ext = path.extname(req.file.originalname) || '.jpg';
             const newFilename = `${playerData.id}_profile${ext}`;
-            const targetPath = path.join('uploads', newFilename);
+            const uploadsDir = path.join(__dirname, '../uploads');
+            if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
+            const targetPath = path.join(uploadsDir, newFilename);
 
             // Move/Rename key file
             fs.renameSync(req.file.path, targetPath);

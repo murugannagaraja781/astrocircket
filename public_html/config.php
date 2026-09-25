@@ -26,9 +26,11 @@ define('PHONEPE_ENV', getenv('PHONEPE_ENV') ?: 'PRODUCTION');
 define('PHONEPE_AUTH_URL', 'https://api.phonepe.com/apis/identity-manager/v1/oauth/token');
 define('PHONEPE_BASE_URL', 'https://api.phonepe.com/apis/pg');
 
-// Website URLs
+// Website & API URLs
 define('SITE_URL', 'https://sbastro.com'); 
 define('REDIRECT_URL', SITE_URL . '/payment_response.php');
+define('NODE_API_URL', getenv('NODE_API_URL') ?: 'http://localhost:5001');
+define('ADMIN_PASSWORD', getenv('ADMIN_PASSWORD') ?: 'astroadmin2026');
 
 // Consultation Plans Mapping
 $plans = [

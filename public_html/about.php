@@ -17,8 +17,7 @@
             <div class="nav-links">
                 <a href="index.php">HOME</a>
                 <a href="about.php">ABOUT</a>
-                <a href="index.php#services">SERVICES</a>
-                <a href="index.php#pricing">PRICING</a>
+                <a href="consultation.php" style="color:var(--accent-gold);">PLAYER REGISTRATION</a>
                 <a href="index.php#contact">CONTACT</a>
             </div>
         </div>

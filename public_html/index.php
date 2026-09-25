@@ -21,8 +21,7 @@
             <div class="nav-links">
                 <a href="index.php">HOME</a>
                 <a href="about.php">ABOUT</a>
-                <a href="index.php#services">SERVICES</a>
-                <a href="index.php#pricing">PRICING</a>
+                <a href="consultation.php" style="color:var(--accent-gold);">PLAYER REGISTRATION</a>
                 <a href="index.php#contact">CONTACT</a>
             </div>
         </div>
@@ -31,11 +30,11 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <h1>Data-Driven KP Astrology – <br><span style="color:#c9a35d">Real Results, No Guesswork.</span></h1>
-            <p>Accurate KP Astrology Consultation for Career, Marriage & Finance by Santhosh Kumar.</p>
+            <h1>Data-Driven Cricket Astrology – <br><span style="color:#c9a35d">Real Results, No Guesswork.</span></h1>
+            <p>Accurate KP Astrology & Performance Profiling for Cricket Players & Teams by Santhosh Kumar.</p>
             <div class="cta-group">
-                <a href="consultation.php" class="btn btn-primary">Book Consultation</a>
-                <a href="https://wa.me/919488818867?text=I%20want%20to%20ask%20my%20qustion%20for%2099%20Rupees" class="btn btn-whatsapp">Quick Question — ₹99</a>
+                <a href="consultation.php" class="btn btn-primary">🏏 Register Cricket Player</a>
+                <a href="https://wa.me/919488818867?text=Hello%20Santhosh,%20I%20want%20to%20know%20about%20cricket%20astrology%20consultation" class="btn btn-whatsapp">WhatsApp Chat</a>
             </div>
             <!-- Trust Elements Below CTA -->
             <div class="hero-trust">
@@ -147,9 +146,10 @@
         <p style="margin-top:20px;">
             <a href="terms.php" style="color:var(--accent-gold); text-decoration:none; margin:0 10px;">Terms & Conditions</a> | 
             <a href="privacy.php" style="color:var(--accent-gold); text-decoration:none; margin:0 10px;">Privacy Policy</a> |
-            <a href="refund.php" style="color:var(--accent-gold); text-decoration:none; margin:0 10px;">Refund Policy</a>
+            <a href="refund.php" style="color:var(--accent-gold); text-decoration:none; margin:0 10px;">Refund Policy</a> |
+            <a href="admin.php" style="color:#6c6c8a; text-decoration:none; margin:0 10px;">Admin Portal</a>
         </p>
-        <p style="margin-top:20px;">&copy; 2026 S&B Astro. All Rights Reserved.</p>
+        <p style="margin-top:20px;">&copy; <?php echo date('Y'); ?> S&B Astro. All Rights Reserved.</p>
     </footer>
 
 </body>
