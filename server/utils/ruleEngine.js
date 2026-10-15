@@ -160,6 +160,7 @@ class RuleContext {
         this.bowling = { score: 0, rules: [], isSpecial: false, status: 'Active' };
         this.sureFlopBat = false;
         this.sureFlopBowl = false;
+        this.isRule2DirectActive = false;
     }
 
     addRule(name, score, type = 'both', isSpecial = false, nameTamil = '') {
@@ -205,6 +206,7 @@ const GENERAL_RULES = [
     },
     (ctx) => { // Rule 2
         if (ctx.matchRasiLord === ctx.playerRasiLord && ctx.matchStarLord === ctx.playerStarLord) {
+            ctx.isRule2DirectActive = true;
             ctx.addRule('BAT Rule 2: Direct', 6, 'bat', false, 'பேட்டிங் விதி 2: நேரடி விதி');
             ctx.applyBonuses(ctx.playerRasiLord, 4, 'bat');
             ctx.setSureFlop('BOWL Rule 2: Same Rasi & Star', 'பவுலிங் விதி 2: ஒரே ராசி & நட்சத்திரம்', 'bowl');
@@ -275,7 +277,9 @@ const GENERAL_RULES = [
             if (isExalted(ctx.playerRasiLord, pMoonPos.longitude) || isOwnSign(ctx.playerRasiLord, pMoonPos.longitude)) ctx.addRule('Rule 5: Bonus', 2);
         }
         if (pStarPos && ownedByMatchRasi.includes(pMoonPos.signId) && ownedByMatchRasi.includes(pStarPos.signId)) {
-            ctx.setSureFlop('BAT Rule 5: Match Rasi Same House', 'பேட்டிங் விதி 5: மேட்ச் ராசி அதிபதி வீட்டில் ஒரே ராசி (Sure Flop)', 'bat');
+            if (!ctx.isRule2DirectActive) {
+                ctx.setSureFlop('BAT Rule 5: Match Rasi Same House', 'பேட்டிங் விதி 5: மேட்ச் ராசி அதிபதி வீட்டில் ஒரே ராசி (Sure Flop)', 'bat');
+            }
             ctx.addRule('BOWL Rule 5: Same House (Rasi Lord)', 6, 'bowl', false, 'பவுலிங் விதி 5: மேட்ச் ராசி அதிபதி வீட்டில் ஒரே ராசி (+6)');
         }
     },

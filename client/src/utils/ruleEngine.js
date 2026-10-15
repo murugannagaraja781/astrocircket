@@ -116,6 +116,7 @@ class RuleContext {
 
         this.sureFlopBat = false;
         this.sureFlopBowl = false;
+        this.isRule2DirectActive = false;
 
         // Mars relevance: active only if player's rasi/star lord is Mars, or both lords are conjunct
         this.isMarsRelevant = (this.playerRasiLord === 'Mars' || this.playerStarLord === 'Mars') ||
@@ -165,6 +166,7 @@ const GENERAL_RULES = [
     // Rule 2: Direct
     (ctx) => {
         if (ctx.matchRasiLord === ctx.playerRasiLord && ctx.matchStarLord === ctx.playerStarLord) {
+            ctx.isRule2DirectActive = true;
             ctx.addRule('BAT Rule 2: Direct', 6, 'bat', false, 'பேட்டிங் விதி 2: நேரடி விதி');
             ctx.applyBonuses(ctx.playerRasiLord, 4, 'bat');
             ctx.setSureFlop('BOWL Rule 2: Same Rasi & Star', 'பவுலிங் விதி 2: ஒரே ராசி & நட்சத்திரம்', 'bowl');
@@ -246,7 +248,9 @@ const GENERAL_RULES = [
             if (isExalted(ctx.playerRasiLord, ctx.playerRasi) || isOwnSign(ctx.playerRasiLord, ctx.playerRasi)) ctx.addRule('Rule 5: Bonus', 2);
         }
         if (isSignInList(pRasiLordPos, ownedByMatchRasi) && isSignInList(pStarLordPos, ownedByMatchRasi)) {
-            ctx.setSureFlop('BAT Rule 5: Match Rasi Same House', 'பேட்டிங் விதி 5: மேட்ச் ராசி அதிபதி வீட்டில் ஒரே ராசி (Sure Flop)', 'bat');
+            if (!ctx.isRule2DirectActive) {
+                ctx.setSureFlop('BAT Rule 5: Match Rasi Same House', 'பேட்டிங் விதி 5: மேட்ச் ராசி அதிபதி வீட்டில் ஒரே ராசி (Sure Flop)', 'bat');
+            }
             ctx.addRule('BOWL Rule 5: Same House (Rasi Lord)', 6, 'bowl', false, 'பவுலிங் விதி 5: மேட்ச் ராசி அதிபதி வீட்டில் ஒரே ராசி (+6)');
         }
     },
