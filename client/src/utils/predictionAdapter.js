@@ -60,7 +60,8 @@ const toTitleCase = (val) => {
 
 const getStarLord = (starName) => {
     if (!starName) return null;
-    const n = String(starName).toLowerCase();
+    const nameStr = typeof starName === 'object' ? (starName.name || starName.tamil || '') : String(starName);
+    const n = nameStr.toLowerCase();
     if (['ashwini', 'magha', 'mula', 'moola'].some(s => n.includes(s))) return 'Ketu';
     if (['bharani', 'purva phalguni', 'purvaphalguni', 'purva ashadha', 'purvashada'].some(s => n.includes(s))) return 'Venus';
     if (['krittika', 'uttara phalguni', 'uttaraphalguni', 'uttara ashadha', 'uttarashada'].some(s => n.includes(s))) return 'Sun';
@@ -80,6 +81,13 @@ const normalizeChart = (chart) => {
 
     // 1. Moon & Rashi Extraction
     let moonObj = planets["Moon"] || planets["moon"] || {};
+    if (!moonObj || (typeof moonObj === 'object' && Object.keys(moonObj).length === 0)) {
+        if (Array.isArray(chart.formattedPlanets)) {
+            const foundMoon = chart.formattedPlanets.find(p => (p.name || p.planetName) === 'Moon');
+            if (foundMoon) moonObj = foundMoon.raw || foundMoon;
+        }
+    }
+
     let rashi = "Unknown";
     let nakshatra = "Unknown";
 
@@ -87,20 +95,25 @@ const normalizeChart = (chart) => {
         rashi = getSignFromDegree(moonObj);
         nakshatra = getNakshatraFromDegree(moonObj);
     } else if (typeof moonObj === 'object') {
-        if (typeof moonObj.longitude === 'number') {
-            rashi = moonObj.sign || moonObj.signName || getSignFromDegree(moonObj.longitude);
-            nakshatra = moonObj.nakshatra || getNakshatraFromDegree(moonObj.longitude);
-        } else {
-            rashi = moonObj.sign || moonObj.signName || chart.moonSign?.english || chart.moonSign?.name || "Unknown";
-            nakshatra = moonObj.nakshatra || chart.moonNakshatra?.name || chart.nakshatra?.name || "Unknown";
+        const rawSign = moonObj.sign || moonObj.signName || chart.moonSign;
+        rashi = typeof rawSign === 'object' ? (rawSign.english || rawSign.name || rawSign.sign || 'Unknown') : (rawSign || 'Unknown');
+        if (rashi === 'Unknown' && typeof moonObj.longitude === 'number') {
+            rashi = getSignFromDegree(moonObj.longitude);
+        }
+
+        const rawNak = moonObj.nakshatra || chart.moonNakshatra || chart.nakshatra;
+        nakshatra = typeof rawNak === 'object' ? (rawNak.name || rawNak.tamil || 'Unknown') : (rawNak || 'Unknown');
+        if (nakshatra === 'Unknown' && typeof moonObj.longitude === 'number') {
+            nakshatra = getNakshatraFromDegree(moonObj.longitude);
         }
     } else if (typeof moonObj === 'string') {
         rashi = moonObj;
-        nakshatra = chart.moonNakshatra?.name || chart.nakshatra?.name || "Unknown";
+        const rawNak = chart.moonNakshatra || chart.nakshatra;
+        nakshatra = typeof rawNak === 'object' ? (rawNak.name || rawNak.tamil || 'Unknown') : (rawNak || 'Unknown');
     }
 
     if (rashi === "Unknown" && chart.moonSign) {
-        rashi = chart.moonSign.english || chart.moonSign.name || chart.moonSign.sign || "Unknown";
+        rashi = typeof chart.moonSign === 'object' ? (chart.moonSign.english || chart.moonSign.name || chart.moonSign.sign || "Unknown") : chart.moonSign;
     }
 
     // 2. Lords
@@ -109,15 +122,25 @@ const normalizeChart = (chart) => {
 
     // 3. Planet Positions Map (PlanetName -> SignName)
     const planetPositions = {};
-    const sourcePlanets = (Array.isArray(chart.formattedPlanets) && chart.formattedPlanets.length > 0)
-        ? chart.formattedPlanets.reduce((acc, p) => { if (p.name) acc[p.name] = p; return acc; }, {})
-        : (planets && Object.keys(planets).length > 0) ? planets : {};
+    let sourcePlanets = {};
+
+    if (planets && Object.keys(planets).length > 0) {
+        sourcePlanets = planets;
+    } else if (Array.isArray(chart.formattedPlanets) && chart.formattedPlanets.length > 0) {
+        sourcePlanets = chart.formattedPlanets.reduce((acc, p) => {
+            const pName = p.name || p.planetName;
+            if (pName) acc[pName] = p.raw || p;
+            return acc;
+        }, {});
+    }
 
     Object.keys(sourcePlanets).forEach(key => {
         let normalizedKey = toTitleCase(key);
         const val = sourcePlanets[key];
 
-        if (!isNaN(key) && val && val.name) normalizedKey = toTitleCase(val.name);
+        if (!isNaN(key) && val && (val.name || val.planetName)) {
+            normalizedKey = toTitleCase(val.name || val.planetName);
+        }
 
         let signName = 'Unknown';
         if (typeof val === 'number') {
@@ -137,6 +160,16 @@ const normalizeChart = (chart) => {
             planetPositions[normalizedKey] = toTitleCase(signName);
         }
     });
+
+    if (Array.isArray(chart.formattedPlanets)) {
+        chart.formattedPlanets.forEach(p => {
+            const pName = toTitleCase(p.name || p.planetName);
+            const pSign = toTitleCase(p.signName || p.sign || p.raw?.sign);
+            if (pName && pSign && pSign !== 'Unknown' && !planetPositions[pName]) {
+                planetPositions[pName] = pSign;
+            }
+        });
+    }
 
     // 4. Lagna / Ascendant extraction
     let ascSign = "Unknown";

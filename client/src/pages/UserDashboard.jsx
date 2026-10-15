@@ -12,7 +12,7 @@ import AdminPredictionManager from '../components/AdminPredictionManager';
 import CaptainMatchAstro from '../components/CaptainMatchAstro';
 import { runPrediction } from '../utils/predictionAdapter';
 import { setPlayers } from '../redux/slices/playerSlice';
-import { calculatePredictions, clearPredictions, clearMatchChart, setBatFirstTeam } from '../redux/slices/predictionSlice';
+import { calculatePredictions, clearPredictions, clearMatchChart, setBatFirstTeam, setMatchChart as setReduxMatchChart } from '../redux/slices/predictionSlice';
 import { isBatEligible, isBowlEligible } from '../utils/timelineEngine';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
@@ -644,6 +644,7 @@ const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = fa
     // Redux State
     const playerPredictions = useSelector(state => state.predictions.playerPredictions);
     const pid = player._id || player.id;
+    const res = playerPredictions[player?.id] || playerPredictions[player?._id] || playerPredictions[pid];
 
     // Normalize Data (Handle wrappers)
     const chartData = useMemo(() => player.birthChart?.data || player.birthChart, [player.birthChart]);
@@ -652,16 +653,16 @@ const PlayerDetailPanel = ({ player, matchChart, initialTab = 0, hideHeader = fa
 
     // Local Prediction Calculation as fallback
     const batsmanPred = useMemo(() => {
-        if (playerPredictions[pid]?.bat) return playerPredictions[pid].bat;
+        if (res?.bat) return res.bat;
         if (chartData && matchData) return runPrediction({ ...chartData, role: player.role }, matchData, "BAT");
         return null;
-    }, [playerPredictions, pid, chartData, matchData, player.role]);
+    }, [res, chartData, matchData, player.role]);
 
     const bowlerPred = useMemo(() => {
-        if (playerPredictions[pid]?.bowl) return playerPredictions[pid].bowl;
+        if (res?.bowl) return res.bowl;
         if (chartData && matchData) return runPrediction({ ...chartData, role: player.role }, matchData, "BOWL");
         return null;
-    }, [playerPredictions, pid, chartData, matchData, player.role]);
+    }, [res, chartData, matchData, player.role]);
 
     return (
         <Box sx={{
@@ -974,7 +975,7 @@ const PlayerRow = ({ player, matchChart, isSelected, onSelect, onEdit, onViewCha
 
     const playerPredictions = useSelector(state => state.predictions.playerPredictions);
     const pid = player.id || player._id;
-    const res = playerPredictions[pid];
+    const res = playerPredictions[player.id] || playerPredictions[player._id] || playerPredictions[pid];
 
     const batResult = res?.bat || (matchChart && chart ? runPrediction({ ...chart, role: player.role }, matchChart.data || matchChart, "BAT") : null);
     const bowlResult = res?.bowl || (matchChart && chart ? runPrediction({ ...chart, role: player.role }, matchChart.data || matchChart, "BOWL") : null);
@@ -2649,10 +2650,15 @@ const PlayerMobileCard = ({ player, matchChart, isSelected, onSelect, onEdit, on
     const rasi = chart?.moonSign?.english || chart?.planets?.Moon?.sign || '-';
 
     // Prediction Logic
-    let batResult = null;
-    let bowlResult = null;
-    if (matchChart && chart && isSelected) {
+    const playerPredictions = useSelector(state => state.predictions.playerPredictions);
+    const res = playerPredictions[player?.id] || playerPredictions[player?._id];
+
+    let batResult = res?.bat || null;
+    let bowlResult = res?.bowl || null;
+    if (!batResult && matchChart && chart && isSelected) {
         batResult = runPrediction({ ...chart, role: player.role }, matchChart.data || matchChart, "BAT");
+    }
+    if (!bowlResult && matchChart && chart && isSelected) {
         bowlResult = runPrediction({ ...chart, role: player.role }, matchChart.data || matchChart, "BOWL");
     }
 
@@ -3262,9 +3268,30 @@ const UserDashboard = ({ hideHeader = false }) => {
     );
 
     // Handle Match Prediction Result
-    const handlePredictionReady = (chartData) => {
+    const handlePredictionReady = (chartData, details) => {
         setMatchChart(chartData);
+        if (chartData) {
+            dispatch(setReduxMatchChart(chartData));
+            if (players && players.length > 0) {
+                dispatch(calculatePredictions({
+                    players,
+                    matchChart: chartData,
+                    matchStartTime: details?.time || '19:30'
+                }));
+            }
+        }
     };
+
+    // Auto-calculate predictions when players list or match chart updates
+    useEffect(() => {
+        if (matchChart && players && players.length > 0) {
+            dispatch(calculatePredictions({
+                players,
+                matchChart,
+                matchStartTime: '19:30'
+            }));
+        }
+    }, [players, matchChart, dispatch]);
 
     // Filter Logic
     const filteredPlayers = useMemo(() => {

@@ -105,11 +105,16 @@ describe('UserDashboard Prediction Flow', () => {
         });
     });
 
+import { Provider } from 'react-redux';
+import { store } from '../redux/store';
+
     const renderComponent = () => {
         return render(
-            <AuthContext.Provider value={{ token: mockToken, user: { name: 'TestUser' }, logout: vi.fn() }}>
-                <UserDashboard />
-            </AuthContext.Provider>
+            <Provider store={store}>
+                <AuthContext.Provider value={{ token: mockToken, user: { name: 'TestUser' }, logout: vi.fn() }}>
+                    <UserDashboard />
+                </AuthContext.Provider>
+            </Provider>
         );
     };
 

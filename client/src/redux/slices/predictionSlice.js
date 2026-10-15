@@ -66,6 +66,8 @@ const predictionSlice = createSlice({
                 const bowl = runPrediction({ ...playerChart, role: player.role }, mChartToUse, "BOWL");
 
                 predictions[pid] = { bat, bowl };
+                if (player.id) predictions[player.id] = { bat, bowl };
+                if (player._id) predictions[player._id] = { bat, bowl };
 
                 if (bat && bowl) {
                     const pBatScore = canBat ? (bat.score || 0) : 0;
