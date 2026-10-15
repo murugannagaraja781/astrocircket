@@ -190,11 +190,19 @@ const GENERAL_RULES = [
         const mStarLordPos = ctx.P[ctx.matchStarLord];
         const mRasiLordPos = ctx.P[ctx.matchRasiLord];
 
+        const isPlanetStrong = (planet) => {
+            if (!planet) return false;
+            const sign = ctx.P[planet];
+            if (!sign) return false;
+            return isExalted(planet, sign) || isOwnSign(planet, sign);
+        };
+
         if (mStarLordPos) {
             if (pRasiLordPos && mStarLordPos === pRasiLordPos) {
-                ctx.addRule('BAT Rule 4: Conjunction (Rasi Lord)', 4, 'bat', false, 'பேட்டிங் விதி 4: சேர்க்கை விதி (ராசி அதிபதி)');
-                ctx.addRule('BOWL Rule 4: Conjunction Star (Rasi Lord)', 4, 'bowl', false, 'பவுலிங் விதி 4: சேர்க்கை விதி (நட்சத்திர அதிபதி)');
-                ctx.applyBonuses(ctx.playerRasiLord, 4);
+                const isStrong = isPlanetStrong(ctx.playerRasiLord) || isPlanetStrong(ctx.matchStarLord);
+                const score = isStrong ? 8 : 4;
+                ctx.addRule('BAT Rule 4: Conjunction (Rasi Lord)', score, 'bat', false, 'பேட்டிங் விதி 4: சேர்க்கை விதி (ராசி அதிபதி)');
+                ctx.addRule('BOWL Rule 4: Conjunction Star (Rasi Lord)', score, 'bowl', false, 'பவுலிங் விதி 4: சேர்க்கை விதி (நட்சத்திர அதிபதி)');
                 if (ctx.matchLagnaSignBat === mStarLordPos) ctx.addRule('Lagna Match Bonus', 2, 'bat');
                 if (ctx.matchLagnaSignBowl === mStarLordPos) ctx.addRule('Lagna Match Bonus', 2, 'bowl');
 
@@ -208,9 +216,10 @@ const GENERAL_RULES = [
                     }
                 });
             } else if (pStarLordPos && mStarLordPos === pStarLordPos) {
-                ctx.addRule('BAT Rule 4: Conjunction (Star Lord)', 4, 'bat', false, 'பேட்டிங் விதி 4: சேர்க்கை விதி (நட்சத்திர அதிபதி)');
-                ctx.addRule('BOWL Rule 4: Conjunction Star (Star Lord)', 4, 'bowl', false, 'பவுலிங் விதி 4: சேர்க்கை விதி (நட்சத்திர அதிபதி)');
-                ctx.applyBonuses(ctx.playerStarLord, 4);
+                const isStrong = isPlanetStrong(ctx.playerStarLord) || isPlanetStrong(ctx.matchStarLord);
+                const score = isStrong ? 8 : 4;
+                ctx.addRule('BAT Rule 4: Conjunction (Star Lord)', score, 'bat', false, 'பேட்டிங் விதி 4: சேர்க்கை விதி (நட்சத்திர அதிபதி)');
+                ctx.addRule('BOWL Rule 4: Conjunction Star (Star Lord)', score, 'bowl', false, 'பவுலிங் விதி 4: சேர்க்கை விதி (நட்சத்திர அதிபதி)');
                 if (ctx.matchLagnaSignBat === mStarLordPos) ctx.addRule('Lagna Match Bonus', 2, 'bat');
                 if (ctx.matchLagnaSignBowl === mStarLordPos) ctx.addRule('Lagna Match Bonus', 2, 'bowl');
 
@@ -227,11 +236,13 @@ const GENERAL_RULES = [
         }
         if (mRasiLordPos) {
             if (pRasiLordPos && mRasiLordPos === pRasiLordPos) {
-                ctx.addRule('BOWL Rule 4: Conjunction Rasi (Rasi Lord)', 4, 'bowl', false, 'பவுலிங் விதி 4: மேட்ச் ராசி அதிபதி சேர்க்கை');
-                ctx.applyBonuses(ctx.playerRasiLord, 4, 'bowl');
+                const isStrong = isPlanetStrong(ctx.playerRasiLord) || isPlanetStrong(ctx.matchRasiLord);
+                const score = isStrong ? 8 : 4;
+                ctx.addRule('BOWL Rule 4: Conjunction Rasi (Rasi Lord)', score, 'bowl', false, 'பவுலிங் விதி 4: மேட்ச் ராசி அதிபதி சேர்க்கை');
             } else if (pStarLordPos && mRasiLordPos === pStarLordPos) {
-                ctx.addRule('BOWL Rule 4: Conjunction Rasi (Star Lord)', 4, 'bowl', false, 'பவுலிங் விதி 4: மேட்ச் ராசி அதிபதி சேர்க்கை');
-                ctx.applyBonuses(ctx.playerStarLord, 4, 'bowl');
+                const isStrong = isPlanetStrong(ctx.playerStarLord) || isPlanetStrong(ctx.matchRasiLord);
+                const score = isStrong ? 8 : 4;
+                ctx.addRule('BOWL Rule 4: Conjunction Rasi (Star Lord)', score, 'bowl', false, 'பவுலிங் விதி 4: மேட்ச் ராசி அதிபதி சேர்க்கை');
             }
         }
     },
