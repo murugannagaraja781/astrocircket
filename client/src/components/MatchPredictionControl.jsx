@@ -398,10 +398,17 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                 label="Search Venue (City)"
                                 size="small"
                                 fullWidth
-                                InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.75rem' } }}
+                                InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.8rem' } }}
                                 InputProps={{
                                     ...params.InputProps,
-                                    sx: { borderRadius: '10px', bgcolor: '#fff', height: 38, fontSize: '0.82rem', border: '1px solid #eee' },
+                                    sx: {
+                                        borderRadius: '10px',
+                                        bgcolor: '#fff',
+                                        minHeight: 44,
+                                        fontSize: '0.85rem',
+                                        border: '1px solid #FFCC80',
+                                        '& input': { py: 0.8 }
+                                    },
                                     endAdornment: (
                                         <React.Fragment>
                                             {locationLoading ? <CircularProgress color="inherit" size={16} /> : null}
@@ -426,40 +433,61 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                 </Grid>
             </Grid>
 
-            {/* Row 2: Lat/Long/TZ/Ayanamsa */}
+            {/* Row 2: Lat/Long/TZ/Ayanamsa (Strict Single Line) */}
             {isSidebar ? (
                 <Box sx={{ mt: 1 }}>
-                    <Grid container spacing={0.8} alignItems="center">
-                        <Grid item xs={3}>
-                            <TextField label="Lat" value={matchDetails.lat} size="small" disabled fullWidth InputProps={{ style: { fontSize: '0.7rem', height: 32 } }} InputLabelProps={{ shrink: true, style: { fontSize: '0.65rem' } }} />
-                        </Grid>
-                        <Grid item xs={3}>
-                            <TextField label="Long" value={matchDetails.long} size="small" disabled fullWidth InputProps={{ style: { fontSize: '0.7rem', height: 32 } }} InputLabelProps={{ shrink: true, style: { fontSize: '0.65rem' } }} />
-                        </Grid>
-                        <Grid item xs={2.5}>
-                            <TextField label="TZ" value={matchDetails.timezone} size="small" disabled fullWidth InputProps={{ style: { fontSize: '0.7rem', height: 32 } }} InputLabelProps={{ shrink: true, style: { fontSize: '0.65rem' } }} />
-                        </Grid>
-                        <Grid item xs={3.5}>
-                            <TextField
-                                select
-                                label="Ayanamsa"
-                                size="small"
-                                value={matchDetails.ayanamsa || 'Lahiri'}
-                                onChange={(e) => {
-                                    handleChange('ayanamsa', e.target.value);
-                                    localStorage.setItem('preferredAyanamsa', e.target.value);
-                                }}
-                                SelectProps={{ native: true }}
-                                fullWidth
-                                InputProps={{ style: { fontSize: '0.7rem', height: 32 } }}
-                                InputLabelProps={{ shrink: true, style: { fontSize: '0.65rem' } }}
-                            >
-                                <option value="Lahiri">Lahiri</option>
-                                <option value="KP">KP</option>
-                                <option value="KP Straight">KP Straight</option>
-                            </TextField>
-                        </Grid>
-                    </Grid>
+                    <Box sx={{
+                        display: 'grid',
+                        gridTemplateColumns: '1.15fr 1.15fr 0.8fr 1.35fr',
+                        gap: 0.6,
+                        alignItems: 'center'
+                    }}>
+                        <TextField
+                            label="Lat"
+                            value={matchDetails.lat}
+                            size="small"
+                            disabled
+                            fullWidth
+                            InputProps={{ style: { fontSize: '0.72rem', height: 32, padding: '0 6px' } }}
+                            InputLabelProps={{ shrink: true, style: { fontSize: '0.68rem', fontWeight: 'bold' } }}
+                        />
+                        <TextField
+                            label="Long"
+                            value={matchDetails.long}
+                            size="small"
+                            disabled
+                            fullWidth
+                            InputProps={{ style: { fontSize: '0.72rem', height: 32, padding: '0 6px' } }}
+                            InputLabelProps={{ shrink: true, style: { fontSize: '0.68rem', fontWeight: 'bold' } }}
+                        />
+                        <TextField
+                            label="TZ"
+                            value={matchDetails.timezone}
+                            size="small"
+                            disabled
+                            fullWidth
+                            InputProps={{ style: { fontSize: '0.72rem', height: 32, padding: '0 4px', textAlign: 'center' } }}
+                            InputLabelProps={{ shrink: true, style: { fontSize: '0.68rem', fontWeight: 'bold' } }}
+                        />
+                        <TextField
+                            select
+                            label="Ayanamsa"
+                            size="small"
+                            value={matchDetails.ayanamsa || 'Lahiri'}
+                            onChange={(e) => {
+                                handleChange('ayanamsa', e.target.value);
+                                localStorage.setItem('preferredAyanamsa', e.target.value);
+                            }}
+                            SelectProps={{ native: true }}
+                            fullWidth
+                            InputProps={{ style: { fontSize: '0.72rem', height: 32, padding: '0 4px' } }}
+                            InputLabelProps={{ shrink: true, style: { fontSize: '0.68rem', fontWeight: 'bold' } }}
+                        >
+                            <option value="Lahiri">Lahiri</option>
+                            <option value="KP">KP</option>
+                            <option value="KP Straight">KP Straight</option>
+                        </TextField>
+                    </Box>
 
                     <Box sx={{ display: 'flex', gap: 1, mt: 1.2 }}>
                         <Button
