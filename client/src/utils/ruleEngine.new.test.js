@@ -162,4 +162,54 @@ describe('Updated Rule Engine Rules', () => {
         });
     });
 
+    /* --------------------------------------------------------
+       5. THIRUVONAM MATCH + SATHAYAM PLAYER SPECIAL RULE
+       -------------------------------------------------------- */
+    describe('Thiruvonam Match + Sathayam Player Special Rule', () => {
+        const thiruvonamMatch = {
+            nakshatra: 'Thiruvonam',
+            rashi: 'Capricorn',
+            rashiLord: 'Saturn',
+            nakshatraLord: 'Moon'
+        };
+
+        const transitSaturnInOwnHouse = {
+            planetPositions: {
+                'Moon': 'Capricorn',
+                'Saturn': 'Aquarius'
+            },
+            ascendantSign: 'Aquarius',
+            ascendantLord: 'Saturn'
+        };
+
+        it('Player with Sathayam nakshatra is a Special Player (+20 in batting) and BAT Rule 5 Sure Flop is bypassed', () => {
+            const sathayamPlayer = {
+                rashi: 'Aquarius',
+                rashiLord: 'Saturn',
+                nakshatra: 'Sathayam',
+                nakshatraLord: 'Rahu',
+                planetPositions: {
+                    'Moon': 'Aquarius',
+                    'Saturn': 'Aquarius'
+                }
+            };
+
+            const batResult = evaluateBatsman(sathayamPlayer, thiruvonamMatch, transitSaturnInOwnHouse);
+
+            // Should be Special Player
+            expect(batResult.isSpecial).toBe(true);
+            // Should NOT be Sure Flop
+            expect(batResult.status).not.toBe('SURE FLOP');
+            // BAT Rule 5 Sure Flop should NOT be in logs
+            const hasRule5Flop = batResult.logs.some(l => l.en.includes('BAT Rule 5'));
+            expect(hasRule5Flop).toBe(false);
+            // Special Rule must be in logs
+            const hasSpecialRule = batResult.logs.some(l => l.en.includes('Thiruvonam Match - Sathayam Player'));
+            expect(hasSpecialRule).toBe(true);
+            // Score should be high (greater than 20)
+            expect(batResult.score).toBeGreaterThanOrEqual(20);
+        });
+    });
+
 });
+

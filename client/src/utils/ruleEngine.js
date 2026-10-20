@@ -259,7 +259,11 @@ const GENERAL_RULES = [
             if (isExalted(ctx.playerRasiLord, ctx.playerRasi) || isOwnSign(ctx.playerRasiLord, ctx.playerRasi)) ctx.addRule('Rule 5: Bonus', 2);
         }
         if (isSignInList(pRasiLordPos, ownedByMatchRasi) && isSignInList(pStarLordPos, ownedByMatchRasi)) {
-            if (!ctx.isRule2DirectActive) {
+            const isThiruvonamMatch = ['Shravana', 'Thiruvonam', 'திருவோணம்'].includes(ctx.matchStar);
+            const isSathayamPlayer = ['Shatabhisha', 'Sathayam', 'சதயம்'].includes(ctx.playerStar);
+            const isThiruvonamSathayam = isThiruvonamMatch && isSathayamPlayer;
+
+            if (!ctx.isRule2DirectActive && !isThiruvonamSathayam) {
                 ctx.setSureFlop('BAT Rule 5: Match Rasi Same House', 'பேட்டிங் விதி 5: மேட்ச் ராசி அதிபதி வீட்டில் ஒரே ராசி (Sure Flop)', 'bat');
             }
             ctx.addRule('BOWL Rule 5: Same House (Rasi Lord)', 6, 'bowl', false, 'பவுலிங் விதி 5: மேட்ச் ராசி அதிபதி வீட்டில் ஒரே ராசி (+6)');
@@ -538,8 +542,14 @@ const NAKSHATRA_RULES = {
     'Shravana': (ctx) => {
         if (ctx.playerRasiLord === 'Mars' && ctx.P['Mars'] === 'Cancer') ctx.addRule('Thiruvonam: Mars in Moon House (Bowling)', 6, 'bowl');
         if (ctx.playerRasiLord === 'Saturn' && ctx.playerStarLord === 'Rahu') ctx.addRule('Thiruvonam: Rasi Lord Saturn & Star Lord Rahu', 12, 'both', true, 'திருவோணம்: ராசி அதிபதி சனி & நட்சத்திர அதிபதி ராகு');
+
+        // Special Rule: Thiruvonam Match + Sathayam Player
+        if (['Shatabhisha', 'Sathayam', 'சதயம்'].includes(ctx.playerStar)) {
+            ctx.addRule('Special Rule: Thiruvonam Match - Sathayam Player', 20, 'bat', true, 'சிறப்பு விதி: திருவோணம் மேட்ச் - சதயம் பேட்டிங் சிறப்பு வீரர்');
+        }
     },
     'Thiruvonam': (ctx) => NAKSHATRA_RULES['Shravana'](ctx),
+    'திருவோணம்': (ctx) => NAKSHATRA_RULES['Shravana'](ctx),
     'Dhanishta': (ctx) => {
         if (['Capricorn', 'Makara'].includes(ctx.M['Moon']) && ctx.playerRasiLord === 'Saturn') ctx.addRule('Avittam (Capricorn): Rasi Lord Saturn', 4);
     },

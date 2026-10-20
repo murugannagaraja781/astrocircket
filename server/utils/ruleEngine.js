@@ -288,7 +288,11 @@ const GENERAL_RULES = [
             if (isExalted(ctx.playerRasiLord, pMoonPos.longitude) || isOwnSign(ctx.playerRasiLord, pMoonPos.longitude)) ctx.addRule('Rule 5: Bonus', 2);
         }
         if (pStarPos && ownedByMatchRasi.includes(pMoonPos.signId) && ownedByMatchRasi.includes(pStarPos.signId)) {
-            if (!ctx.isRule2DirectActive) {
+            const isThiruvonamMatch = ['Shravana', 'Thiruvonam', 'திருவோணம்'].includes(ctx.matchStar);
+            const isSathayamPlayer = ['Shatabhisha', 'Sathayam', 'சதயம்'].includes(ctx.playerStar);
+            const isThiruvonamSathayam = isThiruvonamMatch && isSathayamPlayer;
+
+            if (!ctx.isRule2DirectActive && !isThiruvonamSathayam) {
                 ctx.setSureFlop('BAT Rule 5: Match Rasi Same House', 'பேட்டிங் விதி 5: மேட்ச் ராசி அதிபதி வீட்டில் ஒரே ராசி (Sure Flop)', 'bat');
             }
             ctx.addRule('BOWL Rule 5: Same House (Rasi Lord)', 6, 'bowl', false, 'பவுலிங் விதி 5: மேட்ச் ராசி அதிபதி வீட்டில் ஒரே ராசி (+6)');
@@ -546,8 +550,14 @@ const NAKSHATRA_RULES = {
     'Shravana': (ctx) => {
         if (ctx.playerRasiLord === 'Mars' && ctx.getP("Mars").signId === 4) ctx.addRule('Thiruvonam: Mars in Cancer', 6, 'bowl');
         if (ctx.playerRasiLord === 'Saturn' && ctx.playerStarLord === 'Rahu') ctx.addRule('Thiruvonam: Sat+Rahu', 12, 'both', true);
+
+        // Special Rule: Thiruvonam Match + Sathayam Player
+        if (['Shatabhisha', 'Sathayam', 'சதயம்'].includes(ctx.playerStar)) {
+            ctx.addRule('Special Rule: Thiruvonam Match - Sathayam Player', 20, 'bat', true, 'சிறப்பு விதி: திருவோணம் மேட்ச் - சதயம் பேட்டிங் சிறப்பு வீரர்');
+        }
     },
     'Thiruvonam': (ctx) => NAKSHATRA_RULES['Shravana'](ctx),
+    'திருவோணம்': (ctx) => NAKSHATRA_RULES['Shravana'](ctx),
     'Dhanishta': (ctx) => {
         if (ctx.matchChart.moon.signId === 10 && ctx.playerRasiLord === 'Saturn') ctx.addRule('Avittam: Sat', 4);
     },
