@@ -28,9 +28,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
+    final colors = context.colors;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Create Account')),
+      appBar: AppBar(
+        title: Text('Create Account', style: TextStyle(color: colors.textPrimary)),
+      ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -38,20 +41,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text(
+                Text(
                   'Join ${AppConstants.appName}',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
+                    color: colors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 6),
-                const Text(
+                Text(
                   'Get real-time KP astrology insights for all cricket matches',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                  style: TextStyle(fontSize: 13, color: colors.textSecondary),
                 ),
                 const SizedBox(height: 32),
 
@@ -59,13 +62,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppColors.accentRed.withValues(alpha: 0.15),
+                      color: colors.accentRed.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.accentRed.withValues(alpha: 0.4)),
+                      border: Border.all(color: colors.accentRed.withValues(alpha: 0.4)),
                     ),
                     child: Text(
                       authProvider.errorMessage!,
-                      style: const TextStyle(color: AppColors.accentRed, fontSize: 13),
+                      style: TextStyle(color: colors.accentRed, fontSize: 13),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -74,9 +77,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 TextField(
                   controller: _usernameController,
-                  decoration: const InputDecoration(
+                  style: TextStyle(color: colors.textPrimary),
+                  decoration: InputDecoration(
                     labelText: 'Username or Email',
-                    prefixIcon: Icon(Icons.person_outline, color: AppColors.textSecondary),
+                    prefixIcon: Icon(Icons.person_outline, color: colors.textSecondary),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -84,13 +88,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextField(
                   controller: _passwordController,
                   obscureText: _obscurePassword,
+                  style: TextStyle(color: colors.textPrimary),
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    prefixIcon: const Icon(Icons.lock_outline, color: AppColors.textSecondary),
+                    prefixIcon: Icon(Icons.lock_outline, color: colors.textSecondary),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                        color: AppColors.textSecondary,
+                        color: colors.textSecondary,
                       ),
                       onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                     ),
@@ -101,9 +106,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextField(
                   controller: _confirmPasswordController,
                   obscureText: _obscurePassword,
-                  decoration: const InputDecoration(
+                  style: TextStyle(color: colors.textPrimary),
+                  decoration: InputDecoration(
                     labelText: 'Confirm Password',
-                    prefixIcon: Icon(Icons.lock_reset, color: AppColors.textSecondary),
+                    prefixIcon: Icon(Icons.lock_reset, color: colors.textSecondary),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -135,9 +141,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           final success = await authProvider.register(username, password);
                           if (success) {
                             scaffoldMessenger.showSnackBar(
-                              const SnackBar(
-                                backgroundColor: AppColors.accentGreen,
-                                content: Text('Account created! Please log in.'),
+                              SnackBar(
+                                backgroundColor: colors.accentGreen,
+                                content: const Text('Account created! Please log in.'),
                               ),
                             );
                             navigator.pop();
@@ -156,19 +162,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 // Divider OR
                 Row(
                   children: [
-                    const Expanded(child: Divider(color: AppColors.border)),
+                    Expanded(child: Divider(color: colors.border)),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Text(
                         'OR',
                         style: TextStyle(
-                          color: AppColors.textSecondary.withValues(alpha: 0.8),
+                          color: colors.textSecondary.withValues(alpha: 0.8),
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
-                    const Expanded(child: Divider(color: AppColors.border)),
+                    Expanded(child: Divider(color: colors.border)),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -192,18 +198,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     child: const Icon(Icons.g_mobiledata, color: Colors.red, size: 22),
                   ),
-                  label: const Text(
+                  label: Text(
                     'Sign in with Google',
                     style: TextStyle(
-                      color: AppColors.textPrimary,
+                      color: colors.textPrimary,
                       fontWeight: FontWeight.w600,
                       fontSize: 15,
                     ),
                   ),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 13),
-                    side: const BorderSide(color: AppColors.border, width: 1.2),
-                    backgroundColor: AppColors.surface.withValues(alpha: 0.6),
+                    side: BorderSide(color: colors.border, width: 1.2),
+                    backgroundColor: colors.surface.withValues(alpha: 0.6),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                 ),

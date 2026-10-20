@@ -5,6 +5,7 @@ import '../../models/match_model.dart';
 import '../../providers/match_provider.dart';
 import '../../providers/payment_provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/theme_provider.dart';
 
 class MatchInsightsScreen extends StatelessWidget {
   final MatchModel match;
@@ -13,6 +14,9 @@ class MatchInsightsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
+    final isDark = context.isDarkMode;
+
     return Consumer<MatchProvider>(
       builder: (context, matchProvider, child) {
         // Use updated match from provider if available
@@ -25,13 +29,37 @@ class MatchInsightsScreen extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text('${currentMatch.teamA} vs ${currentMatch.teamB}'),
+            title: Text(
+              '${currentMatch.teamA} vs ${currentMatch.teamB}',
+              style: TextStyle(
+                color: colors.textPrimary,
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             actions: [
+              Consumer<ThemeProvider>(
+                builder: (context, themeProv, _) => IconButton(
+                  icon: Icon(
+                    isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+                    color: isDark ? Colors.amber : colors.textPrimary,
+                    size: 22,
+                  ),
+                  tooltip: isDark ? 'Light Mode' : 'Dark Mode',
+                  onPressed: () => themeProv.toggleTheme(context),
+                ),
+              ),
               IconButton(
-                icon: const Icon(Icons.share_outlined),
+                icon: Icon(Icons.share_outlined, color: colors.textPrimary),
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Match link copied!')),
+                    SnackBar(
+                      backgroundColor: colors.surface,
+                      content: Text(
+                        'Match link copied!',
+                        style: TextStyle(color: colors.textPrimary),
+                      ),
+                    ),
                   );
                 },
               ),
@@ -43,15 +71,15 @@ class MatchInsightsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Header Match Banner
-                _buildMatchHeader(currentMatch),
+                _buildMatchHeader(currentMatch, colors, isDark),
                 const SizedBox(height: 20),
 
                 if (!hasInsight)
-                  _buildAwaitingInsightsCard()
+                  _buildAwaitingInsightsCard(colors)
                 else if (isUnlocked)
-                  _buildUnlockedAnalysis(context, currentMatch)
+                  _buildUnlockedAnalysis(context, currentMatch, colors, isDark)
                 else
-                  _buildLockedPaywall(context, currentMatch),
+                  _buildLockedPaywall(context, currentMatch, colors, isDark),
               ],
             ),
           ),
@@ -60,29 +88,48 @@ class MatchInsightsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMatchHeader(MatchModel match) {
+  Widget _buildMatchHeader(MatchModel match, AppColorPalette colors, bool isDark) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: AppColors.cardGradient,
+        color: colors.surface,
+        gradient: colors.cardGradient,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: colors.border),
+        boxShadow: colors.cardShadow,
       ),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // Team A
               Expanded(
                 child: Column(
                   children: [
-                    CircleAvatar(
-                      radius: 28,
-                      backgroundColor: AppColors.primary.withValues(alpha: 0.2),
+                    Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [
+                            colors.primary.withValues(alpha: isDark ? 0.3 : 0.18),
+                            colors.primary.withValues(alpha: isDark ? 0.1 : 0.06),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        border: Border.all(
+                          color: colors.primary.withValues(alpha: isDark ? 0.5 : 0.3),
+                          width: 1.5,
+                        ),
+                      ),
+                      alignment: Alignment.center,
                       child: Text(
-                        match.teamA.isNotEmpty ? match.teamA[0] : 'A',
-                        style: const TextStyle(
-                          color: AppColors.primary,
+                        match.teamA.isNotEmpty ? match.teamA[0].toUpperCase() : 'A',
+                        style: TextStyle(
+                          color: colors.primary,
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
@@ -92,8 +139,8 @@ class MatchInsightsScreen extends StatelessWidget {
                     Text(
                       match.teamA,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
+                      style: TextStyle(
+                        color: colors.textPrimary,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -101,31 +148,50 @@ class MatchInsightsScreen extends StatelessWidget {
                   ],
                 ),
               ),
+              // VS Badge
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceLight.withValues(alpha: 0.6),
+                  color: colors.surfaceLight.withValues(alpha: isDark ? 0.6 : 0.8),
                   borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: colors.border),
                 ),
-                child: const Text(
+                child: Text(
                   'VS',
                   style: TextStyle(
-                    color: AppColors.secondary,
+                    color: colors.secondary,
                     fontWeight: FontWeight.bold,
-                    fontSize: 14,
+                    fontSize: 13,
                   ),
                 ),
               ),
+              // Team B
               Expanded(
                 child: Column(
                   children: [
-                    CircleAvatar(
-                      radius: 28,
-                      backgroundColor: AppColors.secondary.withValues(alpha: 0.2),
+                    Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [
+                            colors.secondary.withValues(alpha: isDark ? 0.3 : 0.18),
+                            colors.secondary.withValues(alpha: isDark ? 0.1 : 0.06),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        border: Border.all(
+                          color: colors.secondary.withValues(alpha: isDark ? 0.5 : 0.3),
+                          width: 1.5,
+                        ),
+                      ),
+                      alignment: Alignment.center,
                       child: Text(
-                        match.teamB.isNotEmpty ? match.teamB[0] : 'B',
-                        style: const TextStyle(
-                          color: AppColors.secondary,
+                        match.teamB.isNotEmpty ? match.teamB[0].toUpperCase() : 'B',
+                        style: TextStyle(
+                          color: colors.secondary,
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
@@ -135,8 +201,8 @@ class MatchInsightsScreen extends StatelessWidget {
                     Text(
                       match.teamB,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
+                      style: TextStyle(
+                        color: colors.textPrimary,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -147,27 +213,27 @@ class MatchInsightsScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          const Divider(color: AppColors.border),
+          Divider(color: colors.border),
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.schedule_rounded, size: 14, color: AppColors.primary),
+              Icon(Icons.schedule_rounded, size: 14, color: colors.primary),
               const SizedBox(width: 4),
               Flexible(
                 child: Text(
                   match.formattedDateTimeIST,
-                  style: const TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w600),
+                  style: TextStyle(color: colors.primary, fontSize: 12, fontWeight: FontWeight.w600),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
               const SizedBox(width: 12),
-              const Icon(Icons.location_on_outlined, size: 14, color: AppColors.textSecondary),
+              Icon(Icons.location_on_outlined, size: 14, color: colors.textSecondary),
               const SizedBox(width: 4),
               Flexible(
                 child: Text(
-                  match.venue.isNotEmpty ? match.venue : 'International Stadium',
-                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
+                  match.venue.isNotEmpty ? match.venue : 'International Cricket Stadium',
+                  style: TextStyle(color: colors.textSecondary, fontSize: 12),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -178,32 +244,33 @@ class MatchInsightsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAwaitingInsightsCard() {
+  Widget _buildAwaitingInsightsCard(AppColorPalette colors) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: colors.border),
+        boxShadow: colors.cardShadow,
       ),
-      child: const Column(
+      child: Column(
         children: [
-          Icon(Icons.hourglass_top_rounded, size: 48, color: AppColors.secondary),
-          SizedBox(height: 16),
+          Icon(Icons.hourglass_top_rounded, size: 48, color: colors.secondary),
+          const SizedBox(height: 16),
           Text(
             'Astrological Analysis in Progress',
             style: TextStyle(
-              color: AppColors.textPrimary,
+              color: colors.textPrimary,
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             'Our KP astrologers are currently analyzing planetary transits, dasha charts, and player lagnas. You will receive a notification once published!',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: AppColors.textSecondary,
+              color: colors.textSecondary,
               fontSize: 13,
               height: 1.4,
             ),
@@ -213,7 +280,7 @@ class MatchInsightsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLockedPaywall(BuildContext context, MatchModel match) {
+  Widget _buildLockedPaywall(BuildContext context, MatchModel match, AppColorPalette colors, bool isDark) {
     final paymentProvider = Provider.of<PaymentProvider>(context);
 
     return Column(
@@ -230,6 +297,13 @@ class MatchInsightsScreen extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: const Color(0xFF6366F1).withValues(alpha: 0.4)),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF6366F1).withValues(alpha: 0.15),
+                blurRadius: 14,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           child: Column(
             children: [
@@ -238,10 +312,10 @@ class MatchInsightsScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: AppColors.secondary.withValues(alpha: 0.2),
+                      color: colors.secondary.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.lock, color: AppColors.secondary, size: 24),
+                    child: Icon(Icons.lock_rounded, color: colors.secondary, size: 24),
                   ),
                   const SizedBox(width: 14),
                   const Expanded(
@@ -251,14 +325,14 @@ class MatchInsightsScreen extends StatelessWidget {
                         Text(
                           'Premium KP Astro Insights',
                           style: TextStyle(
-                            color: AppColors.textPrimary,
+                            color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
                           'Unlock detailed winning edge & key player ratings',
-                          style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
+                          style: TextStyle(color: Color(0xFFC7D2FE), fontSize: 12),
                         ),
                       ],
                     ),
@@ -268,11 +342,10 @@ class MatchInsightsScreen extends StatelessWidget {
               const SizedBox(height: 16),
               const Divider(color: Color(0xFF4338CA)),
               const SizedBox(height: 12),
-              // What's included checklist
-              _buildIncludedItem('⭐ Complete Astrological Winning Edge Analysis'),
-              _buildIncludedItem('🏏 Top KP Impact Batsmen & Expected Score Index'),
-              _buildIncludedItem('🎯 Top Wicket-Taking Bowlers Analysis'),
-              _buildIncludedItem('🪐 Planetary Dasha & Pitch Lagna Breakdown'),
+              _buildIncludedItem('⭐ Complete Astrological Winning Edge Analysis', colors),
+              _buildIncludedItem('🏏 Top KP Impact Batsmen & Expected Score Index', colors),
+              _buildIncludedItem('🎯 Top Wicket-Taking Bowlers Analysis', colors),
+              _buildIncludedItem('🪐 Planetary Dasha & Pitch Lagna Breakdown', colors),
             ],
           ),
         ),
@@ -282,36 +355,37 @@ class MatchInsightsScreen extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            color: colors.surface,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: AppColors.border),
+            border: Border.all(color: colors.border),
+            boxShadow: colors.cardShadow,
           ),
           child: Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Column(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'Instant Match Access',
                         style: TextStyle(
-                          color: AppColors.textPrimary,
+                          color: colors.textPrimary,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
                         'One-time payment for full report',
-                        style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
+                        style: TextStyle(color: colors.textSecondary, fontSize: 12),
                       ),
                     ],
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                     decoration: BoxDecoration(
-                      gradient: AppColors.goldGradient,
+                      gradient: colors.goldGradient,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -328,11 +402,11 @@ class MatchInsightsScreen extends StatelessWidget {
               const SizedBox(height: 20),
 
               if (paymentProvider.isProcessing) ...[
-                const CircularProgressIndicator(color: AppColors.primary),
+                CircularProgressIndicator(color: colors.primary),
                 const SizedBox(height: 12),
                 Text(
-                  paymentProvider.statusMessage ?? 'Processing with PhonePe...',
-                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                  paymentProvider.statusMessage ?? 'Processing payment...',
+                  style: TextStyle(color: colors.textSecondary, fontSize: 13),
                 ),
               ] else ...[
                 SizedBox(
@@ -343,6 +417,7 @@ class MatchInsightsScreen extends StatelessWidget {
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                      elevation: 3,
                     ),
                     icon: const Icon(Icons.payment, color: Colors.white),
                     label: Text(
@@ -362,24 +437,24 @@ class MatchInsightsScreen extends StatelessWidget {
                       );
                       if (success) {
                         scaffoldMessenger.showSnackBar(
-                          const SnackBar(
-                            backgroundColor: AppColors.accentGreen,
-                            content: Text('🎉 Insights successfully unlocked!'),
+                          SnackBar(
+                            backgroundColor: colors.accentGreen,
+                            content: const Text('🎉 Insights successfully unlocked!'),
                           ),
                         );
                       }
                     },
                   ),
                 ),
-                const SizedBox(height: 8),
-                const Row(
+                const SizedBox(height: 10),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.shield_outlined, size: 14, color: AppColors.textMuted),
-                    SizedBox(width: 4),
+                    Icon(Icons.shield_outlined, size: 14, color: colors.textMuted),
+                    const SizedBox(width: 4),
                     Text(
                       '100% Safe & Secure via PhonePe UPI / Cards',
-                      style: TextStyle(color: AppColors.textMuted, fontSize: 11),
+                      style: TextStyle(color: colors.textMuted, fontSize: 11),
                     ),
                   ],
                 ),
@@ -391,17 +466,17 @@ class MatchInsightsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildIncludedItem(String text) {
+  Widget _buildIncludedItem(String text, AppColorPalette colors) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
         children: [
-          const Icon(Icons.check_circle, size: 16, color: AppColors.accentGreen),
+          Icon(Icons.check_circle_rounded, size: 16, color: colors.accentGreen),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(color: AppColors.textPrimary, fontSize: 13),
+              style: const TextStyle(color: Colors.white, fontSize: 13),
             ),
           ),
         ],
@@ -409,7 +484,7 @@ class MatchInsightsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildUnlockedAnalysis(BuildContext context, MatchModel match) {
+  Widget _buildUnlockedAnalysis(BuildContext context, MatchModel match, AppColorPalette colors, bool isDark) {
     final advantage = match.insight.astrologicalAdvantage ?? 'Balanced Match';
     final batsmen = match.insight.keyBatsmen;
     final bowlers = match.insight.keyBowlers;
@@ -430,8 +505,8 @@ class MatchInsightsScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: AppColors.accentGreen.withValues(alpha: 0.2),
-                blurRadius: 10,
+                color: colors.accentGreen.withValues(alpha: 0.25),
+                blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
             ],
@@ -464,7 +539,7 @@ class MatchInsightsScreen extends StatelessWidget {
                     ),
                     child: const Text(
                       'KP Verified',
-                      style: TextStyle(color: Colors.white70, fontSize: 11),
+                      style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
@@ -490,14 +565,14 @@ class MatchInsightsScreen extends StatelessWidget {
 
         // Key Batsmen Section
         if (batsmen.isNotEmpty) ...[
-          const Row(
+          Row(
             children: [
-              Icon(Icons.sports_cricket, color: AppColors.primary, size: 20),
-              SizedBox(width: 8),
+              Icon(Icons.sports_cricket, color: colors.primary, size: 20),
+              const SizedBox(width: 8),
               Text(
                 'Key Impact Batsmen',
                 style: TextStyle(
-                  color: AppColors.textPrimary,
+                  color: colors.textPrimary,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -505,20 +580,20 @@ class MatchInsightsScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          ...batsmen.map((player) => _buildPlayerCard(player, isBatsman: true)),
+          ...batsmen.map((player) => _buildPlayerCard(player, isBatsman: true, colors: colors)),
           const SizedBox(height: 20),
         ],
 
         // Key Bowlers Section
         if (bowlers.isNotEmpty) ...[
-          const Row(
+          Row(
             children: [
-              Icon(Icons.sports_baseball, color: AppColors.secondary, size: 20),
-              SizedBox(width: 8),
+              Icon(Icons.sports_baseball, color: colors.secondary, size: 20),
+              const SizedBox(width: 8),
               Text(
                 'Key Impact Bowlers',
                 style: TextStyle(
-                  color: AppColors.textPrimary,
+                  color: colors.textPrimary,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -526,16 +601,16 @@ class MatchInsightsScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          ...bowlers.map((player) => _buildPlayerCard(player, isBatsman: false)),
+          ...bowlers.map((player) => _buildPlayerCard(player, isBatsman: false, colors: colors)),
           const SizedBox(height: 20),
         ],
 
         // Detailed KP Summary
         if (summary != null && summary.isNotEmpty) ...[
-          const Text(
+          Text(
             'KP Astrological Match Summary',
             style: TextStyle(
-              color: AppColors.textPrimary,
+              color: colors.textPrimary,
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
@@ -544,14 +619,15 @@ class MatchInsightsScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColors.surface,
+              color: colors.surface,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppColors.border),
+              border: Border.all(color: colors.border),
+              boxShadow: colors.cardShadow,
             ),
             child: Text(
               summary,
-              style: const TextStyle(
-                color: AppColors.textSecondary,
+              style: TextStyle(
+                color: colors.textSecondary,
                 fontSize: 14,
                 height: 1.5,
               ),
@@ -562,25 +638,26 @@ class MatchInsightsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPlayerCard(KeyPlayer player, {required bool isBatsman}) {
+  Widget _buildPlayerCard(KeyPlayer player, {required bool isBatsman, required AppColorPalette colors}) {
+    final playerColor = isBatsman ? colors.primary : colors.secondary;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: colors.border),
+        boxShadow: colors.cardShadow,
       ),
       child: Row(
         children: [
           CircleAvatar(
             radius: 20,
-            backgroundColor: isBatsman
-                ? AppColors.primary.withValues(alpha: 0.15)
-                : AppColors.secondary.withValues(alpha: 0.15),
+            backgroundColor: playerColor.withValues(alpha: colors.isDark ? 0.15 : 0.1),
             child: Icon(
               isBatsman ? Icons.sports_cricket : Icons.sports_baseball,
-              color: isBatsman ? AppColors.primary : AppColors.secondary,
+              color: playerColor,
               size: 20,
             ),
           ),
@@ -591,15 +668,15 @@ class MatchInsightsScreen extends StatelessWidget {
               children: [
                 Text(
                   player.name,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
+                  style: TextStyle(
+                    color: colors.textPrimary,
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
                   isBatsman ? 'Top-Order / Key Run Scorer' : 'Prime Wicket Taker',
-                  style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
+                  style: TextStyle(color: colors.textMuted, fontSize: 12),
                 ),
               ],
             ),
@@ -607,17 +684,18 @@ class MatchInsightsScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: AppColors.surfaceLight,
+              color: colors.surfaceLight.withValues(alpha: colors.isDark ? 0.5 : 0.8),
               borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: colors.border, width: 0.8),
             ),
             child: Row(
               children: [
-                const Icon(Icons.star, size: 14, color: AppColors.secondary),
+                Icon(Icons.star_rounded, size: 14, color: colors.secondary),
                 const SizedBox(width: 4),
                 Text(
                   '${player.rating}',
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
+                  style: TextStyle(
+                    color: colors.textPrimary,
                     fontWeight: FontWeight.bold,
                     fontSize: 13,
                   ),

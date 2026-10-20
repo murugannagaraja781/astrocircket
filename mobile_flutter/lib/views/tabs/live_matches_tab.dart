@@ -12,48 +12,54 @@ class LiveMatchesTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final matchProvider = Provider.of<MatchProvider>(context);
     final liveMatches = matchProvider.liveMatches;
+    final colors = context.colors;
 
     return RefreshIndicator(
       onRefresh: () => matchProvider.fetchAllMatches(),
-      color: AppColors.primary,
-      backgroundColor: AppColors.surface,
+      color: colors.primary,
+      backgroundColor: colors.surface,
       child: liveMatches.isEmpty
           ? Center(
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: AppColors.surfaceLight.withValues(alpha: 0.3),
-                        shape: BoxShape.circle,
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(22),
+                        decoration: BoxDecoration(
+                          color: colors.surfaceLight.withValues(alpha: colors.isDark ? 0.35 : 0.6),
+                          shape: BoxShape.circle,
+                          border: Border.all(color: colors.border),
+                        ),
+                        child: Icon(
+                          Icons.live_tv_rounded,
+                          size: 48,
+                          color: colors.textMuted,
+                        ),
                       ),
-                      child: const Icon(
-                        Icons.live_tv_rounded,
-                        size: 48,
-                        color: AppColors.textMuted,
+                      const SizedBox(height: 18),
+                      Text(
+                        'No Live Matches Right Now',
+                        style: TextStyle(
+                          color: colors.textPrimary,
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'No Live Matches Right Now',
-                      style: TextStyle(
-                        color: AppColors.textPrimary,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                      const SizedBox(height: 8),
+                      Text(
+                        'Check the Upcoming tab for upcoming match insights',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: colors.textSecondary,
+                          fontSize: 13,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Check the Upcoming tab for upcoming match insights',
-                      style: TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             )

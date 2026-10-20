@@ -23,6 +23,15 @@ apiRouter.post('/upload', upload.single('file'), uploadPlayers);
 apiRouter.post('/add', upload.single('image'), addPlayer);
 apiRouter.post('/delete-all', deleteAllPlayers); // Delete all players with password
 apiRouter.post('/sync-live-squad', syncLiveMatchSquad);
+apiRouter.post('/merge-duplicates', async (req, res) => {
+    try {
+        const { mergeDuplicatePlayers } = require('../utils/merge_duplicate_players');
+        const result = await mergeDuplicatePlayers();
+        res.json({ status: 'success', ...result });
+    } catch (err) {
+        res.status(500).json({ status: 'error', error: err.message });
+    }
+});
 apiRouter.get('/review-list', getReviewRequiredPlayers);
 apiRouter.post('/resolve-review/:id', resolvePlayerReview);
 apiRouter.get('/live-matches', getLiveMatches);

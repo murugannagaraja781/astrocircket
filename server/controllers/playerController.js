@@ -103,6 +103,72 @@ const normalizeRole = (roleStr) => {
     }
     return 'BAT';
 };
+// Helper to find existing player using Cricbuzz ID, or (Name + DOB + BirthPlace)
+// As per astrology requirements: birthTime is edited manually, so birthTime is NOT checked for deduplication.
+const findExistingPlayer = async ({ cricbuzzId, id, name, dob, birthPlace }) => {
+    // 1. Try matching by cricbuzzId or custom id
+    if (cricbuzzId) {
+        const byCricbuzz = await Player.findOne({
+            $or: [{ cricbuzzId: String(cricbuzzId) }, { id: String(cricbuzzId) }]
+        });
+        if (byCricbuzz) return byCricbuzz;
+    }
+    if (id) {
+        const byId = await Player.findOne({ id: String(id) });
+        if (byId) return byId;
+    }
+
+    // 2. Try matching by Name + DOB + BirthPlace
+    if (!name) return null;
+    const cleanName = String(name).trim();
+    if (cleanName.length < 2) return null;
+
+    const escapedName = cleanName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const nameCandidates = await Player.find({
+        name: new RegExp(`^${escapedName}$`, 'i')
+    });
+
+    if (nameCandidates.length === 0) return null;
+
+    const isoTargetDob = parseDobToIso(dob);
+    const cleanTargetPlace = (birthPlace || '').trim().toLowerCase();
+
+    for (const candidate of nameCandidates) {
+        if (cricbuzzId && candidate.cricbuzzId === String(cricbuzzId)) {
+            return candidate;
+        }
+
+        const candidateIsoDob = parseDobToIso(candidate.dob);
+        const candidatePlace = (candidate.birthPlace || '').trim().toLowerCase();
+
+        const dobMatch = isDobMatching(candidate.dob, dob);
+        const placeMatch = isPlaceMatching(candidate.birthPlace, birthPlace);
+
+        const dobBothPresent = Boolean(candidateIsoDob && isoTargetDob);
+        const placeBothPresent = Boolean(candidatePlace && candidatePlace !== 'n/a' && cleanTargetPlace && cleanTargetPlace !== 'n/a');
+
+        if (dobBothPresent && placeBothPresent) {
+            if (dobMatch && placeMatch) {
+                return candidate; // Strong match: Name + DOB + BirthPlace
+            }
+        } else if (dobBothPresent) {
+            if (dobMatch) {
+                return candidate; // Name + DOB match
+            }
+        } else if (placeBothPresent) {
+            if (placeMatch) {
+                return candidate; // Name + BirthPlace match
+            }
+        } else {
+            // Neither DOB nor place was present on one of them, but exactly one candidate with this name exists in DB
+            if (nameCandidates.length === 1) {
+                return candidate;
+            }
+        }
+    }
+
+    return null;
+};
 
 // Helper to calculate birth chart locally using vedic-astrology-api
 const fetchCharData = async (p) => {
@@ -201,32 +267,39 @@ const processPlayersData = async (playersData) => {
         // Skip if essential data missing
         if (!p.id || !p.name) continue;
 
-        // Check availability/update needed
-        const existing = await Player.findOne({ id: p.id });
-
-        // Logic: specific condition "new data avilble or check if avilable"
-        // I'll update if it doesn't exist OR if user wants to force update (handled implicitly by re-upload)
-        // Or if birthChart is missing.
+        // Check availability/update needed using findExistingPlayer
+        const existing = await findExistingPlayer({
+            cricbuzzId: p.cricbuzzId,
+            id: p.id,
+            name: p.name,
+            dob: p.dob,
+            birthPlace: p.birthPlace
+        });
 
         let birthChartData = existing ? existing.birthChart : null;
 
-        // If no chart data or forced update, fetch it
-        // User said "check if avilable that data backed procee strat"
-        // Implicitly: If I have the player but no chart, get chart.
-        // If I don't have player, create and get chart.
         if (!birthChartData) {
             birthChartData = await fetchCharData(p);
         }
 
-        // Upsert
-        await Player.findOneAndUpdate(
-            { id: p.id },
-            {
-                ...p, // update text fields
+        // Upsert safely to avoid creating duplicates
+        if (existing) {
+            await Player.findByIdAndUpdate(
+                existing._id,
+                {
+                    ...p,
+                    id: existing.id,
+                    cricbuzzId: p.cricbuzzId || existing.cricbuzzId,
+                    birthChart: birthChartData || existing.birthChart
+                },
+                { new: true }
+            );
+        } else {
+            await Player.create({
+                ...p,
                 birthChart: birthChartData
-            },
-            { upsert: true, new: true }
-        );
+            });
+        }
         updatedCount++;
     }
     return updatedCount;
@@ -571,22 +644,19 @@ const addPlayer = async (req, res) => {
         // Handle multipart/form-data: req.body will have text fields, req.file will have image
         const playerData = req.body;
 
-        // Check for duplicate player (same name + dob only - birthTime is optional)
-        const duplicateQuery = {
-            name: { $regex: new RegExp(`^${playerData.name?.trim()}$`, 'i') },
-            dob: playerData.dob
-        };
-        // Only add birthTime to query if it's provided
-        if (playerData.birthTime) {
-            duplicateQuery.birthTime = playerData.birthTime;
-        }
-
-        const existingPlayer = await Player.findOne(duplicateQuery);
+        // Check for duplicate player (Name + DOB + BirthPlace, birthTime is NOT checked)
+        const existingPlayer = await findExistingPlayer({
+            cricbuzzId: playerData.cricbuzzId,
+            id: playerData.id,
+            name: playerData.name,
+            dob: playerData.dob,
+            birthPlace: playerData.birthPlace
+        });
 
         if (existingPlayer) {
             if (req.file && fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path); // Cleanup uploaded file
             return res.status(400).json({
-                msg: 'Duplicate player! A player with the same name and DOB already exists.',
+                msg: `Duplicate player! "${existingPlayer.name}" already exists with matching DOB/Birth Place.`,
                 existingId: existingPlayer.id
             });
         }
@@ -724,9 +794,11 @@ const syncLiveMatchSquad = async (req, res) => {
             list.forEach(p => {
                 // Parse ID from profile URL (e.g. /profiles/10631/adam-zampa -> 10631)
                 const match = (p.profile_url || '').match(/\/profiles\/(\d+)\//);
-                const id = match ? match[1] : p.name.replace(/\s+/g, '-').toLowerCase();
+                const cricbuzzId = match ? match[1] : '';
+                const id = cricbuzzId || p.name.replace(/\s+/g, '-').toLowerCase();
                 allLivePlayers.push({
                     id,
+                    cricbuzzId,
                     name: p.name,
                     role: normalizeRole(p.role),
                     dob: p.date_of_birth || '',
@@ -742,16 +814,34 @@ const syncLiveMatchSquad = async (req, res) => {
             });
         });
 
+        // In-memory deduplication so a player appearing multiple times in the same match is processed once
+        const uniqueLivePlayersMap = new Map();
+        for (const p of allLivePlayers) {
+            const key = (p.cricbuzzId || p.name.trim().toLowerCase());
+            if (!uniqueLivePlayersMap.has(key)) {
+                uniqueLivePlayersMap.set(key, p);
+            }
+        }
+        const distinctLivePlayers = Array.from(uniqueLivePlayersMap.values());
+
         let updatedCount = 0;
         let flaggedCount = 0;
         let addedCount = 0;
+        const playerResolvedIdMap = new Map();
 
-        for (const p of allLivePlayers) {
-            // Check if player already exists in Database
-            const existing = await Player.findOne({ id: p.id });
-
+        for (const p of distinctLivePlayers) {
             const isoScrapedDob = parseDobToIso(p.dob);
             const cleanScrapedPlace = (p.birthPlace || '').trim();
+
+            // Find existing player using Cricbuzz ID or (Name + DOB + BirthPlace)
+            // (birthTime is edited manually, so it is NOT checked for deduplication)
+            const existing = await findExistingPlayer({
+                cricbuzzId: p.cricbuzzId,
+                id: p.id,
+                name: p.name,
+                dob: p.dob,
+                birthPlace: p.birthPlace
+            });
 
             if (!existing) {
                 const finalDob = isoScrapedDob || p.dob;
@@ -767,6 +857,7 @@ const syncLiveMatchSquad = async (req, res) => {
 
                 const newPlayer = new Player({
                     id: p.id,
+                    cricbuzzId: p.cricbuzzId || '',
                     name: p.name,
                     dob: finalDob,
                     birthTime: '12:00',
@@ -779,10 +870,26 @@ const syncLiveMatchSquad = async (req, res) => {
                 });
 
                 await newPlayer.save();
+                playerResolvedIdMap.set(p.cricbuzzId || p.name.trim().toLowerCase(), newPlayer.id);
                 addedCount++;
             } else {
+                playerResolvedIdMap.set(p.cricbuzzId || p.name.trim().toLowerCase(), existing.id);
+
+                let shouldSave = false;
+
+                // Attach Cricbuzz player ID if not already saved
+                if (p.cricbuzzId && !existing.cricbuzzId) {
+                    existing.cricbuzzId = p.cricbuzzId;
+                    shouldSave = true;
+                }
+                if (p.profile && !existing.profile) {
+                    existing.profile = p.profile;
+                    shouldSave = true;
+                }
+
                 // If user set manual override, we don't auto-update or alert for mismatch
                 if (existing.manualOverride) {
+                    if (shouldSave) await existing.save();
                     continue;
                 }
 
@@ -803,7 +910,6 @@ const syncLiveMatchSquad = async (req, res) => {
                 } else {
                     // No real mismatch! Auto-resolve false review flag if present
                     let shouldUpdateChart = false;
-                    let shouldSave = false;
 
                     if (existing.needsReview) {
                         existing.needsReview = false;
@@ -884,7 +990,9 @@ const syncLiveMatchSquad = async (req, res) => {
 
             const xiPlayerIds = xiPlayers.map(p => {
                 const match = (p.profile_url || '').match(/\/profiles\/(\d+)\//);
-                return match ? match[1] : p.name.replace(/\s+/g, '-').toLowerCase();
+                const cbId = match ? match[1] : '';
+                const lookupKey = cbId || p.name.trim().toLowerCase();
+                return playerResolvedIdMap.get(lookupKey) || cbId || p.name.replace(/\s+/g, '-').toLowerCase();
             }).filter(Boolean);
 
             if (xiPlayerIds.length > 0) {

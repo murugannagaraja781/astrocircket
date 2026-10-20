@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_constants.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/theme_provider.dart';
 import '../home/home_screen.dart';
 import 'register_screen.dart';
 
@@ -28,8 +29,25 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final colors = context.colors;
+    final isDark = context.isDarkMode;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: Icon(
+              isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+              color: isDark ? Colors.amber : colors.textPrimary,
+            ),
+            tooltip: isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
+            onPressed: () => themeProvider.toggleTheme(context),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -43,41 +61,44 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: AppColors.surface,
+                      color: colors.surface,
                       shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.primary.withValues(alpha: 0.3), width: 2),
+                      border: Border.all(
+                        color: colors.primary.withValues(alpha: isDark ? 0.3 : 0.2),
+                        width: 2,
+                      ),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.primary.withValues(alpha: 0.2),
+                          color: colors.primary.withValues(alpha: isDark ? 0.2 : 0.1),
                           blurRadius: 20,
                           offset: const Offset(0, 4),
                         ),
                       ],
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.auto_awesome,
                       size: 48,
-                      color: AppColors.primary,
+                      color: colors.primary,
                     ),
                   ),
                 ),
                 const SizedBox(height: 24),
-                const Text(
+                Text(
                   AppConstants.appName,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
+                    color: colors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 6),
-                const Text(
+                Text(
                   AppConstants.appTagline,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 13,
-                    color: AppColors.textSecondary,
+                    color: colors.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 36),
@@ -87,13 +108,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppColors.accentRed.withValues(alpha: 0.15),
+                      color: colors.accentRed.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.accentRed.withValues(alpha: 0.4)),
+                      border: Border.all(color: colors.accentRed.withValues(alpha: 0.4)),
                     ),
                     child: Text(
                       authProvider.errorMessage!,
-                      style: const TextStyle(color: AppColors.accentRed, fontSize: 13),
+                      style: TextStyle(color: colors.accentRed, fontSize: 13),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -103,9 +124,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Username / Email Input
                 TextField(
                   controller: _usernameController,
-                  decoration: const InputDecoration(
+                  style: TextStyle(color: colors.textPrimary),
+                  decoration: InputDecoration(
                     labelText: 'Username or Email',
-                    prefixIcon: Icon(Icons.person_outline, color: AppColors.textSecondary),
+                    prefixIcon: Icon(Icons.person_outline, color: colors.textSecondary),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -114,13 +136,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 TextField(
                   controller: _passwordController,
                   obscureText: _obscurePassword,
+                  style: TextStyle(color: colors.textPrimary),
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    prefixIcon: const Icon(Icons.lock_outline, color: AppColors.textSecondary),
+                    prefixIcon: Icon(Icons.lock_outline, color: colors.textSecondary),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                        color: AppColors.textSecondary,
+                        color: colors.textSecondary,
                       ),
                       onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                     ),
@@ -165,19 +188,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Divider OR
                 Row(
                   children: [
-                    const Expanded(child: Divider(color: AppColors.border)),
+                    Expanded(child: Divider(color: colors.border)),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Text(
                         'OR',
                         style: TextStyle(
-                          color: AppColors.textSecondary.withValues(alpha: 0.8),
+                          color: colors.textSecondary.withValues(alpha: 0.8),
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
-                    const Expanded(child: Divider(color: AppColors.border)),
+                    Expanded(child: Divider(color: colors.border)),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -203,18 +226,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: const Icon(Icons.g_mobiledata, color: Colors.red, size: 22),
                   ),
-                  label: const Text(
+                  label: Text(
                     'Sign in with Google',
                     style: TextStyle(
-                      color: AppColors.textPrimary,
+                      color: colors.textPrimary,
                       fontWeight: FontWeight.w600,
                       fontSize: 15,
                     ),
                   ),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 13),
-                    side: const BorderSide(color: AppColors.border, width: 1.2),
-                    backgroundColor: AppColors.surface.withValues(alpha: 0.6),
+                    side: BorderSide(color: colors.border, width: 1.2),
+                    backgroundColor: colors.surface.withValues(alpha: 0.6),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                 ),
@@ -230,12 +253,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    side: const BorderSide(color: AppColors.border),
+                    side: BorderSide(color: colors.border),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Explore Insights as Guest',
-                    style: TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.bold),
+                    style: TextStyle(color: colors.textSecondary, fontWeight: FontWeight.bold),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -244,7 +267,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Don't have an account?", style: TextStyle(color: AppColors.textSecondary)),
+                    Text("Don't have an account?", style: TextStyle(color: colors.textSecondary)),
                     TextButton(
                       onPressed: () {
                         Navigator.push(
@@ -252,7 +275,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           MaterialPageRoute(builder: (_) => const RegisterScreen()),
                         );
                       },
-                      child: const Text('Sign Up', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                      child: Text('Sign Up', style: TextStyle(color: colors.primary, fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),
