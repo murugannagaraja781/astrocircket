@@ -303,136 +303,261 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                 </Typography>
             </Box>
 
-            {/* Row 1: Date, Time, Venue */}
-            <Grid container spacing={1} alignItems="center">
-                <Grid item xs={6} sm={isSidebar ? 6 : 3.5}>
-                    <TextField
-                        label="Match Date"
-                        type="date"
-                        size="small"
-                        fullWidth
-                        value={matchDetails.date}
-                        onChange={(e) => handleChange('date', e.target.value)}
-                        InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.75rem' } }}
-                        InputProps={{
-                            sx: {
-                                borderRadius: '10px',
-                                fontWeight: 'bold',
-                                bgcolor: '#fff',
-                                height: 38,
-                                fontSize: '0.82rem',
-                                border: '1px solid #FFCC80'
-                            }
-                        }}
-                    />
-                </Grid>
-
-                <Grid item xs={6} sm={isSidebar ? 6 : 3}>
-                    <TextField
-                        label="Match Time"
-                        type="time"
-                        size="small"
-                        fullWidth
-                        value={matchDetails.time}
-                        onChange={(e) => handleChange('time', e.target.value)}
-                        InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.75rem' } }}
-                        InputProps={{
-                            sx: {
-                                borderRadius: '10px',
-                                fontWeight: 'bold',
-                                bgcolor: '#fff',
-                                height: 38,
-                                fontSize: '0.82rem',
-                                border: '1px solid #FFCC80'
-                            }
-                        }}
-                    />
-                </Grid>
-
-                <Grid item xs={12} sm={isSidebar ? 12 : 5.5}>
-                    <Autocomplete
-                        options={locationOptions}
-                        loading={locationLoading}
-                        getOptionLabel={(option) => `${option.name}, ${option.stateCode}, ${option.countryCode}`}
-                        onInputChange={(event, newInputValue) => {
-                            if (!newInputValue || newInputValue.length < 3) return;
-                            setLocationLoading(true);
-                            setTimeout(() => {
-                                const q = newInputValue.toLowerCase();
-                                const all = City.getAllCities();
-                                const matches = [];
-                                for (let i = 0; i < all.length; i++) {
-                                    if (all[i].name.toLowerCase().includes(q)) {
-                                        matches.push(all[i]);
-                                        if (matches.length >= 50) break;
-                                    }
+            {/* Row 1 & 2: Match Date, Time, Venue */}
+            {isSidebar ? (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                    {/* Row 1: Date & Time in 2 equal columns */}
+                    <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1 }}>
+                        <TextField
+                            label="Match Date"
+                            type="date"
+                            size="small"
+                            fullWidth
+                            value={matchDetails.date}
+                            onChange={(e) => handleChange('date', e.target.value)}
+                            InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.75rem' } }}
+                            InputProps={{
+                                sx: {
+                                    borderRadius: '10px',
+                                    fontWeight: 'bold',
+                                    bgcolor: '#fff',
+                                    height: 38,
+                                    fontSize: '0.82rem',
+                                    border: '1px solid #FFCC80'
                                 }
-                                setLocationOptions(matches);
-                                setLocationLoading(false);
-                            }, 300);
-                        }}
-                        onChange={(event, val) => {
-                            if (val) {
-                                const country = Country.getCountryByCode(val.countryCode);
-                                const state = State.getStateByCodeAndCountry(val.stateCode, val.countryCode);
-                                const locationName = `${val.name}, ${state?.name || val.stateCode}, ${country?.name || val.countryCode}`;
-                                const lat = parseFloat(val.latitude);
-                                const long = parseFloat(val.longitude);
-                                let tz = 5.5;
-                                try {
-                                    const timezones = ct.getTimezonesForCountry(val.countryCode);
-                                    if (timezones && timezones.length > 0) {
-                                        tz = timezones[0].utcOffset / 60;
-                                    } else {
+                            }}
+                        />
+                        <TextField
+                            label="Match Time"
+                            type="time"
+                            size="small"
+                            fullWidth
+                            value={matchDetails.time}
+                            onChange={(e) => handleChange('time', e.target.value)}
+                            InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.75rem' } }}
+                            InputProps={{
+                                sx: {
+                                    borderRadius: '10px',
+                                    fontWeight: 'bold',
+                                    bgcolor: '#fff',
+                                    height: 38,
+                                    fontSize: '0.82rem',
+                                    border: '1px solid #FFCC80'
+                                }
+                            }}
+                        />
+                    </Box>
+
+                    {/* Row 2: Search Venue (City) - 100% Full Width (Doubled Length!) */}
+                    <Box sx={{ width: '100%' }}>
+                        <Autocomplete
+                            fullWidth
+                            sx={{ width: '100%' }}
+                            options={locationOptions}
+                            loading={locationLoading}
+                            getOptionLabel={(option) => `${option.name}, ${option.stateCode}, ${option.countryCode}`}
+                            onInputChange={(event, newInputValue) => {
+                                if (!newInputValue || newInputValue.length < 3) return;
+                                setLocationLoading(true);
+                                setTimeout(() => {
+                                    const q = newInputValue.toLowerCase();
+                                    const all = City.getAllCities();
+                                    const matches = [];
+                                    for (let i = 0; i < all.length; i++) {
+                                        if (all[i].name.toLowerCase().includes(q)) {
+                                            matches.push(all[i]);
+                                            if (matches.length >= 50) break;
+                                        }
+                                    }
+                                    setLocationOptions(matches);
+                                    setLocationLoading(false);
+                                }, 300);
+                            }}
+                            onChange={(event, val) => {
+                                if (val) {
+                                    const country = Country.getCountryByCode(val.countryCode);
+                                    const state = State.getStateByCodeAndCountry(val.stateCode, val.countryCode);
+                                    const locationName = `${val.name}, ${state?.name || val.stateCode}, ${country?.name || val.countryCode}`;
+                                    const lat = parseFloat(val.latitude);
+                                    const long = parseFloat(val.longitude);
+                                    let tz = 5.5;
+                                    try {
+                                        const timezones = ct.getTimezonesForCountry(val.countryCode);
+                                        if (timezones && timezones.length > 0) {
+                                            tz = timezones[0].utcOffset / 60;
+                                        } else {
+                                            tz = calculateTimezone(long);
+                                        }
+                                    } catch (e) {
                                         tz = calculateTimezone(long);
                                     }
-                                } catch (e) {
-                                    tz = calculateTimezone(long);
+                                    setMatchDetails(prev => ({ ...prev, location: locationName, lat, long, timezone: tz }));
                                 }
-                                setMatchDetails(prev => ({ ...prev, location: locationName, lat, long, timezone: tz }));
-                            }
-                        }}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="Search Venue (City)"
-                                size="small"
-                                fullWidth
-                                InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.8rem' } }}
-                                InputProps={{
-                                    ...params.InputProps,
-                                    sx: {
-                                        borderRadius: '12px',
-                                        bgcolor: '#fff',
-                                        minHeight: 60,
-                                        height: 60,
-                                        fontSize: '0.92rem',
-                                        border: '1.5px solid #FFCC80',
-                                        '& input': { py: 1.2, fontSize: '0.92rem', fontWeight: '500' }
-                                    },
-                                    endAdornment: (
-                                        <React.Fragment>
-                                            {locationLoading ? <CircularProgress color="inherit" size={18} /> : null}
-                                            {params.InputProps.endAdornment}
-                                        </React.Fragment>
-                                    ),
-                                }}
-                            />
-                        )}
-                        renderOption={(props, option) => {
-                            const country = Country.getCountryByCode(option.countryCode);
-                            return (
-                                <li {...props} key={`${option.name}-${option.latitude}`}>
-                                    <Box>
-                                        <Typography variant="body2" fontWeight="bold">{option.name}</Typography>
-                                        <Typography variant="caption" color="textSecondary">{option.stateCode}, {country?.name}</Typography>
-                                    </Box>
-                                </li>
-                            );
-                        }}
-                    />
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Search Venue (City)"
+                                    size="small"
+                                    fullWidth
+                                    InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.75rem' } }}
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        sx: {
+                                            borderRadius: '10px',
+                                            bgcolor: '#fff',
+                                            height: 38,
+                                            fontSize: '0.82rem',
+                                            border: '1px solid #FFCC80',
+                                            width: '100%'
+                                        },
+                                        endAdornment: (
+                                            <React.Fragment>
+                                                {locationLoading ? <CircularProgress color="inherit" size={16} /> : null}
+                                                {params.InputProps.endAdornment}
+                                            </React.Fragment>
+                                        ),
+                                    }}
+                                />
+                            )}
+                            renderOption={(props, option) => {
+                                const country = Country.getCountryByCode(option.countryCode);
+                                return (
+                                    <li {...props} key={`${option.name}-${option.latitude}`}>
+                                        <Box>
+                                            <Typography variant="body2" fontWeight="bold">{option.name}</Typography>
+                                            <Typography variant="caption" color="textSecondary">{option.stateCode}, {country?.name}</Typography>
+                                        </Box>
+                                    </li>
+                                );
+                            }}
+                        />
+                    </Box>
+                </Box>
+            ) : (
+                <Grid container spacing={1} alignItems="center">
+                    <Grid item xs={6} sm={3.5}>
+                        <TextField
+                            label="Match Date"
+                            type="date"
+                            size="small"
+                            fullWidth
+                            value={matchDetails.date}
+                            onChange={(e) => handleChange('date', e.target.value)}
+                            InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.75rem' } }}
+                            InputProps={{
+                                sx: {
+                                    borderRadius: '10px',
+                                    fontWeight: 'bold',
+                                    bgcolor: '#fff',
+                                    height: 38,
+                                    fontSize: '0.82rem',
+                                    border: '1px solid #FFCC80'
+                                }
+                            }}
+                        />
+                    </Grid>
+
+                    <Grid item xs={6} sm={3}>
+                        <TextField
+                            label="Match Time"
+                            type="time"
+                            size="small"
+                            fullWidth
+                            value={matchDetails.time}
+                            onChange={(e) => handleChange('time', e.target.value)}
+                            InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.75rem' } }}
+                            InputProps={{
+                                sx: {
+                                    borderRadius: '10px',
+                                    fontWeight: 'bold',
+                                    bgcolor: '#fff',
+                                    height: 38,
+                                    fontSize: '0.82rem',
+                                    border: '1px solid #FFCC80'
+                                }
+                            }}
+                        />
+                    </Grid>
+
+                    <Grid item xs={12} sm={5.5}>
+                        <Autocomplete
+                            fullWidth
+                            options={locationOptions}
+                            loading={locationLoading}
+                            getOptionLabel={(option) => `${option.name}, ${option.stateCode}, ${option.countryCode}`}
+                            onInputChange={(event, newInputValue) => {
+                                if (!newInputValue || newInputValue.length < 3) return;
+                                setLocationLoading(true);
+                                setTimeout(() => {
+                                    const q = newInputValue.toLowerCase();
+                                    const all = City.getAllCities();
+                                    const matches = [];
+                                    for (let i = 0; i < all.length; i++) {
+                                        if (all[i].name.toLowerCase().includes(q)) {
+                                            matches.push(all[i]);
+                                            if (matches.length >= 50) break;
+                                        }
+                                    }
+                                    setLocationOptions(matches);
+                                    setLocationLoading(false);
+                                }, 300);
+                            }}
+                            onChange={(event, val) => {
+                                if (val) {
+                                    const country = Country.getCountryByCode(val.countryCode);
+                                    const state = State.getStateByCodeAndCountry(val.stateCode, val.countryCode);
+                                    const locationName = `${val.name}, ${state?.name || val.stateCode}, ${country?.name || val.countryCode}`;
+                                    const lat = parseFloat(val.latitude);
+                                    const long = parseFloat(val.longitude);
+                                    let tz = 5.5;
+                                    try {
+                                        const timezones = ct.getTimezonesForCountry(val.countryCode);
+                                        if (timezones && timezones.length > 0) {
+                                            tz = timezones[0].utcOffset / 60;
+                                        } else {
+                                            tz = calculateTimezone(long);
+                                        }
+                                    } catch (e) {
+                                        tz = calculateTimezone(long);
+                                    }
+                                    setMatchDetails(prev => ({ ...prev, location: locationName, lat, long, timezone: tz }));
+                                }
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Search Venue (City)"
+                                    size="small"
+                                    fullWidth
+                                    InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.75rem' } }}
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        sx: { borderRadius: '10px', bgcolor: '#fff', height: 38, fontSize: '0.82rem', border: '1px solid #FFCC80' },
+                                        endAdornment: (
+                                            <React.Fragment>
+                                                {locationLoading ? <CircularProgress color="inherit" size={16} /> : null}
+                                                {params.InputProps.endAdornment}
+                                            </React.Fragment>
+                                        ),
+                                    }}
+                                />
+                            )}
+                            renderOption={(props, option) => {
+                                const country = Country.getCountryByCode(option.countryCode);
+                                return (
+                                    <li {...props} key={`${option.name}-${option.latitude}`}>
+                                        <Box>
+                                            <Typography variant="body2" fontWeight="bold">{option.name}</Typography>
+                                            <Typography variant="caption" color="textSecondary">{option.stateCode}, {country?.name}</Typography>
+                                        </Box>
+                                    </li>
+                                );
+                            }}
+                        />
+                    </Grid>
                 </Grid>
-            </Grid>
+            )}
 
             {/* Row 2: Lat/Long/TZ/Ayanamsa (Strict Single Line) */}
             {isSidebar ? (
