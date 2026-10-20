@@ -2158,180 +2158,118 @@ const MatchWizardDialog = (props) => {
 
 
 
-                    {/* Match Setup - Using MatchPredictionControl */}
+                    {/* Match Setup - Using MatchPredictionControl with 2-Column Layout */}
                     <Box sx={{ flexGrow: 1 }}>
                         <MatchPredictionControl
                             ref={wizardPredictionRef}
                             onPredictionComplete={handleMatchReady}
                             token={token}
+                            rightSlot={
+                                <Paper elevation={0} sx={{
+                                    p: { xs: 1.2, sm: 1.5 },
+                                    bgcolor: '#FFFBF5',
+                                    borderRadius: '14px',
+                                    border: '1px solid rgba(255, 111, 0, 0.2)',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'space-between',
+                                    height: '100%'
+                                }}>
+                                    {/* Team Selection Header */}
+                                    <Box sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        mb: 1,
+                                        bgcolor: 'rgba(255, 111, 0, 0.08)',
+                                        p: 0.8,
+                                        px: 1.2,
+                                        borderRadius: '8px',
+                                        border: '1px solid rgba(255, 111, 0, 0.15)'
+                                    }}>
+                                        <Typography variant="subtitle2" fontWeight="900" sx={{ color: '#FF6F00', display: 'flex', alignItems: 'center', gap: 0.8, fontSize: '0.85rem' }}>
+                                            🏏 Team Selection
+                                        </Typography>
+                                        <Typography variant="caption" sx={{ color: '#E65100', fontWeight: 'bold', bgcolor: 'white', px: 1, py: 0.3, borderRadius: '6px', border: '1px solid #FFCC80', fontSize: '0.75rem' }}>
+                                            {teamA && teamB ? `${groups.find(g => g._id === teamA)?.name || 'Team A'} vs ${groups.find(g => g._id === teamB)?.name || 'Team B'}` : 'Select Both Teams'}
+                                        </Typography>
+                                    </Box>
+
+                                    {/* Team Selectors Row */}
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, py: 0.5 }}>
+                                        <Box sx={{ flex: 1 }}>
+                                            <TeamSelector
+                                                label="TEAM A"
+                                                value={teamA}
+                                                onChange={(val) => setTeamA(val)}
+                                                groups={groups}
+                                                placeholder="Team A"
+                                            />
+                                        </Box>
+
+                                        <Box sx={{
+                                            width: 32, height: 32, borderRadius: '50%',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            background: visionPro.gradientPrimary, color: 'white',
+                                            boxShadow: '0 2px 8px rgba(255, 111, 0, 0.35)',
+                                            flexShrink: 0
+                                        }}>
+                                            <Typography variant="caption" fontWeight="900" sx={{ fontSize: '0.75rem' }}>VS</Typography>
+                                        </Box>
+
+                                        <Box sx={{ flex: 1 }}>
+                                            <TeamSelector
+                                                label="TEAM B"
+                                                value={teamB}
+                                                onChange={(val) => setTeamB(val)}
+                                                groups={groups}
+                                                placeholder="Team B"
+                                            />
+                                        </Box>
+                                    </Box>
+
+                                    {/* Bottom Action / Status */}
+                                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 0.5 }}>
+                                        <Typography variant="caption" sx={{ color: '#777', fontSize: '0.72rem' }}>
+                                            {teamA && teamB ? '✅ Ready to analyze players' : '⚡ Select Team A & Team B'}
+                                        </Typography>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
+                                            <Button
+                                                variant="contained"
+                                                size="small"
+                                                onClick={onSave}
+                                                disabled={selectedPlayers.length === 0}
+                                                startIcon={<EmojiEventsIcon sx={{ fontSize: 16 }} />}
+                                                sx={{
+                                                    bgcolor: visionPro.secondary,
+                                                    color: 'white',
+                                                    fontWeight: 'bold',
+                                                    fontSize: '0.75rem',
+                                                    height: 28,
+                                                    px: 1,
+                                                    borderRadius: '8px',
+                                                    textTransform: 'none',
+                                                    '&:hover': { bgcolor: '#E65100' },
+                                                    display: (teamA && teamB) ? 'inline-flex' : 'none'
+                                                }}
+                                            >
+                                                Save ({selectedPlayers.length})
+                                            </Button>
+                                            <IconButton onClick={() => setIsFullView(!isFullView)} color="primary" sx={{ p: 0.3 }}>
+                                                {isFullView ? <FullscreenExitIcon sx={{ fontSize: 18 }} /> : <FullscreenIcon sx={{ fontSize: 18 }} />}
+                                            </IconButton>
+                                        </Box>
+                                    </Box>
+                                </Paper>
+                            }
                         />
                     </Box>
 
-                    <IconButton onClick={onClose} sx={{ color: 'white' }}>
+                    <IconButton onClick={onClose} sx={{ color: 'white', alignSelf: 'flex-start', mt: 0.5 }}>
                         <CloseIcon />
                     </IconButton>
                 </Toolbar>
             </AppBar>
-
-            {/* BREADCRUMBS: Match Details -> Team Selection */}
-            <Box sx={{ px: 2, py: 1.5, bgcolor: '#fff', borderBottom: '1px solid rgba(0,0,0,0.08)', display: isFullView ? 'none' : 'block' }}>
-                <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
-                    <Typography color="inherit" sx={{ display: 'flex', alignItems: 'center', fontSize: '0.9rem' }}>
-                        Match Details
-                    </Typography>
-                    <Typography sx={{ display: 'flex', alignItems: 'center', color: '#FF6F00', fontWeight: 'bold', fontSize: '0.9rem' }}>
-                        {teamA ? groups.find(g => g._id === teamA)?.name : 'Team A'} vs {teamB ? groups.find(g => g._id === teamB)?.name : 'Team B'}
-                    </Typography>
-                </Breadcrumbs>
-            </Box>
-
-
-            {/* MOBILE: FULL SCREEN TEAM SELECTION (when teams not selected) */}
-            {(!teamA || !teamB) && (
-                <Box sx={{
-                    display: { xs: 'flex', sm: 'none' },
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    height: 'calc(100vh - 70px)',
-                    bgcolor: visionPro.background,
-                    p: 3,
-                    gap: 3
-                }}>
-                    {/* Title */}
-                    <Typography variant="h6" fontWeight="900" sx={{ color: '#FF6F00', textAlign: 'center' }}>
-                        🏏 Select Teams to Start
-                    </Typography>
-
-                    {/* Team A */}
-                    <Box sx={{ width: '100%', maxWidth: 300 }}>
-                        <TeamSelector
-                            label="TEAM A"
-                            value={teamA}
-                            onChange={(val) => setTeamA(val)}
-                            groups={groups}
-                            placeholder="Search Team A"
-                        />
-                    </Box>
-
-                    {/* VS Badge */}
-                    <Box sx={{
-                        width: 50, height: 50, borderRadius: '50%',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        background: visionPro.gradientPrimary, color: 'white',
-                        boxShadow: '0 4px 16px rgba(255, 111, 0, 0.4)'
-                    }}>
-                        <Typography variant="subtitle1" fontWeight="900">VS</Typography>
-                    </Box>
-
-                    {/* Team B */}
-                    <Box sx={{ width: '100%', maxWidth: 300 }}>
-                        <TeamSelector
-                            label="TEAM B"
-                            value={teamB}
-                            onChange={(val) => setTeamB(val)}
-                            groups={groups}
-                            placeholder="Search Team B"
-                        />
-                    </Box>
-
-                    <Typography variant="caption" sx={{ color: visionPro.textSecondary, mt: 2 }}>
-                        Select both teams to view players
-                    </Typography>
-                </Box>
-            )}
-
-            {/* DESKTOP: INLINE TEAM SELECTION (always visible on desktop, sticky on mobile) */}
-            <Box sx={{
-                display: { xs: (teamA && teamB) ? 'flex' : 'none', sm: 'flex' },
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: { xs: 1, sm: 2 },
-                py: 1.5,
-                px: 1,
-                bgcolor: visionPro.paper,
-                borderBottom: `1px solid ${visionPro.border}`,
-                position: 'sticky',
-                top: 0,
-                zIndex: 100,
-                boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
-            }}>
-                {/* TEAM A */}
-                <Box sx={{ flex: 1, maxWidth: { xs: 150, sm: 220 } }}>
-                    <TeamSelector
-                        label="TEAM A"
-                        value={teamA}
-                        onChange={(val) => setTeamA(val)}
-                        groups={groups}
-                        placeholder="Team A"
-                    />
-                </Box>
-
-                {/* VS Badge */}
-                <Box sx={{
-                    width: { xs: 32, sm: 40 }, height: { xs: 32, sm: 40 },
-                    borderRadius: '50%',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: visionPro.gradientPrimary, color: 'white',
-                    boxShadow: '0 3px 10px rgba(255, 111, 0, 0.35)',
-                    flexShrink: 0
-                }}>
-                    <Typography variant="caption" fontWeight="900">VS</Typography>
-                </Box>
-
-                {/* TEAM B */}
-                <Box sx={{ flex: 1, maxWidth: { xs: 150, sm: 220 } }}>
-                    <TeamSelector
-                        label="TEAM B"
-                        value={teamB}
-                        onChange={(val) => setTeamB(val)}
-                        groups={groups}
-                        placeholder="Team B"
-                    />
-                </Box>
-
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Button
-                        variant="contained"
-                        size="small"
-                        onClick={onSave}
-                        disabled={selectedPlayers.length === 0}
-                        startIcon={<EmojiEventsIcon />}
-                        sx={{
-                            bgcolor: visionPro.secondary,
-                            color: 'white',
-                            fontWeight: 'bold',
-                            borderRadius: '10px',
-                            textTransform: 'none',
-                            '&:hover': { bgcolor: '#E65100' },
-                            display: (teamA && teamB) ? 'inline-flex' : 'none'
-                        }}
-                    >
-                        Save ({selectedPlayers.length})
-                    </Button>
-                    <Button
-                        variant="contained"
-                        size="small"
-                        onClick={() => wizardPredictionRef.current?.runPrediction()}
-                        sx={{
-                            bgcolor: '#FF6F00',
-                            color: 'white',
-                            fontWeight: 'bold',
-                            whiteSpace: 'nowrap',
-                            minWidth: 'auto',
-                            px: 1,
-                            '&:hover': { bgcolor: '#E65100' },
-                            display: isFullView ? 'inline-flex' : 'none'
-                        }}
-                    >
-                        Predict
-                    </Button>
-                    <IconButton onClick={() => setIsFullView(!isFullView)} color="primary" sx={{ p: 0.5 }}>
-                        {isFullView ? <FullscreenExitIcon /> : <FullscreenIcon />}
-                    </IconButton>
-                </Box>
-            </Box>
 
             {/* INNINGS & MOMENTUM SWITCHER TABS (Desktop & Mobile) */}
             {results && teamA && teamB && (

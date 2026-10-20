@@ -10,7 +10,7 @@ import { Country, State, City } from 'country-state-city';
 import ct from 'countries-and-timezones';
 import RasiChart, { tamilSigns, signLords, signLordsTamil, nakshatraTamilMap, planetFullTamilMap } from './RasiChart';
 
-const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionStart, token }, ref) => {
+const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionStart, token, rightSlot }, ref) => {
     const [matchDetails, setMatchDetails] = useState({
         date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
         time: '19:30',
@@ -257,10 +257,6 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
         if (!isoString) return '-';
         try {
             const date = new Date(isoString);
-            const utcTime = date.getTime();
-            const localDate = new Date(utcTime + (parseFloat(matchDetails.timezone || 0) * 3600000));
-            let hours = localDate.getUTCHours();
-            const minutes = localDate.getUTCMinutes().toString().padStart(2, '0');
             const ampm = hours >= 12 ? 'PM' : 'AM';
             hours = hours % 12 || 12;
             return `${hours.toString().padStart(2, '0')}:${minutes} ${ampm}`;
@@ -270,223 +266,253 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
         }
     };
 
-    return (
-        <Paper elevation={0} sx={{ p: 0, mb: { xs: 1, sm: 3 }, overflow: 'hidden', borderRadius: { xs: '10px', sm: '16px' }, border: '1px solid rgba(0,0,0,0.08)' }}>
+    const matchFormBox = (
+        <Paper
+            elevation={0}
+            sx={{
+                p: { xs: 1.2, sm: 1.5 },
+                bgcolor: '#FFFBF5',
+                borderRadius: '14px',
+                border: '1px solid rgba(255, 111, 0, 0.2)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                height: '100%'
+            }}
+        >
+            {/* Title Header */}
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    mb: 1,
+                    bgcolor: 'rgba(255, 111, 0, 0.08)',
+                    p: 0.8,
+                    px: 1.2,
+                    borderRadius: '8px',
+                    border: '1px solid rgba(255, 111, 0, 0.15)'
+                }}
+            >
+                <Typography variant="subtitle2" fontWeight="900" sx={{ color: '#FF6F00', display: 'flex', alignItems: 'center', gap: 0.8, fontSize: '0.85rem' }}>
+                    📅 Match Schedule & Venue
+                </Typography>
+                <Typography variant="caption" sx={{ color: '#E65100', fontWeight: 'bold', bgcolor: 'white', px: 1, py: 0.3, borderRadius: '6px', border: '1px solid #FFCC80', fontSize: '0.75rem' }}>
+                    {matchDetails.date} @ {matchDetails.time}
+                </Typography>
+            </Box>
 
-            {/* Form Container */}
-            <Box sx={{ p: { xs: 1.5, sm: 2.5 }, bgcolor: '#FFFBF5' }}>
-                {/* Title Header - Clickable to Toggle */}
-                <Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        mb: 2,
-                        bgcolor: 'rgba(255, 111, 0, 0.08)',
-                        p: 1.5,
-                        borderRadius: '12px',
-                        border: '1px solid rgba(255, 111, 0, 0.2)'
-                    }}
-                >
-                    <Typography variant="subtitle2" fontWeight="900" sx={{ color: '#FF6F00', display: 'flex', alignItems: 'center', gap: 1 }}>
-                        📅 Match Schedule & Venue
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: '#E65100', fontWeight: 'bold', bgcolor: 'white', px: 1, py: 0.5, borderRadius: '6px', border: '1px solid #FFCC80' }}>
-                        {matchDetails.date} @ {matchDetails.time}
-                    </Typography>
-                </Box>
-
-                <Grid container spacing={2} alignItems="flex-start">
-                    {/* Date */}
-                    <Grid item xs={6} sm={3} md={2}>
-                        <TextField
-                            label="Match Date"
-                            type="date"
-                            size="small"
-                            fullWidth
-                            value={matchDetails.date}
-                            onChange={(e) => handleChange('date', e.target.value)}
-                            InputLabelProps={{ shrink: true }}
-                            sx={{
-                                '& .MuiInputBase-root': {
-                                    borderRadius: '12px',
-                                    fontWeight: 'bold',
-                                    bgcolor: '#fff',
-                                    border: '1px solid #FFCC80'
-                                },
-                                '& .MuiInputLabel-root': { fontWeight: 'bold', color: '#E65100' }
-                            }}
-                        />
-                    </Grid>
-
-                    {/* Time */}
-                    <Grid item xs={6} sm={3} md={2}>
-                        <TextField
-                            label="Match Time"
-                            type="time"
-                            size="small"
-                            fullWidth
-                            value={matchDetails.time}
-                            onChange={(e) => handleChange('time', e.target.value)}
-                            InputLabelProps={{ shrink: true }}
-                            sx={{
-                                '& .MuiInputBase-root': {
-                                    borderRadius: '12px',
-                                    fontWeight: 'bold',
-                                    bgcolor: '#fff',
-                                    border: '1px solid #FFCC80'
-                                },
-                                '& .MuiInputLabel-root': { fontWeight: 'bold', color: '#E65100' }
-                            }}
-                        />
-                    </Grid>
-
-                    {/* Location Search & Details */}
-                    <Grid item xs={12} sm={6} md={8}>
-                        <Box sx={{ p: 1.5, bgcolor: '#fff', borderRadius: '12px', border: '1px solid #eee' }}>
-                            <Autocomplete
-                                options={locationOptions}
-                                loading={locationLoading}
-                                getOptionLabel={(option) => `${option.name}, ${option.stateCode}, ${option.countryCode}`}
-                                onInputChange={(event, newInputValue) => {
-                                    if (!newInputValue || newInputValue.length < 3) return;
-                                    setLocationLoading(true);
-                                    setTimeout(() => {
-                                        const q = newInputValue.toLowerCase();
-                                        const all = City.getAllCities();
-                                        const matches = [];
-                                        for (let i = 0; i < all.length; i++) {
-                                            if (all[i].name.toLowerCase().includes(q)) {
-                                                matches.push(all[i]);
-                                                if (matches.length >= 50) break;
-                                            }
-                                        }
-                                        setLocationOptions(matches);
-                                        setLocationLoading(false);
-                                    }, 300);
-                                }}
-                                onChange={(event, val) => {
-                                    if (val) {
-                                        const country = Country.getCountryByCode(val.countryCode);
-                                        const state = State.getStateByCodeAndCountry(val.stateCode, val.countryCode);
-                                        const locationName = `${val.name}, ${state?.name || val.stateCode}, ${country?.name || val.countryCode}`;
-                                        const lat = parseFloat(val.latitude);
-                                        const long = parseFloat(val.longitude);
-                                        let tz = 5.5;
-                                        try {
-                                            const timezones = ct.getTimezonesForCountry(val.countryCode);
-                                            if (timezones && timezones.length > 0) {
-                                                tz = timezones[0].utcOffset / 60;
-                                            } else {
-                                                tz = calculateTimezone(long);
-                                            }
-                                        } catch (e) {
-                                            tz = calculateTimezone(long);
-                                        }
-                                        setMatchDetails(prev => ({ ...prev, location: locationName, lat, long, timezone: tz }));
-                                    }
-                                }}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label="� Search Venue (City)"
-                                        size="small"
-                                        fullWidth
-                                        InputProps={{
-                                            ...params.InputProps,
-                                            endAdornment: (
-                                                <React.Fragment>
-                                                    {locationLoading ? <CircularProgress color="inherit" size={20} /> : null}
-                                                    {params.InputProps.endAdornment}
-                                                </React.Fragment>
-                                            ),
-                                        }}
-                                    />
-                                )}
-                                renderOption={(props, option) => {
-                                    const country = Country.getCountryByCode(option.countryCode);
-                                    return (
-                                        <li {...props} key={`${option.name}-${option.latitude}`}>
-                                            <Box>
-                                                <Typography variant="body2" fontWeight="bold">{option.name}</Typography>
-                                                <Typography variant="caption" color="textSecondary">{option.stateCode}, {country?.name}</Typography>
-                                            </Box>
-                                        </li>
-                                    )
-                                }}
-                            />
-
-                            {/* Hidden/Compact Details */}
-                            <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
-                                <TextField label="Lat" value={matchDetails.lat} size="small" sx={{ width: 80 }} disabled InputProps={{ style: { fontSize: '0.7rem' } }} />
-                                <TextField label="Long" value={matchDetails.long} size="small" sx={{ width: 80 }} disabled InputProps={{ style: { fontSize: '0.7rem' } }} />
-                                <TextField label="TZ" value={matchDetails.timezone} size="small" sx={{ width: 50 }} disabled InputProps={{ style: { fontSize: '0.7rem' } }} />
-                                <TextField
-                                    select
-                                    label="Ayanamsa"
-                                    size="small"
-                                    value={matchDetails.ayanamsa || 'Lahiri'}
-                                    onChange={(e) => {
-                                        handleChange('ayanamsa', e.target.value);
-                                        localStorage.setItem('preferredAyanamsa', e.target.value);
-                                    }}
-                                    SelectProps={{ native: true }}
-                                    sx={{ width: 100 }}
-                                    InputProps={{ style: { fontSize: '0.75rem' } }}
-                                >
-                                    <option value="Lahiri">Lahiri</option>
-                                    <option value="KP">KP</option>
-                                    <option value="KP Straight">KP Straight</option>
-                                </TextField>
-                            </Box>
-                        </Box>
-                    </Grid>
+            {/* Row 1: Date, Time, Venue */}
+            <Grid container spacing={1} alignItems="center">
+                <Grid item xs={6} sm={3.5}>
+                    <TextField
+                        label="Match Date"
+                        type="date"
+                        size="small"
+                        fullWidth
+                        value={matchDetails.date}
+                        onChange={(e) => handleChange('date', e.target.value)}
+                        InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.75rem' } }}
+                        InputProps={{
+                            sx: {
+                                borderRadius: '10px',
+                                fontWeight: 'bold',
+                                bgcolor: '#fff',
+                                height: 38,
+                                fontSize: '0.82rem',
+                                border: '1px solid #FFCC80'
+                            }
+                        }}
+                    />
                 </Grid>
 
-                {/* BUTTONS - Compact on Mobile */}
-                <Box sx={{ display: 'flex', gap: { xs: 1, sm: 2 }, mt: { xs: 1.5, sm: 3 }, flexWrap: 'wrap' }}>
+                <Grid item xs={6} sm={3}>
+                    <TextField
+                        label="Match Time"
+                        type="time"
+                        size="small"
+                        fullWidth
+                        value={matchDetails.time}
+                        onChange={(e) => handleChange('time', e.target.value)}
+                        InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.75rem' } }}
+                        InputProps={{
+                            sx: {
+                                borderRadius: '10px',
+                                fontWeight: 'bold',
+                                bgcolor: '#fff',
+                                height: 38,
+                                fontSize: '0.82rem',
+                                border: '1px solid #FFCC80'
+                            }
+                        }}
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={5.5}>
+                    <Autocomplete
+                        options={locationOptions}
+                        loading={locationLoading}
+                        getOptionLabel={(option) => `${option.name}, ${option.stateCode}, ${option.countryCode}`}
+                        onInputChange={(event, newInputValue) => {
+                            if (!newInputValue || newInputValue.length < 3) return;
+                            setLocationLoading(true);
+                            setTimeout(() => {
+                                const q = newInputValue.toLowerCase();
+                                const all = City.getAllCities();
+                                const matches = [];
+                                for (let i = 0; i < all.length; i++) {
+                                    if (all[i].name.toLowerCase().includes(q)) {
+                                        matches.push(all[i]);
+                                        if (matches.length >= 50) break;
+                                    }
+                                }
+                                setLocationOptions(matches);
+                                setLocationLoading(false);
+                            }, 300);
+                        }}
+                        onChange={(event, val) => {
+                            if (val) {
+                                const country = Country.getCountryByCode(val.countryCode);
+                                const state = State.getStateByCodeAndCountry(val.stateCode, val.countryCode);
+                                const locationName = `${val.name}, ${state?.name || val.stateCode}, ${country?.name || val.countryCode}`;
+                                const lat = parseFloat(val.latitude);
+                                const long = parseFloat(val.longitude);
+                                let tz = 5.5;
+                                try {
+                                    const timezones = ct.getTimezonesForCountry(val.countryCode);
+                                    if (timezones && timezones.length > 0) {
+                                        tz = timezones[0].utcOffset / 60;
+                                    } else {
+                                        tz = calculateTimezone(long);
+                                    }
+                                } catch (e) {
+                                    tz = calculateTimezone(long);
+                                }
+                                setMatchDetails(prev => ({ ...prev, location: locationName, lat, long, timezone: tz }));
+                            }
+                        }}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Search Venue (City)"
+                                size="small"
+                                fullWidth
+                                InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.75rem' } }}
+                                InputProps={{
+                                    ...params.InputProps,
+                                    sx: { borderRadius: '10px', bgcolor: '#fff', height: 38, fontSize: '0.82rem', border: '1px solid #eee' },
+                                    endAdornment: (
+                                        <React.Fragment>
+                                            {locationLoading ? <CircularProgress color="inherit" size={16} /> : null}
+                                            {params.InputProps.endAdornment}
+                                        </React.Fragment>
+                                    ),
+                                }}
+                            />
+                        )}
+                        renderOption={(props, option) => {
+                            const country = Country.getCountryByCode(option.countryCode);
+                            return (
+                                <li {...props} key={`${option.name}-${option.latitude}`}>
+                                    <Box>
+                                        <Typography variant="body2" fontWeight="bold">{option.name}</Typography>
+                                        <Typography variant="caption" color="textSecondary">{option.stateCode}, {country?.name}</Typography>
+                                    </Box>
+                                </li>
+                            );
+                        }}
+                    />
+                </Grid>
+            </Grid>
+
+            {/* Row 2: Lat/Long/TZ/Ayanamsa + Chart & Predict Buttons */}
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1, mt: 1, flexWrap: 'wrap' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
+                    <TextField label="Lat" value={matchDetails.lat} size="small" disabled sx={{ width: 64 }} InputProps={{ style: { fontSize: '0.7rem', height: 32 } }} InputLabelProps={{ shrink: true, style: { fontSize: '0.65rem' } }} />
+                    <TextField label="Long" value={matchDetails.long} size="small" disabled sx={{ width: 64 }} InputProps={{ style: { fontSize: '0.7rem', height: 32 } }} InputLabelProps={{ shrink: true, style: { fontSize: '0.65rem' } }} />
+                    <TextField label="TZ" value={matchDetails.timezone} size="small" disabled sx={{ width: 44 }} InputProps={{ style: { fontSize: '0.7rem', height: 32 } }} InputLabelProps={{ shrink: true, style: { fontSize: '0.65rem' } }} />
+                    <TextField
+                        select
+                        label="Ayanamsa"
+                        size="small"
+                        value={matchDetails.ayanamsa || 'Lahiri'}
+                        onChange={(e) => {
+                            handleChange('ayanamsa', e.target.value);
+                            localStorage.setItem('preferredAyanamsa', e.target.value);
+                        }}
+                        SelectProps={{ native: true }}
+                        sx={{ width: 92 }}
+                        InputProps={{ style: { fontSize: '0.7rem', height: 32 } }}
+                        InputLabelProps={{ shrink: true, style: { fontSize: '0.65rem' } }}
+                    >
+                        <option value="Lahiri">Lahiri</option>
+                        <option value="KP">KP</option>
+                        <option value="KP Straight">KP Straight</option>
+                    </TextField>
+                </Box>
+
+                <Box sx={{ display: 'flex', gap: 1, ml: 'auto' }}>
                     <Button
                         variant="outlined"
                         onClick={handleViewChart}
                         disabled={viewChartLoading || loading}
+                        size="small"
                         sx={{
-                            flex: 1,
-                            minWidth: { xs: '80px', sm: '120px' },
-                            height: { xs: '36px', sm: '48px' },
-                            fontSize: { xs: '0.8rem', sm: '1rem' },
+                            height: 32,
+                            px: 1.5,
+                            fontSize: '0.78rem',
                             fontWeight: 'bold',
-                            borderRadius: { xs: '10px', sm: '14px' },
-                            color: '#FFC107',
-                            borderColor: '#FFC107',
-                            borderWidth: '2px',
-                            '&:hover': { bgcolor: 'rgba(255, 193, 7, 0.1)', borderColor: '#FF9800' }
+                            borderRadius: '8px',
+                            color: '#FFB300',
+                            borderColor: '#FFB300',
+                            textTransform: 'none',
+                            '&:hover': { bgcolor: 'rgba(255, 179, 0, 0.08)', borderColor: '#FFA000' }
                         }}
                     >
-                        {viewChartLoading ? <CircularProgress size={20} /> : "📊 Chart"}
+                        {viewChartLoading ? <CircularProgress size={14} /> : "📊 Chart"}
                     </Button>
-
                     <Button
                         variant="contained"
                         onClick={handleRun}
                         disabled={loading || viewChartLoading}
+                        size="small"
                         sx={{
-                            flex: 2,
-                            minWidth: { xs: '120px', sm: '160px' },
-                            height: { xs: '36px', sm: '48px' },
-                            fontSize: { xs: '0.85rem', sm: '1rem' },
-                            fontWeight: '900',
-                            borderRadius: { xs: '10px', sm: '14px' },
+                            height: 32,
+                            px: 2,
+                            fontSize: '0.8rem',
+                            fontWeight: 'bold',
+                            borderRadius: '8px',
                             bgcolor: '#FF6F00',
-                            boxShadow: '0 4px 12px rgba(255, 111, 0, 0.35)',
-                            '&:hover': { bgcolor: '#E65100' },
-                            '&:active': { transform: 'scale(0.98)' }
+                            color: '#fff',
+                            textTransform: 'none',
+                            boxShadow: '0 2px 8px rgba(255, 111, 0, 0.35)',
+                            '&:hover': { bgcolor: '#E65100' }
                         }}
                     >
-                        {loading ? <CircularProgress size={20} color="inherit" /> : "🏏 Predict"}
+                        {loading ? <CircularProgress size={14} color="inherit" /> : "🏏 Predict"}
                     </Button>
                 </Box>
+            </Box>
+        </Paper>
+    );
 
-                {error && <Alert severity="error" sx={{ mt: 2, borderRadius: '12px' }}>{error}</Alert>}
+    return (
+        <Paper elevation={0} sx={{ p: 0, mb: { xs: 1, sm: 2 }, overflow: 'hidden', borderRadius: { xs: '10px', sm: '14px' }, border: 'none', bgcolor: 'transparent' }}>
+            {/* When rightSlot is provided, display side-by-side in 2 columns */}
+            {rightSlot ? (
+                <Grid container spacing={1.5} alignItems="stretch">
+                    <Grid item xs={12} md={7} lg={7.5}>
+                        {matchFormBox}
+                    </Grid>
+                    <Grid item xs={12} md={5} lg={4.5}>
+                        {rightSlot}
+                    </Grid>
+                </Grid>
+            ) : (
+                matchFormBox
+            )}
+
+            {error && <Alert severity="error" sx={{ mt: 1.5, borderRadius: '10px' }}>{error}</Alert>}
 
                 {/* MATCH CHART SUMMARY TABLE - Tamil Format (Collapsible) */}
                 {matchChartResult && (
@@ -683,7 +709,6 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                         </Collapse>
                     </Box>
                 )}
-            </Box>
 
             {/* View Chart Dialog */}
             <Dialog
