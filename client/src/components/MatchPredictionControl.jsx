@@ -8,7 +8,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { Dialog, DialogTitle, DialogContent, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, FormControlLabel, Checkbox } from '@mui/material';
 import { Country, State, City } from 'country-state-city';
 import ct from 'countries-and-timezones';
-import RasiChart, { tamilSigns, signLords, signLordsTamil, nakshatraTamilMap, planetFullTamilMap } from './RasiChart';
+import RasiChart, { tamilSigns, signLords, signLordsTamil, nakshatraTamilMap, planetFullTamilMap, getSignId, getNakshatraLordHelper as getNakLordFromRasiChart } from './RasiChart';
 
 const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionStart, token, rightSlot, layout = 'default' }, ref) => {
     const [matchDetails, setMatchDetails] = useState({
@@ -753,38 +753,66 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                             }}
                         >
                             <Typography variant="caption" fontWeight="bold" sx={{ color: '#FF6F00', fontSize: '0.8rem' }}>
-                                📊 போட்டி ராசி விவரம் (Match Chart)
+                                📊 போட்டி ராசி விவரம்
                             </Typography>
                             <IconButton size="small" sx={{ p: 0.2, color: '#FF6F00' }}>
                                 {chartExpanded ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
                             </IconButton>
                         </Box>
                         <Collapse in={chartExpanded}>
-                            <Box sx={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(3, 1fr)',
-                                gap: 0.6,
-                                mt: 0.5
-                            }}>
-                                <Paper elevation={0} sx={{ p: 0.8, textAlign: 'center', bgcolor: 'rgba(255, 193, 7, 0.12)', border: '1px solid #FFE082', borderRadius: '8px' }}>
-                                    <Typography variant="caption" sx={{ color: '#E65100', fontWeight: 'bold', display: 'block', fontSize: '0.65rem' }}>🟡 லக்னம்</Typography>
-                                    <Typography variant="body2" sx={{ fontWeight: '900', color: '#212121', fontSize: '0.75rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                        {matchChartResult.ascendant?.tamil || matchChartResult.ascendant?.english || '-'}
-                                    </Typography>
-                                </Paper>
-                                <Paper elevation={0} sx={{ p: 0.8, textAlign: 'center', bgcolor: 'rgba(25, 118, 210, 0.08)', border: '1px solid #90CAF9', borderRadius: '8px' }}>
-                                    <Typography variant="caption" sx={{ color: '#1565C0', fontWeight: 'bold', display: 'block', fontSize: '0.65rem' }}>🔵 ராசி</Typography>
-                                    <Typography variant="body2" sx={{ fontWeight: '900', color: '#212121', fontSize: '0.75rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                        {matchChartResult.moonSign?.tamil || matchChartResult.moonSign?.english || '-'}
-                                    </Typography>
-                                </Paper>
-                                <Paper elevation={0} sx={{ p: 0.8, textAlign: 'center', bgcolor: 'rgba(123, 31, 162, 0.08)', border: '1px solid #CE93D8', borderRadius: '8px' }}>
-                                    <Typography variant="caption" sx={{ color: '#7B1FA2', fontWeight: 'bold', display: 'block', fontSize: '0.65rem' }}>🟣 நட்சத்திரம்</Typography>
-                                    <Typography variant="body2" sx={{ fontWeight: '900', color: '#212121', fontSize: '0.75rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                        {matchChartResult.moonNakshatra?.tamil || matchChartResult.nakshatra?.tamil || '-'}
-                                    </Typography>
-                                </Paper>
-                            </Box>
+                            {(() => {
+                                const ascSign = matchChartResult.ascendant?.tamil || matchChartResult.ascendant?.english || '-';
+                                const ascSignId = getSignId(matchChartResult.ascendant);
+                                const ascLordRaw = matchChartResult.ascendant?.lordTamil || matchChartResult.ascendant?.lord || (ascSignId ? signLords[ascSignId] : null);
+                                const ascLord = signLordsTamil[ascLordRaw] || planetFullTamilMap[ascLordRaw] || ascLordRaw || '-';
+
+                                const moonSign = matchChartResult.moonSign?.tamil || matchChartResult.moonSign?.english || '-';
+                                const moonSignId = getSignId(matchChartResult.moonSign);
+                                const moonLordRaw = matchChartResult.moonSign?.lordTamil || matchChartResult.moonSign?.lord || (moonSignId ? signLords[moonSignId] : null);
+                                const moonLord = signLordsTamil[moonLordRaw] || planetFullTamilMap[moonLordRaw] || moonLordRaw || '-';
+
+                                const nakObj = matchChartResult.moonNakshatra || matchChartResult.nakshatra || {};
+                                const nakTamil = nakObj.tamil || nakshatraTamilMap[nakObj.name] || nakObj.name || '-';
+                                const nakLordRaw = nakObj.lordTamil || nakObj.lord || getNakshatraLordHelper(nakObj.name || nakObj.tamil);
+                                const nakLord = signLordsTamil[nakLordRaw] || planetFullTamilMap[nakLordRaw] || nakLordRaw || '-';
+
+                                return (
+                                    <Box sx={{
+                                        display: 'grid',
+                                        gridTemplateColumns: 'repeat(3, 1fr)',
+                                        gap: 0.6,
+                                        mt: 0.5
+                                    }}>
+                                        <Paper elevation={0} sx={{ p: 0.6, textAlign: 'center', bgcolor: 'rgba(255, 193, 7, 0.12)', border: '1px solid #FFE082', borderRadius: '8px' }}>
+                                            <Typography variant="caption" sx={{ color: '#E65100', fontWeight: 'bold', display: 'block', fontSize: '0.65rem', lineHeight: 1.2 }}>🟡 லக்னம்</Typography>
+                                            <Typography variant="body2" sx={{ fontWeight: '900', color: '#212121', fontSize: '0.75rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', my: 0.2 }}>
+                                                {ascSign}
+                                            </Typography>
+                                            <Typography variant="caption" sx={{ color: '#B45309', fontWeight: 'bold', display: 'block', fontSize: '0.68rem', bgcolor: 'rgba(255, 193, 7, 0.25)', borderRadius: '4px', py: 0.1, px: 0.3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={`அதிபதி: ${ascLord}`}>
+                                                {ascLord}
+                                            </Typography>
+                                        </Paper>
+                                        <Paper elevation={0} sx={{ p: 0.6, textAlign: 'center', bgcolor: 'rgba(25, 118, 210, 0.08)', border: '1px solid #90CAF9', borderRadius: '8px' }}>
+                                            <Typography variant="caption" sx={{ color: '#1565C0', fontWeight: 'bold', display: 'block', fontSize: '0.65rem', lineHeight: 1.2 }}>🔵 ராசி</Typography>
+                                            <Typography variant="body2" sx={{ fontWeight: '900', color: '#212121', fontSize: '0.75rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', my: 0.2 }}>
+                                                {moonSign}
+                                            </Typography>
+                                            <Typography variant="caption" sx={{ color: '#1E40AF', fontWeight: 'bold', display: 'block', fontSize: '0.68rem', bgcolor: 'rgba(25, 118, 210, 0.12)', borderRadius: '4px', py: 0.1, px: 0.3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={`அதிபதி: ${moonLord}`}>
+                                                {moonLord}
+                                            </Typography>
+                                        </Paper>
+                                        <Paper elevation={0} sx={{ p: 0.6, textAlign: 'center', bgcolor: 'rgba(123, 31, 162, 0.08)', border: '1px solid #CE93D8', borderRadius: '8px' }}>
+                                            <Typography variant="caption" sx={{ color: '#7B1FA2', fontWeight: 'bold', display: 'block', fontSize: '0.65rem', lineHeight: 1.2 }}>🟣 நட்சத்திரம்</Typography>
+                                            <Typography variant="body2" sx={{ fontWeight: '900', color: '#212121', fontSize: '0.75rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', my: 0.2 }}>
+                                                {nakTamil}
+                                            </Typography>
+                                            <Typography variant="caption" sx={{ color: '#6B21A8', fontWeight: 'bold', display: 'block', fontSize: '0.68rem', bgcolor: 'rgba(123, 31, 162, 0.12)', borderRadius: '4px', py: 0.1, px: 0.3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={`அதிபதி: ${nakLord}`}>
+                                                {nakLord}
+                                            </Typography>
+                                        </Paper>
+                                    </Box>
+                                );
+                            })()}
                         </Collapse>
                     </Box>
                 )}
@@ -885,7 +913,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                             }}
                         >
                             <Typography variant="caption" fontWeight="bold" sx={{ color: '#FF6F00', fontSize: '0.85rem' }}>
-                                📊 போட்டி ராசி விவரம் (Match Chart Details)
+                                📊 போட்டி ராசி விவரம்
                             </Typography>
                             <IconButton size="small" sx={{ p: 0.5, color: '#FF6F00' }}>
                                 {chartExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
@@ -902,7 +930,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                                 {/* Ascendant Row */}
                                                 <TableRow sx={{ bgcolor: 'rgba(255, 193, 7, 0.08)' }}>
                                                     <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', width: '35%', py: 0.8, fontSize: '0.75rem' }}>
-                                                        லக்னம் (Asc)
+                                                        லக்னம்
                                                     </TableCell>
                                                     <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
                                                         {matchChartResult.ascendant?.tamil || matchChartResult.ascendant?.english || '-'} <br />
@@ -921,7 +949,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                                 {/* Moon Sign Row */}
                                                 <TableRow>
                                                     <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
-                                                        சந்திரன் (Moon)
+                                                        ராசி (சந்திரன்)
                                                     </TableCell>
                                                     <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
                                                         {matchChartResult.moonSign?.tamil || matchChartResult.moonSign?.english || '-'}
@@ -934,7 +962,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                                 {/* Nakshatra Row */}
                                                 <TableRow sx={{ bgcolor: 'rgba(255, 193, 7, 0.08)' }}>
                                                     <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
-                                                        நட்சத்திரம் (Star)
+                                                        நட்சத்திரம்
                                                     </TableCell>
                                                     <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
                                                         {matchChartResult.moonNakshatra?.tamil || nakshatraTamilMap[matchChartResult.moonNakshatra?.name || matchChartResult.nakshatra?.name] || matchChartResult.moonNakshatra?.name || matchChartResult.nakshatra?.name || '-'}
@@ -947,7 +975,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                                 {/* Pada Row */}
                                                 <TableRow>
                                                     <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
-                                                        பாதம் (Pada)
+                                                        பாதம்
                                                     </TableCell>
                                                     <TableCell colSpan={2} sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
                                                         {matchChartResult.moonNakshatra?.pada || matchChartResult.nakshatra?.pada || '-'}
@@ -1134,34 +1162,40 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
 // Helper to get Star Lord (copied from predictionRules/adapter to avoid circular dep issues quickly)
 const getNakshatraLordHelper = (starName) => {
     if (!starName) return null;
-    const n = starName.toLowerCase();
+    try {
+        const fromRasi = getNakLordFromRasiChart(starName);
+        if (fromRasi && fromRasi !== '-') return fromRasi;
+    } catch (e) {
+        // fallback
+    }
+    const n = String(starName).toLowerCase();
     
     // Ketu: Ashwini, Magha, Mula
-    if (['ashwini', 'aswini', 'magha', 'magam', 'makam', 'mula', 'moola', 'moolam'].some(s => n.includes(s))) return 'Ketu';
+    if (['ashwini', 'aswini', 'magha', 'magam', 'makam', 'mula', 'moola', 'moolam', 'அசுவினி', 'அஸ்வினி', 'மகம்', 'மூலம்'].some(s => n.includes(s))) return 'Ketu';
     
     // Venus: Bharani, Purva Phalguni, Purva Ashadha
-    if (['bharani', 'purva phalguni', 'purvaphalguni', 'pooram', 'purva ashadha', 'purvashada', 'pooradam'].some(s => n.includes(s))) return 'Venus';
+    if (['bharani', 'purva phalguni', 'purvaphalguni', 'pooram', 'purva ashadha', 'purvashada', 'pooradam', 'பரணி', 'பூரம்', 'பூராடம்'].some(s => n.includes(s))) return 'Venus';
     
     // Sun: Krittika, Uttara Phalguni, Uttara Ashadha
-    if (['krittika', 'karthigai', 'uttara phalguni', 'uttaraphalguni', 'uthiram', 'uttara ashadha', 'uttarashada', 'uthiradam'].some(s => n.includes(s))) return 'Sun';
+    if (['krittika', 'karthigai', 'uttara phalguni', 'uttaraphalguni', 'uthiram', 'uttara ashadha', 'uttarashada', 'uthiradam', 'கார்த்திகை', 'உத்திரம்', 'உத்திராடம்'].some(s => n.includes(s))) return 'Sun';
     
     // Moon: Rohini, Hasta, Shravana
-    if (['rohini', 'hasta', 'hastham', 'shravana', 'thiruvonam'].some(s => n.includes(s))) return 'Moon';
+    if (['rohini', 'hasta', 'hastham', 'shravana', 'thiruvonam', 'ரோகிணி', 'ஹஸ்தம்', 'அஸ்தம்', 'திருவோணம்'].some(s => n.includes(s))) return 'Moon';
     
     // Mars: Mrigashira, Chitra, Dhanishta
-    if (['mrigashira', 'mrigashirsha', 'mrigasirisa', 'mrigasirisha', 'mirugasirisha', 'mirugasirish', 'mrigasirisam', 'chitra', 'chithirai', 'dhanishta', 'avittam'].some(s => n.includes(s))) return 'Mars';
+    if (['mrigashira', 'mrigashirsha', 'mrigasirisa', 'mrigasirisha', 'mirugasirisha', 'mirugasirish', 'mrigasirisam', 'chitra', 'chithirai', 'dhanishta', 'avittam', 'மிருகசீரிஷம்', 'மிருகசீரிடம்', 'சித்திரை', 'அவிட்டம்'].some(s => n.includes(s))) return 'Mars';
     
     // Rahu: Ardra, Swati, Shatabhisha
-    if (['ardra', 'thiruvadhirai', 'swati', 'swathi', 'shatabhisha', 'sadhayam', 'sathayam'].some(s => n.includes(s))) return 'Rahu';
+    if (['ardra', 'thiruvadhirai', 'swati', 'swathi', 'shatabhisha', 'sadhayam', 'sathayam', 'திருவாதிரை', 'சுவாதி', 'சதயம்'].some(s => n.includes(s))) return 'Rahu';
     
     // Jupiter: Punarvasu, Vishakha, Purva Bhadrapada
-    if (['punarvasu', 'punarpusam', 'vishakha', 'visakam', 'purva bhadrapada', 'purvabhadra', 'poorattathi'].some(s => n.includes(s))) return 'Jupiter';
+    if (['punarvasu', 'punarpusam', 'vishakha', 'visakam', 'purva bhadrapada', 'purvabhadra', 'poorattathi', 'புனர்பூசம்', 'விசாகம்', 'பூரட்டாதி'].some(s => n.includes(s))) return 'Jupiter';
     
     // Saturn: Pushya, Anuradha, Uttara Bhadrapada
-    if (['pushya', 'poosam', 'anuradha', 'anusham', 'uttara bhadrapada', 'uttarabhadra', 'uthirattathi'].some(s => n.includes(s))) return 'Saturn';
+    if (['pushya', 'poosam', 'anuradha', 'anusham', 'uttara bhadrapada', 'uttarabhadra', 'uthirattathi', 'பூசம்', 'அனுஷம்', 'உத்திரட்டாதி'].some(s => n.includes(s))) return 'Saturn';
     
     // Mercury: Ashlesha, Jyeshtha, Revati
-    if (['ashlesha', 'ayilyam', 'jyeshtha', 'kettai', 'revati'].some(s => n.includes(s))) return 'Mercury';
+    if (['ashlesha', 'ayilyam', 'jyeshtha', 'kettai', 'revati', 'ஆயில்யம்', 'கேட்டை', 'ரேவதி'].some(s => n.includes(s))) return 'Mercury';
     
     return null;
 };
