@@ -10,7 +10,7 @@ import { Country, State, City } from 'country-state-city';
 import ct from 'countries-and-timezones';
 import RasiChart, { tamilSigns, signLords, signLordsTamil, nakshatraTamilMap, planetFullTamilMap } from './RasiChart';
 
-const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionStart, token, rightSlot }, ref) => {
+const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionStart, token, rightSlot, layout = 'default' }, ref) => {
     const [matchDetails, setMatchDetails] = useState({
         date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
         time: '19:30',
@@ -266,6 +266,8 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
         }
     };
 
+    const isSidebar = layout === 'sidebar';
+
     const matchFormBox = (
         <Paper
             elevation={0}
@@ -276,8 +278,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                 border: '1px solid rgba(255, 111, 0, 0.2)',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'space-between',
-                height: '100%'
+                justifyContent: 'space-between'
             }}
         >
             {/* Title Header */}
@@ -304,7 +305,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
 
             {/* Row 1: Date, Time, Venue */}
             <Grid container spacing={1} alignItems="center">
-                <Grid item xs={6} sm={3.5}>
+                <Grid item xs={6} sm={isSidebar ? 6 : 3.5}>
                     <TextField
                         label="Match Date"
                         type="date"
@@ -326,7 +327,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                     />
                 </Grid>
 
-                <Grid item xs={6} sm={3}>
+                <Grid item xs={6} sm={isSidebar ? 6 : 3}>
                     <TextField
                         label="Match Time"
                         type="time"
@@ -348,7 +349,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                     />
                 </Grid>
 
-                <Grid item xs={12} sm={5.5}>
+                <Grid item xs={12} sm={isSidebar ? 12 : 5.5}>
                     <Autocomplete
                         options={locationOptions}
                         loading={locationLoading}
@@ -425,76 +426,273 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                 </Grid>
             </Grid>
 
-            {/* Row 2: Lat/Long/TZ/Ayanamsa + Chart & Predict Buttons */}
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1, mt: 1, flexWrap: 'wrap' }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
-                    <TextField label="Lat" value={matchDetails.lat} size="small" disabled sx={{ width: 64 }} InputProps={{ style: { fontSize: '0.7rem', height: 32 } }} InputLabelProps={{ shrink: true, style: { fontSize: '0.65rem' } }} />
-                    <TextField label="Long" value={matchDetails.long} size="small" disabled sx={{ width: 64 }} InputProps={{ style: { fontSize: '0.7rem', height: 32 } }} InputLabelProps={{ shrink: true, style: { fontSize: '0.65rem' } }} />
-                    <TextField label="TZ" value={matchDetails.timezone} size="small" disabled sx={{ width: 44 }} InputProps={{ style: { fontSize: '0.7rem', height: 32 } }} InputLabelProps={{ shrink: true, style: { fontSize: '0.65rem' } }} />
-                    <TextField
-                        select
-                        label="Ayanamsa"
-                        size="small"
-                        value={matchDetails.ayanamsa || 'Lahiri'}
-                        onChange={(e) => {
-                            handleChange('ayanamsa', e.target.value);
-                            localStorage.setItem('preferredAyanamsa', e.target.value);
-                        }}
-                        SelectProps={{ native: true }}
-                        sx={{ width: 92 }}
-                        InputProps={{ style: { fontSize: '0.7rem', height: 32 } }}
-                        InputLabelProps={{ shrink: true, style: { fontSize: '0.65rem' } }}
-                    >
-                        <option value="Lahiri">Lahiri</option>
-                        <option value="KP">KP</option>
-                        <option value="KP Straight">KP Straight</option>
-                    </TextField>
-                </Box>
+            {/* Row 2: Lat/Long/TZ/Ayanamsa */}
+            {isSidebar ? (
+                <Box sx={{ mt: 1 }}>
+                    <Grid container spacing={0.8} alignItems="center">
+                        <Grid item xs={3}>
+                            <TextField label="Lat" value={matchDetails.lat} size="small" disabled fullWidth InputProps={{ style: { fontSize: '0.7rem', height: 32 } }} InputLabelProps={{ shrink: true, style: { fontSize: '0.65rem' } }} />
+                        </Grid>
+                        <Grid item xs={3}>
+                            <TextField label="Long" value={matchDetails.long} size="small" disabled fullWidth InputProps={{ style: { fontSize: '0.7rem', height: 32 } }} InputLabelProps={{ shrink: true, style: { fontSize: '0.65rem' } }} />
+                        </Grid>
+                        <Grid item xs={2.5}>
+                            <TextField label="TZ" value={matchDetails.timezone} size="small" disabled fullWidth InputProps={{ style: { fontSize: '0.7rem', height: 32 } }} InputLabelProps={{ shrink: true, style: { fontSize: '0.65rem' } }} />
+                        </Grid>
+                        <Grid item xs={3.5}>
+                            <TextField
+                                select
+                                label="Ayanamsa"
+                                size="small"
+                                value={matchDetails.ayanamsa || 'Lahiri'}
+                                onChange={(e) => {
+                                    handleChange('ayanamsa', e.target.value);
+                                    localStorage.setItem('preferredAyanamsa', e.target.value);
+                                }}
+                                SelectProps={{ native: true }}
+                                fullWidth
+                                InputProps={{ style: { fontSize: '0.7rem', height: 32 } }}
+                                InputLabelProps={{ shrink: true, style: { fontSize: '0.65rem' } }}
+                            >
+                                <option value="Lahiri">Lahiri</option>
+                                <option value="KP">KP</option>
+                                <option value="KP Straight">KP Straight</option>
+                            </TextField>
+                        </Grid>
+                    </Grid>
 
-                <Box sx={{ display: 'flex', gap: 1, ml: 'auto' }}>
-                    <Button
-                        variant="outlined"
-                        onClick={handleViewChart}
-                        disabled={viewChartLoading || loading}
-                        size="small"
-                        sx={{
-                            height: 32,
-                            px: 1.5,
-                            fontSize: '0.78rem',
-                            fontWeight: 'bold',
-                            borderRadius: '8px',
-                            color: '#FFB300',
-                            borderColor: '#FFB300',
-                            textTransform: 'none',
-                            '&:hover': { bgcolor: 'rgba(255, 179, 0, 0.08)', borderColor: '#FFA000' }
-                        }}
-                    >
-                        {viewChartLoading ? <CircularProgress size={14} /> : "📊 Chart"}
-                    </Button>
-                    <Button
-                        variant="contained"
-                        onClick={handleRun}
-                        disabled={loading || viewChartLoading}
-                        size="small"
-                        sx={{
-                            height: 32,
-                            px: 2,
-                            fontSize: '0.8rem',
-                            fontWeight: 'bold',
-                            borderRadius: '8px',
-                            bgcolor: '#FF6F00',
-                            color: '#fff',
-                            textTransform: 'none',
-                            boxShadow: '0 2px 8px rgba(255, 111, 0, 0.35)',
-                            '&:hover': { bgcolor: '#E65100' }
-                        }}
-                    >
-                        {loading ? <CircularProgress size={14} color="inherit" /> : "🏏 Predict"}
-                    </Button>
+                    <Box sx={{ display: 'flex', gap: 1, mt: 1.2 }}>
+                        <Button
+                            variant="outlined"
+                            onClick={handleViewChart}
+                            disabled={viewChartLoading || loading}
+                            size="small"
+                            fullWidth
+                            sx={{
+                                height: 34,
+                                fontSize: '0.78rem',
+                                fontWeight: 'bold',
+                                borderRadius: '8px',
+                                color: '#FF6F00',
+                                borderColor: 'rgba(255, 111, 0, 0.4)',
+                                bgcolor: 'rgba(255, 111, 0, 0.04)',
+                                textTransform: 'none',
+                                '&:hover': { bgcolor: 'rgba(255, 111, 0, 0.1)', borderColor: '#FF6F00' }
+                            }}
+                        >
+                            {viewChartLoading ? <CircularProgress size={14} /> : "📊 View Chart"}
+                        </Button>
+                        <Button
+                            variant="contained"
+                            onClick={handleRun}
+                            disabled={loading || viewChartLoading}
+                            size="small"
+                            fullWidth
+                            sx={{
+                                height: 34,
+                                fontSize: '0.8rem',
+                                fontWeight: 'bold',
+                                borderRadius: '8px',
+                                background: 'linear-gradient(135deg, #FF9800 0%, #FF6F00 100%)',
+                                color: '#fff',
+                                textTransform: 'none',
+                                boxShadow: '0 2px 8px rgba(255, 111, 0, 0.35)',
+                                '&:hover': { background: 'linear-gradient(135deg, #F57C00 0%, #E65100 100%)' }
+                            }}
+                        >
+                            {loading ? <CircularProgress size={14} color="inherit" /> : "🚀 Predict Match"}
+                        </Button>
+                    </Box>
                 </Box>
-            </Box>
+            ) : (
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1, mt: 1, flexWrap: 'wrap' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
+                        <TextField label="Lat" value={matchDetails.lat} size="small" disabled sx={{ width: 64 }} InputProps={{ style: { fontSize: '0.7rem', height: 32 } }} InputLabelProps={{ shrink: true, style: { fontSize: '0.65rem' } }} />
+                        <TextField label="Long" value={matchDetails.long} size="small" disabled sx={{ width: 64 }} InputProps={{ style: { fontSize: '0.7rem', height: 32 } }} InputLabelProps={{ shrink: true, style: { fontSize: '0.65rem' } }} />
+                        <TextField label="TZ" value={matchDetails.timezone} size="small" disabled sx={{ width: 44 }} InputProps={{ style: { fontSize: '0.7rem', height: 32 } }} InputLabelProps={{ shrink: true, style: { fontSize: '0.65rem' } }} />
+                        <TextField
+                            select
+                            label="Ayanamsa"
+                            size="small"
+                            value={matchDetails.ayanamsa || 'Lahiri'}
+                            onChange={(e) => {
+                                handleChange('ayanamsa', e.target.value);
+                                localStorage.setItem('preferredAyanamsa', e.target.value);
+                            }}
+                            SelectProps={{ native: true }}
+                            sx={{ width: 92 }}
+                            InputProps={{ style: { fontSize: '0.7rem', height: 32 } }}
+                            InputLabelProps={{ shrink: true, style: { fontSize: '0.65rem' } }}
+                        >
+                            <option value="Lahiri">Lahiri</option>
+                            <option value="KP">KP</option>
+                            <option value="KP Straight">KP Straight</option>
+                        </TextField>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', gap: 1, ml: 'auto' }}>
+                        <Button
+                            variant="outlined"
+                            onClick={handleViewChart}
+                            disabled={viewChartLoading || loading}
+                            size="small"
+                            sx={{
+                                height: 32,
+                                px: 1.5,
+                                fontSize: '0.78rem',
+                                fontWeight: 'bold',
+                                borderRadius: '8px',
+                                color: '#FFB300',
+                                borderColor: '#FFB300',
+                                textTransform: 'none',
+                                '&:hover': { bgcolor: 'rgba(255, 179, 0, 0.08)', borderColor: '#FFA000' }
+                            }}
+                        >
+                            {viewChartLoading ? <CircularProgress size={14} /> : "📊 Chart"}
+                        </Button>
+                        <Button
+                            variant="contained"
+                            onClick={handleRun}
+                            disabled={loading || viewChartLoading}
+                            size="small"
+                            sx={{
+                                height: 32,
+                                px: 2,
+                                fontSize: '0.8rem',
+                                fontWeight: 'bold',
+                                borderRadius: '8px',
+                                bgcolor: '#FF6F00',
+                                color: '#fff',
+                                textTransform: 'none',
+                                boxShadow: '0 2px 8px rgba(255, 111, 0, 0.35)',
+                                '&:hover': { bgcolor: '#E65100' }
+                            }}
+                        >
+                            {loading ? <CircularProgress size={14} color="inherit" /> : "🏏 Predict"}
+                        </Button>
+                    </Box>
+                </Box>
+            )}
         </Paper>
     );
+
+    if (isSidebar) {
+        return (
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                {matchFormBox}
+                {rightSlot}
+                {error && <Alert severity="error" sx={{ borderRadius: '10px' }}>{error}</Alert>}
+                {matchChartResult && (
+                    <Box sx={{ mt: 1 }}>
+                        <Box
+                            onClick={() => setChartExpanded(!chartExpanded)}
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                mb: 1,
+                                cursor: 'pointer',
+                                bgcolor: 'rgba(255, 111, 0, 0.08)',
+                                p: 1,
+                                borderRadius: '8px',
+                                border: '1px solid rgba(255, 111, 0, 0.2)'
+                            }}
+                        >
+                            <Typography variant="caption" fontWeight="bold" sx={{ color: '#FF6F00', fontSize: '0.8rem' }}>
+                                📊 போட்டி ராசி விவரம் (Match Chart)
+                            </Typography>
+                            <IconButton size="small" sx={{ p: 0.2, color: '#FF6F00' }}>
+                                {chartExpanded ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
+                            </IconButton>
+                        </Box>
+                        <Collapse in={chartExpanded}>
+                            <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '10px', border: '1px solid rgba(255, 111, 0, 0.2)' }}>
+                                <Table size="small">
+                                    <TableBody>
+                                        <TableRow sx={{ bgcolor: 'rgba(255, 193, 7, 0.08)' }}>
+                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.6, fontSize: '0.72rem', width: '40%' }}>லக்னம்</TableCell>
+                                            <TableCell sx={{ color: '#212121', py: 0.6, fontSize: '0.75rem', fontWeight: 'bold' }}>
+                                                {matchChartResult.ascendant?.tamil || matchChartResult.ascendant?.english || '-'}
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell sx={{ fontWeight: 'bold', color: '#1976D2', py: 0.6, fontSize: '0.72rem' }}>ராசி</TableCell>
+                                            <TableCell sx={{ color: '#212121', py: 0.6, fontSize: '0.75rem', fontWeight: 'bold' }}>
+                                                {matchChartResult.moonSign?.tamil || matchChartResult.moonSign?.english || '-'}
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow sx={{ bgcolor: 'rgba(255, 193, 7, 0.04)' }}>
+                                            <TableCell sx={{ fontWeight: 'bold', color: '#7B1FA2', py: 0.6, fontSize: '0.72rem' }}>நட்சத்திரம்</TableCell>
+                                            <TableCell sx={{ color: '#212121', py: 0.6, fontSize: '0.75rem', fontWeight: 'bold' }}>
+                                                {matchChartResult.moonNakshatra?.tamil || matchChartResult.nakshatra?.tamil || '-'}
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </Collapse>
+                    </Box>
+                )}
+
+                {/* View Chart Modal Dialog */}
+                <Dialog
+                    open={viewChartOpen}
+                    onClose={() => setViewChartOpen(false)}
+                    maxWidth="md"
+                    fullWidth
+                    PaperProps={{ sx: { borderRadius: '16px' } }}
+                >
+                    <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', bgcolor: '#FFFBF5', borderBottom: '1px solid #FFE0B2' }}>
+                        <Typography variant="h6" fontWeight="bold" sx={{ color: '#FF6F00' }}>
+                            📊 Match Astrological Chart Details
+                        </Typography>
+                        <IconButton onClick={() => setViewChartOpen(false)} size="small">
+                            <CloseIcon />
+                        </IconButton>
+                    </DialogTitle>
+                    <DialogContent sx={{ p: 2, bgcolor: '#FFFDF9' }}>
+                        {chartData ? (
+                            <Box sx={{ mt: 1 }}>
+                                <RasiChart chartData={chartData} />
+                                <Box sx={{ mt: 2 }}>
+                                    <TableContainer component={Paper} elevation={0} sx={{ border: '1px solid #FFCC80', borderRadius: '10px' }}>
+                                        <Table size="small">
+                                            <TableHead sx={{ bgcolor: 'rgba(255, 111, 0, 0.1)' }}>
+                                                <TableRow>
+                                                    <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00' }}>அம்சம் (Factor)</TableCell>
+                                                    <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00' }}>ராசி / நட்சத்திரம்</TableCell>
+                                                    <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00' }}>அதிபதி (Lord)</TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {getChartSummary().map((row, index) => (
+                                                    <TableRow key={index}>
+                                                        <TableCell sx={{ fontWeight: 'bold', color: '#000' }}>{row.label}</TableCell>
+                                                        <TableCell sx={{ color: '#000' }}>{row.sign}</TableCell>
+                                                        <TableCell sx={{ color: '#000' }}>{row.lord}</TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                </Box>
+                                {chartData.moonNakshatra && renderRawDataTable("Moon Nakshatra Details", chartData.moonNakshatra)}
+                                <Box sx={{ mt: 2, textAlign: 'center' }}>
+                                    <Typography variant="caption" color="text.secondary">
+                                        Chart for {matchDetails.date} at {matchDetails.time} | {matchDetails.location}
+                                    </Typography>
+                                </Box>
+                            </Box>
+                        ) : (
+                            <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+                                <CircularProgress />
+                            </Box>
+                        )}
+                    </DialogContent>
+                </Dialog>
+            </Box>
+        );
+    }
 
     return (
         <Paper elevation={0} sx={{ p: 0, mb: { xs: 1, sm: 2 }, overflow: 'hidden', borderRadius: { xs: '10px', sm: '14px' }, border: 'none', bgcolor: 'transparent' }}>

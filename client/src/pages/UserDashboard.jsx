@@ -48,6 +48,8 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ErrorBoundary from '../components/ErrorBoundary';
 
 // --- COLOR PALETTE (YELLOW + ORANGE PURE APP THEME) ---
@@ -1509,6 +1511,7 @@ const MatchWizardDialog = (props) => {
         timezone: 5.5
     });
     const [isFullView, setIsFullView] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const wizardPredictionRef = useRef(null);
 
     // Rule Animation State
@@ -2152,280 +2155,354 @@ const MatchWizardDialog = (props) => {
             fullScreen
             TransitionComponent={Slide}
         >
-            {/* APP BAR - MATCH PREDICTION SETUP */}
-            <AppBar position="static" sx={{ bgcolor: '#FF6F00', backgroundImage: visionPro.gradientPrimary, display: isFullView ? 'none' : 'block' }}>
-                <Toolbar sx={{ gap: 1, py: 0.5 }}>
+            {/* TOP HEADER BAR (Compact 48px Header with Inputs Toggle) */}
+            <AppBar position="static" elevation={0} sx={{ bgcolor: '#FFFDF9', color: '#212121', borderBottom: '1px solid rgba(0,0,0,0.08)', display: isFullView ? 'none' : 'block' }}>
+                <Toolbar variant="dense" sx={{ display: 'flex', justifyContent: 'space-between', px: 2, minHeight: 48 }}>
+                    {/* Left: Sidebar Toggle Button + Branding */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                        <Button
+                            size="small"
+                            onClick={() => setIsSidebarOpen(prev => !prev)}
+                            startIcon={isSidebarOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                            variant="outlined"
+                            sx={{
+                                borderRadius: '8px',
+                                textTransform: 'none',
+                                fontWeight: 'bold',
+                                fontSize: '0.78rem',
+                                borderColor: '#FF6F00',
+                                color: '#FF6F00',
+                                bgcolor: isSidebarOpen ? 'rgba(255, 111, 0, 0.05)' : '#FFF3E0',
+                                '&:hover': { bgcolor: 'rgba(255, 111, 0, 0.15)', borderColor: '#E65100' }
+                            }}
+                        >
+                            {isSidebarOpen ? '◀ Hide Inputs' : '▶ Show Inputs'}
+                        </Button>
 
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <SportsCricketIcon sx={{ color: '#FF6F00', fontSize: 22 }} />
+                            <Typography variant="subtitle1" fontWeight="900" sx={{ background: visionPro.gradientPrimary, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: 0.5 }}>
+                                ASTRO CRICKET
+                            </Typography>
+                            <Chip
+                                label="MATCH ANALYSIS"
+                                size="small"
+                                sx={{ bgcolor: 'rgba(255, 111, 0, 0.1)', color: '#E65100', fontWeight: 'bold', fontSize: '0.68rem', height: 20 }}
+                            />
+                        </Box>
+                    </Box>
 
+                    {/* Middle: Active Match Badge */}
+                    {teamA && teamB && (
+                        <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1, bgcolor: '#FFF8E1', px: 1.5, py: 0.3, borderRadius: '20px', border: '1px solid #FFE082' }}>
+                            <Typography variant="body2" fontWeight="bold" sx={{ color: '#E65100', fontSize: '0.8rem' }}>
+                                {groups.find(g => g._id === teamA)?.name || 'Team A'}
+                            </Typography>
+                            <Chip label="VS" size="small" sx={{ bgcolor: '#FF6F00', color: 'white', fontWeight: '900', fontSize: '0.62rem', height: 18 }} />
+                            <Typography variant="body2" fontWeight="bold" sx={{ color: '#E65100', fontSize: '0.8rem' }}>
+                                {groups.find(g => g._id === teamB)?.name || 'Team B'}
+                            </Typography>
+                        </Box>
+                    )}
 
-                    {/* Match Setup - Using MatchPredictionControl with 2-Column Layout */}
-                    <Box sx={{ flexGrow: 1 }}>
+                    {/* Right: Quick Actions */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Button
+                            variant="contained"
+                            size="small"
+                            onClick={onSave}
+                            disabled={selectedPlayers.length === 0}
+                            startIcon={<EmojiEventsIcon sx={{ fontSize: 16 }} />}
+                            sx={{
+                                bgcolor: visionPro.secondary,
+                                color: 'white',
+                                fontWeight: 'bold',
+                                fontSize: '0.75rem',
+                                height: 30,
+                                px: 1.5,
+                                borderRadius: '8px',
+                                textTransform: 'none',
+                                '&:hover': { bgcolor: '#E65100' },
+                                display: (teamA && teamB) ? 'inline-flex' : 'none'
+                            }}
+                        >
+                            Save ({selectedPlayers.length})
+                        </Button>
+                        <IconButton onClick={() => setIsFullView(!isFullView)} size="small" sx={{ color: '#555' }}>
+                            {isFullView ? <FullscreenExitIcon sx={{ fontSize: 20 }} /> : <FullscreenIcon sx={{ fontSize: 20 }} />}
+                        </IconButton>
+                        <IconButton onClick={onClose} size="small" sx={{ color: '#555' }}>
+                            <CloseIcon sx={{ fontSize: 20 }} />
+                        </IconButton>
+                    </Box>
+                </Toolbar>
+            </AppBar>
+
+            {/* MAIN 3-COLUMN WORKSPACE: LEFT COLLAPSIBLE SIDEBAR + RIGHT RESULTS PANELS */}
+            <Box sx={{
+                display: 'flex',
+                flexGrow: 1,
+                height: isFullView ? '100vh' : 'calc(100vh - 48px)',
+                overflow: 'hidden',
+                bgcolor: '#F8F9FA'
+            }}>
+                {/* COLUMN 1: LEFT COLLAPSIBLE SIDEBAR (~340px) */}
+                {isSidebarOpen && (
+                    <Box sx={{
+                        width: { xs: '100%', sm: 340, md: 360 },
+                        flexShrink: 0,
+                        bgcolor: '#FFFDF9',
+                        borderRight: '1px solid rgba(0,0,0,0.08)',
+                        height: '100%',
+                        overflowY: 'auto',
+                        p: 1.5,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 1.5,
+                        boxShadow: '2px 0 10px rgba(0,0,0,0.03)',
+                        zIndex: 5
+                    }}>
+                        {/* Match Prediction Control with layout="sidebar" */}
                         <MatchPredictionControl
                             ref={wizardPredictionRef}
+                            layout="sidebar"
                             onPredictionComplete={handleMatchReady}
                             token={token}
                             rightSlot={
                                 <Paper elevation={0} sx={{
-                                    p: { xs: 1.2, sm: 1.5 },
+                                    p: 1.5,
                                     bgcolor: '#FFFBF5',
                                     borderRadius: '14px',
                                     border: '1px solid rgba(255, 111, 0, 0.2)',
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    justifyContent: 'space-between',
-                                    height: '100%'
+                                    gap: 1
                                 }}>
                                     {/* Team Selection Header */}
                                     <Box sx={{
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'space-between',
-                                        mb: 1,
                                         bgcolor: 'rgba(255, 111, 0, 0.08)',
                                         p: 0.8,
                                         px: 1.2,
                                         borderRadius: '8px',
                                         border: '1px solid rgba(255, 111, 0, 0.15)'
                                     }}>
-                                        <Typography variant="subtitle2" fontWeight="900" sx={{ color: '#FF6F00', display: 'flex', alignItems: 'center', gap: 0.8, fontSize: '0.85rem' }}>
+                                        <Typography variant="subtitle2" fontWeight="900" sx={{ color: '#FF6F00', display: 'flex', alignItems: 'center', gap: 0.8, fontSize: '0.82rem' }}>
                                             🏏 Team Selection
                                         </Typography>
-                                        <Typography variant="caption" sx={{ color: '#E65100', fontWeight: 'bold', bgcolor: 'white', px: 1, py: 0.3, borderRadius: '6px', border: '1px solid #FFCC80', fontSize: '0.75rem' }}>
-                                            {teamA && teamB ? `${groups.find(g => g._id === teamA)?.name || 'Team A'} vs ${groups.find(g => g._id === teamB)?.name || 'Team B'}` : 'Select Both Teams'}
+                                        <Typography variant="caption" sx={{ color: '#E65100', fontWeight: 'bold', bgcolor: 'white', px: 1, py: 0.2, borderRadius: '6px', border: '1px solid #FFCC80', fontSize: '0.72rem' }}>
+                                            {teamA && teamB ? 'Ready' : 'Choose 2'}
                                         </Typography>
                                     </Box>
 
-                                    {/* Team Selectors Row */}
-                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, py: 0.5 }}>
-                                        <Box sx={{ flex: 1 }}>
-                                            <TeamSelector
-                                                label="TEAM A"
-                                                value={teamA}
-                                                onChange={(val) => setTeamA(val)}
-                                                groups={groups}
-                                                placeholder="Team A"
-                                            />
+                                    {/* Team Selectors */}
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                                        <TeamSelector
+                                            label="TEAM A"
+                                            value={teamA}
+                                            onChange={(val) => setTeamA(val)}
+                                            groups={groups}
+                                            placeholder="Select Team A"
+                                        />
+
+                                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <Box sx={{
+                                                width: 26, height: 26, borderRadius: '50%',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                background: visionPro.gradientPrimary, color: 'white',
+                                                boxShadow: '0 2px 6px rgba(255, 111, 0, 0.3)',
+                                                flexShrink: 0
+                                            }}>
+                                                <Typography variant="caption" fontWeight="900" sx={{ fontSize: '0.68rem' }}>VS</Typography>
+                                            </Box>
                                         </Box>
 
-                                        <Box sx={{
-                                            width: 32, height: 32, borderRadius: '50%',
-                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                            background: visionPro.gradientPrimary, color: 'white',
-                                            boxShadow: '0 2px 8px rgba(255, 111, 0, 0.35)',
-                                            flexShrink: 0
-                                        }}>
-                                            <Typography variant="caption" fontWeight="900" sx={{ fontSize: '0.75rem' }}>VS</Typography>
-                                        </Box>
-
-                                        <Box sx={{ flex: 1 }}>
-                                            <TeamSelector
-                                                label="TEAM B"
-                                                value={teamB}
-                                                onChange={(val) => setTeamB(val)}
-                                                groups={groups}
-                                                placeholder="Team B"
-                                            />
-                                        </Box>
-                                    </Box>
-
-                                    {/* Bottom Action / Status */}
-                                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 0.5 }}>
-                                        <Typography variant="caption" sx={{ color: '#777', fontSize: '0.72rem' }}>
-                                            {teamA && teamB ? '✅ Ready to analyze players' : '⚡ Select Team A & Team B'}
-                                        </Typography>
-                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
-                                            <Button
-                                                variant="contained"
-                                                size="small"
-                                                onClick={onSave}
-                                                disabled={selectedPlayers.length === 0}
-                                                startIcon={<EmojiEventsIcon sx={{ fontSize: 16 }} />}
-                                                sx={{
-                                                    bgcolor: visionPro.secondary,
-                                                    color: 'white',
-                                                    fontWeight: 'bold',
-                                                    fontSize: '0.75rem',
-                                                    height: 28,
-                                                    px: 1,
-                                                    borderRadius: '8px',
-                                                    textTransform: 'none',
-                                                    '&:hover': { bgcolor: '#E65100' },
-                                                    display: (teamA && teamB) ? 'inline-flex' : 'none'
-                                                }}
-                                            >
-                                                Save ({selectedPlayers.length})
-                                            </Button>
-                                            <IconButton onClick={() => setIsFullView(!isFullView)} color="primary" sx={{ p: 0.3 }}>
-                                                {isFullView ? <FullscreenExitIcon sx={{ fontSize: 18 }} /> : <FullscreenIcon sx={{ fontSize: 18 }} />}
-                                            </IconButton>
-                                        </Box>
+                                        <TeamSelector
+                                            label="TEAM B"
+                                            value={teamB}
+                                            onChange={(val) => setTeamB(val)}
+                                            groups={groups}
+                                            placeholder="Select Team B"
+                                        />
                                     </Box>
                                 </Paper>
                             }
                         />
                     </Box>
+                )}
 
-                    <IconButton onClick={onClose} sx={{ color: 'white', alignSelf: 'flex-start', mt: 0.5 }}>
-                        <CloseIcon />
-                    </IconButton>
-                </Toolbar>
-            </AppBar>
-
-            {/* INNINGS & MOMENTUM SWITCHER TABS (Desktop & Mobile) */}
-            {results && teamA && teamB && (
+                {/* COLUMNS 2 & 3: MAIN RESULTS WORKSPACE (Expands to 100% when sidebar is closed) */}
                 <Box sx={{
-                    px: { xs: 1, sm: 2 },
-                    py: 1,
-                    bgcolor: '#FFFDF9',
-                    borderBottom: `1px solid ${visionPro.border}`,
+                    flex: 1,
+                    height: '100%',
+                    overflowY: 'auto',
                     display: 'flex',
-                    flexWrap: 'wrap',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: 1
+                    flexDirection: 'column',
+                    bgcolor: '#FAFAF8'
                 }}>
-                    <Tabs
-                        value={activeInningsTab}
-                        onChange={(e, val) => setActiveInningsTab(val)}
-                        variant="scrollable"
-                        scrollButtons="auto"
-                        sx={{
-                            minHeight: 34,
-                            '& .MuiTab-root': {
-                                minHeight: 34,
-                                py: 0.5,
-                                px: 1.5,
-                                fontSize: '0.78rem',
-                                fontWeight: 'bold',
-                                textTransform: 'none',
-                                borderRadius: '10px',
-                                mr: 1,
-                                bgcolor: 'rgba(0,0,0,0.03)',
-                                color: '#4B5563'
-                            },
-                            '& .Mui-selected': {
-                                bgcolor: '#FF6F00 !important',
-                                color: 'white !important'
-                            },
-                            '& .MuiTabs-indicator': { display: 'none' }
-                        }}
-                    >
-                        <Tab value="ALL" label="📊 Complete Match" />
-                        <Tab
-                            value="INN1"
-                            label={`1️⃣ 1st Innings: ${batFirstTeam === 'teamA' ? (groups.find(g => g._id === teamA)?.name || 'Team A') : (groups.find(g => g._id === teamB)?.name || 'Team B')} (Bat) vs ${batFirstTeam === 'teamA' ? (groups.find(g => g._id === teamB)?.name || 'Team B') : (groups.find(g => g._id === teamA)?.name || 'Team A')} (Bowl)`}
-                        />
-                        <Tab
-                            value="INN2"
-                            label={`2️⃣ 2nd Innings: ${batFirstTeam === 'teamA' ? (groups.find(g => g._id === teamB)?.name || 'Team B') : (groups.find(g => g._id === teamA)?.name || 'Team A')} (Bat) vs ${batFirstTeam === 'teamA' ? (groups.find(g => g._id === teamA)?.name || 'Team A') : (groups.find(g => g._id === teamB)?.name || 'Team B')} (Bowl)`}
-                        />
-                        <Tab value="WAVE" label="📈 Trading Waveform Chart" />
-                        <Tab value="H2H" label="⚔️ Head to Head" />
-                    </Tabs>
-
-                    {/* Quick Toss Control */}
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Button
-                            size="small"
-                            variant="outlined"
-                            onClick={handleTossToggle}
-                            startIcon={<SwapHorizIcon sx={{ color: '#FF6F00' }} />}
-                            sx={{
-                                fontSize: '0.72rem',
-                                borderRadius: '20px',
-                                borderColor: 'rgba(255, 111, 0, 0.4)',
-                                color: '#FF6F00',
-                                textTransform: 'none',
-                                fontWeight: 'bold',
-                                bgcolor: 'rgba(255, 111, 0, 0.05)',
-                                '&:hover': { bgcolor: 'rgba(255, 111, 0, 0.12)', borderColor: '#FF6F00' }
-                            }}
-                        >
-                            Toss: <strong>{batFirstTeam === 'teamA' ? (groups.find(g => g._id === teamA)?.name || 'Team A') : (groups.find(g => g._id === teamB)?.name || 'Team B')} Bat 1st</strong>
-                        </Button>
-                    </Box>
-                </Box>
-            )}
-
-            {/* DYNAMIC MOMENTUM WAVEFORM CHART (Dedicated Tab View) */}
-            {activeInningsTab === 'WAVE' && (
-                <Box sx={{ p: 2, flexGrow: 1, overflow: 'auto', maxHeight: 'calc(100vh - 160px)' }}>
-                    {timelineData && teamA && teamB ? (
-                        <MatchMomentumChart
-                            timelineData={timelineData}
-                            teamAName={groups.find(g => g._id === teamA)?.name || 'Team A'}
-                            teamBName={groups.find(g => g._id === teamB)?.name || 'Team B'}
-                            onTossToggle={handleTossToggle}
-                            batFirstTeam={batFirstTeam}
-                        />
-                    ) : (
-                        <Paper sx={{ p: 6, textAlign: 'center', borderRadius: '16px', bgcolor: 'rgba(0,0,0,0.02)' }}>
-                            <Typography variant="h6" color="text.secondary">
-                                Please select both teams above to view the Trading-Style Momentum Waveform Chart.
-                            </Typography>
-                        </Paper>
-                    )}
-                </Box>
-            )}
-
-            {/* HEAD TO HEAD (2 Batsmen vs 1 Bowler) TAB VIEW */}
-            {activeInningsTab === 'H2H' && (
-                <Box sx={{ p: { xs: 1, sm: 2 }, flexGrow: 1, overflow: 'auto', maxHeight: 'calc(100vh - 160px)' }}>
-                    {teamA && teamB ? (
-                        <HeadToHeadAnalysis
-                            teamAPlayers={(groups.find(g => g._id === teamA)?.players || [])}
-                            teamBPlayers={(groups.find(g => g._id === teamB)?.players || [])}
-                            teamAName={groups.find(g => g._id === teamA)?.name || 'Team A'}
-                            teamBName={groups.find(g => g._id === teamB)?.name || 'Team B'}
-                            matchChart={matchChart}
-                            timelineData={timelineData}
-                            batFirstTeam={batFirstTeam}
-                            matchStartTime={matchDetails?.time || '19:30'}
-                            token={token}
-                        />
-                    ) : (
-                        <Paper sx={{ p: 6, textAlign: 'center', borderRadius: '16px', bgcolor: 'rgba(0,0,0,0.02)' }}>
-                            <Typography variant="h6" color="text.secondary">
-                                Please select both teams above to use Head-to-Head Analysis.
-                            </Typography>
-                        </Paper>
-                    )}
-                </Box>
-            )}
-
-            {/* SIDE BY SIDE PLAYER TABLES - Full height on Complete Match & Innings Tabs */}
-            {activeInningsTab !== 'WAVE' && activeInningsTab !== 'H2H' && (
-                <Box sx={{
-                    flexGrow: 1,
-                    display: (teamA && teamB) ? 'flex' : 'none',
-                    gap: 1,
-                    p: 1,
-                    overflow: 'hidden',
-                    height: 'calc(100vh - 170px)'
-                }}>
-                    {teamA && teamB ? (
-                        <>
-                            {/* TEAM A - LEFT */}
-                            <Box sx={{ flex: 1, overflow: 'auto' }}>
-                                {renderPlayerList(teamA, groups.find(g => g._id === teamA)?.name || 'Team A', filterA, setFilterA)}
-                            </Box>
-                            {/* TEAM B - RIGHT */}
-                            <Box sx={{ flex: 1, overflow: 'auto' }}>
-                                {renderPlayerList(teamB, groups.find(g => g._id === teamB)?.name || 'Team B', filterB, setFilterB)}
-                            </Box>
-                        </>
-                    ) : (
+                    {/* INNINGS & MOMENTUM SWITCHER TABS */}
+                    {results && teamA && teamB && (
                         <Box sx={{
-                            flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            flexDirection: 'column', gap: 2, color: 'text.secondary'
+                            px: { xs: 1, sm: 2 },
+                            py: 0.8,
+                            bgcolor: '#FFFDF9',
+                            borderBottom: `1px solid rgba(0,0,0,0.08)`,
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            gap: 1
                         }}>
-                            <SportsCricketIcon sx={{ fontSize: 80, opacity: 0.3 }} />
-                            <Typography variant="h6" color="text.secondary">Select both teams to view players</Typography>
-                            <Typography variant="body2" color="text.secondary">இரண்டு அணிகளையும் தேர்வு செய்யவும்</Typography>
+                            <Tabs
+                                value={activeInningsTab}
+                                onChange={(e, val) => setActiveInningsTab(val)}
+                                variant="scrollable"
+                                scrollButtons="auto"
+                                sx={{
+                                    minHeight: 34,
+                                    '& .MuiTab-root': {
+                                        minHeight: 34,
+                                        py: 0.5,
+                                        px: 1.5,
+                                        fontSize: '0.78rem',
+                                        fontWeight: 'bold',
+                                        textTransform: 'none',
+                                        borderRadius: '10px',
+                                        mr: 1,
+                                        bgcolor: 'rgba(0,0,0,0.03)',
+                                        color: '#4B5563'
+                                    },
+                                    '& .Mui-selected': {
+                                        bgcolor: '#FF6F00 !important',
+                                        color: 'white !important'
+                                    },
+                                    '& .MuiTabs-indicator': { display: 'none' }
+                                }}
+                            >
+                                <Tab value="ALL" label="📊 Complete Match" />
+                                <Tab
+                                    value="INN1"
+                                    label={`1️⃣ 1st Innings: ${batFirstTeam === 'teamA' ? (groups.find(g => g._id === teamA)?.name || 'Team A') : (groups.find(g => g._id === teamB)?.name || 'Team B')} (Bat)`}
+                                />
+                                <Tab
+                                    value="INN2"
+                                    label={`2️⃣ 2nd Innings: ${batFirstTeam === 'teamA' ? (groups.find(g => g._id === teamB)?.name || 'Team B') : (groups.find(g => g._id === teamA)?.name || 'Team A')} (Bat)`}
+                                />
+                                <Tab value="WAVE" label="📈 Trading Waveform Chart" />
+                                <Tab value="H2H" label="⚔️ Head to Head" />
+                            </Tabs>
+
+                            {/* Quick Toss Control */}
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Button
+                                    size="small"
+                                    variant="outlined"
+                                    onClick={handleTossToggle}
+                                    startIcon={<SwapHorizIcon sx={{ color: '#FF6F00' }} />}
+                                    sx={{
+                                        fontSize: '0.72rem',
+                                        borderRadius: '20px',
+                                        borderColor: 'rgba(255, 111, 0, 0.4)',
+                                        color: '#FF6F00',
+                                        textTransform: 'none',
+                                        fontWeight: 'bold',
+                                        bgcolor: 'rgba(255, 111, 0, 0.05)',
+                                        '&:hover': { bgcolor: 'rgba(255, 111, 0, 0.12)', borderColor: '#FF6F00' }
+                                    }}
+                                >
+                                    Toss: <strong>{batFirstTeam === 'teamA' ? (groups.find(g => g._id === teamA)?.name || 'Team A') : (groups.find(g => g._id === teamB)?.name || 'Team B')} Bat 1st</strong>
+                                </Button>
+                            </Box>
+                        </Box>
+                    )}
+
+                    {/* DYNAMIC MOMENTUM WAVEFORM CHART (Dedicated Tab View) */}
+                    {activeInningsTab === 'WAVE' && (
+                        <Box sx={{ p: 2, flexGrow: 1, overflow: 'auto' }}>
+                            {timelineData && teamA && teamB ? (
+                                <MatchMomentumChart
+                                    timelineData={timelineData}
+                                    teamAName={groups.find(g => g._id === teamA)?.name || 'Team A'}
+                                    teamBName={groups.find(g => g._id === teamB)?.name || 'Team B'}
+                                    onTossToggle={handleTossToggle}
+                                    batFirstTeam={batFirstTeam}
+                                />
+                            ) : (
+                                <Paper sx={{ p: 6, textAlign: 'center', borderRadius: '16px', bgcolor: 'rgba(0,0,0,0.02)' }}>
+                                    <Typography variant="h6" color="text.secondary">
+                                        Please select both teams in the left panel to view the Trading-Style Momentum Waveform Chart.
+                                    </Typography>
+                                </Paper>
+                            )}
+                        </Box>
+                    )}
+
+                    {/* HEAD TO HEAD TAB VIEW */}
+                    {activeInningsTab === 'H2H' && (
+                        <Box sx={{ p: { xs: 1, sm: 2 }, flexGrow: 1, overflow: 'auto' }}>
+                            {teamA && teamB ? (
+                                <HeadToHeadAnalysis
+                                    teamAPlayers={(groups.find(g => g._id === teamA)?.players || [])}
+                                    teamBPlayers={(groups.find(g => g._id === teamB)?.players || [])}
+                                    teamAName={groups.find(g => g._id === teamA)?.name || 'Team A'}
+                                    teamBName={groups.find(g => g._id === teamB)?.name || 'Team B'}
+                                    matchChart={matchChart}
+                                    timelineData={timelineData}
+                                    batFirstTeam={batFirstTeam}
+                                    matchStartTime={matchDetails?.time || '19:30'}
+                                    token={token}
+                                />
+                            ) : (
+                                <Paper sx={{ p: 6, textAlign: 'center', borderRadius: '16px', bgcolor: 'rgba(0,0,0,0.02)' }}>
+                                    <Typography variant="h6" color="text.secondary">
+                                        Please select both teams in the left panel to use Head-to-Head Analysis.
+                                    </Typography>
+                                </Paper>
+                            )}
+                        </Box>
+                    )}
+
+                    {/* SIDE BY SIDE PLAYER TABLES: COLUMN 2 (TEAM A) & COLUMN 3 (TEAM B) */}
+                    {activeInningsTab !== 'WAVE' && activeInningsTab !== 'H2H' && (
+                        <Box sx={{
+                            flexGrow: 1,
+                            display: 'flex',
+                            gap: 1.5,
+                            p: 1.5,
+                            overflow: 'hidden',
+                            height: (results && teamA && teamB) ? 'calc(100% - 50px)' : '100%'
+                        }}>
+                            {teamA && teamB ? (
+                                <>
+                                    {/* COLUMN 2: TEAM A */}
+                                    <Box sx={{ flex: 1, height: '100%', overflowY: 'auto' }}>
+                                        {renderPlayerList(teamA, groups.find(g => g._id === teamA)?.name || 'Team A', filterA, setFilterA)}
+                                    </Box>
+                                    {/* COLUMN 3: TEAM B */}
+                                    <Box sx={{ flex: 1, height: '100%', overflowY: 'auto' }}>
+                                        {renderPlayerList(teamB, groups.find(g => g._id === teamB)?.name || 'Team B', filterB, setFilterB)}
+                                    </Box>
+                                </>
+                            ) : (
+                                <Box sx={{
+                                    flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    flexDirection: 'column', gap: 2, color: 'text.secondary', p: 4
+                                }}>
+                                    <SportsCricketIcon sx={{ fontSize: 72, color: '#FF6F00', opacity: 0.35 }} />
+                                    <Typography variant="h6" fontWeight="bold" sx={{ color: '#374151' }}>
+                                        Select Both Teams to Begin Analysis
+                                    </Typography>
+                                    <Typography variant="body2" sx={{ color: '#6B7280', maxWidth: 420, textAlign: 'center' }}>
+                                        இடதுபுற பேனலில் (Left Panel) Team A மற்றும் Team B அணிகளைத் தேர்வு செய்து "Predict Match" பட்டனை அழுத்தவும்.
+                                    </Typography>
+                                </Box>
+                            )}
                         </Box>
                     )}
                 </Box>
-            )}
+            </Box>
 
             {/* MATCH CHART POPUP */}
             {matchChart && (
