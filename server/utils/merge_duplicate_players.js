@@ -55,6 +55,14 @@ const isDobMatching = (dob1, dob2) => {
     return iso1 === iso2;
 };
 
+const cleanPlayerName = (name) => {
+    return (name || '')
+        .replace(/\s*\([^)]*\)\s*/g, ' ') // Strip role suffixes like (WK), (C), (VC), (C & WK)
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, ' ');
+};
+
 // Check if two birth places match or are compatible
 const isPlaceMatching = (p1, p2) => {
     const s1 = (p1 || '').trim().toLowerCase();
@@ -73,12 +81,16 @@ const scorePlayerRecord = (p) => {
     if (p.isTobLocked) score += 50;
     // Non-default customized birthTime
     if (p.birthTime && p.birthTime !== '09:00' && p.birthTime !== '12:00') score += 40;
+    // Clean name without (WK), (C) role tags
+    if (!/\(/.test(p.name || '')) score += 15;
     // Has full birthChart calculated
     if (p.birthChart && Object.keys(p.birthChart).length > 0) score += 30;
     // Has DOB
     if (p.dob && p.dob.trim()) score += 20;
-    // Has BirthPlace
-    if (p.birthPlace && p.birthPlace.trim() && p.birthPlace !== 'N/A') score += 15;
+    // Has detailed BirthPlace
+    if (p.birthPlace && p.birthPlace.trim() && p.birthPlace !== 'N/A') {
+        score += 15 + Math.min(10, p.birthPlace.length / 5);
+    }
     // Has Cricbuzz ID or numeric ID
     if (p.cricbuzzId || /^\d+$/.test(p.id)) score += 10;
     // Has Profile image
@@ -99,10 +111,10 @@ async function mergeDuplicatePlayers() {
         const allPlayers = await Player.find({});
         console.log(`Fetched ${allPlayers.length} players. Analyzing duplicate clusters...`);
 
-        // Group by normalized name
+        // Group by cleaned name (role tags removed, normalized whitespace & lowercase)
         const nameGroups = new Map();
         for (const p of allPlayers) {
-            const cleanName = (p.name || '').trim().toLowerCase();
+            const cleanName = cleanPlayerName(p.name);
             if (!cleanName) continue;
             if (!nameGroups.has(cleanName)) {
                 nameGroups.set(cleanName, []);
@@ -117,8 +129,7 @@ async function mergeDuplicatePlayers() {
         for (const [name, players] of nameGroups.entries()) {
             if (players.length <= 1) continue;
 
-            // Partition players with the same name based on DOB and Birth Place
-            // (Note: birthTime is NOT checked because it is manually edited)
+            // Partition players with the same clean name based on DOB (primary) or Place (fallback)
             const subClusters = [];
 
             for (const player of players) {
@@ -138,18 +149,14 @@ async function mergeDuplicatePlayers() {
                     const bothHaveDob = Boolean(repIsoDob && playerIsoDob);
                     const bothHavePlace = Boolean(repPlace && repPlace !== 'n/a' && playerPlace && playerPlace !== 'n/a');
 
-                    // True duplicate condition:
-                    // If both have DOB, they must match.
-                    // If both have Place, they must match.
+                    // Duplicate condition requested by user:
+                    // If both have DOB, rely on DOB match (ignoring city/district text variations like Trivandrum vs Thiruvananthapuram)
                     let isSamePerson = false;
-                    if (bothHaveDob && bothHavePlace) {
-                        isSamePerson = dobMatch && placeMatch;
-                    } else if (bothHaveDob) {
+                    if (bothHaveDob) {
                         isSamePerson = dobMatch;
                     } else if (bothHavePlace) {
                         isSamePerson = placeMatch;
                     } else {
-                        // Neither has differentiating data, and name is identical
                         isSamePerson = true;
                     }
 
@@ -175,6 +182,11 @@ async function mergeDuplicatePlayers() {
                 const primary = cluster[0];
                 const duplicates = cluster.slice(1);
 
+                // Clean role suffix from primary name if present
+                if (/\(/.test(primary.name)) {
+                    primary.name = primary.name.replace(/\s*\([^)]*\)\s*/g, ' ').replace(/\s+/g, ' ').trim();
+                }
+
                 const duplicateDocIds = [];
                 const duplicatePlayerIds = [];
 
@@ -190,9 +202,23 @@ async function mergeDuplicatePlayers() {
                     }
                     if (!primary.profile && dup.profile) primary.profile = dup.profile;
                     if (!primary.dob && dup.dob) primary.dob = dup.dob;
-                    if ((!primary.birthPlace || primary.birthPlace === 'N/A') && dup.birthPlace && dup.birthPlace !== 'N/A') {
-                        primary.birthPlace = dup.birthPlace;
+                    
+                    // Prefer richer birthPlace
+                    if (!primary.birthPlace || primary.birthPlace === 'N/A' || primary.birthPlace.length < (dup.birthPlace || '').length) {
+                        if (dup.birthPlace && dup.birthPlace !== 'N/A') {
+                            primary.birthPlace = dup.birthPlace;
+                        }
                     }
+
+                    // Preserve manual override / custom birth time if primary had defaults
+                    if (dup.manualOverride && !primary.manualOverride) {
+                        primary.manualOverride = true;
+                    }
+                    if (dup.birthTime && dup.birthTime !== '09:00' && dup.birthTime !== '12:00' && (primary.birthTime === '09:00' || primary.birthTime === '12:00' || !primary.birthTime)) {
+                        primary.birthTime = dup.birthTime;
+                        if (dup.birthChart) primary.birthChart = dup.birthChart;
+                    }
+
                     if (!primary.birthChart && dup.birthChart) primary.birthChart = dup.birthChart;
                     if (!primary.jerseyNumber && dup.jerseyNumber) primary.jerseyNumber = dup.jerseyNumber;
                 }
