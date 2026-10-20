@@ -1342,26 +1342,27 @@ const TeamSelector = ({ label, value, onChange, groups = [], placeholder = "Sele
             <Box
                 onClick={handleClick}
                 sx={{
-                    p: 1.5,
-                    borderRadius: '12px',
+                    p: { xs: 0.8, sm: 1 },
+                    borderRadius: '10px',
                     bgcolor: 'rgba(255, 193, 7, 0.08)',
-                    border: '2px solid',
+                    border: '1.5px solid',
                     borderColor: open ? '#FF6F00' : '#FFC107',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     transition: 'all 0.2s',
+                    minHeight: 44,
                     '&:hover': { bgcolor: 'rgba(255, 193, 7, 0.12)', borderColor: '#FF6F00' }
                 }}
             >
-                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <Typography variant="caption" sx={{ color: '#FF6F00', fontWeight: 'bold', mb: -0.5 }}>{label}</Typography>
-                    <Typography variant="body1" sx={{ fontWeight: '900', color: selectedTeam ? '#111' : '#666', fontSize: '1rem' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', mr: 0.5 }}>
+                    <Typography variant="caption" sx={{ color: '#FF6F00', fontWeight: 'bold', fontSize: '0.68rem', mb: -0.2 }}>{label}</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: '900', color: selectedTeam ? '#111' : '#666', fontSize: '0.85rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {selectedTeam ? selectedTeam.name : placeholder}
                     </Typography>
                 </Box>
-                <KeyboardArrowDownIcon sx={{ color: '#FF6F00', transform: open ? 'rotate(180deg)' : 'none', transition: '0.2s' }} />
+                <KeyboardArrowDownIcon sx={{ color: '#FF6F00', fontSize: 18, transform: open ? 'rotate(180deg)' : 'none', transition: '0.2s', flexShrink: 0 }} />
             </Box>
 
             <Popover
@@ -2255,10 +2256,10 @@ const MatchWizardDialog = (props) => {
                         borderRight: '1px solid rgba(0,0,0,0.08)',
                         height: '100%',
                         overflowY: 'auto',
-                        p: 1.5,
+                        p: 1.2,
                         display: 'flex',
                         flexDirection: 'column',
-                        gap: 1.5,
+                        gap: 1,
                         boxShadow: '2px 0 10px rgba(0,0,0,0.03)',
                         zIndex: 5
                     }}>
@@ -2270,13 +2271,13 @@ const MatchWizardDialog = (props) => {
                             token={token}
                             rightSlot={
                                 <Paper elevation={0} sx={{
-                                    p: 1.5,
+                                    p: 1.2,
                                     bgcolor: '#FFFBF5',
-                                    borderRadius: '14px',
+                                    borderRadius: '12px',
                                     border: '1px solid rgba(255, 111, 0, 0.2)',
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    gap: 1
+                                    gap: 0.8
                                 }}>
                                     {/* Team Selection Header */}
                                     <Box sx={{
@@ -2284,48 +2285,50 @@ const MatchWizardDialog = (props) => {
                                         alignItems: 'center',
                                         justifyContent: 'space-between',
                                         bgcolor: 'rgba(255, 111, 0, 0.08)',
-                                        p: 0.8,
-                                        px: 1.2,
+                                        p: 0.6,
+                                        px: 1,
                                         borderRadius: '8px',
                                         border: '1px solid rgba(255, 111, 0, 0.15)'
                                     }}>
-                                        <Typography variant="subtitle2" fontWeight="900" sx={{ color: '#FF6F00', display: 'flex', alignItems: 'center', gap: 0.8, fontSize: '0.82rem' }}>
+                                        <Typography variant="subtitle2" fontWeight="900" sx={{ color: '#FF6F00', display: 'flex', alignItems: 'center', gap: 0.8, fontSize: '0.8rem' }}>
                                             🏏 Team Selection
                                         </Typography>
-                                        <Typography variant="caption" sx={{ color: '#E65100', fontWeight: 'bold', bgcolor: 'white', px: 1, py: 0.2, borderRadius: '6px', border: '1px solid #FFCC80', fontSize: '0.72rem' }}>
+                                        <Typography variant="caption" sx={{ color: '#E65100', fontWeight: 'bold', bgcolor: 'white', px: 0.8, py: 0.2, borderRadius: '4px', border: '1px solid #FFCC80', fontSize: '0.7rem' }}>
                                             {teamA && teamB ? 'Ready' : 'Choose 2'}
                                         </Typography>
                                     </Box>
 
-                                    {/* Team Selectors */}
-                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                                        <TeamSelector
-                                            label="TEAM A"
-                                            value={teamA}
-                                            onChange={(val) => setTeamA(val)}
-                                            groups={groups}
-                                            placeholder="Select Team A"
-                                        />
-
-                                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                            <Box sx={{
-                                                width: 26, height: 26, borderRadius: '50%',
-                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                                background: visionPro.gradientPrimary, color: 'white',
-                                                boxShadow: '0 2px 6px rgba(255, 111, 0, 0.3)',
-                                                flexShrink: 0
-                                            }}>
-                                                <Typography variant="caption" fontWeight="900" sx={{ fontSize: '0.68rem' }}>VS</Typography>
-                                            </Box>
+                                    {/* Team Selectors - Compact Side-by-Side Duel Row */}
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
+                                        <Box sx={{ flex: 1, minWidth: 0 }}>
+                                            <TeamSelector
+                                                label="TEAM A"
+                                                value={teamA}
+                                                onChange={(val) => setTeamA(val)}
+                                                groups={groups}
+                                                placeholder="Team A"
+                                            />
                                         </Box>
 
-                                        <TeamSelector
-                                            label="TEAM B"
-                                            value={teamB}
-                                            onChange={(val) => setTeamB(val)}
-                                            groups={groups}
-                                            placeholder="Select Team B"
-                                        />
+                                        <Box sx={{
+                                            width: 24, height: 24, borderRadius: '50%',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            background: visionPro.gradientPrimary, color: 'white',
+                                            boxShadow: '0 2px 6px rgba(255, 111, 0, 0.3)',
+                                            flexShrink: 0
+                                        }}>
+                                            <Typography variant="caption" fontWeight="900" sx={{ fontSize: '0.62rem' }}>VS</Typography>
+                                        </Box>
+
+                                        <Box sx={{ flex: 1, minWidth: 0 }}>
+                                            <TeamSelector
+                                                label="TEAM B"
+                                                value={teamB}
+                                                onChange={(val) => setTeamB(val)}
+                                                groups={groups}
+                                                placeholder="Team B"
+                                            />
+                                        </Box>
                                     </Box>
                                 </Paper>
                             }

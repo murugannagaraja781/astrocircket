@@ -402,16 +402,17 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                 InputProps={{
                                     ...params.InputProps,
                                     sx: {
-                                        borderRadius: '10px',
+                                        borderRadius: '12px',
                                         bgcolor: '#fff',
-                                        minHeight: 44,
-                                        fontSize: '0.85rem',
-                                        border: '1px solid #FFCC80',
-                                        '& input': { py: 0.8 }
+                                        minHeight: 60,
+                                        height: 60,
+                                        fontSize: '0.92rem',
+                                        border: '1.5px solid #FFCC80',
+                                        '& input': { py: 1.2, fontSize: '0.92rem', fontWeight: '500' }
                                     },
                                     endAdornment: (
                                         <React.Fragment>
-                                            {locationLoading ? <CircularProgress color="inherit" size={16} /> : null}
+                                            {locationLoading ? <CircularProgress color="inherit" size={18} /> : null}
                                             {params.InputProps.endAdornment}
                                         </React.Fragment>
                                     ),
@@ -634,30 +635,31 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                             </IconButton>
                         </Box>
                         <Collapse in={chartExpanded}>
-                            <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '10px', border: '1px solid rgba(255, 111, 0, 0.2)' }}>
-                                <Table size="small">
-                                    <TableBody>
-                                        <TableRow sx={{ bgcolor: 'rgba(255, 193, 7, 0.08)' }}>
-                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.6, fontSize: '0.72rem', width: '40%' }}>லக்னம்</TableCell>
-                                            <TableCell sx={{ color: '#212121', py: 0.6, fontSize: '0.75rem', fontWeight: 'bold' }}>
-                                                {matchChartResult.ascendant?.tamil || matchChartResult.ascendant?.english || '-'}
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell sx={{ fontWeight: 'bold', color: '#1976D2', py: 0.6, fontSize: '0.72rem' }}>ராசி</TableCell>
-                                            <TableCell sx={{ color: '#212121', py: 0.6, fontSize: '0.75rem', fontWeight: 'bold' }}>
-                                                {matchChartResult.moonSign?.tamil || matchChartResult.moonSign?.english || '-'}
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow sx={{ bgcolor: 'rgba(255, 193, 7, 0.04)' }}>
-                                            <TableCell sx={{ fontWeight: 'bold', color: '#7B1FA2', py: 0.6, fontSize: '0.72rem' }}>நட்சத்திரம்</TableCell>
-                                            <TableCell sx={{ color: '#212121', py: 0.6, fontSize: '0.75rem', fontWeight: 'bold' }}>
-                                                {matchChartResult.moonNakshatra?.tamil || matchChartResult.nakshatra?.tamil || '-'}
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
+                            <Box sx={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(3, 1fr)',
+                                gap: 0.6,
+                                mt: 0.5
+                            }}>
+                                <Paper elevation={0} sx={{ p: 0.8, textAlign: 'center', bgcolor: 'rgba(255, 193, 7, 0.12)', border: '1px solid #FFE082', borderRadius: '8px' }}>
+                                    <Typography variant="caption" sx={{ color: '#E65100', fontWeight: 'bold', display: 'block', fontSize: '0.65rem' }}>🟡 லக்னம்</Typography>
+                                    <Typography variant="body2" sx={{ fontWeight: '900', color: '#212121', fontSize: '0.75rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                        {matchChartResult.ascendant?.tamil || matchChartResult.ascendant?.english || '-'}
+                                    </Typography>
+                                </Paper>
+                                <Paper elevation={0} sx={{ p: 0.8, textAlign: 'center', bgcolor: 'rgba(25, 118, 210, 0.08)', border: '1px solid #90CAF9', borderRadius: '8px' }}>
+                                    <Typography variant="caption" sx={{ color: '#1565C0', fontWeight: 'bold', display: 'block', fontSize: '0.65rem' }}>🔵 ராசி</Typography>
+                                    <Typography variant="body2" sx={{ fontWeight: '900', color: '#212121', fontSize: '0.75rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                        {matchChartResult.moonSign?.tamil || matchChartResult.moonSign?.english || '-'}
+                                    </Typography>
+                                </Paper>
+                                <Paper elevation={0} sx={{ p: 0.8, textAlign: 'center', bgcolor: 'rgba(123, 31, 162, 0.08)', border: '1px solid #CE93D8', borderRadius: '8px' }}>
+                                    <Typography variant="caption" sx={{ color: '#7B1FA2', fontWeight: 'bold', display: 'block', fontSize: '0.65rem' }}>🟣 நட்சத்திரம்</Typography>
+                                    <Typography variant="body2" sx={{ fontWeight: '900', color: '#212121', fontSize: '0.75rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                        {matchChartResult.moonNakshatra?.tamil || matchChartResult.nakshatra?.tamil || '-'}
+                                    </Typography>
+                                </Paper>
+                            </Box>
                         </Collapse>
                     </Box>
                 )}
