@@ -553,7 +553,7 @@ const NAKSHATRA_RULES = {
 
         // Special Rule: Thiruvonam Match + Sathayam Player
         if (['Shatabhisha', 'Sathayam', 'சதயம்'].includes(ctx.playerStar)) {
-            ctx.addRule('Special Rule: Thiruvonam Match - Sathayam Player', 20, 'bat', true, 'சிறப்பு விதி: திருவோணம் மேட்ச் - சதயம் பேட்டிங் சிறப்பு வீரர்');
+            ctx.addRule('Special Rule: Thiruvonam Match - Sathayam Player', 20, 'both', true, 'சிறப்பு விதி: திருவோணம் மேட்ச் - சதயம் சிறப்பு வீரர்');
         }
     },
     'Thiruvonam': (ctx) => NAKSHATRA_RULES['Shravana'](ctx),

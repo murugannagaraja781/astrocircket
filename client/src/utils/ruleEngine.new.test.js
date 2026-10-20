@@ -209,6 +209,29 @@ describe('Updated Rule Engine Rules', () => {
             // Score should be high (greater than 20)
             expect(batResult.score).toBeGreaterThanOrEqual(20);
         });
+
+        it('Bowler with Sathayam nakshatra is also a Special Player (+20 in bowling)', () => {
+            const sathayamBowler = {
+                rashi: 'Aquarius',
+                rashiLord: 'Saturn',
+                nakshatra: 'Sathayam',
+                nakshatraLord: 'Rahu',
+                planetPositions: {
+                    'Moon': 'Aquarius',
+                    'Saturn': 'Aquarius'
+                }
+            };
+
+            const bowlResult = evaluateBowler(sathayamBowler, thiruvonamMatch, transitSaturnInOwnHouse);
+
+            // Should be Special Player for bowling
+            expect(bowlResult.isSpecial).toBe(true);
+            // Special Rule must be in bowling logs
+            const hasSpecialRule = bowlResult.logs.some(l => l.en.includes('Thiruvonam Match - Sathayam Player'));
+            expect(hasSpecialRule).toBe(true);
+            // Score should be high (greater than 20)
+            expect(bowlResult.score).toBeGreaterThanOrEqual(20);
+        });
     });
 
 });
