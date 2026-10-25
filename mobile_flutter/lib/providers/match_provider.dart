@@ -223,7 +223,7 @@ class MatchProvider with ChangeNotifier {
                   KeyPlayer(name: 'Lead Bowler 1', role: 'Bowler', rating: 9.2, astroScore: 87),
                   KeyPlayer(name: 'Lead Bowler 2', role: 'Bowler', rating: 8.5, astroScore: 79),
                 ],
-          insightsSummary: _selectedMatch!.insight.insightsSummary ?? 'Planetary alignments strongly favor top-order batting and swing pacers in early overs.',
+          insightsSummary: _selectedMatch!.insight.insightsSummary ?? 'Planetary sub-lord alignments indicate positive momentum for top-order batting and swing pacers in early overs.',
           timelineUpdates: _selectedMatch!.insight.timelineUpdates,
         ),
         isUnlocked: true,

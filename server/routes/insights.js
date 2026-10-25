@@ -249,7 +249,7 @@ router.get('/matches', async (req, res) => {
                     return timeB - timeA;
                 });
             } else if (hasInsight) {
-                safeInsight.previewText = 'Full Astrological Edge & Key Players available. Unlock to view.';
+                safeInsight.previewText = 'Full Planetary Influences & Key Impact Players available. Unlock to view.';
                 safeInsight.keyBatsmenCount = (matchObj.insightData.keyBatsmen || []).length;
                 safeInsight.keyBowlersCount = (matchObj.insightData.keyBowlers || []).length;
             }

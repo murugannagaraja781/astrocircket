@@ -123,7 +123,7 @@ class ApiService {
           'amount': amountPaisa,
           'userId': userId ?? 'app_user',
           'matchId': matchId,
-          'planType': 'match_prediction',
+          'planType': 'match_insights',
         }),
       ).timeout(const Duration(seconds: 15));
 

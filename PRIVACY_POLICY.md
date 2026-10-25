@@ -65,11 +65,18 @@ We employ industry-standard administrative, technical, and physical security mea
 
 ---
 
-## 7. Data Retention & Account Deletion
-- We retain personal data only as long as necessary to fulfill the purposes outlined in this policy or as required by law.
-- **Account & Data Deletion:** You have the absolute right to delete your account and associated data. You can request immediate deletion at any time by:
-  - Visiting the **Profile / Account** section in the App, or
-  - Emailing us at **`support@sbastro.com`** with the subject "Delete My Account". Your account and associated data will be permanently removed within 7 business days.
+## 7. Account & Data Deletion Policy
+Users have the right to request the permanent deletion of their account and all associated personal data at any time.
+
+### How to Request Account Deletion:
+1. **Via Email:** Send an email from your registered email address to **`support@sbastro.com`** with the subject line: **"Account Deletion Request"**.
+2. **Details to Include:** Please mention your registered email address and username in the body of the email.
+
+### Deletion Timeline & Procedure:
+- **Processing Time:** Upon receiving and verifying your request, your account and all associated personal data will be permanently deleted from our systems within **15 to 30 days**.
+- **Data That Gets Deleted:** All personally identifiable information, including your email address, username, authentication credentials, push notification tokens, and saved preferences.
+- **Confirmation:** You will receive a confirmation email once your account and data have been permanently removed.
+- **Legal Compliance:** Certain non-personal financial transaction logs or records required by applicable tax and accounting laws may be retained solely for legal compliance.
 
 ---
 

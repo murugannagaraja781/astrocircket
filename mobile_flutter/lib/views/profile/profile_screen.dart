@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../auth/login_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -141,21 +142,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           const SizedBox(height: 8),
           Container(
-            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: colors.surface,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: colors.border),
               boxShadow: colors.cardShadow,
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
               children: [
-                Text('App Version', style: TextStyle(color: colors.textSecondary)),
-                Text(
-                  '1.0.0 (Play Store Ready)',
-                  style: TextStyle(color: colors.textPrimary, fontWeight: FontWeight.bold),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('App Version', style: TextStyle(color: colors.textSecondary)),
+                      Text(
+                        '1.0.0',
+                        style: TextStyle(color: colors.textPrimary, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
                 ),
+                Divider(color: colors.border, height: 1),
+                ListTile(
+                  leading: Icon(Icons.privacy_tip_outlined, color: colors.primary, size: 20),
+                  title: Text(
+                    'Privacy Policy',
+                    style: TextStyle(color: colors.textPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+                  ),
+                  trailing: Icon(Icons.arrow_forward_ios_rounded, size: 14, color: colors.textMuted),
+                  onTap: () async {
+                    final uri = Uri.parse('https://sbastro.com/privacy-policy');
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    }
+                  },
+                ),
+                if (user != null) ...[
+                  Divider(color: colors.border, height: 1),
+                  ListTile(
+                    leading: Icon(Icons.delete_forever_outlined, color: colors.accentRed, size: 20),
+                    title: Text(
+                      'Delete Account & Data',
+                      style: TextStyle(color: colors.accentRed, fontSize: 14, fontWeight: FontWeight.w600),
+                    ),
+                    trailing: Icon(Icons.arrow_forward_ios_rounded, size: 14, color: colors.textMuted),
+                    onTap: () => _showDeleteAccountDialog(context, colors),
+                  ),
+                ],
               ],
             ),
           ),
@@ -272,6 +306,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showDeleteAccountDialog(BuildContext context, AppColorPalette colors) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: colors.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Icon(Icons.warning_amber_rounded, color: colors.accentRed, size: 24),
+            const SizedBox(width: 8),
+            Text(
+              'Delete Account & Data',
+              style: TextStyle(color: colors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        content: Text(
+          'In accordance with our Data Retention Policy, requesting account deletion will permanently remove your login credentials, email address, push notification tokens, and all personal preferences within 15 to 30 days.\n\nTo proceed, tap "Email Support" to send an Account Deletion Request from your registered email address.',
+          style: TextStyle(color: colors.textSecondary, fontSize: 13, height: 1.45),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text('Cancel', style: TextStyle(color: colors.textMuted)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: colors.accentRed,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            onPressed: () async {
+              Navigator.pop(ctx);
+              final emailUri = Uri.parse(
+                'mailto:support@sbastro.com?subject=Account%20Deletion%20Request&body=Please%20permanently%20delete%20my%20account%20and%20all%20associated%20personal%20data.',
+              );
+              if (await canLaunchUrl(emailUri)) {
+                await launchUrl(emailUri);
+              }
+            },
+            child: const Text('Email Support', style: TextStyle(fontWeight: FontWeight.bold)),
+          ),
+        ],
       ),
     );
   }

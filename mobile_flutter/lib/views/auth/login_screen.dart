@@ -59,7 +59,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 // App Logo / Icon Header
                 Center(
                   child: Container(
-                    padding: const EdgeInsets.all(20),
+                    width: 90,
+                    height: 90,
+                    padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       color: colors.surface,
                       shape: BoxShape.circle,

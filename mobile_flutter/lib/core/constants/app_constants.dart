@@ -19,6 +19,8 @@ class AppConstants {
   // Safe Terminology for Google Play Compliance
   static const String termMatchAnalysis = 'Match Analysis';
   static const String termAstroInsights = 'Astrological Insights';
-  static const String termAdvantage = 'Astrological Edge';
+  static const String termAdvantage = 'Planetary Influences';
   static const String termKeyPlayers = 'Key Impact Players';
+  static const String disclaimerText =
+      'Astrological interpretations are for entertainment and informational purposes only and are not a guarantee of match outcomes. No real-money gambling or betting is provided.';
 }

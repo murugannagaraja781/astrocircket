@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/constants/app_constants.dart';
 import '../../models/match_model.dart';
 import '../../providers/match_provider.dart';
 import '../../providers/payment_provider.dart';
@@ -80,6 +81,8 @@ class MatchInsightsScreen extends StatelessWidget {
                   _buildUnlockedAnalysis(context, currentMatch, colors, isDark)
                 else
                   _buildLockedPaywall(context, currentMatch, colors, isDark),
+                const SizedBox(height: 24),
+                _buildDisclaimerCard(colors),
               ],
             ),
           ),
@@ -331,7 +334,7 @@ class MatchInsightsScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Unlock detailed winning edge & key player ratings',
+                          'Unlock detailed planetary influences & key player ratings',
                           style: TextStyle(color: Color(0xFFC7D2FE), fontSize: 12),
                         ),
                       ],
@@ -342,7 +345,7 @@ class MatchInsightsScreen extends StatelessWidget {
               const SizedBox(height: 16),
               const Divider(color: Color(0xFF4338CA)),
               const SizedBox(height: 12),
-              _buildIncludedItem('⭐ Complete Astrological Winning Edge Analysis', colors),
+              _buildIncludedItem('⭐ Complete Astrological Planetary Influences & Transit Breakdown', colors),
               _buildIncludedItem('🏏 Top KP Impact Batsmen & Expected Score Index', colors),
               _buildIncludedItem('🎯 Top Wicket-Taking Bowlers Analysis', colors),
               _buildIncludedItem('🪐 Planetary Dasha & Pitch Lagna Breakdown', colors),
@@ -516,20 +519,27 @@ class MatchInsightsScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Row(
-                    children: [
-                      Icon(Icons.verified, color: Colors.white, size: 20),
-                      SizedBox(width: 6),
-                      Text(
-                        'Astrological Edge',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
+                  Expanded(
+                    child: Row(
+                      children: [
+                        const Icon(Icons.verified, color: Colors.white, size: 20),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            AppConstants.termAdvantage,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                  const SizedBox(width: 8),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
@@ -537,7 +547,7 @@ class MatchInsightsScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: const Text(
-                      'KP Verified',
+                      'KP Analysis',
                       style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -545,16 +555,18 @@ class MatchInsightsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                advantage,
+                advantage.contains('Transit') || advantage.contains('Momentum')
+                    ? advantage
+                    : '$advantage (Transit Focus)',
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 22,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 6),
               const Text(
-                'Planetary positions and lagna sub-lords favor strong execution during critical overs.',
+                'Planetary sub-lord transits and astrological alignments mapped across match intervals.',
                 style: TextStyle(color: Colors.white70, fontSize: 12),
               ),
             ],
@@ -662,20 +674,27 @@ class MatchInsightsScreen extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                Icon(Icons.access_time_filled_rounded, color: colors.primary, size: 20),
-                const SizedBox(width: 8),
-                Text(
-                  'Match Tips & Live Updates',
-                  style: TextStyle(
-                    color: colors.textPrimary,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+            Expanded(
+              child: Row(
+                children: [
+                  Icon(Icons.access_time_filled_rounded, color: colors.primary, size: 20),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Astro Trends & Updates',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: colors.textPrimary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
+            const SizedBox(width: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
               decoration: BoxDecoration(
@@ -888,6 +907,34 @@ class MatchInsightsScreen extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDisclaimerCard(AppColorPalette colors) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: colors.surfaceLight.withValues(alpha: colors.isDark ? 0.35 : 0.6),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: colors.border.withValues(alpha: 0.6)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.info_outline_rounded, size: 18, color: colors.textSecondary),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              AppConstants.disclaimerText,
+              style: TextStyle(
+                fontSize: 11.5,
+                color: colors.textSecondary,
+                height: 1.4,
+              ),
             ),
           ),
         ],
