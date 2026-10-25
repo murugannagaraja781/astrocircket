@@ -242,6 +242,12 @@ router.get('/matches', async (req, res) => {
                 safeInsight.keyBatsmen = matchObj.insightData.keyBatsmen || [];
                 safeInsight.keyBowlers = matchObj.insightData.keyBowlers || [];
                 safeInsight.insightsSummary = matchObj.insightData.insightsSummary || '';
+                const rawUpdates = matchObj.insightData.timelineUpdates || [];
+                safeInsight.timelineUpdates = rawUpdates.slice().sort((a, b) => {
+                    const timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+                    const timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+                    return timeB - timeA;
+                });
             } else if (hasInsight) {
                 safeInsight.previewText = 'Full Astrological Edge & Key Players available. Unlock to view.';
                 safeInsight.keyBatsmenCount = (matchObj.insightData.keyBatsmen || []).length;
@@ -374,6 +380,12 @@ router.get('/match/:id', async (req, res) => {
             safeInsight.keyBatsmen = matchObj.insightData.keyBatsmen || [];
             safeInsight.keyBowlers = matchObj.insightData.keyBowlers || [];
             safeInsight.insightsSummary = matchObj.insightData.insightsSummary || '';
+            const rawUpdates = matchObj.insightData.timelineUpdates || [];
+            safeInsight.timelineUpdates = rawUpdates.slice().sort((a, b) => {
+                const timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+                const timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+                return timeB - timeA;
+            });
         }
 
         res.json({
@@ -419,6 +431,7 @@ router.post('/publish/:id', adminAuth, async (req, res) => {
             keyBatsmen,
             keyBowlers,
             insightsSummary,
+            timelineUpdates,
             price,
             notifyUsers = true
         } = req.body;
@@ -460,11 +473,39 @@ router.post('/publish/:id', adminAuth, async (req, res) => {
         const publishedAt = new Date();
         const safePrice = (price !== undefined && price !== null && price !== '') ? Math.max(0, Number(price)) : 49;
 
+        // Normalize timeline updates with timestamps
+        let normalizedTimeline = [];
+        if (Array.isArray(timelineUpdates) && timelineUpdates.length > 0) {
+            normalizedTimeline = timelineUpdates
+                .filter(u => u && (typeof u.text === 'string' ? u.text.trim() : (u.message ? u.message.trim() : false)))
+                .map(u => ({
+                    id: u.id || `tip_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+                    time: u.time || new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),
+                    timestamp: u.timestamp ? new Date(u.timestamp) : new Date(),
+                    text: (u.text || u.message || '').trim(),
+                    title: (u.title || '').trim()
+                }));
+        } else if (insightsSummary && typeof insightsSummary === 'string' && insightsSummary.trim()) {
+            normalizedTimeline = [{
+                id: `tip_${Date.now()}`,
+                time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),
+                timestamp: new Date(),
+                text: insightsSummary.trim(),
+                title: 'Match Analysis'
+            }];
+        }
+
+        // Determine effective summary text for legacy clients and notifications
+        const effectiveSummary = (insightsSummary && typeof insightsSummary === 'string' && insightsSummary.trim())
+            ? insightsSummary.trim()
+            : (normalizedTimeline.length > 0 ? normalizedTimeline[0].text : '');
+
         match.insightData = {
             astrologicalAdvantage,
             keyBatsmen: Array.isArray(keyBatsmen) ? keyBatsmen : [],
             keyBowlers: Array.isArray(keyBowlers) ? keyBowlers : [],
-            insightsSummary: insightsSummary || '',
+            insightsSummary: effectiveSummary,
+            timelineUpdates: normalizedTimeline,
             price: safePrice,
             isPublished: true,
             publishedAt: publishedAt,
@@ -480,21 +521,21 @@ router.post('/publish/:id', adminAuth, async (req, res) => {
         match.expertPrediction = {
             predictedWinner: astrologicalAdvantage || '',
             keyPlayers: allKeyPlayerNames,
-            reasoning: insightsSummary || '',
+            reasoning: effectiveSummary,
             isPublished: true,
             publishedAt: publishedAt
         };
 
         await match.save();
 
-        // Dispatch FCM Push Notification
+        // Dispatch FCM Push Notification (EXACT SAME FCM SERVICE CALL - 100% UNTOUCHED)
         if (notifyUsers) {
             fcmService.sendMatchInsightNotification({
                 matchId: match._id,
                 teamA: match.teamA,
                 teamB: match.teamB,
                 advantage: astrologicalAdvantage,
-                summary: insightsSummary
+                summary: effectiveSummary
             }).catch(e => console.error('Background FCM error:', e));
         }
 

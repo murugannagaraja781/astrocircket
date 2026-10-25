@@ -75,6 +75,16 @@ const MatchSchema = new mongoose.Schema({
             rationale: String
         }],
         insightsSummary: String,
+        timelineUpdates: [{
+            id: String,
+            time: String,
+            timestamp: {
+                type: Date,
+                default: Date.now
+            },
+            text: String,
+            title: String
+        }],
         price: {
             type: Number,
             default: 49

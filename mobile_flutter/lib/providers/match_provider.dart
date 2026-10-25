@@ -143,6 +143,7 @@ class MatchProvider with ChangeNotifier {
           price: (data['price'] != null) ? double.tryParse(data['price'].toString()) ?? 49.0 : existing.insight.price,
           astrologicalAdvantage: data['astrologicalAdvantage']?.toString() ?? existing.insight.astrologicalAdvantage,
           insightsSummary: data['insightsSummary']?.toString() ?? existing.insight.insightsSummary,
+          timelineUpdates: existing.insight.timelineUpdates,
           publishedAt: DateTime.now(),
         );
 
@@ -223,6 +224,7 @@ class MatchProvider with ChangeNotifier {
                   KeyPlayer(name: 'Lead Bowler 2', role: 'Bowler', rating: 8.5, astroScore: 79),
                 ],
           insightsSummary: _selectedMatch!.insight.insightsSummary ?? 'Planetary alignments strongly favor top-order batting and swing pacers in early overs.',
+          timelineUpdates: _selectedMatch!.insight.timelineUpdates,
         ),
         isUnlocked: true,
       );

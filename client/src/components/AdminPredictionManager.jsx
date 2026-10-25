@@ -208,6 +208,7 @@ const AdminPredictionManager = () => {
         keyBatsmen: '',
         keyBowlers: '',
         insightsSummary: '',
+        timelineUpdates: [],
         price: 49,
         notifyUsers: true
     });
@@ -351,6 +352,26 @@ const AdminPredictionManager = () => {
             ? existingInsights.price
             : 49;
 
+        const rawUpdates = existingInsights.timelineUpdates || [];
+        let initialUpdates = [];
+        if (Array.isArray(rawUpdates) && rawUpdates.length > 0) {
+            initialUpdates = rawUpdates.map(u => ({
+                id: u.id || `tip_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+                time: u.time || '',
+                timestamp: u.timestamp || new Date().toISOString(),
+                text: u.text || u.message || '',
+                title: u.title || ''
+            }));
+        } else if (existingInsights.insightsSummary || legacyPrediction.reasoning) {
+            initialUpdates = [{
+                id: `tip_${Date.now()}`,
+                time: 'Initial Analysis',
+                timestamp: new Date().toISOString(),
+                text: existingInsights.insightsSummary || legacyPrediction.reasoning || '',
+                title: 'KP Astrology Analysis'
+            }];
+        }
+
         setInsightForm({
             matchDate: match.matchDate || new Date().toISOString().split('T')[0],
             matchTime: match.matchTime || '',
@@ -359,10 +380,58 @@ const AdminPredictionManager = () => {
             keyBatsmen: keyBatsmenNames || legacyPlayers,
             keyBowlers: keyBowlersNames,
             insightsSummary: existingInsights.insightsSummary || legacyPrediction.reasoning || '',
+            timelineUpdates: initialUpdates,
             price: existingPrice,
             notifyUsers: true
         });
         setOpenInsightDialog(true);
+    };
+
+    // Timeline Updates Handlers
+    const handleAddTimelineUpdate = () => {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+        const newUpdate = {
+            id: `tip_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+            time: timeStr,
+            timestamp: now.toISOString(),
+            title: '',
+            text: ''
+        };
+        setInsightForm(prev => ({
+            ...prev,
+            timelineUpdates: [newUpdate, ...(prev.timelineUpdates || [])]
+        }));
+    };
+
+    const handleUpdateTimelineField = (index, field, value) => {
+        setInsightForm(prev => {
+            const nextUpdates = [...(prev.timelineUpdates || [])];
+            if (nextUpdates[index]) {
+                nextUpdates[index] = {
+                    ...nextUpdates[index],
+                    [field]: value
+                };
+            }
+            const topText = nextUpdates[0]?.text || '';
+            return {
+                ...prev,
+                timelineUpdates: nextUpdates,
+                insightsSummary: topText || prev.insightsSummary
+            };
+        });
+    };
+
+    const handleDeleteTimelineUpdate = (index) => {
+        setInsightForm(prev => {
+            const nextUpdates = (prev.timelineUpdates || []).filter((_, i) => i !== index);
+            const topText = nextUpdates[0]?.text || '';
+            return {
+                ...prev,
+                timelineUpdates: nextUpdates,
+                insightsSummary: topText
+            };
+        });
     };
 
     // Toggle player in comma-separated list
@@ -449,6 +518,7 @@ const AdminPredictionManager = () => {
                 keyBatsmen: parsePlayers(insightForm.keyBatsmen, 'Batsman'),
                 keyBowlers: parsePlayers(insightForm.keyBowlers, 'Bowler'),
                 insightsSummary: insightForm.insightsSummary,
+                timelineUpdates: insightForm.timelineUpdates || [],
                 price: (insightForm.price !== '' && insightForm.price !== null && insightForm.price !== undefined)
                     ? Math.max(0, Number(insightForm.price))
                     : 0,
@@ -1406,17 +1476,198 @@ const AdminPredictionManager = () => {
                                     </Box>
                                 </Grid>
 
-                                {/* Astrological Match Summary */}
+                                {/* Live Match Tips & Updates Timeline (With Real-Time Timestamp and Add Button) */}
                                 <Grid item xs={12}>
-                                    <TextField
-                                        label="KP Astrological Match Analysis Summary"
-                                        placeholder="Provide detailed KP planetary transit breakdown, sub-lord analysis, lagna strengths, and key turning sessions..."
-                                        fullWidth
-                                        multiline
-                                        rows={4}
-                                        value={insightForm.insightsSummary}
-                                        onChange={e => setInsightForm({ ...insightForm, insightsSummary: e.target.value })}
-                                    />
+                                    <Paper
+                                        elevation={0}
+                                        sx={{
+                                            p: 2.2,
+                                            backgroundColor: 'rgba(15, 23, 42, 0.75)',
+                                            border: '1px solid rgba(56, 189, 248, 0.25)',
+                                            borderRadius: '16px'
+                                        }}
+                                    >
+                                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2, flexWrap: 'wrap', gap: 1.5 }}>
+                                            <Box>
+                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                    <AccessTimeIcon sx={{ color: '#38BDF8', fontSize: 22 }} />
+                                                    <Typography variant="subtitle1" fontWeight="700" sx={{ color: '#F8FAFC !important' }}>
+                                                        Match Tips & Live Updates Timeline
+                                                    </Typography>
+                                                    <Chip
+                                                        label={`${(insightForm.timelineUpdates || []).length} Updates`}
+                                                        size="small"
+                                                        sx={{
+                                                            backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                                                            color: '#38BDF8',
+                                                            fontWeight: 700,
+                                                            fontSize: '0.75rem',
+                                                            border: '1px solid rgba(56, 189, 248, 0.3)'
+                                                        }}
+                                                    />
+                                                </Box>
+                                                <Typography variant="caption" sx={{ color: '#94A3B8 !important', display: 'block', mt: 0.3 }}>
+                                                    Add real-time tips before or during the match. The latest tip will appear on top in the Mobile App!
+                                                </Typography>
+                                            </Box>
+
+                                            <Button
+                                                variant="contained"
+                                                size="small"
+                                                startIcon={<AddIcon />}
+                                                onClick={handleAddTimelineUpdate}
+                                                sx={{
+                                                    background: 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)',
+                                                    color: '#FFFFFF',
+                                                    fontWeight: 'bold',
+                                                    textTransform: 'none',
+                                                    borderRadius: '10px',
+                                                    px: 2,
+                                                    py: 0.8,
+                                                    boxShadow: '0 4px 12px rgba(2, 132, 199, 0.3)',
+                                                    '&:hover': {
+                                                        background: 'linear-gradient(135deg, #0369A1 0%, #075985 100%)'
+                                                    }
+                                                }}
+                                            >
+                                                + Add Live Tip / Update
+                                            </Button>
+                                        </Box>
+
+                                        {/* List of Timeline Updates */}
+                                        {(!insightForm.timelineUpdates || insightForm.timelineUpdates.length === 0) ? (
+                                            <Box
+                                                onClick={handleAddTimelineUpdate}
+                                                sx={{
+                                                    p: 3,
+                                                    textAlign: 'center',
+                                                    border: '1.5px dashed rgba(148, 163, 184, 0.25)',
+                                                    borderRadius: '12px',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.2s ease',
+                                                    backgroundColor: 'rgba(30, 41, 59, 0.3)',
+                                                    '&:hover': {
+                                                        borderColor: '#38BDF8',
+                                                        backgroundColor: 'rgba(56, 189, 248, 0.05)'
+                                                    }
+                                                }}
+                                            >
+                                                <Typography variant="body2" sx={{ color: '#94A3B8 !important', mb: 1 }}>
+                                                    No time-stamped tips yet. Click below to add an update with the current time.
+                                                </Typography>
+                                                <Button
+                                                    size="small"
+                                                    startIcon={<AddIcon />}
+                                                    sx={{ color: '#38BDF8 !important', fontWeight: 700, textTransform: 'none' }}
+                                                >
+                                                    Add First Tip / Live Update
+                                                </Button>
+                                            </Box>
+                                        ) : (
+                                            <Stack spacing={2}>
+                                                {insightForm.timelineUpdates.map((update, idx) => {
+                                                    const isLatest = idx === 0;
+                                                    return (
+                                                        <Paper
+                                                            key={update.id || idx}
+                                                            elevation={0}
+                                                            sx={{
+                                                                p: 1.8,
+                                                                backgroundColor: isLatest ? 'rgba(30, 41, 59, 0.7)' : 'rgba(15, 23, 42, 0.5)',
+                                                                border: isLatest ? '1.5px solid rgba(56, 189, 248, 0.5)' : '1px solid rgba(255, 255, 255, 0.08)',
+                                                                borderRadius: '12px',
+                                                                position: 'relative'
+                                                            }}
+                                                        >
+                                                            {/* Card Top Row: Badge, Time, Title, Delete */}
+                                                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.2, gap: 1, flexWrap: 'wrap' }}>
+                                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                                    {isLatest ? (
+                                                                        <Chip
+                                                                            label="🔴 LATEST UPDATE"
+                                                                            size="small"
+                                                                            sx={{
+                                                                                backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                                                                                color: '#F87171',
+                                                                                fontWeight: 800,
+                                                                                fontSize: '0.7rem',
+                                                                                border: '1px solid rgba(239, 68, 68, 0.4)'
+                                                                            }}
+                                                                        />
+                                                                    ) : (
+                                                                        <Chip
+                                                                            label={`Update #${insightForm.timelineUpdates.length - idx}`}
+                                                                            size="small"
+                                                                            sx={{
+                                                                                backgroundColor: 'rgba(148, 163, 184, 0.12)',
+                                                                                color: '#94A3B8',
+                                                                                fontWeight: 600,
+                                                                                fontSize: '0.7rem'
+                                                                            }}
+                                                                        />
+                                                                    )}
+
+                                                                    <TextField
+                                                                        size="small"
+                                                                        label="Time"
+                                                                        placeholder="e.g. 2:44 PM"
+                                                                        value={update.time || ''}
+                                                                        onChange={(e) => handleUpdateTimelineField(idx, 'time', e.target.value)}
+                                                                        sx={{
+                                                                            width: 140,
+                                                                            '& .MuiInputBase-input': { fontSize: '0.85rem', py: 0.7 }
+                                                                        }}
+                                                                    />
+
+                                                                    <TextField
+                                                                        size="small"
+                                                                        label="Stage / Title (Optional)"
+                                                                        placeholder="e.g. Toss, Overs 1-6"
+                                                                        value={update.title || ''}
+                                                                        onChange={(e) => handleUpdateTimelineField(idx, 'title', e.target.value)}
+                                                                        sx={{
+                                                                            width: 180,
+                                                                            '& .MuiInputBase-input': { fontSize: '0.85rem', py: 0.7 }
+                                                                        }}
+                                                                    />
+                                                                </Box>
+
+                                                                <Tooltip title="Delete this update">
+                                                                    <IconButton
+                                                                        size="small"
+                                                                        onClick={() => handleDeleteTimelineUpdate(idx)}
+                                                                        sx={{
+                                                                            color: '#64748B',
+                                                                            '&:hover': { color: '#EF4444', backgroundColor: 'rgba(239, 68, 68, 0.1)' }
+                                                                        }}
+                                                                    >
+                                                                        <DeleteIcon fontSize="small" />
+                                                                    </IconButton>
+                                                                </Tooltip>
+                                                            </Box>
+
+                                                            {/* Message / Tip Text */}
+                                                            <TextField
+                                                                fullWidth
+                                                                multiline
+                                                                rows={2}
+                                                                size="small"
+                                                                placeholder="Enter match advice, planetary transit impact, turning point tips..."
+                                                                value={update.text || ''}
+                                                                onChange={(e) => handleUpdateTimelineField(idx, 'text', e.target.value)}
+                                                                sx={{
+                                                                    '& .MuiOutlinedInput-root': {
+                                                                        backgroundColor: 'rgba(11, 17, 32, 0.4)',
+                                                                        fontSize: '0.9rem'
+                                                                    }
+                                                                }}
+                                                            />
+                                                        </Paper>
+                                                    );
+                                                })}
+                                            </Stack>
+                                        )}
+                                    </Paper>
                                 </Grid>
 
                                 {/* Push Notification Toggle */}

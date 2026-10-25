@@ -488,7 +488,6 @@ class MatchInsightsScreen extends StatelessWidget {
     final advantage = match.insight.astrologicalAdvantage ?? 'Balanced Match';
     final batsmen = match.insight.keyBatsmen;
     final bowlers = match.insight.keyBowlers;
-    final summary = match.insight.insightsSummary;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -605,15 +604,35 @@ class MatchInsightsScreen extends StatelessWidget {
           const SizedBox(height: 20),
         ],
 
-        // Detailed KP Summary
-        if (summary != null && summary.isNotEmpty) ...[
-          Text(
-            'KP Astrological Match Summary',
-            style: TextStyle(
-              color: colors.textPrimary,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+        // Detailed KP Summary & Live Updates Timeline
+        _buildTimelineSection(match, colors),
+      ],
+    );
+  }
+
+  Widget _buildTimelineSection(MatchModel match, AppColorPalette colors) {
+    final updates = match.insight.timelineUpdates;
+    final summary = match.insight.insightsSummary;
+
+    // If no timeline updates, fallback to summary
+    if (updates.isEmpty) {
+      if (summary == null || summary.isEmpty) return const SizedBox.shrink();
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.auto_awesome, color: colors.primary, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                'KP Astrological Match Summary',
+                style: TextStyle(
+                  color: colors.textPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 12),
           Container(
@@ -634,6 +653,174 @@ class MatchInsightsScreen extends StatelessWidget {
             ),
           ),
         ],
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.access_time_filled_rounded, color: colors.primary, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  'Match Tips & Live Updates',
+                  style: TextStyle(
+                    color: colors.textPrimary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(
+                color: colors.primary.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: colors.primary.withValues(alpha: 0.3)),
+              ),
+              child: Text(
+                '${updates.length} Updates',
+                style: TextStyle(
+                  color: colors.primary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+
+        // Timeline items (Latest on top)
+        ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: updates.length,
+          separatorBuilder: (context, index) => const SizedBox(height: 12),
+          itemBuilder: (context, index) {
+            final update = updates[index];
+            final isLatest = index == 0;
+
+            return Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: isLatest
+                    ? colors.surfaceLight.withValues(alpha: colors.isDark ? 0.35 : 0.6)
+                    : colors.surface,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: isLatest ? colors.primary.withValues(alpha: 0.6) : colors.border,
+                  width: isLatest ? 1.5 : 1.0,
+                ),
+                boxShadow: isLatest
+                    ? [
+                        BoxShadow(
+                          color: colors.primary.withValues(alpha: 0.12),
+                          blurRadius: 10,
+                          offset: const Offset(0, 3),
+                        ),
+                      ]
+                    : colors.cardShadow,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          if (isLatest) ...[
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: Colors.red.withValues(alpha: 0.15),
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(color: Colors.red.withValues(alpha: 0.4)),
+                              ),
+                              child: const Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.fiber_manual_record, color: Colors.red, size: 10),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    'LATEST',
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 10,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                          ] else ...[
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: colors.border.withValues(alpha: 0.3),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                'Tip #${updates.length - index}',
+                                style: TextStyle(
+                                  color: colors.textMuted,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                          ],
+                          if (update.title != null && update.title!.isNotEmpty)
+                            Text(
+                              update.title!,
+                              style: TextStyle(
+                                color: colors.textPrimary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
+                            ),
+                        ],
+                      ),
+                      if (update.time.isNotEmpty)
+                        Row(
+                          children: [
+                            Icon(Icons.schedule, size: 13, color: colors.textMuted),
+                            const SizedBox(width: 4),
+                            Text(
+                              update.time,
+                              style: TextStyle(
+                                color: isLatest ? colors.primary : colors.textMuted,
+                                fontWeight: isLatest ? FontWeight.bold : FontWeight.w500,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    update.text,
+                    style: TextStyle(
+                      color: colors.textSecondary,
+                      fontSize: 14,
+                      height: 1.5,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ],
     );
   }

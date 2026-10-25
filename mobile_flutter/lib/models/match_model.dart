@@ -38,6 +38,40 @@ class KeyPlayer {
   };
 }
 
+class TimelineUpdate {
+  final String id;
+  final String time;
+  final DateTime? timestamp;
+  final String text;
+  final String? title;
+
+  TimelineUpdate({
+    required this.id,
+    required this.time,
+    this.timestamp,
+    required this.text,
+    this.title,
+  });
+
+  factory TimelineUpdate.fromJson(Map<String, dynamic> json) {
+    return TimelineUpdate(
+      id: json['id']?.toString() ?? json['_id']?.toString() ?? '',
+      time: json['time']?.toString() ?? '',
+      timestamp: json['timestamp'] != null ? DateTime.tryParse(json['timestamp'].toString()) : null,
+      text: json['text']?.toString() ?? json['message']?.toString() ?? '',
+      title: json['title']?.toString(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'time': time,
+    'timestamp': timestamp?.toIso8601String(),
+    'text': text,
+    if (title != null) 'title': title,
+  };
+}
+
 class InsightData {
   final bool isPublished;
   final bool isUnlocked;
@@ -47,6 +81,7 @@ class InsightData {
   final List<KeyPlayer> keyBatsmen;
   final List<KeyPlayer> keyBowlers;
   final String? insightsSummary;
+  final List<TimelineUpdate> timelineUpdates;
   final String? previewText;
 
   InsightData({
@@ -58,6 +93,7 @@ class InsightData {
     this.keyBatsmen = const [],
     this.keyBowlers = const [],
     this.insightsSummary,
+    this.timelineUpdates = const [],
     this.previewText,
   });
 
@@ -80,6 +116,14 @@ class InsightData {
           .toList();
     }
 
+    var updatesList = <TimelineUpdate>[];
+    if (json['timelineUpdates'] != null && json['timelineUpdates'] is List) {
+      updatesList = (json['timelineUpdates'] as List)
+          .whereType<Map<String, dynamic>>()
+          .map(TimelineUpdate.fromJson)
+          .toList();
+    }
+
     return InsightData(
       isPublished: json['isPublished'] ?? false,
       isUnlocked: json['isUnlocked'] ?? false,
@@ -89,6 +133,7 @@ class InsightData {
       keyBatsmen: batsmenList,
       keyBowlers: bowlersList,
       insightsSummary: json['insightsSummary'],
+      timelineUpdates: updatesList,
       previewText: json['previewText'],
     );
   }
@@ -102,6 +147,7 @@ class InsightData {
     'keyBatsmen': keyBatsmen.map((k) => k.toJson()).toList(),
     'keyBowlers': keyBowlers.map((k) => k.toJson()).toList(),
     'insightsSummary': insightsSummary,
+    'timelineUpdates': timelineUpdates.map((u) => u.toJson()).toList(),
     'previewText': previewText,
   };
 }
