@@ -201,13 +201,10 @@ router.get('/matches', async (req, res) => {
             return item;
         });
 
-        // 2. Only fetch Cricbuzz matches if requested by Admin in the Admin Panel
+        // 2. Fetch Cricbuzz live and upcoming matches (cached in memory for 60s)
         let realTimeMatches = [];
-        const shouldScrapeForAdmin = isAdmin && (req.query.source === 'admin' || req.query.includeLiveScrape === 'true');
-
-        if (shouldScrapeForAdmin) {
-            try {
-                const liveResult = await liveScoreService.fetchMatches();
+        try {
+            const liveResult = await liveScoreService.fetchMatches();
                 if (liveResult && Array.isArray(liveResult.matches)) {
                     for (const m of liveResult.matches) {
                         const parsed = parseMatchTitle(m.title, m.status, m.url);
@@ -253,12 +250,10 @@ router.get('/matches', async (req, res) => {
                     }
                 }
             } catch (liveErr) {
-                console.warn('Admin live scrape warning:', liveErr.message);
+                console.warn('Live matches scrape warning:', liveErr.message);
             }
-        }
 
-        // For mobile/client users: strictly Admin published/saved MongoDB matches (0 Cricbuzz load)
-        // For Admin Panel: DB matches + Cricbuzz live matches to pick & predict
+            // Both DB matches (with insights) + Cricbuzz live/upcoming matches for all users
         const allMatches = [...formattedDbMatches, ...realTimeMatches];
 
         res.json({
