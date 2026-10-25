@@ -96,7 +96,7 @@ const parseMatchTitle = (title, defaultStatus, url = '') => {
     } else if (normStatus === 'completed') {
         matchTimeDisplay = subStatus ? subStatus : 'Completed';
     } else {
-        matchTimeDisplay = '19:30';
+        matchTimeDisplay = '';
     }
 
     return {
@@ -233,9 +233,9 @@ router.get('/matches', async (req, res) => {
                             _id: m.match_id,
                             teamA: parsed.teamA,
                             teamB: parsed.teamB,
-                            matchDate: new Date().toISOString().split('T')[0],
-                            matchTime: parsed.matchTime,
-                            venue: parsed.venue,
+                            matchDate: m.matchDate || new Date().toISOString().split('T')[0],
+                            matchTime: m.matchTime || parsed.matchTime || '',
+                            venue: m.venue || parsed.venue,
                             status: parsed.status,
                             gender: parsed.gender,
                             format: parsed.format,
@@ -322,9 +322,9 @@ router.get('/match/:id', async (req, res) => {
                     id: foundRealTime.match_id,
                     teamA: parsed.teamA,
                     teamB: parsed.teamB,
-                    matchDate: new Date().toISOString().split('T')[0],
-                    matchTime: '19:30',
-                    venue: parsed.venue,
+                    matchDate: foundRealTime.matchDate || new Date().toISOString().split('T')[0],
+                    matchTime: foundRealTime.matchTime || parsed.matchTime || '',
+                    venue: foundRealTime.venue || parsed.venue,
                     status: parsed.status,
                     url: foundRealTime.url,
                     insightData: {
@@ -423,10 +423,16 @@ router.post('/publish/:id', adminAuth, async (req, res) => {
                 teamA: teamA || 'Team A',
                 teamB: teamB || 'Team B',
                 matchDate: matchDate || new Date().toISOString().split('T')[0],
-                matchTime: matchTime || '19:30',
+                matchTime: matchTime || '',
                 venue: venue || 'Cricket Arena',
                 status: matchStatus || 'upcoming'
             });
+        } else {
+            // Also update match details if provided by Admin
+            if (matchDate) match.matchDate = matchDate;
+            if (matchTime) match.matchTime = matchTime;
+            if (venue) match.venue = venue;
+            if (matchStatus) match.status = matchStatus;
         }
 
         const publishedAt = new Date();

@@ -13,11 +13,114 @@ const HEADERS = {
 
 const playerCache = new Map(); // profileUrl -> { name, role, date_of_birth, birth_place, lastUpdated }
 const squadCache = new Map();  // matchId -> { data, lastUpdated }
+const matchFactsCache = new Map(); // matchId -> { data, lastUpdated }
 let matchesCache = { data: null, lastUpdated: 0 };
 
 const clean = (text) => {
     if (!text) return '';
     return text.replace(/\s+/g, ' ').trim();
+};
+
+/**
+ * Helper to execute async tasks in batches
+ */
+const runInBatches = async (items, batchSize, fn) => {
+    const results = [];
+    for (let i = 0; i < items.length; i += batchSize) {
+        const batch = items.slice(i, i + batchSize);
+        const batchResults = await Promise.all(batch.map(fn));
+        results.push(...batchResults);
+    }
+    return results;
+};
+
+/**
+ * Fetch match facts (Date, Start Time in IST, Venue) for a specific match from Cricbuzz
+ */
+const fetchMatchFacts = async (matchId) => {
+    if (!matchId) return null;
+    const cached = matchFactsCache.get(matchId);
+    if (cached && (Date.now() - cached.lastUpdated < 3600000 * 2)) {
+        return cached.data;
+    }
+
+    try {
+        const url = `https://www.cricbuzz.com/cricket-match-facts/${matchId}`;
+        const res = await axios.get(url, { headers: HEADERS, timeout: 6000 });
+        const $ = cheerio.load(res.data);
+
+        let matchDate = null;
+        let matchTime = null;
+        let venue = null;
+        let city = null;
+
+        // 1. First attempt: Match facts table for full multi-timezone Time row (LOCAL, GMT, IST)
+        $('.facts-row-grid').each((_, el) => {
+            const label = clean($(el).find('div').first().text());
+            const val = clean($(el).find('div').last().text());
+
+            if (label === 'Time') {
+                // e.g. "1:00 PM LOCAL, 8:00 AM GMT, 1:30 PM IST"
+                matchTime = val;
+            }
+            if (label === 'Venue' && !venue) {
+                venue = val;
+            }
+            if (label === 'City' && !city) {
+                city = val;
+            }
+        });
+
+        // 2. Parse SportsEvent JSON-LD for exact matchDate and fallback matchTime
+        $('script[type="application/ld+json"]').each((_, el) => {
+            try {
+                const json = JSON.parse($(el).html());
+                if (json['@type'] === 'SportsEvent' && json.startDate) {
+                    const d = new Date(json.startDate);
+                    if (!isNaN(d.getTime())) {
+                        const istOffset = 5.5 * 60 * 60 * 1000;
+                        const istDate = new Date(d.getTime() + istOffset);
+                        if (!matchDate) {
+                            matchDate = istDate.toISOString().split('T')[0];
+                        }
+                        if (!matchTime) {
+                            const gmtH = d.getUTCHours();
+                            const gmtM = String(d.getUTCMinutes()).padStart(2, '0');
+                            const gmtAmpm = gmtH >= 12 ? 'PM' : 'AM';
+                            const gmtH12 = gmtH % 12 || 12;
+
+                            const istH = istDate.getUTCHours();
+                            const istM = String(istDate.getUTCMinutes()).padStart(2, '0');
+                            const istAmpm = istH >= 12 ? 'PM' : 'AM';
+                            const istH12 = istH % 12 || 12;
+
+                            matchTime = `${gmtH12}:${gmtM} ${gmtAmpm} GMT, ${istH12}:${istM} ${istAmpm} IST`;
+                        }
+                    }
+                    if (!venue && json.location?.name) {
+                        venue = json.location.name;
+                    }
+                    if (!city && json.location?.address?.addressLocality) {
+                        city = json.location.address.addressLocality;
+                    }
+                }
+            } catch (e) {}
+        });
+
+        const fullVenue = venue && city && !venue.toLowerCase().includes(city.toLowerCase())
+            ? `${venue}, ${city}`
+            : (venue || city || null);
+
+        const data = {
+            matchDate,
+            matchTime,
+            venue: fullVenue
+        };
+        matchFactsCache.set(matchId, { data, lastUpdated: Date.now() });
+        return data;
+    } catch (e) {
+        return null;
+    }
 };
 
 /**
@@ -65,9 +168,23 @@ const fetchMatches = async (forceRefresh = false) => {
             };
         });
 
+        const rawMatches = Object.values(matches);
+
+        // Enrich matches with real matchDate, matchTime (IST), and venue in parallel batches
+        await runInBatches(rawMatches, 6, async (m) => {
+            try {
+                const facts = await fetchMatchFacts(m.match_id);
+                if (facts) {
+                    if (facts.matchDate) m.matchDate = facts.matchDate;
+                    if (facts.matchTime) m.matchTime = facts.matchTime;
+                    if (facts.venue) m.venue = facts.venue;
+                }
+            } catch (e) {}
+        });
+
         const result = {
             status: 'success',
-            matches: Object.values(matches)
+            matches: rawMatches
         };
         matchesCache = { data: result, lastUpdated: Date.now() };
 
@@ -125,18 +242,7 @@ const fetchPlayerDetails = async (player) => {
     }
 };
 
-/**
- * Helper to execute async tasks in batches
- */
-const runInBatches = async (items, batchSize, fn) => {
-    const results = [];
-    for (let i = 0; i < items.length; i += batchSize) {
-        const batch = items.slice(i, i + batchSize);
-        const batchResults = await Promise.all(batch.map(fn));
-        results.push(...batchResults);
-    }
-    return results;
-};
+
 
 /**
  * Fetch squad details for a specific match from Cricbuzz
@@ -315,6 +421,7 @@ const fetchScore = async (matchId) => {
 
 module.exports = {
     fetchMatches,
+    fetchMatchFacts,
     fetchSquads,
     fetchScore,
     fetchPlayerDetails

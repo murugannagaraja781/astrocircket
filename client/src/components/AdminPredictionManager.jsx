@@ -145,6 +145,26 @@ const darkPredictionTheme = createTheme({
     }
 });
 
+const formatTimeDisplay = (timeStr) => {
+    if (!timeStr) return '';
+    const trimmed = timeStr.trim();
+    if (trimmed.toUpperCase().includes('LOCAL') || trimmed.toUpperCase().includes('GMT') || trimmed.toUpperCase().includes('IST')) {
+        return trimmed;
+    }
+    if (!trimmed.includes(':')) return trimmed;
+    const parts = trimmed.split(':');
+    if (parts.length >= 2) {
+        const h = parseInt(parts[0], 10);
+        const m = parts[1].replace(/[^\d]/g, '').padStart(2, '0');
+        if (!isNaN(h)) {
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            const h12 = h % 12 || 12;
+            return `${String(h12).padStart(2, '0')}:${m} ${ampm} IST`;
+        }
+    }
+    return `${trimmed} IST`;
+};
+
 const AdminPredictionManager = () => {
     const { token, user } = useContext(AuthContext);
     const [matches, setMatches] = useState([]);
@@ -181,6 +201,9 @@ const AdminPredictionManager = () => {
 
     // Form states for Match Insights Publishing
     const [insightForm, setInsightForm] = useState({
+        matchDate: '',
+        matchTime: '',
+        venue: '',
         astrologicalAdvantage: '',
         keyBatsmen: '',
         keyBowlers: '',
@@ -325,6 +348,9 @@ const AdminPredictionManager = () => {
             : 49;
 
         setInsightForm({
+            matchDate: match.matchDate || new Date().toISOString().split('T')[0],
+            matchTime: match.matchTime || '',
+            venue: match.venue || '',
             astrologicalAdvantage: existingInsights.astrologicalAdvantage || legacyPrediction.predictedWinner || match.teamA || '',
             keyBatsmen: keyBatsmenNames || legacyPlayers,
             keyBowlers: keyBowlersNames,
@@ -409,9 +435,9 @@ const AdminPredictionManager = () => {
             const payload = {
                 teamA: selectedMatch.teamA,
                 teamB: selectedMatch.teamB,
-                matchDate: selectedMatch.matchDate,
-                matchTime: selectedMatch.matchTime,
-                venue: selectedMatch.venue,
+                matchDate: insightForm.matchDate || selectedMatch.matchDate,
+                matchTime: insightForm.matchTime || selectedMatch.matchTime,
+                venue: insightForm.venue || selectedMatch.venue,
                 status: selectedMatch.status,
                 gender: selectedMatch.gender,
                 format: selectedMatch.format,
@@ -868,7 +894,7 @@ const AdminPredictionManager = () => {
 
                                             <Typography variant="caption" sx={{ color: '#94A3B8 !important', display: 'flex', alignItems: 'center', gap: 0.5 }}>
                                                 <AccessTimeIcon sx={{ fontSize: 13, color: '#38BDF8' }} />
-                                                {match.matchDate} {match.matchTime ? `• ${match.matchTime}` : ''}
+                                                {match.matchDate} {match.matchTime ? `• ${formatTimeDisplay(match.matchTime)}` : ''}
                                             </Typography>
                                         </Box>
 
@@ -1206,6 +1232,28 @@ const AdminPredictionManager = () => {
                             </Alert>
 
                             <Grid container spacing={2.5}>
+                                {/* Match Date & Match Time (IST) */}
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        label="Match Date"
+                                        type="date"
+                                        fullWidth
+                                        value={insightForm.matchDate}
+                                        onChange={e => setInsightForm({ ...insightForm, matchDate: e.target.value })}
+                                        InputLabelProps={{ shrink: true }}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        label="Match Time (LOCAL, GMT, IST)"
+                                        placeholder="e.g. 1:00 PM LOCAL, 8:00 AM GMT, 1:30 PM IST"
+                                        fullWidth
+                                        value={insightForm.matchTime}
+                                        onChange={e => setInsightForm({ ...insightForm, matchTime: e.target.value })}
+                                        helperText="e.g. 1:00 PM LOCAL, 8:00 AM GMT, 1:30 PM IST"
+                                    />
+                                </Grid>
+
                                 {/* Astrological Advantage */}
                                 <Grid item xs={12} sm={6}>
                                     <FormControl fullWidth>

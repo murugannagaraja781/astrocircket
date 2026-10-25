@@ -172,15 +172,16 @@ class _MatchCardState extends State<MatchCard> with SingleTickerProviderStateMix
                           ],
                         ),
                       ),
-                      Flexible(
+                      Expanded(
                         child: Text(
                           match.formattedDateTimeIST,
+                          textAlign: TextAlign.end,
                           style: TextStyle(
                             color: colors.textSecondary,
-                            fontSize: 12,
+                            fontSize: 11,
                             fontWeight: FontWeight.w500,
                           ),
-                          maxLines: 1,
+                          maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),

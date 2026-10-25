@@ -171,10 +171,14 @@ class MatchModel {
       }
 
       String timePart = matchTime.trim();
+      final upperTime = timePart.toUpperCase();
+      if (upperTime.contains('LOCAL') || upperTime.contains('GMT') || upperTime.contains('IST')) {
+        return '$datePart • $timePart';
+      }
+
       if (timePart.isNotEmpty && timePart.contains(':')) {
         int hour = 0;
         int minute = 0;
-        final upperTime = timePart.toUpperCase();
         final isPM = upperTime.contains('PM');
         final isAM = upperTime.contains('AM');
 
