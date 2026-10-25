@@ -84,6 +84,14 @@ app.get('/', (req, res) => {
     res.send('API is running');
 });
 
+// Privacy Policy endpoint for Google Play Console compliance
+app.get('/privacy-policy', (req, res) => {
+    const policyPath = fs.existsSync(path.join(__dirname, 'privacy_policy.html'))
+        ? path.join(__dirname, 'privacy_policy.html')
+        : path.join(__dirname, '../PRIVACY_POLICY.html');
+    res.sendFile(policyPath);
+});
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/charts', chartRoutes);
