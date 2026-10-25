@@ -75,10 +75,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ],
                     ),
-                    child: Icon(
-                      Icons.auto_awesome,
-                      size: 48,
-                      color: colors.primary,
+                    child: ClipOval(
+                      child: Image.asset(
+                        'assets/images/app_logo.png',
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),

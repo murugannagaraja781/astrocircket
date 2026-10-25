@@ -64,7 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        user != null ? 'Role: ${user.role.toUpperCase()}' : 'Sign in to unlock & sync predictions',
+                        user != null ? 'Role: ${user.role.toUpperCase()}' : 'Sign in to unlock & sync insights',
                         style: TextStyle(color: colors.textSecondary, fontSize: 12),
                       ),
                     ],

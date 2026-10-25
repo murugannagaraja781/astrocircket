@@ -23,8 +23,8 @@ class FCMService {
 
   static const AndroidNotificationChannel _channel = AndroidNotificationChannel(
     'astrocricket_high_importance_channel',
-    'AstroCricket Match & Prediction Alerts',
-    description: 'Notifications for live match predictions, astrological advantages, and updates.',
+    'AstroCricket Match & Insights Alerts',
+    description: 'Notifications for live match analysis, astrological advantages, and updates.',
     importance: Importance.max,
     playSound: true,
     enableVibration: true,

@@ -61,12 +61,24 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               title: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(7),
+                    width: 36,
+                    height: 36,
                     decoration: BoxDecoration(
-                      color: colors.primary.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(10),
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.amber.withValues(alpha: 0.25),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
-                    child: Icon(Icons.auto_awesome, color: colors.primary, size: 20),
+                    child: ClipOval(
+                      child: Image.asset(
+                        'assets/images/app_logo.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 10),
                   Column(
