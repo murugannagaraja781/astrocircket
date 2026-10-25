@@ -251,6 +251,8 @@ router.get('/matches', async (req, res) => {
             return {
                 id: matchObj._id.toString(),
                 _id: matchObj._id.toString(),
+                matchTitle: `${matchObj.teamA} vs ${matchObj.teamB}`,
+                matchTimeDisplay: matchObj.matchTime || '',
                 teamA: matchObj.teamA,
                 teamB: matchObj.teamB,
                 matchDate: matchObj.matchDate || new Date().toISOString().split('T')[0],
