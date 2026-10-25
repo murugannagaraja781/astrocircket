@@ -112,15 +112,96 @@ const parseMatchTitle = (title, defaultStatus, url = '') => {
 };
 
 /**
+ * Helper to sync real-time matches from Cricbuzz into MongoDB
+ * Only called by Admin trigger to prevent rate-limiting and server overload.
+ */
+const syncCricbuzzMatchesToDB = async (forceRefresh = false) => {
+    try {
+        const liveResult = await liveScoreService.fetchMatches(forceRefresh);
+        if (!liveResult || !Array.isArray(liveResult.matches) || liveResult.matches.length === 0) {
+            return { success: false, msg: 'No matches found from Cricbuzz' };
+        }
+
+        const ops = liveResult.matches.map(m => {
+            const parsed = parseMatchTitle(m.title, m.status, m.url);
+            const matchDate = m.matchDate || new Date().toISOString().split('T')[0];
+            const matchTime = m.matchTime || '';
+            const venue = m.venue || parsed.venue;
+
+            return {
+                updateOne: {
+                    filter: {
+                        $or: [
+                            { cricbuzzMatchId: m.match_id },
+                            {
+                                teamA: { $regex: new RegExp(`^${parsed.teamA.trim()}$`, 'i') },
+                                teamB: { $regex: new RegExp(`^${parsed.teamB.trim()}$`, 'i') }
+                            }
+                        ]
+                    },
+                    update: {
+                        $set: {
+                            teamA: parsed.teamA,
+                            teamB: parsed.teamB,
+                            matchDate,
+                            matchTime,
+                            venue,
+                            status: parsed.status,
+                            gender: parsed.gender,
+                            format: parsed.format,
+                            subStatus: parsed.subStatus,
+                            cricbuzzMatchId: m.match_id
+                        },
+                        $setOnInsert: {
+                            insightData: {
+                                isPublished: false,
+                                price: 49,
+                                astrologicalAdvantage: '',
+                                keyBatsmen: [],
+                                keyBowlers: [],
+                                insightsSummary: ''
+                            },
+                            createdAt: new Date()
+                        }
+                    },
+                    upsert: true
+                }
+            };
+        });
+
+        const bulkRes = await Match.bulkWrite(ops);
+        return {
+            success: true,
+            totalScraped: liveResult.matches.length,
+            upserted: bulkRes.upsertedCount,
+            modified: bulkRes.modifiedCount,
+            matched: bulkRes.matchedCount
+        };
+    } catch (err) {
+        console.error('Error syncing Cricbuzz matches to DB:', err);
+        return { success: false, error: err.message };
+    }
+};
+
+/**
  * @route   GET /api/insights/matches
  * @desc    Get real-time matches with tab filtering (live, upcoming, finished) + Astrological Insights
+ *          Mobile App / Client users read 100% from MongoDB (zero Cricbuzz scraping / zero server load).
+ *          Admin syncs automatically upsert Cricbuzz matches into MongoDB.
  * @access  Public (sensitive insight details masked unless purchased)
  */
 router.get('/matches', async (req, res) => {
     try {
         const { status } = req.query; // 'live', 'upcoming', 'finished' (completed)
         const currentUser = await getUserFromToken(req);
+        const isAdmin = currentUser?.role === 'superadmin';
 
+        // 1. If Admin requested a sync (Admin panel access or "Sync Live Matches" button)
+        if (isAdmin && (req.query.source === 'admin' || req.query.sync === 'true')) {
+            await syncCricbuzzMatchesToDB(req.query.force === 'true');
+        }
+
+        // 2. Query strictly from MongoDB for ALL users (mobile app & web clients)
         let query = {};
         if (status === 'live') {
             query.status = 'live';
@@ -134,23 +215,16 @@ router.get('/matches', async (req, res) => {
 
         // Get user's purchased match IDs if logged in
         let purchasedMatchIds = new Set();
-        let isAdmin = false;
-
-        if (currentUser) {
-            if (currentUser.role === 'superadmin') {
-                isAdmin = true;
-            } else {
-                const purchases = await Purchase.find({
-                    userId: currentUser.id,
-                    status: 'SUCCESS'
-                }).select('matchId');
-                purchasedMatchIds = new Set(purchases.map(p => p.matchId.toString()));
-            }
+        if (currentUser && !isAdmin) {
+            const purchases = await Purchase.find({
+                userId: currentUser.id,
+                status: 'SUCCESS'
+            }).select('matchId');
+            purchasedMatchIds = new Set(purchases.map(p => p.matchId.toString()));
         }
 
-        // 1. Process MongoDB Matches
-        const dbMatchesMap = new Map();
-        const formattedDbMatches = dbMatches.map(match => {
+        // 3. Format MongoDB Matches safely
+        const formattedMatches = dbMatches.map(match => {
             const matchObj = match.toObject();
             const matchPrice = matchObj.insightData?.price !== undefined ? matchObj.insightData.price : 49;
             const isUnlocked = isAdmin || (matchPrice === 0) || purchasedMatchIds.has(match._id.toString());
@@ -174,96 +248,47 @@ router.get('/matches', async (req, res) => {
                 safeInsight.keyBowlersCount = (matchObj.insightData.keyBowlers || []).length;
             }
 
-            const parsedDb = parseMatchTitle(`${matchObj.teamA} vs ${matchObj.teamB}, ${matchObj.venue || ''}`, matchObj.status);
-
-            const item = {
+            return {
                 id: matchObj._id.toString(),
                 _id: matchObj._id.toString(),
                 teamA: matchObj.teamA,
                 teamB: matchObj.teamB,
                 matchDate: matchObj.matchDate || new Date().toISOString().split('T')[0],
-                matchTime: matchObj.matchTime || parsedDb.matchTime,
-                venue: matchObj.venue || parsedDb.venue,
+                matchTime: matchObj.matchTime || '',
+                venue: matchObj.venue || 'Cricket Arena',
                 status: matchObj.status,
-                gender: matchObj.gender || parsedDb.gender,
-                format: matchObj.format || parsedDb.format,
-                subStatus: parsedDb.subStatus,
+                gender: matchObj.gender || 'men',
+                format: matchObj.format || 'T20',
+                subStatus: matchObj.subStatus,
                 location: matchObj.location || {},
                 result: matchObj.result || {},
                 insight: safeInsight,
                 isUnlocked: isUnlocked
             };
-
-            const key = `${matchObj.teamA.toLowerCase()}_vs_${matchObj.teamB.toLowerCase()}`;
-            dbMatchesMap.set(key, item);
-            dbMatchesMap.set(matchObj._id.toString(), item);
-
-            return item;
         });
-
-        // 2. Fetch Cricbuzz live and upcoming matches (cached in memory for 60s)
-        let realTimeMatches = [];
-        try {
-            const liveResult = await liveScoreService.fetchMatches();
-                if (liveResult && Array.isArray(liveResult.matches)) {
-                    for (const m of liveResult.matches) {
-                        const parsed = parseMatchTitle(m.title, m.status, m.url);
-                        const key = `${parsed.teamA.toLowerCase()}_vs_${parsed.teamB.toLowerCase()}`;
-
-                        // If match status filter was requested
-                        if (status) {
-                            const targetStatus = (status === 'finished' ? 'completed' : status).toLowerCase();
-                            if (parsed.status !== targetStatus) {
-                                continue;
-                            }
-                        }
-
-                        // If this match already has DB insights / was saved
-                        if (dbMatchesMap.has(key) || dbMatchesMap.has(m.match_id)) {
-                            continue; // Already included from DB
-                        }
-
-                        const isUnlocked = isAdmin || purchasedMatchIds.has(m.match_id);
-
-                        realTimeMatches.push({
-                            id: m.match_id,
-                            _id: m.match_id,
-                            teamA: parsed.teamA,
-                            teamB: parsed.teamB,
-                            matchDate: m.matchDate || new Date().toISOString().split('T')[0],
-                            matchTime: m.matchTime || parsed.matchTime || '',
-                            venue: m.venue || parsed.venue,
-                            status: parsed.status,
-                            gender: parsed.gender,
-                            format: parsed.format,
-                            subStatus: parsed.subStatus,
-                            url: m.url,
-                            insight: {
-                                isPublished: false,
-                                price: 49,
-                                publishedAt: null,
-                                isUnlocked: isUnlocked,
-                                previewText: 'Awaiting Astrological Calculation'
-                            },
-                            isUnlocked: isUnlocked
-                        });
-                    }
-                }
-            } catch (liveErr) {
-                console.warn('Live matches scrape warning:', liveErr.message);
-            }
-
-            // Both DB matches (with insights) + Cricbuzz live/upcoming matches for all users
-        const allMatches = [...formattedDbMatches, ...realTimeMatches];
 
         res.json({
             success: true,
-            count: allMatches.length,
-            matches: allMatches
+            count: formattedMatches.length,
+            matches: formattedMatches
         });
     } catch (err) {
         console.error('Error fetching matches with insights:', err);
         res.status(500).json({ success: false, msg: 'Server Error' });
+    }
+});
+
+/**
+ * @route   POST /api/insights/admin/sync-matches
+ * @desc    Dedicated Admin Sync Endpoint to trigger Cricbuzz scrape & MongoDB upsert
+ * @access  Private (Admin Only)
+ */
+router.post('/admin/sync-matches', adminAuth, async (req, res) => {
+    try {
+        const result = await syncCricbuzzMatchesToDB(true);
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
     }
 });
 

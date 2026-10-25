@@ -27,6 +27,19 @@ const MatchSchema = new mongoose.Schema({
         }
     },
     venue: String,
+    cricbuzzMatchId: {
+        type: String,
+        index: true
+    },
+    gender: {
+        type: String,
+        default: 'men'
+    },
+    format: {
+        type: String,
+        default: 'T20'
+    },
+    subStatus: String,
     leagueId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'League'

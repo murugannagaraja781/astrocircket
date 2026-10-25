@@ -220,8 +220,9 @@ const AdminPredictionManager = () => {
 
         try {
             const authToken = token || localStorage.getItem('token');
+            const syncParam = silent ? '&sync=true&force=true' : '';
             const [matchesRes, groupsRes] = await Promise.allSettled([
-                axios.get(`${baseUrl}/api/insights/matches?source=admin`, { headers: { 'x-auth-token': authToken } }),
+                axios.get(`${baseUrl}/api/insights/matches?source=admin${syncParam}`, { headers: { 'x-auth-token': authToken } }),
                 axios.get(`${baseUrl}/api/groups`, { headers: { 'x-auth-token': authToken } })
             ]);
 
@@ -229,6 +230,9 @@ const AdminPredictionManager = () => {
                 const data = matchesRes.value.data;
                 if (data?.success && Array.isArray(data.matches)) {
                     setMatches(data.matches);
+                    if (silent) {
+                        setStatusMsg({ type: 'success', text: `Synchronized ${data.matches.length} matches from Cricbuzz to Database & Mobile App!` });
+                    }
                 } else if (Array.isArray(data)) {
                     setMatches(data);
                 }
