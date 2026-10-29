@@ -53,25 +53,85 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
     };
 
     const handleLocationSearch = (event, newInputValue) => {
-        if (!newInputValue || newInputValue.length < 3) {
+        if (!newInputValue || newInputValue.trim().length < 2) {
+            setLocationOptions([]);
             return;
         }
 
         setLocationLoading(true);
-        // Small delay to prevent blocking typing
         setTimeout(() => {
-            const q = newInputValue.toLowerCase();
+            const q = newInputValue.trim().toLowerCase();
             const all = City.getAllCities();
-            const matches = [];
+            const r1 = []; // Prefix match in India (IN)
+            const r2 = []; // Prefix match elsewhere
+            const r3 = []; // Substring match in India (IN)
+            const r4 = []; // Substring match elsewhere
+
             for (let i = 0; i < all.length; i++) {
-                if (all[i].name.toLowerCase().includes(q)) {
-                    matches.push(all[i]);
-                    if (matches.length >= 50) break;
+                const c = all[i];
+                const nl = c.name.toLowerCase();
+                if (!nl.includes(q)) continue;
+
+                const isPrefix = nl.startsWith(q);
+                const isIndia = c.countryCode === 'IN';
+
+                if (isPrefix && isIndia) r1.push(c);
+                else if (isPrefix) r2.push(c);
+                else if (isIndia) r3.push(c);
+                else r4.push(c);
+
+                if (r1.length >= 30) break;
+            }
+
+            setLocationOptions([...r1, ...r2, ...r3, ...r4].slice(0, 50));
+            setLocationLoading(false);
+        }, 120);
+    };
+
+    const handleLocationSelect = (event, val) => {
+        if (val) {
+            const country = Country.getCountryByCode(val.countryCode);
+            const state = State.getStateByCodeAndCountry(val.stateCode, val.countryCode);
+            const locationName = `${val.name}, ${state?.name || val.stateCode}, ${country?.name || val.countryCode}`;
+            const lat = parseFloat(val.latitude);
+            const long = parseFloat(val.longitude);
+            let tz = 5.5;
+
+            if (val.countryCode === 'IN') {
+                tz = 5.5;
+            } else {
+                try {
+                    const timezones = ct.getTimezonesForCountry(val.countryCode);
+                    if (timezones && timezones.length === 1) {
+                        tz = timezones[0].utcOffset / 60;
+                    } else if (timezones && timezones.length > 1) {
+                        let bestTz = timezones[0];
+                        let minDiff = 999;
+                        timezones.forEach(t => {
+                            const tzNominalLong = (t.utcOffset / 60) * 15;
+                            const diff = Math.abs(tzNominalLong - long);
+                            if (diff < minDiff) {
+                                minDiff = diff;
+                                bestTz = t;
+                            }
+                        });
+                        tz = bestTz.utcOffset / 60;
+                    } else {
+                        tz = calculateTimezone(long);
+                    }
+                } catch (e) {
+                    tz = calculateTimezone(long);
                 }
             }
-            setLocationOptions(matches);
-            setLocationLoading(false);
-        }, 100);
+
+            setMatchDetails(prev => ({
+                ...prev,
+                location: locationName,
+                lat,
+                long,
+                timezone: tz
+            }));
+        }
     };
 
 
@@ -253,13 +313,18 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
     const [expanded, setExpanded] = useState(false); // Default collapsed
     const [chartExpanded, setChartExpanded] = useState(true); // Default open when result available
 
-    const formatLagnaTime = (isoString) => {
+    const formatLagnaTime = (isoString, fallbackTime = null) => {
+        if (fallbackTime && typeof fallbackTime === 'string') return fallbackTime;
         if (!isoString) return '-';
         try {
-            const date = new Date(isoString);
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12 || 12;
-            return `${hours.toString().padStart(2, '0')}:${minutes} ${ampm}`;
+            const utcDate = new Date(isoString);
+            if (isNaN(utcDate.getTime())) return isoString;
+            const tz = typeof matchDetails.timezone === 'number' ? matchDetails.timezone : (parseFloat(matchDetails.timezone) || 5.5);
+            const localMs = utcDate.getTime() + (tz * 3600000);
+            const d = new Date(localMs);
+            const hours = d.getUTCHours();
+            const minutes = d.getUTCMinutes().toString().padStart(2, '0');
+            return `${hours.toString().padStart(2, '0')}:${minutes}`;
         } catch (e) {
             console.error("Time format error", e);
             return isoString.split('T')[1]?.slice(0, 5) || isoString;
@@ -348,58 +413,29 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                         />
                     </Box>
 
-                    {/* Row 2: Search Venue (City) - 100% Full Width (Doubled Length!) */}
+                    {/* Row 2: Search Venue (City) - 100% Full Width */}
                     <Box sx={{ width: '100%' }}>
                         <Autocomplete
                             fullWidth
                             sx={{ width: '100%' }}
                             options={locationOptions}
                             loading={locationLoading}
-                            getOptionLabel={(option) => `${option.name}, ${option.stateCode}, ${option.countryCode}`}
-                            onInputChange={(event, newInputValue) => {
-                                if (!newInputValue || newInputValue.length < 3) return;
-                                setLocationLoading(true);
-                                setTimeout(() => {
-                                    const q = newInputValue.toLowerCase();
-                                    const all = City.getAllCities();
-                                    const matches = [];
-                                    for (let i = 0; i < all.length; i++) {
-                                        if (all[i].name.toLowerCase().includes(q)) {
-                                            matches.push(all[i]);
-                                            if (matches.length >= 50) break;
-                                        }
-                                    }
-                                    setLocationOptions(matches);
-                                    setLocationLoading(false);
-                                }, 300);
+                            getOptionLabel={(option) => {
+                                if (!option) return '';
+                                if (typeof option === 'string') return option;
+                                const country = Country.getCountryByCode(option.countryCode);
+                                const state = State.getStateByCodeAndCountry(option.stateCode, option.countryCode);
+                                return `${option.name}, ${state?.name || option.stateCode}, ${country?.name || option.countryCode}`;
                             }}
-                            onChange={(event, val) => {
-                                if (val) {
-                                    const country = Country.getCountryByCode(val.countryCode);
-                                    const state = State.getStateByCodeAndCountry(val.stateCode, val.countryCode);
-                                    const locationName = `${val.name}, ${state?.name || val.stateCode}, ${country?.name || val.countryCode}`;
-                                    const lat = parseFloat(val.latitude);
-                                    const long = parseFloat(val.longitude);
-                                    let tz = 5.5;
-                                    try {
-                                        const timezones = ct.getTimezonesForCountry(val.countryCode);
-                                        if (timezones && timezones.length > 0) {
-                                            tz = timezones[0].utcOffset / 60;
-                                        } else {
-                                            tz = calculateTimezone(long);
-                                        }
-                                    } catch (e) {
-                                        tz = calculateTimezone(long);
-                                    }
-                                    setMatchDetails(prev => ({ ...prev, location: locationName, lat, long, timezone: tz }));
-                                }
-                            }}
+                            onInputChange={handleLocationSearch}
+                            onChange={handleLocationSelect}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
                                     label="Search Venue (City)"
                                     size="small"
                                     fullWidth
+                                    placeholder="Search venue (e.g. Coimbatore, Chennai, Mumbai...)"
                                     InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.75rem' } }}
                                     InputProps={{
                                         ...params.InputProps,
@@ -422,11 +458,24 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                             )}
                             renderOption={(props, option) => {
                                 const country = Country.getCountryByCode(option.countryCode);
+                                const state = State.getStateByCodeAndCountry(option.stateCode, option.countryCode);
+                                const isIndia = option.countryCode === 'IN';
                                 return (
-                                    <li {...props} key={`${option.name}-${option.latitude}`}>
-                                        <Box>
-                                            <Typography variant="body2" fontWeight="bold">{option.name}</Typography>
-                                            <Typography variant="caption" color="textSecondary">{option.stateCode}, {country?.name}</Typography>
+                                    <li {...props} key={`${option.name}-${option.latitude}-${option.longitude}`}>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
+                                                <Typography variant="body2" fontWeight="bold">{option.name}</Typography>
+                                                <Typography variant="caption" sx={{
+                                                    bgcolor: isIndia ? '#E8F5E9' : '#EDE7F6',
+                                                    color: isIndia ? '#2E7D32' : '#512DA8',
+                                                    px: 0.8, py: 0.2, borderRadius: '4px', fontWeight: 'bold'
+                                                }}>
+                                                    {isIndia ? '🇮🇳 India (+5.5)' : option.countryCode}
+                                                </Typography>
+                                            </Box>
+                                            <Typography variant="caption" color="textSecondary">
+                                                {state?.name || option.stateCode}, {country?.name || option.countryCode} (Lat: {parseFloat(option.latitude).toFixed(2)}, Long: {parseFloat(option.longitude).toFixed(2)})
+                                            </Typography>
                                         </Box>
                                     </li>
                                 );
@@ -435,16 +484,17 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                     </Box>
                 </Box>
             ) : (
-                <Grid container spacing={1} alignItems="center">
-                    <Grid item xs={6} sm={3.5}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                    {/* Row 1: Date & Time side-by-side */}
+                    <Box sx={{ display: 'flex', gap: 1.2, alignItems: 'center', flexWrap: 'wrap' }}>
                         <TextField
                             label="Match Date"
                             type="date"
                             size="small"
-                            fullWidth
                             value={matchDetails.date}
                             onChange={(e) => handleChange('date', e.target.value)}
                             InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.75rem' } }}
+                            sx={{ width: { xs: '100%', sm: 190 } }}
                             InputProps={{
                                 sx: {
                                     borderRadius: '10px',
@@ -456,17 +506,14 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                 }
                             }}
                         />
-                    </Grid>
-
-                    <Grid item xs={6} sm={3}>
                         <TextField
                             label="Match Time"
                             type="time"
                             size="small"
-                            fullWidth
                             value={matchDetails.time}
                             onChange={(e) => handleChange('time', e.target.value)}
                             InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.75rem' } }}
+                            sx={{ width: { xs: '100%', sm: 160 } }}
                             InputProps={{
                                 sx: {
                                     borderRadius: '10px',
@@ -478,62 +525,43 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                 }
                             }}
                         />
-                    </Grid>
+                    </Box>
 
-                    <Grid item xs={12} sm={5.5}>
+                    {/* Row 2: Search Venue (City) - 100% Full Width (Tripled Size!) */}
+                    <Box sx={{ width: '100%' }}>
                         <Autocomplete
                             fullWidth
+                            sx={{ width: '100%' }}
                             options={locationOptions}
                             loading={locationLoading}
-                            getOptionLabel={(option) => `${option.name}, ${option.stateCode}, ${option.countryCode}`}
-                            onInputChange={(event, newInputValue) => {
-                                if (!newInputValue || newInputValue.length < 3) return;
-                                setLocationLoading(true);
-                                setTimeout(() => {
-                                    const q = newInputValue.toLowerCase();
-                                    const all = City.getAllCities();
-                                    const matches = [];
-                                    for (let i = 0; i < all.length; i++) {
-                                        if (all[i].name.toLowerCase().includes(q)) {
-                                            matches.push(all[i]);
-                                            if (matches.length >= 50) break;
-                                        }
-                                    }
-                                    setLocationOptions(matches);
-                                    setLocationLoading(false);
-                                }, 300);
+                            getOptionLabel={(option) => {
+                                if (!option) return '';
+                                if (typeof option === 'string') return option;
+                                const country = Country.getCountryByCode(option.countryCode);
+                                const state = State.getStateByCodeAndCountry(option.stateCode, option.countryCode);
+                                return `${option.name}, ${state?.name || option.stateCode}, ${country?.name || option.countryCode}`;
                             }}
-                            onChange={(event, val) => {
-                                if (val) {
-                                    const country = Country.getCountryByCode(val.countryCode);
-                                    const state = State.getStateByCodeAndCountry(val.stateCode, val.countryCode);
-                                    const locationName = `${val.name}, ${state?.name || val.stateCode}, ${country?.name || val.countryCode}`;
-                                    const lat = parseFloat(val.latitude);
-                                    const long = parseFloat(val.longitude);
-                                    let tz = 5.5;
-                                    try {
-                                        const timezones = ct.getTimezonesForCountry(val.countryCode);
-                                        if (timezones && timezones.length > 0) {
-                                            tz = timezones[0].utcOffset / 60;
-                                        } else {
-                                            tz = calculateTimezone(long);
-                                        }
-                                    } catch (e) {
-                                        tz = calculateTimezone(long);
-                                    }
-                                    setMatchDetails(prev => ({ ...prev, location: locationName, lat, long, timezone: tz }));
-                                }
-                            }}
+                            onInputChange={handleLocationSearch}
+                            onChange={handleLocationSelect}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
                                     label="Search Venue (City)"
                                     size="small"
                                     fullWidth
+                                    placeholder="Search venue city (e.g. Coimbatore, Chennai, Mumbai, London...)"
                                     InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.75rem' } }}
                                     InputProps={{
                                         ...params.InputProps,
-                                        sx: { borderRadius: '10px', bgcolor: '#fff', height: 38, fontSize: '0.82rem', border: '1px solid #FFCC80' },
+                                        sx: {
+                                            borderRadius: '10px',
+                                            bgcolor: '#fff',
+                                            height: 38,
+                                            fontSize: '0.85rem',
+                                            fontWeight: 'bold',
+                                            border: '1px solid #FFCC80',
+                                            width: '100%'
+                                        },
                                         endAdornment: (
                                             <React.Fragment>
                                                 {locationLoading ? <CircularProgress color="inherit" size={16} /> : null}
@@ -545,18 +573,33 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                             )}
                             renderOption={(props, option) => {
                                 const country = Country.getCountryByCode(option.countryCode);
+                                const state = State.getStateByCodeAndCountry(option.stateCode, option.countryCode);
+                                const isIndia = option.countryCode === 'IN';
                                 return (
-                                    <li {...props} key={`${option.name}-${option.latitude}`}>
-                                        <Box>
-                                            <Typography variant="body2" fontWeight="bold">{option.name}</Typography>
-                                            <Typography variant="caption" color="textSecondary">{option.stateCode}, {country?.name}</Typography>
+                                    <li {...props} key={`${option.name}-${option.latitude}-${option.longitude}`}>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
+                                                <Typography variant="body2" fontWeight="bold">
+                                                    {option.name}
+                                                </Typography>
+                                                <Typography variant="caption" sx={{
+                                                    bgcolor: isIndia ? '#E8F5E9' : '#EDE7F6',
+                                                    color: isIndia ? '#2E7D32' : '#512DA8',
+                                                    px: 0.8, py: 0.2, borderRadius: '4px', fontWeight: 'bold'
+                                                }}>
+                                                    {isIndia ? '🇮🇳 India (+5.5)' : option.countryCode}
+                                                </Typography>
+                                            </Box>
+                                            <Typography variant="caption" color="textSecondary">
+                                                {state?.name || option.stateCode}, {country?.name || option.countryCode} (Lat: {parseFloat(option.latitude).toFixed(2)}, Long: {parseFloat(option.longitude).toFixed(2)})
+                                            </Typography>
                                         </Box>
                                     </li>
                                 );
                             }}
                         />
-                    </Grid>
-                </Grid>
+                    </Box>
+                </Box>
             )}
 
             {/* Row 2: Lat/Long/TZ/Ayanamsa (Strict Single Line) */}
@@ -1066,8 +1109,8 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                                                                 }}>{slot.nakLabel}</Box>
                                                                             </Box>
                                                                         </TableCell>
-                                                                        <TableCell sx={{ fontSize: '0.7rem', px: 0.5, whiteSpace: 'nowrap' }}>{formatLagnaTime(slot.start)}</TableCell>
-                                                                        <TableCell sx={{ fontSize: '0.7rem', px: 0.5, whiteSpace: 'nowrap' }}>{formatLagnaTime(slot.end)}</TableCell>
+                                                                        <TableCell sx={{ fontSize: '0.7rem', px: 0.5, whiteSpace: 'nowrap', fontWeight: 'bold' }}>{slot.startTime || formatLagnaTime(slot.start)}</TableCell>
+                                                                        <TableCell sx={{ fontSize: '0.7rem', px: 0.5, whiteSpace: 'nowrap', fontWeight: 'bold' }}>{slot.endTime || formatLagnaTime(slot.end)}</TableCell>
                                                                         <TableCell sx={{ fontSize: '0.7rem', px: 0.5, fontWeight: slot.isMain ? 'bold' : 'normal' }}>
                                                                             {lagnaTamil} {slot.isMain ? '⭐' : ''}
                                                                         </TableCell>

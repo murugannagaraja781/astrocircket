@@ -295,7 +295,7 @@ const calculatePlanetaryPositions = (year, month, day, hour, minute, latitude, l
         if (planets[k] < 0) planets[k] += 360;
     });
 
-    console.log(`[VedicAPI] Calculated for ${year}-${month}-${day}: Asc=${ascendant.toFixed(2)} (${ayanamsaType})`);
+    // console.log(`[VedicAPI] Calculated for ${year}-${month}-${day}: Asc=${ascendant.toFixed(2)} (${ayanamsaType})`);
 
     return {
         planets,
@@ -448,6 +448,10 @@ const getLagnaTimeline = (year, month, day, hour, minute, lat, lon, timezone = 5
             currentNakTamil = nakTamil;
             segmentStartTime = new Date(currentTime);
         } else if (currentLagna !== signName || currentNakshatra !== nakName) {
+            const segStartWall = new Date(segmentStartTime.getTime() + (parseFloat(timezone) * 3600000));
+            const currentWall = new Date(currentTime.getTime() + (parseFloat(timezone) * 3600000));
+            const formatWall = (d) => `${String(d.getUTCHours()).padStart(2, '0')}:${String(d.getUTCMinutes()).padStart(2, '0')}`;
+
             // Sign or Nakshatra changed - push previous segment
             timeline.push({
                 lagna: currentLagna,
@@ -457,6 +461,8 @@ const getLagnaTimeline = (year, month, day, hour, minute, lat, lon, timezone = 5
                 nakshatraLord: currentNakLord,
                 start: segmentStartTime.toISOString(),
                 end: currentTime.toISOString(),
+                startTime: formatWall(segStartWall),
+                endTime: formatWall(currentWall),
                 isMain: timeline.length === 0
             });
             currentLagna = signName;
@@ -472,6 +478,10 @@ const getLagnaTimeline = (year, month, day, hour, minute, lat, lon, timezone = 5
 
     // Push the last segment
     if (currentLagna) {
+        const segStartWall = new Date(segmentStartTime.getTime() + (parseFloat(timezone) * 3600000));
+        const endWall = new Date(endTime.getTime() + (parseFloat(timezone) * 3600000));
+        const formatWall = (d) => `${String(d.getUTCHours()).padStart(2, '0')}:${String(d.getUTCMinutes()).padStart(2, '0')}`;
+
         timeline.push({
             lagna: currentLagna,
             lord: currentLagnaLord,
@@ -480,6 +490,8 @@ const getLagnaTimeline = (year, month, day, hour, minute, lat, lon, timezone = 5
             nakshatraLord: currentNakLord,
             start: segmentStartTime.toISOString(),
             end: endTime.toISOString(),
+            startTime: formatWall(segStartWall),
+            endTime: formatWall(endWall),
             isMain: timeline.length === 0
         });
     }
