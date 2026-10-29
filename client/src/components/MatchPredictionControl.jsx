@@ -13,7 +13,8 @@ import RasiChart, { tamilSigns, signLords, signLordsTamil, nakshatraTamilMap, pl
 const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionStart, token, rightSlot, layout = 'default' }, ref) => {
     const [matchDetails, setMatchDetails] = useState({
         date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
-        time: '19:30',
+        time: '19:30', // Venue Local Time (sent to calculation backend)
+        istTime: '19:30', // Indian Standard Time (IST)
         battingTime: '',
         bowlingTime: '',
         location: 'Mumbai, India', // Default
@@ -34,8 +35,6 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
     const [locationOptions, setLocationOptions] = useState([]);
     const [locationLoading, setLocationLoading] = useState(false);
 
-
-
     const calculateTimezone = (long) => {
         const lonNum = parseFloat(long);
         if (isNaN(lonNum)) return 5.5;
@@ -46,7 +45,56 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
         return offset;
     };
 
+    const convertIstToLocal = (ist, tz) => {
+        if (!ist) return '';
+        const [h, m] = ist.split(':').map(Number);
+        if (isNaN(h) || isNaN(m)) return ist;
+        const targetTz = typeof tz === 'number' ? tz : parseFloat(tz) || 5.5;
+        const diffMin = (targetTz - 5.5) * 60;
+        let totalMin = Math.round(h * 60 + m + diffMin);
+        totalMin = ((totalMin % 1440) + 1440) % 1440;
+        const lh = Math.floor(totalMin / 60);
+        const lm = totalMin % 60;
+        return `${String(lh).padStart(2, '0')}:${String(lm).padStart(2, '0')}`;
+    };
 
+    const convertLocalToIst = (local, tz) => {
+        if (!local) return '';
+        const [h, m] = local.split(':').map(Number);
+        if (isNaN(h) || isNaN(m)) return local;
+        const targetTz = typeof tz === 'number' ? tz : parseFloat(tz) || 5.5;
+        const diffMin = (5.5 - targetTz) * 60;
+        let totalMin = Math.round(h * 60 + m + diffMin);
+        totalMin = ((totalMin % 1440) + 1440) % 1440;
+        const ih = Math.floor(totalMin / 60);
+        const im = totalMin % 60;
+        return `${String(ih).padStart(2, '0')}:${String(im).padStart(2, '0')}`;
+    };
+
+    const formatToIST = (isoString) => {
+        if (!isoString) return '-';
+        try {
+            const utcDate = new Date(isoString);
+            if (isNaN(utcDate.getTime())) return '-';
+            const istMs = utcDate.getTime() + (5.5 * 3600000);
+            const d = new Date(istMs);
+            const hours = d.getUTCHours().toString().padStart(2, '0');
+            const minutes = d.getUTCMinutes().toString().padStart(2, '0');
+            return `${hours}:${minutes}`;
+        } catch (e) {
+            return '-';
+        }
+    };
+
+    const handleTimeChange = (type, val) => {
+        if (type === 'ist') {
+            const newLocal = convertIstToLocal(val, matchDetails.timezone);
+            setMatchDetails(prev => ({ ...prev, istTime: val, time: newLocal }));
+        } else {
+            const newIst = convertLocalToIst(val, matchDetails.timezone);
+            setMatchDetails(prev => ({ ...prev, time: val, istTime: newIst }));
+        }
+    };
 
     const handleChange = (field, value) => {
         setMatchDetails(prev => ({ ...prev, [field]: value }));
@@ -124,12 +172,17 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                 }
             }
 
+            const currentIst = matchDetails.istTime || convertLocalToIst(matchDetails.time, matchDetails.timezone) || '19:30';
+            const newLocalTime = convertIstToLocal(currentIst, tz);
+
             setMatchDetails(prev => ({
                 ...prev,
                 location: locationName,
                 lat,
                 long,
-                timezone: tz
+                timezone: tz,
+                istTime: currentIst,
+                time: newLocalTime
             }));
         }
     };
@@ -364,7 +417,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                     📅 Match Schedule & Venue
                 </Typography>
                 <Typography variant="caption" sx={{ color: '#E65100', fontWeight: 'bold', bgcolor: 'white', px: 1, py: 0.3, borderRadius: '6px', border: '1px solid #FFCC80', fontSize: '0.75rem' }}>
-                    {matchDetails.date} @ {matchDetails.time}
+                    {matchDetails.date} @ {matchDetails.time} {matchDetails.timezone !== 5.5 ? `(IST ${matchDetails.istTime || convertLocalToIst(matchDetails.time, matchDetails.timezone)})` : 'IST'}
                 </Typography>
             </Box>
 
@@ -393,25 +446,47 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                             }}
                         />
                         <TextField
-                            label="Match Time"
+                            label={matchDetails.timezone === 5.5 ? "Match Time (IST)" : "Time (IST 🇮🇳)"}
                             type="time"
                             size="small"
                             fullWidth
-                            value={matchDetails.time}
-                            onChange={(e) => handleChange('time', e.target.value)}
+                            value={matchDetails.istTime || convertLocalToIst(matchDetails.time, matchDetails.timezone)}
+                            onChange={(e) => handleTimeChange('ist', e.target.value)}
                             InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.75rem' } }}
                             InputProps={{
                                 sx: {
                                     borderRadius: '10px',
                                     fontWeight: 'bold',
-                                    bgcolor: '#fff',
+                                    bgcolor: matchDetails.timezone === 5.5 ? '#fff' : '#FFF8E1',
                                     height: 38,
                                     fontSize: '0.82rem',
-                                    border: '1px solid #FFCC80'
+                                    border: matchDetails.timezone === 5.5 ? '1px solid #FFCC80' : '1px solid #FFB300'
                                 }
                             }}
                         />
                     </Box>
+
+                    {matchDetails.timezone !== 5.5 && (
+                        <TextField
+                            label={`Venue Local Time (TZ ${matchDetails.timezone >= 0 ? '+' + matchDetails.timezone : matchDetails.timezone})`}
+                            type="time"
+                            size="small"
+                            fullWidth
+                            value={matchDetails.time}
+                            onChange={(e) => handleTimeChange('local', e.target.value)}
+                            InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#1565C0', fontSize: '0.75rem' } }}
+                            InputProps={{
+                                sx: {
+                                    borderRadius: '10px',
+                                    fontWeight: 'bold',
+                                    bgcolor: '#E3F2FD',
+                                    height: 36,
+                                    fontSize: '0.82rem',
+                                    border: '1px solid #90CAF9'
+                                }
+                            }}
+                        />
+                    )}
 
                     {/* Row 2: Search Venue (City) - 100% Full Width */}
                     <Box sx={{ width: '100%' }}>
@@ -485,7 +560,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                 </Box>
             ) : (
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                    {/* Row 1: Date & Time side-by-side */}
+                    {/* Row 1: Date & Time (IST + Local if venue is abroad) */}
                     <Box sx={{ display: 'flex', gap: 1.2, alignItems: 'center', flexWrap: 'wrap' }}>
                         <TextField
                             label="Match Date"
@@ -494,7 +569,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                             value={matchDetails.date}
                             onChange={(e) => handleChange('date', e.target.value)}
                             InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.75rem' } }}
-                            sx={{ width: { xs: '100%', sm: 190 } }}
+                            sx={{ width: { xs: '100%', sm: 175 } }}
                             InputProps={{
                                 sx: {
                                     borderRadius: '10px',
@@ -506,25 +581,66 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                 }
                             }}
                         />
+
+                        {/* Match Time (IST) */}
                         <TextField
-                            label="Match Time"
+                            label={matchDetails.timezone === 5.5 ? "Match Time (IST)" : "Match Time (IST 🇮🇳)"}
                             type="time"
                             size="small"
-                            value={matchDetails.time}
-                            onChange={(e) => handleChange('time', e.target.value)}
+                            value={matchDetails.istTime || convertLocalToIst(matchDetails.time, matchDetails.timezone)}
+                            onChange={(e) => handleTimeChange('ist', e.target.value)}
                             InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.75rem' } }}
-                            sx={{ width: { xs: '100%', sm: 160 } }}
+                            sx={{ width: { xs: '100%', sm: 165 } }}
                             InputProps={{
                                 sx: {
                                     borderRadius: '10px',
                                     fontWeight: 'bold',
-                                    bgcolor: '#fff',
+                                    bgcolor: matchDetails.timezone === 5.5 ? '#fff' : '#FFF8E1',
                                     height: 38,
                                     fontSize: '0.82rem',
-                                    border: '1px solid #FFCC80'
+                                    border: matchDetails.timezone === 5.5 ? '1px solid #FFCC80' : '1px solid #FFB300'
                                 }
                             }}
                         />
+
+                        {/* If abroad: Venue Local Time */}
+                        {matchDetails.timezone !== 5.5 && (
+                            <React.Fragment>
+                                <TextField
+                                    label={`Venue Time (Local TZ ${matchDetails.timezone >= 0 ? '+' + matchDetails.timezone : matchDetails.timezone})`}
+                                    type="time"
+                                    size="small"
+                                    value={matchDetails.time}
+                                    onChange={(e) => handleTimeChange('local', e.target.value)}
+                                    InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#1565C0', fontSize: '0.75rem' } }}
+                                    sx={{ width: { xs: '100%', sm: 195 } }}
+                                    InputProps={{
+                                        sx: {
+                                            borderRadius: '10px',
+                                            fontWeight: 'bold',
+                                            bgcolor: '#E3F2FD',
+                                            height: 38,
+                                            fontSize: '0.82rem',
+                                            border: '1px solid #90CAF9'
+                                        }
+                                    }}
+                                />
+                                <Box sx={{
+                                    bgcolor: 'rgba(21, 101, 192, 0.08)',
+                                    color: '#0D47A1',
+                                    px: 1, py: 0.5,
+                                    borderRadius: '6px',
+                                    fontSize: '0.72rem',
+                                    fontWeight: 'bold',
+                                    border: '1px solid rgba(21, 101, 192, 0.2)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 0.5
+                                }}>
+                                    🔄 {matchDetails.timezone - 5.5 >= 0 ? `+${(matchDetails.timezone - 5.5).toFixed(1)}h ahead of IST` : `${(matchDetails.timezone - 5.5).toFixed(1)}h behind IST`}
+                                </Box>
+                            </React.Fragment>
+                        )}
                     </Box>
 
                     {/* Row 2: Search Venue (City) - 100% Full Width (Tripled Size!) */}
@@ -1038,8 +1154,12 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                                     <TableHead sx={{ bgcolor: 'rgba(255, 193, 7, 0.15)' }}>
                                                         <TableRow>
                                                             <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.7rem', px: 0.5 }}>#</TableCell>
-                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.7rem', px: 0.5 }}>தொடக்கம்</TableCell>
-                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.7rem', px: 0.5 }}>முடிவு</TableCell>
+                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.7rem', px: 0.5 }}>
+                                                                தொடக்கம் {matchDetails.timezone !== 5.5 ? '(Local / IST)' : ''}
+                                                            </TableCell>
+                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.7rem', px: 0.5 }}>
+                                                                முடிவு {matchDetails.timezone !== 5.5 ? '(Local / IST)' : ''}
+                                                            </TableCell>
                                                             <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.7rem', px: 0.5 }}>லக்னம்</TableCell>
                                                             <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.7rem', px: 0.5 }}>நட்சத்திரம்</TableCell>
                                                             <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.7rem', px: 0.5 }}>அதிபதி</TableCell>
@@ -1109,8 +1229,26 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                                                                 }}>{slot.nakLabel}</Box>
                                                                             </Box>
                                                                         </TableCell>
-                                                                        <TableCell sx={{ fontSize: '0.7rem', px: 0.5, whiteSpace: 'nowrap', fontWeight: 'bold' }}>{slot.startTime || formatLagnaTime(slot.start)}</TableCell>
-                                                                        <TableCell sx={{ fontSize: '0.7rem', px: 0.5, whiteSpace: 'nowrap', fontWeight: 'bold' }}>{slot.endTime || formatLagnaTime(slot.end)}</TableCell>
+                                                                        <TableCell sx={{ fontSize: '0.7rem', px: 0.5, whiteSpace: 'nowrap', fontWeight: 'bold' }}>
+                                                                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.2 }}>
+                                                                                <span>{slot.startTime || formatLagnaTime(slot.start)}</span>
+                                                                                {matchDetails.timezone !== 5.5 && (
+                                                                                    <Typography component="span" sx={{ fontSize: '0.62rem', color: '#E65100', bgcolor: 'rgba(255, 111, 0, 0.1)', px: 0.5, py: 0.1, borderRadius: '4px', fontWeight: 'bold', width: 'fit-content' }}>
+                                                                                        🇮🇳 {formatToIST(slot.start)} IST
+                                                                                    </Typography>
+                                                                                )}
+                                                                            </Box>
+                                                                        </TableCell>
+                                                                        <TableCell sx={{ fontSize: '0.7rem', px: 0.5, whiteSpace: 'nowrap', fontWeight: 'bold' }}>
+                                                                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.2 }}>
+                                                                                <span>{slot.endTime || formatLagnaTime(slot.end)}</span>
+                                                                                {matchDetails.timezone !== 5.5 && (
+                                                                                    <Typography component="span" sx={{ fontSize: '0.62rem', color: '#E65100', bgcolor: 'rgba(255, 111, 0, 0.1)', px: 0.5, py: 0.1, borderRadius: '4px', fontWeight: 'bold', width: 'fit-content' }}>
+                                                                                        🇮🇳 {formatToIST(slot.end)} IST
+                                                                                    </Typography>
+                                                                                )}
+                                                                            </Box>
+                                                                        </TableCell>
                                                                         <TableCell sx={{ fontSize: '0.7rem', px: 0.5, fontWeight: slot.isMain ? 'bold' : 'normal' }}>
                                                                             {lagnaTamil} {slot.isMain ? '⭐' : ''}
                                                                         </TableCell>
