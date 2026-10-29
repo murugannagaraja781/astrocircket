@@ -1,5 +1,5 @@
 import React, { useState, forwardRef, useImperativeHandle, useRef } from 'react';
-import { Paper, Typography, Box, TextField, Button, Grid, CircularProgress, Alert, Autocomplete, Collapse } from '@mui/material';
+import { Paper, Typography, Box, TextField, Button, Grid, CircularProgress, Alert, Autocomplete, Collapse, Fab, Tooltip } from '@mui/material';
 import axios from 'axios';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import CloseIcon from '@mui/icons-material/Close';
@@ -29,6 +29,8 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
     const [viewChartOpen, setViewChartOpen] = useState(false);
     const [chartData, setChartData] = useState(null);
     const [matchChartResult, setMatchChartResult] = useState(null); // Store result for display
+    const [lagnaModalOpen, setLagnaModalOpen] = useState(false);
+    const [lagnaLoading, setLagnaLoading] = useState(false);
 
     // Country-State-City Selection States
     // Single Line Search State
@@ -270,6 +272,9 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
             });
 
             setChartData(res.data);
+            if (!matchChartResult) {
+                setMatchChartResult(res.data);
+            }
             setViewChartOpen(true);
 
         } catch (err) {
@@ -277,6 +282,47 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
             setError("Failed to fetch Rasi Chart.");
         } finally {
             setViewChartLoading(false);
+        }
+    };
+
+    const handleOpenLagnaModal = async () => {
+        const activeData = matchChartResult || chartData;
+        if (activeData?.lagnaTimeline && activeData.lagnaTimeline.length > 0) {
+            setLagnaModalOpen(true);
+            return;
+        }
+
+        setLagnaLoading(true);
+        setError('');
+        try {
+            const [year, month, day] = matchDetails.date.split('-');
+            const [hour, minute] = matchDetails.time.split(':');
+
+            const payload = {
+                day: parseInt(day),
+                month: parseInt(month),
+                year: parseInt(year),
+                hour: parseInt(hour),
+                minute: parseInt(minute),
+                latitude: matchDetails.lat,
+                longitude: matchDetails.long,
+                timezone: matchDetails.timezone,
+                ayanamsa: matchDetails.ayanamsa || 'Lahiri'
+            };
+
+            const baseUrl = import.meta.env.VITE_BACKEND_URL || (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' ? '' : 'http://localhost:5001');
+            const res = await axios.post(`${baseUrl}/api/charts/birth-chart`, payload, {
+                headers: { 'x-auth-token': token }
+            });
+
+            setChartData(res.data);
+            setMatchChartResult(res.data);
+            setLagnaModalOpen(true);
+        } catch (err) {
+            console.error("Fetch Lagna Transit Error", err);
+            setError("Failed to fetch Lagna Transit.");
+        } finally {
+            setLagnaLoading(false);
         }
     };
 
@@ -384,6 +430,195 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
         }
     };
 
+    const renderLagnaTransitContent = (data) => {
+        if (!data) return null;
+        const ascSign = data.ascendant?.tamil || data.ascendant?.english || '-';
+        const ascSignId = getSignId(data.ascendant);
+        const ascLordRaw = data.ascendant?.lordTamil || data.ascendant?.lord || (ascSignId ? signLords[ascSignId] : null);
+        const ascLord = signLordsTamil[ascLordRaw] || planetFullTamilMap[ascLordRaw] || ascLordRaw || '-';
+
+        const ascNakName = data.ascendant?.nakshatra?.tamil || nakshatraTamilMap[data.ascendant?.nakshatra?.name] || data.ascendant?.nakshatra?.name || '-';
+        const ascNakLord = planetFullTamilMap[getNakshatraLordHelper(data.ascendant?.nakshatra?.name)] || getNakshatraLordHelper(data.ascendant?.nakshatra?.name) || '-';
+
+        const moonSign = data.moonSign?.tamil || data.moonSign?.english || '-';
+        const moonLordRaw = data.moonSign?.lordTamil || data.moonSign?.lord || (getSignId(data.moonSign) ? signLords[getSignId(data.moonSign)] : null);
+        const moonLord = signLordsTamil[moonLordRaw] || planetFullTamilMap[moonLordRaw] || moonLordRaw || '-';
+
+        const nakObj = data.moonNakshatra || data.nakshatra || {};
+        const nakTamil = nakObj.tamil || nakshatraTamilMap[nakObj.name] || nakObj.name || '-';
+        const nakLordRaw = nakObj.lordTamil || nakObj.lord || getNakshatraLordHelper(nakObj.name || nakObj.tamil);
+        const nakLord = signLordsTamil[nakLordRaw] || planetFullTamilMap[nakLordRaw] || nakLordRaw || '-';
+        const pada = nakObj.pada || '-';
+
+        const timeline = data.lagnaTimeline || [];
+
+        return (
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {/* 4 Summary Highlight Cards */}
+                <Box sx={{
+                    display: 'grid',
+                    gridTemplateColumns: { xs: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' },
+                    gap: 1.2
+                }}>
+                    <Paper elevation={0} sx={{ p: 1.2, bgcolor: 'rgba(255, 193, 7, 0.12)', border: '1px solid #FFE082', borderRadius: '10px' }}>
+                        <Typography variant="caption" sx={{ color: '#E65100', fontWeight: 'bold', display: 'block', fontSize: '0.72rem' }}>🟡 லக்னம் (Ascendant)</Typography>
+                        <Typography variant="subtitle1" sx={{ fontWeight: '900', color: '#212121', my: 0.3, fontSize: '0.95rem' }}>
+                            {ascSign}
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: '#555', display: 'block', fontSize: '0.7rem' }}>
+                            {ascNakName} • அதிபதி: <b style={{ color: '#E65100' }}>{ascLord}</b>
+                        </Typography>
+                    </Paper>
+
+                    <Paper elevation={0} sx={{ p: 1.2, bgcolor: 'rgba(25, 118, 210, 0.08)', border: '1px solid #90CAF9', borderRadius: '10px' }}>
+                        <Typography variant="caption" sx={{ color: '#1565C0', fontWeight: 'bold', display: 'block', fontSize: '0.72rem' }}>🔵 ராசி (சந்திரன்)</Typography>
+                        <Typography variant="subtitle1" sx={{ fontWeight: '900', color: '#212121', my: 0.3, fontSize: '0.95rem' }}>
+                            {moonSign}
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: '#555', display: 'block', fontSize: '0.7rem' }}>
+                            அதிபதி: <b style={{ color: '#1565C0' }}>{moonLord}</b>
+                        </Typography>
+                    </Paper>
+
+                    <Paper elevation={0} sx={{ p: 1.2, bgcolor: 'rgba(123, 31, 162, 0.08)', border: '1px solid #CE93D8', borderRadius: '10px' }}>
+                        <Typography variant="caption" sx={{ color: '#7B1FA2', fontWeight: 'bold', display: 'block', fontSize: '0.72rem' }}>🟣 நட்சத்திரம்</Typography>
+                        <Typography variant="subtitle1" sx={{ fontWeight: '900', color: '#212121', my: 0.3, fontSize: '0.95rem' }}>
+                            {nakTamil}
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: '#555', display: 'block', fontSize: '0.7rem' }}>
+                            அதிபதி: <b style={{ color: '#7B1FA2' }}>{nakLord}</b>
+                        </Typography>
+                    </Paper>
+
+                    <Paper elevation={0} sx={{ p: 1.2, bgcolor: 'rgba(46, 125, 50, 0.08)', border: '1px solid #A5D6A7', borderRadius: '10px' }}>
+                        <Typography variant="caption" sx={{ color: '#2E7D32', fontWeight: 'bold', display: 'block', fontSize: '0.72rem' }}>🔢 பாதம்</Typography>
+                        <Typography variant="subtitle1" sx={{ fontWeight: '900', color: '#212121', my: 0.3, fontSize: '0.95rem' }}>
+                            {pada}
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: '#555', display: 'block', fontSize: '0.7rem' }}>
+                            நட்சத்திர பாதம்
+                        </Typography>
+                    </Paper>
+                </Box>
+
+                {/* Lagna Transit Timeline Table */}
+                {timeline.length > 0 && (
+                    <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '12px', border: '1px solid rgba(255, 111, 0, 0.25)', overflow: 'hidden' }}>
+                        <Table size="small">
+                            <TableHead sx={{ bgcolor: 'rgba(255, 193, 7, 0.18)' }}>
+                                <TableRow>
+                                    <TableCell sx={{ fontWeight: '900', color: '#E65100', fontSize: '0.75rem', px: 1 }}>#</TableCell>
+                                    <TableCell sx={{ fontWeight: '900', color: '#E65100', fontSize: '0.75rem', px: 1 }}>
+                                        தொடக்கம் {matchDetails.timezone !== 5.5 ? '(LOCAL / IST)' : '(LOCAL)'}
+                                    </TableCell>
+                                    <TableCell sx={{ fontWeight: '900', color: '#E65100', fontSize: '0.75rem', px: 1 }}>
+                                        முடிவு {matchDetails.timezone !== 5.5 ? '(LOCAL / IST)' : '(LOCAL)'}
+                                    </TableCell>
+                                    <TableCell sx={{ fontWeight: '900', color: '#E65100', fontSize: '0.75rem', px: 1 }}>லக்னம்</TableCell>
+                                    <TableCell sx={{ fontWeight: '900', color: '#E65100', fontSize: '0.75rem', px: 1 }}>நட்சத்திரம்</TableCell>
+                                    <TableCell sx={{ fontWeight: '900', color: '#E65100', fontSize: '0.75rem', px: 1 }}>அதிபதி</TableCell>
+                                    <TableCell sx={{ fontWeight: '900', color: '#E65100', fontSize: '0.75rem', px: 1 }}>கால அளவு</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {(() => {
+                                    let lagnaCount = 0;
+                                    let nakCount = 0;
+                                    let prevLagna = null;
+                                    let prevNak = null;
+                                    const labeled = timeline.map((slot) => {
+                                        if (slot.lagna !== prevLagna) {
+                                            lagnaCount++;
+                                            prevLagna = slot.lagna;
+                                        }
+                                        if (slot.nakshatra !== prevNak) {
+                                            nakCount++;
+                                            prevNak = slot.nakshatra;
+                                        }
+                                        return { ...slot, lagnaLabel: `L${lagnaCount}`, nakLabel: `N${nakCount}` };
+                                    });
+
+                                    return labeled.map((slot, index) => {
+                                        const signMap = {
+                                            'Aries': 'மேஷம்', 'Taurus': 'ரிஷபம்', 'Gemini': 'மிதுனம்', 'Cancer': 'கடகம்',
+                                            'Leo': 'சிம்மம்', 'Virgo': 'கன்னி', 'Libra': 'துலாம்', 'Scorpio': 'விருச்சிகம்',
+                                            'Sagittarius': 'தனுசு', 'Capricorn': 'மகரம்', 'Aquarius': 'கும்பம்', 'Pisces': 'மீனம்'
+                                        };
+                                        const lagnaTamil = signMap[slot.lagna] || slot.lagna;
+                                        const lordTamil = planetFullTamilMap[slot.lord] || slot.lord;
+                                        const nakSlotTamil = slot.nakshatraTamil || nakshatraTamilMap[slot.nakshatra] || slot.nakshatra || '-';
+                                        const nakLordTamil = planetFullTamilMap[slot.nakshatraLord] || slot.nakshatraLord || '-';
+
+                                        const startMs = new Date(slot.start).getTime();
+                                        const endMs = new Date(slot.end).getTime();
+                                        const diffMs = endMs - startMs;
+                                        const diffMin = Math.floor(diffMs / 60000);
+                                        const durationHrs = Math.floor(diffMin / 60);
+                                        const durationMins = diffMin % 60;
+                                        const durationStr = durationHrs > 0 ? `${durationHrs}h ${durationMins}m` : `${durationMins}m`;
+
+                                        const lagnaColors = ['#FF6F00', '#1565C0', '#2E7D32', '#6A1B9A', '#C62828'];
+                                        const lColor = lagnaColors[(parseInt(slot.lagnaLabel.slice(1)) - 1) % lagnaColors.length];
+
+                                        return (
+                                            <TableRow key={index} sx={{
+                                                bgcolor: slot.isMain ? 'rgba(255, 193, 7, 0.1)' : (index % 2 === 0 ? '#fff' : 'rgba(250, 250, 250, 0.8)'),
+                                                '&:hover': { bgcolor: 'rgba(255, 238, 204, 0.3)' }
+                                            }}>
+                                                <TableCell sx={{ fontSize: '0.72rem', px: 1, whiteSpace: 'nowrap' }}>
+                                                    <Box sx={{ display: 'flex', gap: 0.4 }}>
+                                                        <Box sx={{
+                                                            bgcolor: lColor, color: '#fff', px: 0.6, py: 0.15,
+                                                            borderRadius: '4px', fontSize: '0.62rem', fontWeight: 'bold',
+                                                            lineHeight: 1.3, minWidth: '22px', textAlign: 'center'
+                                                        }}>{slot.lagnaLabel}</Box>
+                                                        <Box sx={{
+                                                            bgcolor: '#00897B', color: '#fff', px: 0.6, py: 0.15,
+                                                            borderRadius: '4px', fontSize: '0.62rem', fontWeight: 'bold',
+                                                            lineHeight: 1.3, minWidth: '22px', textAlign: 'center'
+                                                        }}>{slot.nakLabel}</Box>
+                                                    </Box>
+                                                </TableCell>
+                                                <TableCell sx={{ fontSize: '0.75rem', px: 1, whiteSpace: 'nowrap', fontWeight: 'bold' }}>
+                                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.2 }}>
+                                                        <span>{slot.startTime || formatLagnaTime(slot.start)}</span>
+                                                        {matchDetails.timezone !== 5.5 && (
+                                                            <Typography component="span" sx={{ fontSize: '0.65rem', color: '#E65100', bgcolor: 'rgba(255, 111, 0, 0.1)', px: 0.5, py: 0.1, borderRadius: '4px', fontWeight: 'bold', width: 'fit-content' }}>
+                                                                🇮🇳 {formatToIST(slot.start)} IST
+                                                            </Typography>
+                                                        )}
+                                                    </Box>
+                                                </TableCell>
+                                                <TableCell sx={{ fontSize: '0.75rem', px: 1, whiteSpace: 'nowrap', fontWeight: 'bold' }}>
+                                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.2 }}>
+                                                        <span>{slot.endTime || formatLagnaTime(slot.end)}</span>
+                                                        {matchDetails.timezone !== 5.5 && (
+                                                            <Typography component="span" sx={{ fontSize: '0.65rem', color: '#E65100', bgcolor: 'rgba(255, 111, 0, 0.1)', px: 0.5, py: 0.1, borderRadius: '4px', fontWeight: 'bold', width: 'fit-content' }}>
+                                                                🇮🇳 {formatToIST(slot.end)} IST
+                                                            </Typography>
+                                                        )}
+                                                    </Box>
+                                                </TableCell>
+                                                <TableCell sx={{ fontSize: '0.75rem', px: 1, fontWeight: slot.isMain ? 'bold' : 'normal' }}>
+                                                    {lagnaTamil} {slot.isMain ? '⭐' : ''}
+                                                </TableCell>
+                                                <TableCell sx={{ fontSize: '0.75rem', px: 1 }}>{nakSlotTamil}</TableCell>
+                                                <TableCell sx={{ fontSize: '0.75rem', px: 1 }}>
+                                                    {lordTamil} / {nakLordTamil}
+                                                </TableCell>
+                                                <TableCell sx={{ fontSize: '0.75rem', px: 1, color: '#666' }}>{durationStr}</TableCell>
+                                            </TableRow>
+                                        );
+                                    });
+                                })()}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                )}
+            </Box>
+        );
+    };
+
     const isSidebar = layout === 'sidebar';
 
     const matchFormBox = (
@@ -416,37 +651,39 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                 <Typography variant="subtitle2" fontWeight="900" sx={{ color: '#FF6F00', display: 'flex', alignItems: 'center', gap: 0.8, fontSize: '0.85rem' }}>
                     📅 Match Schedule & Venue
                 </Typography>
-                <Typography variant="caption" sx={{ color: '#E65100', fontWeight: 'bold', bgcolor: 'white', px: 1, py: 0.3, borderRadius: '6px', border: '1px solid #FFCC80', fontSize: '0.75rem' }}>
-                    {matchDetails.date} @ {matchDetails.time} {matchDetails.timezone !== 5.5 ? `(IST ${matchDetails.istTime || convertLocalToIst(matchDetails.time, matchDetails.timezone)})` : 'IST'}
+                <Typography variant="caption" sx={{ color: '#E65100', fontWeight: 'bold', bgcolor: 'white', px: 1, py: 0.3, borderRadius: '6px', border: '1px solid #FFCC80', fontSize: '0.72rem' }}>
+                    {matchDetails.date} @ {matchDetails.istTime || convertLocalToIst(matchDetails.time, matchDetails.timezone)} IST {matchDetails.timezone !== 5.5 ? `• ${matchDetails.time} Local` : ''}
                 </Typography>
             </Box>
 
             {/* Row 1 & 2: Match Date, Time, Venue */}
             {isSidebar ? (
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                    {/* Row 1: Date & Time in 2 equal columns */}
+                    {/* Row 1: Match Date (Full Width) */}
+                    <TextField
+                        label="Match Date"
+                        type="date"
+                        size="small"
+                        fullWidth
+                        value={matchDetails.date}
+                        onChange={(e) => handleChange('date', e.target.value)}
+                        InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.75rem' } }}
+                        InputProps={{
+                            sx: {
+                                borderRadius: '10px',
+                                fontWeight: 'bold',
+                                bgcolor: '#fff',
+                                height: 38,
+                                fontSize: '0.82rem',
+                                border: '1px solid #FFCC80'
+                            }
+                        }}
+                    />
+
+                    {/* Row 2: Match Time (IST) & Venue Local Time side-by-side in 2 equal columns */}
                     <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1 }}>
                         <TextField
-                            label="Match Date"
-                            type="date"
-                            size="small"
-                            fullWidth
-                            value={matchDetails.date}
-                            onChange={(e) => handleChange('date', e.target.value)}
-                            InputLabelProps={{ shrink: true, sx: { fontWeight: 'bold', color: '#E65100', fontSize: '0.75rem' } }}
-                            InputProps={{
-                                sx: {
-                                    borderRadius: '10px',
-                                    fontWeight: 'bold',
-                                    bgcolor: '#fff',
-                                    height: 38,
-                                    fontSize: '0.82rem',
-                                    border: '1px solid #FFCC80'
-                                }
-                            }}
-                        />
-                        <TextField
-                            label={matchDetails.timezone === 5.5 ? "Match Time (IST)" : "Time (IST 🇮🇳)"}
+                            label="Match Time (IST 🇮🇳)"
                             type="time"
                             size="small"
                             fullWidth
@@ -457,18 +694,15 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                 sx: {
                                     borderRadius: '10px',
                                     fontWeight: 'bold',
-                                    bgcolor: matchDetails.timezone === 5.5 ? '#fff' : '#FFF8E1',
+                                    bgcolor: '#FFF8E1',
                                     height: 38,
                                     fontSize: '0.82rem',
-                                    border: matchDetails.timezone === 5.5 ? '1px solid #FFCC80' : '1px solid #FFB300'
+                                    border: '1px solid #FFB300'
                                 }
                             }}
                         />
-                    </Box>
-
-                    {matchDetails.timezone !== 5.5 && (
                         <TextField
-                            label={`Venue Local Time (TZ ${matchDetails.timezone >= 0 ? '+' + matchDetails.timezone : matchDetails.timezone})`}
+                            label={`Venue Local 📍 (${matchDetails.timezone >= 0 ? '+' + matchDetails.timezone : matchDetails.timezone} TZ)`}
                             type="time"
                             size="small"
                             fullWidth
@@ -480,13 +714,13 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                     borderRadius: '10px',
                                     fontWeight: 'bold',
                                     bgcolor: '#E3F2FD',
-                                    height: 36,
+                                    height: 38,
                                     fontSize: '0.82rem',
                                     border: '1px solid #90CAF9'
                                 }
                             }}
                         />
-                    )}
+                    </Box>
 
                     {/* Row 2: Search Venue (City) - 100% Full Width */}
                     <Box sx={{ width: '100%' }}>
@@ -972,6 +1206,26 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                                     </Box>
                                 );
                             })()}
+                            {/* Button to open full Lagna Timeline Modal */}
+                            <Button
+                                variant="contained"
+                                size="small"
+                                fullWidth
+                                onClick={handleOpenLagnaModal}
+                                startIcon={<span>🪐</span>}
+                                sx={{
+                                    mt: 1.2,
+                                    bgcolor: '#FF6F00',
+                                    '&:hover': { bgcolor: '#E65100' },
+                                    fontWeight: 'bold',
+                                    fontSize: '0.75rem',
+                                    borderRadius: '8px',
+                                    textTransform: 'none',
+                                    boxShadow: '0 2px 8px rgba(255, 111, 0, 0.3)'
+                                }}
+                            >
+                                🪐 முழு லக்ன அட்டவணை (View Lagna Timeline)
+                            </Button>
                         </Collapse>
                     </Box>
                 )}
@@ -1032,27 +1286,124 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                         )}
                     </DialogContent>
                 </Dialog>
+
+                {/* Floating Action Button for Lagna Transit (Always available in sidebar) */}
+                <Tooltip title="போட்டி ராசி & லக்ன ட்ரான்சிஸ்ட் அட்டவணையைத் திறக்க அழுத்தவும் (View Lagna Transit Timeline)" arrow placement="left">
+                    <Fab
+                        variant="extended"
+                        onClick={handleOpenLagnaModal}
+                        sx={{
+                            position: 'fixed',
+                            bottom: 24,
+                            right: 24,
+                            zIndex: 1350,
+                            background: 'linear-gradient(135deg, #FF6F00 0%, #E65100 100%)',
+                            color: '#fff',
+                            fontWeight: '900',
+                            fontSize: '0.82rem',
+                            boxShadow: '0 6px 20px rgba(230, 81, 0, 0.45)',
+                            textTransform: 'none',
+                            gap: 0.8,
+                            px: 2,
+                            py: 0.8,
+                            border: '2px solid rgba(255, 255, 255, 0.7)',
+                            backdropFilter: 'blur(6px)',
+                            '&:hover': {
+                                background: 'linear-gradient(135deg, #E65100 0%, #D84315 100%)',
+                                boxShadow: '0 8px 26px rgba(216, 67, 21, 0.6)',
+                                transform: 'translateY(-2px)'
+                            },
+                            transition: 'all 0.25s ease'
+                        }}
+                    >
+                        {lagnaLoading ? (
+                            <CircularProgress size={18} sx={{ color: '#fff' }} />
+                        ) : (
+                            <span style={{ fontSize: '1.2rem' }}>🪐</span>
+                        )}
+                        <span>போட்டி ராசி & லக்ன ட்ரான்சிஸ்ட்</span>
+                    </Fab>
+                </Tooltip>
+
+                {/* Lagna Transit Modal Dialog */}
+                <Dialog
+                    open={lagnaModalOpen}
+                    onClose={() => setLagnaModalOpen(false)}
+                    maxWidth="lg"
+                    fullWidth
+                    PaperProps={{
+                        sx: {
+                            borderRadius: '16px',
+                            overflow: 'hidden',
+                            boxShadow: '0 16px 40px rgba(0,0,0,0.3)',
+                            bgcolor: '#FFFDF9'
+                        }
+                    }}
+                >
+                    <DialogTitle
+                        component="div"
+                        sx={{
+                            m: 0,
+                            p: 2,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            background: 'linear-gradient(135deg, #1A1F38 0%, #2A3358 100%)',
+                            color: 'white',
+                            borderBottom: '3px solid #FF6F00'
+                        }}
+                    >
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.3 }}>
+                            <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <span>🪐</span> போட்டி ராசி & லக்ன ட்ரான்சிஸ்ட் அட்டவணை
+                            </Typography>
+                            <Typography variant="caption" sx={{ color: '#FFE082', fontSize: '0.78rem' }}>
+                                📅 {matchDetails.date} • 🇮🇳 {matchDetails.istTime || convertLocalToIst(matchDetails.time, matchDetails.timezone)} IST 
+                                {matchDetails.timezone !== 5.5 ? ` | 📍 ${matchDetails.time} Local (TZ ${matchDetails.timezone >= 0 ? '+' + matchDetails.timezone : matchDetails.timezone})` : ''} 
+                                {matchDetails.location ? ` • 📍 ${matchDetails.location}` : ''}
+                            </Typography>
+                        </Box>
+                        <IconButton
+                            aria-label="close"
+                            onClick={() => setLagnaModalOpen(false)}
+                            sx={{ color: 'white', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' } }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    </DialogTitle>
+                    <DialogContent dividers sx={{ p: { xs: 1.5, md: 2.5 }, bgcolor: '#FFFDF9' }}>
+                        {(matchChartResult || chartData) ? (
+                            renderLagnaTransitContent(matchChartResult || chartData)
+                        ) : (
+                            <Box sx={{ p: 4, textAlign: 'center' }}>
+                                <CircularProgress sx={{ color: '#FF6F00' }} />
+                                <Typography sx={{ mt: 1, color: '#666' }}>லக்ன ட்ரான்சிஸ்ட் விபரம் ஏற்றப்படுகிறது...</Typography>
+                            </Box>
+                        )}
+                    </DialogContent>
+                </Dialog>
             </Box>
         );
     }
 
     return (
-        <Paper elevation={0} sx={{ p: 0, mb: { xs: 1, sm: 2 }, overflow: 'hidden', borderRadius: { xs: '10px', sm: '14px' }, border: 'none', bgcolor: 'transparent' }}>
-            {/* When rightSlot is provided, display side-by-side in 2 columns */}
-            {rightSlot ? (
-                <Grid container spacing={1.5} alignItems="stretch">
-                    <Grid item xs={12} md={7} lg={7.5}>
-                        {matchFormBox}
+        <>
+            <Paper elevation={0} sx={{ p: 0, mb: { xs: 1, sm: 2 }, overflow: 'hidden', borderRadius: { xs: '10px', sm: '14px' }, border: 'none', bgcolor: 'transparent' }}>
+                {/* When rightSlot is provided, display side-by-side in 2 columns */}
+                {rightSlot ? (
+                    <Grid container spacing={1.5} alignItems="stretch">
+                        <Grid item xs={12} md={7} lg={7.5}>
+                            {matchFormBox}
+                        </Grid>
+                        <Grid item xs={12} md={5} lg={4.5}>
+                            {rightSlot}
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12} md={5} lg={4.5}>
-                        {rightSlot}
-                    </Grid>
-                </Grid>
-            ) : (
-                matchFormBox
-            )}
+                ) : (
+                    matchFormBox
+                )}
 
-            {error && <Alert severity="error" sx={{ mt: 1.5, borderRadius: '10px' }}>{error}</Alert>}
+                {error && <Alert severity="error" sx={{ mt: 1.5, borderRadius: '10px' }}>{error}</Alert>}
 
                 {/* MATCH CHART SUMMARY TABLE - Tamil Format (Collapsible) */}
                 {matchChartResult && (
@@ -1080,263 +1431,171 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                         </Box>
 
                         <Collapse in={chartExpanded}>
-                            <Grid container spacing={2}>
-                                {/* Left Column: Match Details */}
-                                <Grid item xs={12} md={6}>
-                                    <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '10px', border: '1px solid rgba(255, 111, 0, 0.2)', height: '100%' }}>
-                                        <Table size="small">
-                                            <TableBody>
-                                                {/* Ascendant Row */}
-                                                <TableRow sx={{ bgcolor: 'rgba(255, 193, 7, 0.08)' }}>
-                                                    <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', width: '35%', py: 0.8, fontSize: '0.75rem' }}>
-                                                        லக்னம்
-                                                    </TableCell>
-                                                    <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                                        {matchChartResult.ascendant?.tamil || matchChartResult.ascendant?.english || '-'} <br />
-                                                        <span style={{ fontSize: '0.7rem', color: '#666' }}>
-                                                            ({matchChartResult.ascendant?.nakshatra?.tamil || nakshatraTamilMap[matchChartResult.ascendant?.nakshatra?.name] || matchChartResult.ascendant?.nakshatra?.name || '-'})
-                                                        </span>
-                                                    </TableCell>
-                                                    <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
-                                                        {matchChartResult.ascendant?.lordTamil || planetFullTamilMap[matchChartResult.ascendant?.lord] || matchChartResult.ascendant?.lord || '-'} <br />
-                                                        <span style={{ fontSize: '0.7rem', color: '#888' }}>
-                                                            (நட்சத்திர அதிபதி: {planetFullTamilMap[getNakshatraLordHelper(matchChartResult.ascendant?.nakshatra?.name)] || getNakshatraLordHelper(matchChartResult.ascendant?.nakshatra?.name) || '-'})
-                                                        </span>
-                                                    </TableCell>
-                                                </TableRow>
-
-                                                {/* Moon Sign Row */}
-                                                <TableRow>
-                                                    <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
-                                                        ராசி (சந்திரன்)
-                                                    </TableCell>
-                                                    <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                                        {matchChartResult.moonSign?.tamil || matchChartResult.moonSign?.english || '-'}
-                                                    </TableCell>
-                                                    <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
-                                                        {matchChartResult.moonSign?.lordTamil || planetFullTamilMap[matchChartResult.moonSign?.lord] || matchChartResult.moonSign?.lord || '-'}
-                                                    </TableCell>
-                                                </TableRow>
-
-                                                {/* Nakshatra Row */}
-                                                <TableRow sx={{ bgcolor: 'rgba(255, 193, 7, 0.08)' }}>
-                                                    <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
-                                                        நட்சத்திரம்
-                                                    </TableCell>
-                                                    <TableCell sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                                        {matchChartResult.moonNakshatra?.tamil || nakshatraTamilMap[matchChartResult.moonNakshatra?.name || matchChartResult.nakshatra?.name] || matchChartResult.moonNakshatra?.name || matchChartResult.nakshatra?.name || '-'}
-                                                    </TableCell>
-                                                    <TableCell sx={{ color: '#616161', py: 0.8, fontSize: '0.75rem' }}>
-                                                        {matchChartResult.moonNakshatra?.lordTamil || planetFullTamilMap[matchChartResult.moonNakshatra?.lord || getNakshatraLordHelper(matchChartResult.moonNakshatra?.name || matchChartResult.nakshatra?.name)] || matchChartResult.moonNakshatra?.lord || getNakshatraLordHelper(matchChartResult.moonNakshatra?.name || matchChartResult.nakshatra?.name) || '-'}
-                                                    </TableCell>
-                                                </TableRow>
-
-                                                {/* Pada Row */}
-                                                <TableRow>
-                                                    <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', py: 0.8, fontSize: '0.75rem' }}>
-                                                        பாதம்
-                                                    </TableCell>
-                                                    <TableCell colSpan={2} sx={{ color: '#212121', py: 0.8, fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                                        {matchChartResult.moonNakshatra?.pada || matchChartResult.nakshatra?.pada || '-'}
-                                                    </TableCell>
-                                                </TableRow>
-                                            </TableBody>
-                                        </Table>
-                                    </TableContainer>
-                                </Grid>
-
-                                {/* Right Column: Lagna Timeline */}
-                                <Grid item xs={12} md={6}>
-                                    {matchChartResult.lagnaTimeline && matchChartResult.lagnaTimeline.length > 0 && (
-                                        <Box sx={{ height: '100%' }}>
-                                            <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '12px', border: '1px solid rgba(255, 111, 0, 0.2)', height: '100%' }}>
-                                                <Table size="small">
-                                                    <TableHead sx={{ bgcolor: 'rgba(255, 193, 7, 0.15)' }}>
-                                                        <TableRow>
-                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.7rem', px: 0.5 }}>#</TableCell>
-                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.7rem', px: 0.5 }}>
-                                                                தொடக்கம் {matchDetails.timezone !== 5.5 ? '(Local / IST)' : ''}
-                                                            </TableCell>
-                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.7rem', px: 0.5 }}>
-                                                                முடிவு {matchDetails.timezone !== 5.5 ? '(Local / IST)' : ''}
-                                                            </TableCell>
-                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.7rem', px: 0.5 }}>லக்னம்</TableCell>
-                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.7rem', px: 0.5 }}>நட்சத்திரம்</TableCell>
-                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.7rem', px: 0.5 }}>அதிபதி</TableCell>
-                                                            <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00', fontSize: '0.7rem', px: 0.5 }}>கால அளவு</TableCell>
-                                                        </TableRow>
-                                                    </TableHead>
-                                                    <TableBody>
-                                                        {(() => {
-                                                            // Pre-compute L# and N# labels
-                                                            let lagnaCount = 0;
-                                                            let nakCount = 0;
-                                                            let prevLagna = null;
-                                                            let prevNak = null;
-                                                            const timeline = matchChartResult.lagnaTimeline;
-                                                            const labeled = timeline.map((slot) => {
-                                                                if (slot.lagna !== prevLagna) {
-                                                                    lagnaCount++;
-                                                                    prevLagna = slot.lagna;
-                                                                }
-                                                                if (slot.nakshatra !== prevNak) {
-                                                                    nakCount++;
-                                                                    prevNak = slot.nakshatra;
-                                                                }
-                                                                return { ...slot, lagnaLabel: `L${lagnaCount}`, nakLabel: `N${nakCount}` };
-                                                            });
-
-                                                            return labeled.map((slot, index) => {
-                                                                const signMap = {
-                                                                    'Aries': 'மேஷம்', 'Taurus': 'ரிஷபம்', 'Gemini': 'மிதுனம்', 'Cancer': 'கடகம்',
-                                                                    'Leo': 'சிம்மம்', 'Virgo': 'கன்னி', 'Libra': 'துலாம்', 'Scorpio': 'விருச்சிகம்',
-                                                                    'Sagittarius': 'தனுசு', 'Capricorn': 'மகரம்', 'Aquarius': 'கும்பம்', 'Pisces': 'மீனம்'
-                                                                };
-                                                                const lagnaTamil = signMap[slot.lagna] || slot.lagna;
-                                                                const lordTamil = planetFullTamilMap[slot.lord] || slot.lord;
-                                                                const nakTamil = slot.nakshatraTamil || nakshatraTamilMap[slot.nakshatra] || slot.nakshatra || '-';
-                                                                const nakLordTamil = planetFullTamilMap[slot.nakshatraLord] || slot.nakshatraLord || '-';
-
-                                                                // Calculate duration
-                                                                const startMs = new Date(slot.start).getTime();
-                                                                const endMs = new Date(slot.end).getTime();
-                                                                const diffMs = endMs - startMs;
-                                                                const diffMin = Math.floor(diffMs / 60000);
-                                                                const durationHrs = Math.floor(diffMin / 60);
-                                                                const durationMins = diffMin % 60;
-                                                                const durationStr = durationHrs > 0 ? `${durationHrs}h ${durationMins}m` : `${durationMins}m`;
-
-                                                                // Color coding for L# and N# badges
-                                                                const lagnaColors = ['#FF6F00', '#1565C0', '#2E7D32', '#6A1B9A', '#C62828'];
-                                                                const lColor = lagnaColors[(parseInt(slot.lagnaLabel.slice(1)) - 1) % lagnaColors.length];
-
-                                                                return (
-                                                                    <TableRow key={index} sx={{
-                                                                        '&:last-child td, &:last-child th': { border: 0 },
-                                                                        bgcolor: slot.isMain ? 'rgba(255, 193, 7, 0.08)' : 'inherit'
-                                                                    }}>
-                                                                        <TableCell sx={{ fontSize: '0.65rem', px: 0.5, whiteSpace: 'nowrap' }}>
-                                                                            <Box sx={{ display: 'flex', gap: 0.3 }}>
-                                                                                <Box sx={{
-                                                                                    bgcolor: lColor, color: '#fff', px: 0.5, py: 0.1,
-                                                                                    borderRadius: '4px', fontSize: '0.6rem', fontWeight: 'bold',
-                                                                                    lineHeight: 1.3, minWidth: '20px', textAlign: 'center'
-                                                                                }}>{slot.lagnaLabel}</Box>
-                                                                                <Box sx={{
-                                                                                    bgcolor: '#00897B', color: '#fff', px: 0.5, py: 0.1,
-                                                                                    borderRadius: '4px', fontSize: '0.6rem', fontWeight: 'bold',
-                                                                                    lineHeight: 1.3, minWidth: '20px', textAlign: 'center'
-                                                                                }}>{slot.nakLabel}</Box>
-                                                                            </Box>
-                                                                        </TableCell>
-                                                                        <TableCell sx={{ fontSize: '0.7rem', px: 0.5, whiteSpace: 'nowrap', fontWeight: 'bold' }}>
-                                                                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.2 }}>
-                                                                                <span>{slot.startTime || formatLagnaTime(slot.start)}</span>
-                                                                                {matchDetails.timezone !== 5.5 && (
-                                                                                    <Typography component="span" sx={{ fontSize: '0.62rem', color: '#E65100', bgcolor: 'rgba(255, 111, 0, 0.1)', px: 0.5, py: 0.1, borderRadius: '4px', fontWeight: 'bold', width: 'fit-content' }}>
-                                                                                        🇮🇳 {formatToIST(slot.start)} IST
-                                                                                    </Typography>
-                                                                                )}
-                                                                            </Box>
-                                                                        </TableCell>
-                                                                        <TableCell sx={{ fontSize: '0.7rem', px: 0.5, whiteSpace: 'nowrap', fontWeight: 'bold' }}>
-                                                                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.2 }}>
-                                                                                <span>{slot.endTime || formatLagnaTime(slot.end)}</span>
-                                                                                {matchDetails.timezone !== 5.5 && (
-                                                                                    <Typography component="span" sx={{ fontSize: '0.62rem', color: '#E65100', bgcolor: 'rgba(255, 111, 0, 0.1)', px: 0.5, py: 0.1, borderRadius: '4px', fontWeight: 'bold', width: 'fit-content' }}>
-                                                                                        🇮🇳 {formatToIST(slot.end)} IST
-                                                                                    </Typography>
-                                                                                )}
-                                                                            </Box>
-                                                                        </TableCell>
-                                                                        <TableCell sx={{ fontSize: '0.7rem', px: 0.5, fontWeight: slot.isMain ? 'bold' : 'normal' }}>
-                                                                            {lagnaTamil} {slot.isMain ? '⭐' : ''}
-                                                                        </TableCell>
-                                                                        <TableCell sx={{ fontSize: '0.7rem', px: 0.5 }}>{nakTamil}</TableCell>
-                                                                        <TableCell sx={{ fontSize: '0.7rem', px: 0.5 }}>
-                                                                            {lordTamil}/{nakLordTamil}
-                                                                        </TableCell>
-                                                                        <TableCell sx={{ fontSize: '0.7rem', px: 0.5, color: '#666' }}>{durationStr}</TableCell>
-                                                                    </TableRow>
-                                                                );
-                                                            });
-                                                        })()}
-                                                    </TableBody>
-                                                </Table>
-                                            </TableContainer>
-                                        </Box>
-                                    )}
-                                </Grid>
-                            </Grid>
+                            {renderLagnaTransitContent(matchChartResult)}
                         </Collapse>
                     </Box>
                 )}
 
-            {/* View Chart Dialog */}
+                {/* View Chart Dialog */}
+                <Dialog
+                    open={viewChartOpen}
+                    onClose={() => setViewChartOpen(false)}
+                    maxWidth="md"
+                    fullWidth
+                    PaperProps={{ sx: { borderRadius: '16px' } }}
+                >
+                    <DialogTitle component="div" sx={{ m: 0, p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(90deg, #FFC107 0%, #FF6F00 100%)' }}>
+                        <Typography variant="h6" component="div" sx={{ color: 'white', fontWeight: 'bold' }}>
+                            📊 Rasi Chart View
+                        </Typography>
+                        <IconButton
+                            aria-label="close"
+                            onClick={() => setViewChartOpen(false)}
+                            sx={{ color: 'white' }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    </DialogTitle>
+                    <DialogContent dividers sx={{ p: 3, display: 'flex', justifyContent: 'center', bgcolor: '#FFFBF5' }}>
+                        {chartData ? (
+                            <Box sx={{ width: '100%', maxWidth: '600px' }}>
+                                <RasiChart data={chartData} />
+
+                                <Box sx={{ mt: 3 }}>
+                                    <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '12px', border: '1px solid rgba(255, 111, 0, 0.2)' }}>
+                                        <Table size="small">
+                                            <TableHead sx={{ bgcolor: 'rgba(255, 193, 7, 0.15)' }}>
+                                                <TableRow>
+                                                    <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00' }}>விபரம்</TableCell>
+                                                    <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00' }}>இராசி/நட்சத்திரம்</TableCell>
+                                                    <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00' }}>அதிபதி</TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {getChartSummary().map((row, index) => (
+                                                    <TableRow key={index}>
+                                                        <TableCell sx={{ fontWeight: 'bold', color: '#000' }}>{row.label}</TableCell>
+                                                        <TableCell sx={{ color: '#000' }}>{row.sign}</TableCell>
+                                                        <TableCell sx={{ color: '#000' }}>{row.lord}</TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                </Box>
+
+                                {/* Raw Data Tables */}
+                                {chartData.moonNakshatra && renderRawDataTable("Moon Nakshatra Details", chartData.moonNakshatra)}
+
+                                <Box sx={{ mt: 2, textAlign: 'center' }}>
+                                    <Typography variant="caption" color="text.secondary">
+                                        Chart for {matchDetails.date} at {matchDetails.time}
+                                    </Typography>
+                                </Box>
+                            </Box>
+                        ) : (
+                            <CircularProgress />
+                        )}
+                    </DialogContent>
+                </Dialog>
+            </Paper>
+
+            {/* Floating Action Button for Lagna Transit */}
+            <Tooltip title="போட்டி ராசி & லக்ன ட்ரான்சிஸ்ட் அட்டவணையைத் திறக்க அழுத்தவும் (View Lagna Transit Timeline)" arrow placement="left">
+                <Fab
+                    variant="extended"
+                    onClick={handleOpenLagnaModal}
+                    sx={{
+                        position: 'fixed',
+                        bottom: 24,
+                        right: 24,
+                        zIndex: 1350,
+                        background: 'linear-gradient(135deg, #FF6F00 0%, #E65100 100%)',
+                        color: '#fff',
+                        fontWeight: '900',
+                        fontSize: '0.82rem',
+                        boxShadow: '0 6px 20px rgba(230, 81, 0, 0.45)',
+                        textTransform: 'none',
+                        gap: 0.8,
+                        px: 2,
+                        py: 0.8,
+                        border: '2px solid rgba(255, 255, 255, 0.7)',
+                        backdropFilter: 'blur(6px)',
+                        '&:hover': {
+                            background: 'linear-gradient(135deg, #E65100 0%, #D84315 100%)',
+                            boxShadow: '0 8px 26px rgba(216, 67, 21, 0.6)',
+                            transform: 'translateY(-2px)'
+                        },
+                        transition: 'all 0.25s ease'
+                    }}
+                >
+                    {lagnaLoading ? (
+                        <CircularProgress size={18} sx={{ color: '#fff' }} />
+                    ) : (
+                        <span style={{ fontSize: '1.2rem' }}>🪐</span>
+                    )}
+                    <span>போட்டி ராசி & லக்ன ட்ரான்சிஸ்ட்</span>
+                </Fab>
+            </Tooltip>
+
+            {/* Lagna Transit Modal Dialog */}
             <Dialog
-                open={viewChartOpen}
-                onClose={() => setViewChartOpen(false)}
-                maxWidth="md"
+                open={lagnaModalOpen}
+                onClose={() => setLagnaModalOpen(false)}
+                maxWidth="lg"
                 fullWidth
-                PaperProps={{ sx: { borderRadius: '16px' } }}
+                PaperProps={{
+                    sx: {
+                        borderRadius: '16px',
+                        overflow: 'hidden',
+                        boxShadow: '0 16px 40px rgba(0,0,0,0.3)',
+                        bgcolor: '#FFFDF9'
+                    }
+                }}
             >
-                <DialogTitle component="div" sx={{ m: 0, p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(90deg, #FFC107 0%, #FF6F00 100%)' }}>
-                    <Typography variant="h6" component="div" sx={{ color: 'white', fontWeight: 'bold' }}>
-                        📊 Rasi Chart View
-                    </Typography>
+                <DialogTitle
+                    component="div"
+                    sx={{
+                        m: 0,
+                        p: 2,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        background: 'linear-gradient(135deg, #1A1F38 0%, #2A3358 100%)',
+                        color: 'white',
+                        borderBottom: '3px solid #FF6F00'
+                    }}
+                >
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.3 }}>
+                        <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <span>🪐</span> போட்டி ராசி & லக்ன ட்ரான்சிஸ்ட் அட்டவணை
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: '#FFE082', fontSize: '0.78rem' }}>
+                            📅 {matchDetails.date} • 🇮🇳 {matchDetails.istTime || convertLocalToIst(matchDetails.time, matchDetails.timezone)} IST 
+                            {matchDetails.timezone !== 5.5 ? ` | 📍 ${matchDetails.time} Local (TZ ${matchDetails.timezone >= 0 ? '+' + matchDetails.timezone : matchDetails.timezone})` : ''} 
+                            {matchDetails.location ? ` • 📍 ${matchDetails.location}` : ''}
+                        </Typography>
+                    </Box>
                     <IconButton
                         aria-label="close"
-                        onClick={() => setViewChartOpen(false)}
-                        sx={{ color: 'white' }}
+                        onClick={() => setLagnaModalOpen(false)}
+                        sx={{ color: 'white', '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' } }}
                     >
                         <CloseIcon />
                     </IconButton>
                 </DialogTitle>
-                <DialogContent dividers sx={{ p: 3, display: 'flex', justifyContent: 'center', bgcolor: '#FFFBF5' }}>
-                    {chartData ? (
-                        <Box sx={{ width: '100%', maxWidth: '600px' }}>
-                            <RasiChart data={chartData} />
-
-                            <Box sx={{ mt: 3 }}>
-                                <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '12px', border: '1px solid rgba(255, 111, 0, 0.2)' }}>
-                                    <Table size="small">
-                                        <TableHead sx={{ bgcolor: 'rgba(255, 193, 7, 0.15)' }}>
-                                            <TableRow>
-                                                <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00' }}>விபரம்</TableCell>
-                                                <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00' }}>இராசி/நட்சத்திரம்</TableCell>
-                                                <TableCell sx={{ fontWeight: 'bold', color: '#FF6F00' }}>அதிபதி</TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {getChartSummary().map((row, index) => (
-                                                <TableRow key={index}>
-                                                    <TableCell sx={{ fontWeight: 'bold', color: '#000' }}>{row.label}</TableCell>
-                                                    <TableCell sx={{ color: '#000' }}>{row.sign}</TableCell>
-                                                    <TableCell sx={{ color: '#000' }}>{row.lord}</TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-                            </Box>
-
-                            {/* Raw Data Tables */}
-                            {chartData.moonNakshatra && renderRawDataTable("Moon Nakshatra Details", chartData.moonNakshatra)}
-
-
-
-                            <Box sx={{ mt: 2, textAlign: 'center' }}>
-                                <Typography variant="caption" color="text.secondary">
-                                    Chart for {matchDetails.date} at {matchDetails.time}
-                                </Typography>
-                            </Box>
-                        </Box>
+                <DialogContent dividers sx={{ p: { xs: 1.5, md: 2.5 }, bgcolor: '#FFFDF9' }}>
+                    {(matchChartResult || chartData) ? (
+                        renderLagnaTransitContent(matchChartResult || chartData)
                     ) : (
-                        <CircularProgress />
+                        <Box sx={{ p: 4, textAlign: 'center' }}>
+                            <CircularProgress sx={{ color: '#FF6F00' }} />
+                            <Typography sx={{ mt: 1, color: '#666' }}>லக்ன ட்ரான்சிஸ்ட் விபரம் ஏற்றப்படுகிறது...</Typography>
+                        </Box>
                     )}
                 </DialogContent>
             </Dialog>
-        </Paper>
+        </>
     );
 });
 
