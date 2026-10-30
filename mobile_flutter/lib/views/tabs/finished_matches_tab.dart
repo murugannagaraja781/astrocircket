@@ -35,14 +35,16 @@ class FinishedMatchesTab extends StatelessWidget {
                           border: Border.all(color: colors.border),
                         ),
                         child: Icon(
-                          Icons.emoji_events_outlined,
+                          matchProvider.onlyPredicted ? Icons.auto_awesome : Icons.emoji_events_outlined,
                           size: 48,
-                          color: colors.textMuted,
+                          color: matchProvider.onlyPredicted ? Colors.amber : colors.textMuted,
                         ),
                       ),
                       const SizedBox(height: 18),
                       Text(
-                        'No Finished Matches Recorded',
+                        matchProvider.onlyPredicted
+                            ? 'No Predicted Finished Matches'
+                            : 'No Finished Matches Recorded',
                         style: TextStyle(
                           color: colors.textPrimary,
                           fontSize: 17,
@@ -51,13 +53,28 @@ class FinishedMatchesTab extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Past match outcomes and accuracy records appear here',
+                        matchProvider.onlyPredicted
+                            ? 'No past matches found with astro predictions. Switch to All Matches to view all completed games.'
+                            : 'Past match outcomes and accuracy records appear here',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: colors.textSecondary,
                           fontSize: 13,
                         ),
                       ),
+                      if (matchProvider.onlyPredicted) ...[
+                        const SizedBox(height: 14),
+                        OutlinedButton.icon(
+                          onPressed: () => matchProvider.setOnlyPredicted(false),
+                          icon: const Icon(Icons.refresh_rounded, size: 16),
+                          label: const Text('View All Finished Matches'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: colors.primary,
+                            side: BorderSide(color: colors.primary.withValues(alpha: 0.5)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),

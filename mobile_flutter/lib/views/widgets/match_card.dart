@@ -75,21 +75,31 @@ class _MatchCardState extends State<MatchCard> with SingleTickerProviderStateMix
           color: colors.surface,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isLive
-                ? colors.accentRed.withValues(alpha: isDark ? 0.5 : 0.4)
-                : colors.border,
-            width: isLive ? 1.5 : 1,
+            color: hasInsight
+                ? const Color(0xFFF59E0B)
+                : (isLive ? colors.accentRed.withValues(alpha: isDark ? 0.5 : 0.4) : colors.border),
+            width: hasInsight ? 1.8 : (isLive ? 1.5 : 1),
           ),
-          boxShadow: isLive
+          boxShadow: hasInsight
               ? [
                   ...colors.cardShadow,
                   BoxShadow(
-                    color: colors.accentRed.withValues(alpha: isDark ? 0.12 : 0.08),
-                    blurRadius: 16,
+                    color: const Color(0xFFF59E0B).withValues(alpha: isDark ? 0.22 : 0.15),
+                    blurRadius: 18,
                     spreadRadius: 1,
+                    offset: const Offset(0, 3),
                   ),
                 ]
-              : colors.cardShadow,
+              : (isLive
+                  ? [
+                      ...colors.cardShadow,
+                      BoxShadow(
+                        color: colors.accentRed.withValues(alpha: isDark ? 0.12 : 0.08),
+                        blurRadius: 16,
+                        spreadRadius: 1,
+                      ),
+                    ]
+                  : colors.cardShadow),
         ),
         child: Material(
           color: Colors.transparent,
@@ -106,6 +116,61 @@ class _MatchCardState extends State<MatchCard> with SingleTickerProviderStateMix
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Prominent Top Banner for Predicted / Astro Insight Matches
+                  if (hasInsight) ...[
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: isDark
+                              ? [const Color(0xFFB45309), const Color(0xFF78350F)]
+                              : [const Color(0xFFFFFBEB), const Color(0xFFFEF3C7)],
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: isDark ? const Color(0xFFF59E0B) : const Color(0xFFFCD34D),
+                          width: 1.2,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.auto_awesome, size: 14, color: Color(0xFFD97706)),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              isUnlocked
+                                  ? '✨ ASTRO PREDICTION UNLOCKED & AVAILABLE'
+                                  : '✨ ASTRO PREDICTION POSTED • TOP MATCH',
+                              style: TextStyle(
+                                color: isDark ? const Color(0xFFFDE68A) : const Color(0xFF92400E),
+                                fontSize: 10.5,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0.3,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF59E0B),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: const Text(
+                              'FEATURED',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 9,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+
                   // Top Row: Status badge + Venue / Date
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -35,14 +35,16 @@ class LiveMatchesTab extends StatelessWidget {
                           border: Border.all(color: colors.border),
                         ),
                         child: Icon(
-                          Icons.live_tv_rounded,
+                          matchProvider.onlyPredicted ? Icons.auto_awesome : Icons.live_tv_rounded,
                           size: 48,
-                          color: colors.textMuted,
+                          color: matchProvider.onlyPredicted ? Colors.amber : colors.textMuted,
                         ),
                       ),
                       const SizedBox(height: 18),
                       Text(
-                        'No Live Matches Right Now',
+                        matchProvider.onlyPredicted
+                            ? 'No Live Predicted Matches'
+                            : 'No Live Matches Right Now',
                         style: TextStyle(
                           color: colors.textPrimary,
                           fontSize: 17,
@@ -51,13 +53,28 @@ class LiveMatchesTab extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Check the Upcoming tab for upcoming match insights',
+                        matchProvider.onlyPredicted
+                            ? 'No active predictions for currently live matches. Check Upcoming or switch to All Matches.'
+                            : 'Check the Upcoming tab for upcoming match insights',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: colors.textSecondary,
                           fontSize: 13,
                         ),
                       ),
+                      if (matchProvider.onlyPredicted) ...[
+                        const SizedBox(height: 14),
+                        OutlinedButton.icon(
+                          onPressed: () => matchProvider.setOnlyPredicted(false),
+                          icon: const Icon(Icons.refresh_rounded, size: 16),
+                          label: const Text('View All Live Matches'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: colors.primary,
+                            side: BorderSide(color: colors.primary.withValues(alpha: 0.5)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),

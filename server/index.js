@@ -160,6 +160,10 @@ const connectDB = async () => {
 
         await mongoose.connect(process.env.MONGO_URI);
         console.log('MongoDB connected successfully');
+
+        // Start automated background Cricbuzz match scraper (random 1h to 1.5h intervals)
+        const { startMatchScraper, stopMatchScraper } = require('./utils/matchScraperService');
+        startMatchScraper();
     } catch (err) {
         console.error('MongoDB connection error:', err.message);
         // Don't exit immediately, let the health check reflect the status if needed
@@ -176,6 +180,10 @@ if (require.main === module) {
     // Handle process termination gracefully
     process.on('SIGTERM', () => {
         console.log('SIGTERM signal received: closing HTTP server');
+        try {
+            const { stopMatchScraper } = require('./utils/matchScraperService');
+            stopMatchScraper();
+        } catch (_) {}
         server.close(() => {
             console.log('HTTP server closed');
             mongoose.connection.close(false, () => {

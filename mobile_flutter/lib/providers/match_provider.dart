@@ -21,9 +21,15 @@ class MatchProvider with ChangeNotifier {
   // Filter States
   String _selectedGender = 'all'; // 'all', 'men', 'women'
   String _selectedFormat = 'all'; // 'all', 't20', 'odi', 'test'
+  bool _onlyPredicted = false; // Filter: only matches with Astro Predictions
 
   String get selectedGender => _selectedGender;
   String get selectedFormat => _selectedFormat;
+  bool get onlyPredicted => _onlyPredicted;
+
+  int get livePredictedCount => _liveMatches.where((m) => m.insight.isPublished).length;
+  int get upcomingPredictedCount => _upcomingMatches.where((m) => m.insight.isPublished).length;
+  int get finishedPredictedCount => _finishedMatches.where((m) => m.insight.isPublished).length;
 
   void setGenderFilter(String gender) {
     if (_selectedGender != gender) {
@@ -39,8 +45,23 @@ class MatchProvider with ChangeNotifier {
     }
   }
 
+  void setOnlyPredicted(bool value) {
+    if (_onlyPredicted != value) {
+      _onlyPredicted = value;
+      notifyListeners();
+    }
+  }
+
+  void toggleOnlyPredicted() {
+    _onlyPredicted = !_onlyPredicted;
+    notifyListeners();
+  }
+
   List<MatchModel> _filterList(List<MatchModel> list) {
-    return list.where((m) {
+    var filtered = list.where((m) {
+      if (_onlyPredicted && !m.insight.isPublished) {
+        return false;
+      }
       if (_selectedGender != 'all' && m.gender != _selectedGender) {
         return false;
       }
@@ -49,6 +70,15 @@ class MatchProvider with ChangeNotifier {
       }
       return true;
     }).toList();
+
+    // Prioritize Predicted / Astro Insight matches at the TOP of the list
+    filtered.sort((a, b) {
+      if (a.insight.isPublished && !b.insight.isPublished) return -1;
+      if (!a.insight.isPublished && b.insight.isPublished) return 1;
+      return 0;
+    });
+
+    return filtered;
   }
 
   List<MatchModel> get liveMatches => _filterList(_liveMatches);

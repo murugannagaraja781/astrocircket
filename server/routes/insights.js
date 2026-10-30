@@ -49,139 +49,7 @@ const requireAuth = (req, res, next) => {
 };
 
 const liveScoreService = require('../utils/liveScoreService');
-
-// Helper to parse title and metadata from Cricbuzz
-const parseMatchTitle = (title, defaultStatus, url = '') => {
-    const cleanTitle = (title || '').replace(/\s+/g, ' ').trim();
-    const parts = cleanTitle.split(',');
-    const matchPart = parts[0] || '';
-    const venueAndStatus = parts.slice(1).join(',');
-    const venuePart = venueAndStatus.split('-')[0]?.trim() || '';
-    const subStatus = venueAndStatus.split('-')[1]?.trim() || '';
-    
-    const teams = matchPart.split(/\s+vs\s+/i);
-    const teamA = (teams[0] || 'Team A').trim();
-    const teamB = (teams[1] || 'Team B').trim();
-
-    let normStatus = (defaultStatus || 'upcoming').toLowerCase();
-    if (normStatus === 'completed' || normStatus === 'finished') {
-        normStatus = 'completed';
-    } else if (normStatus === 'live') {
-        normStatus = 'live';
-    } else {
-        normStatus = 'upcoming';
-    }
-
-    // Gender detection
-    const fullText = `${title} ${url} ${teamA} ${teamB}`.toLowerCase();
-    let gender = 'men';
-    if (fullText.includes('women') || fullText.includes('womens') || fullText.includes(' indw') || fullText.includes(' banw') || fullText.includes('wcpl') || fullText.includes('jew') || fullText.includes('tkrw')) {
-        gender = 'women';
-    }
-
-    // Format detection
-    let format = 'T20';
-    if (fullText.includes('odi') || fullText.includes('one-day') || fullText.includes('one day') || fullText.includes('50 over')) {
-        format = 'ODI';
-    } else if (fullText.includes('test') || fullText.includes('four-day') || fullText.includes('three-day') || fullText.includes('trophy') || fullText.includes('championship')) {
-        format = 'Test';
-    } else {
-        format = 'T20';
-    }
-
-    // Live / Upcoming status text
-    let matchTimeDisplay = '';
-    if (normStatus === 'live') {
-        matchTimeDisplay = subStatus ? subStatus : 'Live In Progress';
-    } else if (normStatus === 'completed') {
-        matchTimeDisplay = subStatus ? subStatus : 'Completed';
-    } else {
-        matchTimeDisplay = '';
-    }
-
-    return {
-        teamA,
-        teamB,
-        venue: venuePart || 'Live Cricket Arena',
-        status: normStatus,
-        gender,
-        format,
-        matchTime: matchTimeDisplay,
-        subStatus
-    };
-};
-
-/**
- * Helper to sync real-time matches from Cricbuzz into MongoDB
- * Only called by Admin trigger to prevent rate-limiting and server overload.
- */
-const syncCricbuzzMatchesToDB = async (forceRefresh = false) => {
-    try {
-        const liveResult = await liveScoreService.fetchMatches(forceRefresh);
-        if (!liveResult || !Array.isArray(liveResult.matches) || liveResult.matches.length === 0) {
-            return { success: false, msg: 'No matches found from Cricbuzz' };
-        }
-
-        const ops = liveResult.matches.map(m => {
-            const parsed = parseMatchTitle(m.title, m.status, m.url);
-            const matchDate = m.matchDate || new Date().toISOString().split('T')[0];
-            const matchTime = m.matchTime || '';
-            const venue = m.venue || parsed.venue;
-
-            return {
-                updateOne: {
-                    filter: {
-                        $or: [
-                            { cricbuzzMatchId: m.match_id },
-                            {
-                                teamA: { $regex: new RegExp(`^${parsed.teamA.trim()}$`, 'i') },
-                                teamB: { $regex: new RegExp(`^${parsed.teamB.trim()}$`, 'i') }
-                            }
-                        ]
-                    },
-                    update: {
-                        $set: {
-                            teamA: parsed.teamA,
-                            teamB: parsed.teamB,
-                            matchDate,
-                            matchTime,
-                            venue,
-                            status: parsed.status,
-                            gender: parsed.gender,
-                            format: parsed.format,
-                            subStatus: parsed.subStatus,
-                            cricbuzzMatchId: m.match_id
-                        },
-                        $setOnInsert: {
-                            insightData: {
-                                isPublished: false,
-                                price: 49,
-                                astrologicalAdvantage: '',
-                                keyBatsmen: [],
-                                keyBowlers: [],
-                                insightsSummary: ''
-                            },
-                            createdAt: new Date()
-                        }
-                    },
-                    upsert: true
-                }
-            };
-        });
-
-        const bulkRes = await Match.bulkWrite(ops);
-        return {
-            success: true,
-            totalScraped: liveResult.matches.length,
-            upserted: bulkRes.upsertedCount,
-            modified: bulkRes.modifiedCount,
-            matched: bulkRes.matchedCount
-        };
-    } catch (err) {
-        console.error('Error syncing Cricbuzz matches to DB:', err);
-        return { success: false, error: err.message };
-    }
-};
+const { parseMatchTitle, syncCricbuzzMatchesToDB } = require('../utils/matchScraperService');
 
 /**
  * @route   GET /api/insights/matches
@@ -211,7 +79,8 @@ router.get('/matches', async (req, res) => {
             query.status = { $in: ['completed', 'finished'] };
         }
 
-        const dbMatches = await Match.find(query).sort({ matchDate: 1, matchTime: 1 });
+        // Sort by predicted matches first ('insightData.isPublished': -1), then chronological
+        const dbMatches = await Match.find(query).sort({ 'insightData.isPublished': -1, matchDate: 1, matchTime: 1 });
 
         // Get user's purchased match IDs if logged in
         let purchasedMatchIds = new Set();

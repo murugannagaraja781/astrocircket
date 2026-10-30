@@ -331,7 +331,94 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               ),
             ],
           ),
+          const SizedBox(height: 6),
+          // Row 3: Insights filter (All Matches, ✨ Astro Predicted)
+          Row(
+            children: [
+              SizedBox(
+                width: 62,
+                child: Text(
+                  'Insights',
+                  style: TextStyle(
+                    color: colors.textMuted,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      _buildChip(
+                        'All Matches',
+                        !matchProvider.onlyPredicted,
+                        () => matchProvider.setOnlyPredicted(false),
+                        colors,
+                      ),
+                      const SizedBox(width: 6),
+                      _buildAstroFilterChip(
+                        '✨ Astro Predicted',
+                        matchProvider.onlyPredicted,
+                        () => matchProvider.setOnlyPredicted(!matchProvider.onlyPredicted),
+                        colors,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildAstroFilterChip(String label, bool isSelected, VoidCallback onTap, AppColorPalette colors) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? const Color(0xFFF59E0B)
+              : (colors.isDark ? const Color(0xFF78350F).withValues(alpha: 0.3) : const Color(0xFFFEF3C7)),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isSelected
+                ? const Color(0xFFD97706)
+                : (colors.isDark ? const Color(0xFFF59E0B).withValues(alpha: 0.5) : const Color(0xFFFBBF24)),
+            width: isSelected ? 1.5 : 1,
+          ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: const Color(0xFFF59E0B).withValues(alpha: 0.35),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected
+                    ? Colors.white
+                    : (colors.isDark ? const Color(0xFFFBBF24) : const Color(0xFF92400E)),
+                fontSize: 11,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
