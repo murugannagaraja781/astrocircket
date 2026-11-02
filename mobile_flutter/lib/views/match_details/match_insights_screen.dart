@@ -242,6 +242,46 @@ class MatchInsightsScreen extends StatelessWidget {
               ),
             ],
           ),
+          if (match.predictionResult == 'WON' || match.predictionResult == 'LOST') ...[
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              decoration: BoxDecoration(
+                color: match.predictionResult == 'WON'
+                    ? const Color(0xFF10B981).withValues(alpha: 0.15)
+                    : const Color(0xFFEF4444).withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: match.predictionResult == 'WON' ? const Color(0xFF10B981) : const Color(0xFFEF4444),
+                  width: 1.2,
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    match.predictionResult == 'WON' ? Icons.check_circle_rounded : Icons.info_outline_rounded,
+                    color: match.predictionResult == 'WON' ? const Color(0xFF10B981) : const Color(0xFFEF4444),
+                    size: 16,
+                  ),
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(
+                      match.predictionResult == 'WON'
+                          ? '🏆 Astrological Prediction: WON'
+                          : '🔴 Prediction Lost • 1 Free Replacement Pass Refunded to Buyers',
+                      style: TextStyle(
+                        color: match.predictionResult == 'WON' ? const Color(0xFF10B981) : const Color(0xFFEF4444),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -412,20 +452,152 @@ class MatchInsightsScreen extends StatelessWidget {
                   style: TextStyle(color: colors.textSecondary, fontSize: 13),
                 ),
               ] else ...[
+                // METHOD 1: Free Replacement Pass Available!
+                Consumer<MatchProvider>(
+                  builder: (context, mProv, _) {
+                    if (mProv.freePasses > 0) {
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF065F46), Color(0xFF047857)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: const Color(0xFF34D399), width: 1.5),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFF10B981).withValues(alpha: 0.25),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(Icons.stars_rounded, color: Color(0xFFFBBF24), size: 28),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '🎁 ${mProv.freePasses} Free Replacement Pass Available!',
+                                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+                                      ),
+                                      const Text(
+                                        'Previous prediction did not win? Unlock this match 100% FREE without paying!',
+                                        style: TextStyle(color: Color(0xFFA7F3D0), fontSize: 11),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFFF59E0B), // Golden Amber
+                                  foregroundColor: Colors.black,
+                                  padding: const EdgeInsets.symmetric(vertical: 14),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                  elevation: 2,
+                                ),
+                                icon: const Icon(Icons.lock_open_rounded, color: Colors.black),
+                                label: const Text(
+                                  'Use 1 Free Pass (Unlock Free)',
+                                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                                ),
+                                onPressed: () async {
+                                  final scaffoldMessenger = ScaffoldMessenger.of(context);
+                                  final ok = await paymentProvider.processFreePassUnlock(
+                                    context: context,
+                                    matchId: match.id,
+                                    matchProvider: mProv,
+                                  );
+                                  if (ok) {
+                                    scaffoldMessenger.showSnackBar(
+                                      SnackBar(
+                                        backgroundColor: colors.accentGreen,
+                                        content: const Text('🎉 Unlocked for FREE with your Replacement Pass!'),
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
+
+                // Razorpay Primary Payment Button
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF5F259F), // PhonePe Purple
+                      backgroundColor: const Color(0xFF0C2340), // Razorpay Dark Blue
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        side: const BorderSide(color: Color(0xFF0A85EA), width: 1.5),
+                      ),
                       elevation: 3,
                     ),
-                    icon: const Icon(Icons.payment, color: Colors.white),
+                    icon: const Icon(Icons.flash_on_rounded, color: Color(0xFF38BDF8)),
                     label: Text(
-                      'Unlock with PhonePe (₹${match.insight.price.toInt()})',
+                      'Pay with Razorpay (₹${match.insight.price.toInt()})',
                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    onPressed: () async {
+                      final matchProvider = Provider.of<MatchProvider>(context, listen: false);
+                      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                      final scaffoldMessenger = ScaffoldMessenger.of(context);
+                      final success = await paymentProvider.processRazorpayPayment(
+                        context: context,
+                        matchId: match.id,
+                        amount: match.insight.price,
+                        matchProvider: matchProvider,
+                        userEmail: authProvider.currentUser?.email ?? authProvider.currentUser?.username,
+                        userName: authProvider.currentUser?.displayName ?? authProvider.currentUser?.username,
+                      );
+                      if (success) {
+                        scaffoldMessenger.showSnackBar(
+                          SnackBar(
+                            backgroundColor: colors.accentGreen,
+                            content: const Text('🎉 Insights successfully unlocked!'),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // PhonePe Payment Option
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: colors.textPrimary,
+                      padding: const EdgeInsets.symmetric(vertical: 13),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      side: BorderSide(color: colors.border),
+                    ),
+                    icon: const Icon(Icons.payment, size: 18, color: Color(0xFF5F259F)),
+                    label: Text(
+                      'Pay with PhonePe UPI (₹${match.insight.price.toInt()})',
+                      style: TextStyle(color: colors.textSecondary, fontSize: 13, fontWeight: FontWeight.w600),
                     ),
                     onPressed: () async {
                       final matchProvider = Provider.of<MatchProvider>(context, listen: false);
@@ -449,15 +621,57 @@ class MatchInsightsScreen extends StatelessWidget {
                     },
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 14),
+
+                // 100% Risk-Free Prediction Protection Guarantee Box
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: colors.primary.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: colors.primary.withValues(alpha: 0.25)),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(Icons.verified_user_rounded, color: colors.primary, size: 20),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '🛡️ 100% Prediction Loss Guarantee',
+                              style: TextStyle(
+                                color: colors.textPrimary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'If our astrological prediction fails in this match, 1 Free Replacement Pass will be automatically credited to your account for your next match!',
+                              style: TextStyle(
+                                color: colors.textSecondary,
+                                fontSize: 11,
+                                height: 1.3,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.shield_outlined, size: 14, color: colors.textMuted),
+                    Icon(Icons.lock_outline, size: 13, color: colors.textMuted),
                     const SizedBox(width: 4),
                     Text(
-                      '100% Safe & Secure via PhonePe UPI / Cards',
-                      style: TextStyle(color: colors.textMuted, fontSize: 11),
+                      '100% Safe & Secure via Razorpay (UPI, GPay, Cards, NetBanking)',
+                      style: TextStyle(color: colors.textMuted, fontSize: 10),
                     ),
                   ],
                 ),

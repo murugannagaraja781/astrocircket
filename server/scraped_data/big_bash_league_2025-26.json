@@ -1,0 +1,232 @@
+[
+  {
+    "cricbuzzMatchId": "176353",
+    "series": "Big Bash League 2025-26",
+    "matchTitle": "Netherlands vs United Arab Emirates 143rd Match",
+    "teamA": "UAE",
+    "teamB": "NED",
+    "matchDate": "Today",
+    "matchTime": "11:00 AM",
+    "venue": "ICC Academy Ground, Dubai",
+    "city": "Dubai",
+    "location": {
+      "lat": 20.5937,
+      "lng": 78.9629
+    },
+    "format": "T20",
+    "toss": "Netherlands won the toss and opt to Bat",
+    "result": {
+      "winner": "United Arab Emirates",
+      "margin": "United Arab Emirates won by 5 wkts",
+      "score": ""
+    },
+    "status": "completed"
+  },
+  {
+    "cricbuzzMatchId": "177651",
+    "series": "Big Bash League 2025-26",
+    "matchTitle": "Chitwan Rhinos vs Lumbini Lions 7th Match",
+    "teamA": "CHR",
+    "teamB": "LUL",
+    "matchDate": "Today",
+    "matchTime": "12:15 PM",
+    "venue": "Tribhuvan University International Cricket Ground, Kirtipur",
+    "city": "Kirtipur",
+    "location": {
+      "lat": 20.5937,
+      "lng": 78.9629
+    },
+    "format": "T20",
+    "toss": "",
+    "result": {
+      "winner": "",
+      "margin": "",
+      "score": ""
+    },
+    "status": "completed"
+  },
+  {
+    "cricbuzzMatchId": "177661",
+    "series": "Big Bash League 2025-26",
+    "matchTitle": "Biratnagar Kings vs Sudur Paschim Royals 8th Match",
+    "teamA": "BIK",
+    "teamB": "SPR",
+    "matchDate": "Today",
+    "matchTime": "4:15 PM",
+    "venue": "Tribhuvan University International Cricket Ground, Kirtipur",
+    "city": "Kirtipur",
+    "location": {
+      "lat": 20.5937,
+      "lng": 78.9629
+    },
+    "format": "T20",
+    "toss": "Sudur Paschim Royals won the toss and opt to Bowl",
+    "result": {
+      "winner": "Biratnagar Kings",
+      "margin": "Biratnagar Kings won by 35 runs (5 overs game due to wet outfield)",
+      "score": ""
+    },
+    "status": "completed"
+  },
+  {
+    "cricbuzzMatchId": "177670",
+    "series": "Big Bash League 2025-26",
+    "matchTitle": "Janakpur Bolts vs Pokhara Avengers 9th Match",
+    "teamA": "JAB",
+    "teamB": "POA",
+    "matchDate": "Tomorrow",
+    "matchTime": "4:15 PM",
+    "venue": "Tribhuvan University International Cricket Ground, Kirtipur",
+    "city": "Kirtipur",
+    "location": {
+      "lat": 20.5937,
+      "lng": 78.9629
+    },
+    "format": "T20",
+    "toss": "",
+    "result": {
+      "winner": "",
+      "margin": "",
+      "score": ""
+    },
+    "status": "completed"
+  },
+  {
+    "cricbuzzMatchId": "175590",
+    "series": "Big Bash League 2025-26",
+    "matchTitle": "Kenya vs Papua New Guinea 44th Match",
+    "teamA": "KEN",
+    "teamB": "PNG",
+    "matchDate": "Today",
+    "matchTime": "12:15 PM",
+    "venue": "Gymkhana Club Ground, Nairobi",
+    "city": "Nairobi",
+    "location": {
+      "lat": 20.5937,
+      "lng": 78.9629
+    },
+    "format": "T20",
+    "toss": "Papua New Guinea won the toss and opt to Bowl",
+    "result": {
+      "winner": "Kenya",
+      "margin": "Kenya won by 88 runs - Match reduced to 38 overs due to rain",
+      "score": ""
+    },
+    "status": "completed"
+  },
+  {
+    "cricbuzzMatchId": "175597",
+    "series": "Big Bash League 2025-26",
+    "matchTitle": "Jersey vs Qatar 45th Match",
+    "teamA": "QAT",
+    "teamB": "JER",
+    "matchDate": "Today",
+    "matchTime": "12:15 PM",
+    "venue": "Ruaraka Sports Club Ground, Nairobi",
+    "city": "Nairobi",
+    "location": {
+      "lat": 20.5937,
+      "lng": 78.9629
+    },
+    "format": "T20",
+    "toss": "Qatar won the toss and opt to Bowl",
+    "result": {
+      "winner": "Jersey",
+      "margin": "Jersey won by 34 runs - Match reduced to 24 overs due to rain",
+      "score": ""
+    },
+    "status": "completed"
+  },
+  {
+    "cricbuzzMatchId": "162713",
+    "series": "Big Bash League 2025-26",
+    "matchTitle": "Adelaide Strikers Women vs Melbourne Stars Women 4th Match",
+    "teamA": "ADSW",
+    "teamB": "MLSW",
+    "matchDate": "Today",
+    "matchTime": "10:10 AM",
+    "venue": "Karen Rolton Oval, Adelaide, South Australia",
+    "city": "South Australia",
+    "location": {
+      "lat": 20.5937,
+      "lng": 78.9629
+    },
+    "format": "T20",
+    "toss": "Melbourne Stars Women won the toss and opt to Bowl",
+    "result": {
+      "winner": "Adelaide Strikers Women",
+      "margin": "Adelaide Strikers Women won by 21 runs",
+      "score": ""
+    },
+    "status": "completed"
+  },
+  {
+    "cricbuzzMatchId": "162731",
+    "series": "Big Bash League 2025-26",
+    "matchTitle": "Melbourne Renegades Women vs Perth Scorchers Women 5th Match",
+    "teamA": "PRSW",
+    "teamB": "MLRW",
+    "matchDate": "Today",
+    "matchTime": "1:40 PM",
+    "venue": "W.A.C.A. Ground, Perth",
+    "city": "Perth",
+    "location": {
+      "lat": 20.5937,
+      "lng": 78.9629
+    },
+    "format": "T20",
+    "toss": "Perth Scorchers Women won the toss and opt to Bowl",
+    "result": {
+      "winner": "Perth Scorchers Women",
+      "margin": "Perth Scorchers Women won by 9 wkts",
+      "score": ""
+    },
+    "status": "completed"
+  },
+  {
+    "cricbuzzMatchId": "162733",
+    "series": "Big Bash League 2025-26",
+    "matchTitle": "Sydney Thunder Women vs Brisbane Heat Women 6th Match",
+    "teamA": "SYTW",
+    "teamB": "BRHW",
+    "matchDate": "Tomorrow",
+    "matchTime": "10:10 AM",
+    "venue": "Drummoyne Oval, Sydney",
+    "city": "Sydney",
+    "location": {
+      "lat": -33.8688,
+      "lng": 151.2093
+    },
+    "format": "T20",
+    "toss": "",
+    "result": {
+      "winner": "",
+      "margin": "",
+      "score": ""
+    },
+    "status": "completed"
+  },
+  {
+    "cricbuzzMatchId": "162747",
+    "series": "Big Bash League 2025-26",
+    "matchTitle": "Sydney Sixers Women vs Hobart Hurricanes Women 7th Match",
+    "teamA": "SYSW",
+    "teamB": "HBHW",
+    "matchDate": "Tomorrow",
+    "matchTime": "1:40 PM",
+    "venue": "Drummoyne Oval, Sydney",
+    "city": "Sydney",
+    "location": {
+      "lat": -33.8688,
+      "lng": 151.2093
+    },
+    "format": "T20",
+    "toss": "",
+    "result": {
+      "winner": "",
+      "margin": "",
+      "score": ""
+    },
+    "status": "completed"
+  }
+]

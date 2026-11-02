@@ -361,6 +361,8 @@ import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore
 import SendIcon from '@mui/icons-material/Send';
 import AdminPredictionManager from '../components/AdminPredictionManager';
 import CaptainMatchAstro from '../components/CaptainMatchAstro';
+import HistoryIcon from '@mui/icons-material/History';
+import OldMatchDetailsManager from '../components/OldMatchDetailsManager';
 
 
 // Rules View Component (Tamil)
@@ -4409,6 +4411,7 @@ const AdminDashboard = () => {
     const menuItems = [
         { id: 'dashboard', label: 'Dashboard', icon: <DashboardIcon /> },
         { id: 'matchInsights', label: 'Post Match Insights', icon: <SendIcon /> },
+        { id: 'oldMatchDetails', label: 'Old Match Details', icon: <HistoryIcon /> },
         { id: 'users', label: 'Users', icon: <PeopleIcon /> },
         { id: 'players', label: 'Players', icon: <SportsCricketIcon /> },
         { id: 'groups', label: 'Groups', icon: <GroupIcon /> },
@@ -4546,6 +4549,7 @@ const AdminDashboard = () => {
         switch (currentView) {
             case 'dashboard': return <DashboardHome onNavigate={setCurrentView} />;
             case 'matchInsights': return <AdminPredictionManager />;
+            case 'oldMatchDetails': return <OldMatchDetailsManager />;
             case 'users': return <UsersManager />;
             case 'players': return <PlayersManager />;
             case 'groups': return <GroupsManager />;

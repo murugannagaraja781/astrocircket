@@ -1,51 +1,81 @@
-🏏 CRICKET ASTROLOGY RULE BOOK (Updated)
+🏏 CRICKET ASTROLOGY RULE BOOK (Updated - Priority & Non-Stacking System)
+
+🔴 PART 1: CORE LOGIC & PRIORITY SYSTEM
+🔹 Max Points Cap: 25 Points Maximum per player. Points will NEVER exceed 25.
+🔹 No Stacking: Rules do not blindly accumulate points. Priority hierarchy decides the primary points:
+   1. Zig-Zag (25 Pts Flat) -> Highest Priority. If matched, player gets flat 25 pts (No other general batting rules run).
+   2. Direct Rule (10 Pts) -> Second Priority.
+   3. Star vs Conjunction -> Evaluates both candidates; picks whichever has HIGHER points. The lower one is deactivated.
 
 🔴 PART 2: IMPORTANT RAHU / KETU RULE (MATCH)
 🔹 If Match Nakshatra Lord = Rahu or Ketu -> Use Match Rasi Lord.
 🔹 Special: Magam -> Star Lord becomes Chevvai (Mars).
 🔹 Special: Ashwini -> Star Lord becomes Chevvai (Mars).
 
-🟢 PART 4: BATTING RULES
-🟩 Rule 1: ZIG–ZAG RULE (Strongest)
-Rasi Lord A = Star Lord B AND Star Lord A = Rasi Lord B -> 12 Pts (+4 Bonus)
+🟢 PART 3: BATTING RULES
+🟩 Rule 1: ZIG–ZAG RULE (Top Priority)
+   Match Rasi Lord = Player Star Lord AND Match Star Lord = Player Rasi Lord -> 25 Pts Flat (Max Cap)
 🟩 Rule 2: DIRECT RULE
-Rasi Lord Match = Rasi Lord Player AND Star Lord Match = Star Lord Player -> 6 Pts (+4 Bonus)
+   Match Rasi Lord = Player Rasi Lord AND Match Star Lord = Player Star Lord -> 10 Pts Flat
 🟩 Rule 3: STAR RULE
-Match Star Lord = Player Rasi OR Star Lord -> 4 Pts (+4 Bonus)
+   Match Star Lord = Player Rasi OR Star Lord:
+   - Base: 10 Pts
+   - Aatchi / Ucham Bonus: +5 Pts
+   - Lagna Match Bonus: +5 Pts (Total Max: 20 Pts)
 🟩 Rule 4: CONJUNCTION RULE
-Match Star Lord conjoined with Player Rasi Lord -> 4 Pts (+4 Bonus)
+   Match Star Lord conjoined with Player Rasi Lord or Star Lord:
+   - Base: 5 Pts
+   - Aatchi / Ucham: +5 Pts (Total 10 Pts)
+   - Lagna Match: +5 Pts (Total Max: 15-20 Pts)
+   *Note: Between Star & Conjunction, highest candidate score is selected. No stacking!
 🟩 Rule 5: SAME HOUSE RULE
-Both Player Rasi and Star Lords in signs owned by Match Star Lord -> 4 Pts (+2 Bonus)
-🟩 Rule 6: MATCH LORDS IN PLAYER HOUSES
-Match Rasi and Star Lords (in Player Chart) are in signs owned by Player Rasi or Star Lord -> 6 Pts (+4 Bonus)
-🟩 Rule 7: RAHU / KETU PLAYER RULE
-Player Nak Lord is Rahu/Ketu AND Player Rasi Lord in Match Star house -> 4 Pts (+4 Bonus)
+   - In Match Star Lord signs: 4 Pts
+   - In Match Rasi Lord signs: SURE FLOP (0 Pts)
+🟩 Rule 6: MATCH LORDS IN PLAYER HOUSES -> 6 Pts
+🟩 Rule 7: RAHU / KETU PLAYER RULE -> 4 Pts
 🟩 Rule 8: LAGNA RULE (BATTING)
-Match Lagna Lord = Player Rasi Lord -> 2 Pts (+2 Bonus)
+   Match Lagna Lord = Player Rasi Lord -> 5 Pts (Aatchi/Ucham +5, Neecham -2)
+   *Not applied if Star/Conjunction already included Lagna bonus.
+🟩 Rule 9: DOUBLE LORD CONJUNCTION -> +12 Pts
+🟩 Rule 10: ASHLESHA MATCH + SHATABHISHA PLAYER -> +20 Pts
+🟩 Rule 11: RAHU / KETU SPECIAL PLACEMENT -> +20 Pts
 
-🔵 PART 5: BOWLING RULES
-🟦 Rule 1: ZIG–ZAG RULE (12 Pts + Bonus)
-🟦 Rule 2: DIRECT RULE (NEGATIVE) -> -12 Pts
-🟦 Rule 3: STAR RULE -> 3 Pts (+6 Bonus)
-🟦 Rule 4: CONJUNCTION RULE -> 4 Pts (+4 Bonus)
-🟦 Rule 5: SAME HOUSE RULE -> 4 Pts (+2 Bonus)
-🟦 Rule 6: PLAYER RASI HOME -> 4 Pts (+2 Bonus)
-🟦 Rule 7: RAHU / KETU RULE -> 4 Pts (+4 Bonus)
-🟦 Rule 8: LAGNA RULE -> 4 Pts (+4 Bonus + 4 Planet Bonus)
-🟦 Rule 9: MATCH SIGN LORD RULE -> 3 Pts (+8 Bonus)
+🔵 PART 4: BOWLING RULES
+🟦 Rule 1: ZIG–ZAG RULE -> 25 Pts Flat
+🟦 Rule 2: DIRECT RULE -> SURE FLOP (0 Pts)
+🟦 Rule 3: STAR RULE -> 5 Pts (Aatchi/Ucham +5 Pts)
+🟦 Rule 4: CONJUNCTION RULE -> 5 Pts (Strong +5 Pts)
+🟦 Rule 5: SAME HOUSE RULE:
+   - In Match Star Lord signs: 4 Pts
+   - In Match Rasi Lord signs: 6 Pts
+🟦 Rule 6: PLAYER RASI HOME -> 4 Pts
+🟦 Rule 7: RAHU / KETU RULE -> 4 Pts
+🟦 Rule 8: DYNAMIC LAGNA RULE (BOWLING HIGHEST PRIORITY)
+   Match Lagna Lord = Player Rasi Lord:
+   - Direct Lagna: 5 Pts
+   - Aatchi / Ucham: +10 Pts Bonus (Direct 15 Pts Total!)
+   - Neecham: -2 Pts
+   - Lagna Planets Bonus: +4 Pts
+🟦 Rule 9: DOUBLE LORD CONJUNCTION -> +12 Pts
+🟦 Rule 11: RAHU / KETU SPECIAL PLACEMENT -> +20 Pts
 
-(Original Star Specific Rules from Aswini to Sathayam are also active)
-
-⭐ SPECIAL MATCH NAKSHATRA RULES (+12 Points – Show Special Player)
-
-🔶 1️⃣ Magam: Rasi Suriyan, Nak Kethu. Player: Rasi Budhan, Nak Chevvai -> +12 👉 Special
-🔶 2️⃣ Uthiram (Kanya): Nak Budhan, Sec Suriyan. Player: Rasi Sani, Nak Rahu -> +12 👉 Special
-🔶 3️⃣ Chithirai (3,4): Nak Sukkiran, RL Chevvai. Player: Rasi Chandran, Nak Sani -> +12 👉 Special
-🔶 4️⃣ Moolam: Nak Guru, Sec Kethu.
-   - Batting: Rasi Sani, Nak Chevvai -> +12 👉 Special
-   - Bowling: Rasi Chevvai, Nak Sani -> +12 👉 Special
-🔶 5️⃣ Uthiradam (Makara): Nak Sani, RL Suriyan. Player: Rasi Chandran -> +12 👉 Special
-🔶 6️⃣ Thiruvonam: Nak Sani, RL Chandran.
-   - Bowl Type 1: Rasi Chevvai, Chevvai in Cancer -> +6
-   - Bowl Type 2: Rasi Sani, Nak Rahu -> +12 👉 Special
-🔶 7️⃣ Sathayam: Nak Sani, Sec Rahu. Player: Rasi Chandran -> +12 👉 GAME CHANGER
+⭐ SPECIAL MATCH NAKSHATRA RULES (10 to 20 Points - All scores capped at 25 Max)
+🔶 1️⃣ Ashwini: Mars Exalted +8 / Mars Debilitated -12 / Mars+Venus +10
+🔶 2️⃣ Bharani: Venus + Mercury Conjunction -> Batting Sure Flop / Bowling +12
+🔶 3️⃣ Rohini: Moon Debilitated +8 / Sathayam + Saturn+Rahu +12
+🔶 4️⃣ Mrigashira: Mars Lordship 6 / Strong Mars +6
+🔶 5️⃣ Ardra: Mars Debilitated Sure Flop / Exalted/Own Bowling +10
+🔶 6️⃣ Ashlesha: Venus+Mercury Bat Flop, Bowl +12 / Special Sathayam Player +20
+🔶 7️⃣ Magam: Player Rasi Budhan, Nak Chevvai -> +12 Special
+🔶 8️⃣ Pooram: Batting Sat+Mars +12 / Bowling Jup+Merc +12 / Sun+Venus Flop
+🔶 9️⃣ Uthiram (Kanya): Player Rasi Sani, Nak Rahu -> +12 Special
+🔶 🔟 Chithirai (Virgo/Libra): Merc+Sun+Jup combinations / Moon+Saturn +12
+🔶 1️⃣1️⃣ Anuradha: Jupiter 5 / Strong Jupiter +10
+🔶 1️⃣2️⃣ Jyeshtha: Venus+Mercury Bat Flop, Bowl +12
+🔶 1️⃣3️⃣ Moolam: Batting Sat+Mars +12 / Bowling Mars+Sat +12
+🔶 1️⃣4️⃣ Pooradam: Venus+Mercury Bat Flop, Bowl +12
+🔶 1️⃣5️⃣ Uthiradam (Makara): Player Rasi Chandran -> +12 Special
+🔶 1️⃣6️⃣ Thiruvonam: Mars in Moon House +6 Bowl / Sat+Rahu +12 / Sathayam Player +20
+🔶 1️⃣7️⃣ Avittam: Player Rasi Sani -> +4 Pts
+🔶 1️⃣8️⃣ Sathayam: Moon+Jupiter Flop / Player Rasi Chandran +12
+🔶 1️⃣9️⃣ Swati: Player Merc+Sun+Jup Conjunction -> Batting +20

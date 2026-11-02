@@ -339,5 +339,91 @@ class ApiService {
       return null;
     }
   }
+
+  /// Create Razorpay Order
+  Future<Map<String, dynamic>> createRazorpayOrder({required String matchId}) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$_baseUrl/api/insights/purchase/razorpay/create-order'),
+        headers: _getHeaders(),
+        body: jsonEncode({'matchId': matchId}),
+      ).timeout(const Duration(seconds: 15));
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+      final err = jsonDecode(response.body);
+      return {'success': false, 'msg': err['msg'] ?? 'Failed to create Razorpay order'};
+    } catch (e) {
+      return {'success': false, 'msg': 'Network error creating Razorpay order: $e'};
+    }
+  }
+
+  /// Verify Razorpay Payment
+  Future<Map<String, dynamic>> verifyRazorpayPayment({
+    required String matchId,
+    required String razorpayOrderId,
+    required String razorpayPaymentId,
+    String? razorpaySignature,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$_baseUrl/api/insights/purchase/razorpay/verify'),
+        headers: _getHeaders(),
+        body: jsonEncode({
+          'matchId': matchId,
+          'razorpayOrderId': razorpayOrderId,
+          'razorpayPaymentId': razorpayPaymentId,
+          'razorpaySignature': razorpaySignature,
+        }),
+      ).timeout(const Duration(seconds: 15));
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+      final err = jsonDecode(response.body);
+      return {'success': false, 'msg': err['msg'] ?? 'Verification failed'};
+    } catch (e) {
+      return {'success': false, 'msg': 'Network error verifying payment: $e'};
+    }
+  }
+
+  /// Unlock match prediction using 1 Free Replacement Pass
+  Future<Map<String, dynamic>> unlockWithPass({required String matchId}) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$_baseUrl/api/insights/purchase/unlock-with-pass'),
+        headers: _getHeaders(),
+        body: jsonEncode({'matchId': matchId}),
+      ).timeout(const Duration(seconds: 15));
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+      final err = jsonDecode(response.body);
+      return {'success': false, 'msg': err['msg'] ?? 'Failed to unlock with free pass'};
+    } catch (e) {
+      return {'success': false, 'msg': 'Network error unlocking with pass: $e'};
+    }
+  }
+
+  /// Fetch user's remaining free passes
+  Future<int> getUserPasses() async {
+    try {
+      if (_token == null) return 0;
+      final response = await http.get(
+        Uri.parse('$_baseUrl/api/insights/user-passes'),
+        headers: _getHeaders(),
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return (data['freePasses'] is num) ? (data['freePasses'] as num).toInt() : 0;
+      }
+      return 0;
+    } catch (e) {
+      return 0;
+    }
+  }
 }
 

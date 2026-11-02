@@ -6,6 +6,7 @@ const Purchase = require('../models/Purchase');
 const User = require('../models/User');
 const adminAuth = require('../middleware/adminAuth');
 const phonepeService = require('../utils/phonepeService');
+const razorpayService = require('../utils/razorpayService');
 const fcmService = require('../utils/fcmService');
 const jwt = require('jsonwebtoken');
 
@@ -82,14 +83,19 @@ router.get('/matches', async (req, res) => {
         // Sort by predicted matches first ('insightData.isPublished': -1), then chronological
         const dbMatches = await Match.find(query).sort({ 'insightData.isPublished': -1, matchDate: 1, matchTime: 1 });
 
-        // Get user's purchased match IDs if logged in
+        // Get user's purchased match IDs and pass balance if logged in
         let purchasedMatchIds = new Set();
+        let userFreePasses = 0;
         if (currentUser && !isAdmin) {
-            const purchases = await Purchase.find({
-                userId: currentUser.id,
-                status: 'SUCCESS'
-            }).select('matchId');
+            const [purchases, userDoc] = await Promise.all([
+                Purchase.find({
+                    userId: currentUser.id,
+                    status: 'SUCCESS'
+                }).select('matchId'),
+                User.findById(currentUser.id).select('freePasses')
+            ]);
             purchasedMatchIds = new Set(purchases.map(p => p.matchId.toString()));
+            userFreePasses = userDoc?.freePasses || 0;
         }
 
         // 3. Format MongoDB Matches safely
@@ -139,6 +145,10 @@ router.get('/matches', async (req, res) => {
                 subStatus: matchObj.subStatus,
                 location: matchObj.location || {},
                 result: matchObj.result || {},
+                predictionResult: matchObj.predictionResult || 'PENDING',
+                predictionResultNote: matchObj.predictionResultNote || '',
+                compensatedCount: matchObj.compensatedCount || 0,
+                compensatedAt: matchObj.compensatedAt || null,
                 insight: safeInsight,
                 isUnlocked: isUnlocked
             };
@@ -147,6 +157,7 @@ router.get('/matches', async (req, res) => {
         res.json({
             success: true,
             count: formattedMatches.length,
+            freePasses: userFreePasses,
             matches: formattedMatches
         });
     } catch (err) {
@@ -702,6 +713,322 @@ router.post('/test-notification', adminAuth, async (req, res) => {
         res.json({ success: true, result });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+/**
+ * @route   GET /api/insights/user-passes
+ * @desc    Get user's available Free Prediction Passes
+ * @access  Private
+ */
+router.get('/user-passes', requireAuth, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('freePasses username email');
+        res.json({
+            success: true,
+            freePasses: user?.freePasses || 0
+        });
+    } catch (err) {
+        console.error('Error fetching user passes:', err);
+        res.status(500).json({ success: false, msg: 'Server error fetching user passes' });
+    }
+});
+
+/**
+ * @route   POST /api/insights/purchase/razorpay/create-order
+ * @desc    Create Razorpay Order for Match Insight Prediction
+ * @access  Private
+ */
+router.post('/purchase/razorpay/create-order', requireAuth, async (req, res) => {
+    try {
+        const { matchId } = req.body;
+        if (!matchId) return res.status(400).json({ success: false, msg: 'matchId is required' });
+
+        const match = await Match.findById(matchId);
+        if (!match) return res.status(404).json({ success: false, msg: 'Match not found' });
+
+        // Check if already purchased
+        const existingPurchase = await Purchase.findOne({
+            userId: req.user.id,
+            matchId: match._id,
+            status: 'SUCCESS'
+        });
+
+        if (existingPurchase) {
+            return res.json({
+                success: true,
+                alreadyPurchased: true,
+                msg: 'You have already unlocked this match insight'
+            });
+        }
+
+        const amount = match.insightData?.price !== undefined ? match.insightData.price : 49;
+        const merchantTransactionId = `RZP_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
+
+        const orderResult = await razorpayService.createOrder(amount, merchantTransactionId, {
+            matchId: String(match._id),
+            userId: String(req.user.id),
+            matchTitle: `${match.teamA} vs ${match.teamB}`
+        });
+
+        if (!orderResult.success) {
+            return res.status(500).json({
+                success: false,
+                msg: 'Could not create Razorpay order',
+                error: orderResult.error
+            });
+        }
+
+        // Store pending purchase
+        const newPurchase = new Purchase({
+            userId: req.user.id,
+            userEmail: req.user.email || req.user.username,
+            matchId: match._id,
+            merchantTransactionId: merchantTransactionId,
+            razorpayOrderId: orderResult.orderId,
+            amount: amount,
+            currency: 'INR',
+            status: 'PENDING',
+            paymentMethod: 'RAZORPAY'
+        });
+        await newPurchase.save();
+
+        res.json({
+            success: true,
+            orderId: orderResult.orderId,
+            amount: orderResult.amount, // in paise
+            amountInINR: amount,
+            currency: orderResult.currency,
+            keyId: orderResult.keyId,
+            merchantTransactionId,
+            matchTitle: `${match.teamA} vs ${match.teamB}`
+        });
+    } catch (err) {
+        console.error('Error creating Razorpay order:', err);
+        res.status(500).json({ success: false, msg: 'Server Error' });
+    }
+});
+
+/**
+ * @route   POST /api/insights/purchase/razorpay/verify
+ * @desc    Verify Razorpay payment and unlock match
+ * @access  Private
+ */
+router.post('/purchase/razorpay/verify', requireAuth, async (req, res) => {
+    try {
+        const { matchId, razorpayOrderId, razorpayPaymentId, razorpaySignature } = req.body;
+
+        if (!razorpayOrderId || !razorpayPaymentId) {
+            return res.status(400).json({ success: false, msg: 'Razorpay orderId and paymentId are required' });
+        }
+
+        // Verify HMAC signature if signature provided and real key configured
+        let isValid = true;
+        if (razorpaySignature && process.env.RAZORPAY_KEY_SECRET) {
+            isValid = razorpayService.verifyPaymentSignature(razorpayOrderId, razorpayPaymentId, razorpaySignature);
+        }
+
+        if (!isValid) {
+            return res.status(400).json({ success: false, msg: 'Invalid Razorpay payment signature' });
+        }
+
+        let purchase = await Purchase.findOne({
+            userId: req.user.id,
+            $or: [
+                { razorpayOrderId: razorpayOrderId },
+                { matchId: matchId, status: 'PENDING' }
+            ]
+        });
+
+        if (!purchase) {
+            purchase = new Purchase({
+                userId: req.user.id,
+                userEmail: req.user.email || req.user.username,
+                matchId: matchId,
+                merchantTransactionId: razorpayOrderId,
+                razorpayOrderId: razorpayOrderId,
+                amount: 49,
+                currency: 'INR',
+                status: 'SUCCESS',
+                paymentMethod: 'RAZORPAY'
+            });
+        }
+
+        purchase.razorpayOrderId = razorpayOrderId;
+        purchase.razorpayPaymentId = razorpayPaymentId;
+        purchase.razorpaySignature = razorpaySignature || '';
+        purchase.status = 'SUCCESS';
+        purchase.paymentMethod = 'RAZORPAY';
+        purchase.updatedAt = new Date();
+        await purchase.save();
+
+        res.json({
+            success: true,
+            isUnlocked: true,
+            matchId: purchase.matchId,
+            msg: 'Payment verified and match prediction unlocked successfully!'
+        });
+    } catch (err) {
+        console.error('Error verifying Razorpay payment:', err);
+        res.status(500).json({ success: false, msg: 'Server Error' });
+    }
+});
+
+/**
+ * @route   POST /api/insights/purchase/unlock-with-pass
+ * @desc    Unlock match insight prediction using 1 Free Replacement Pass
+ * @access  Private
+ */
+router.post('/purchase/unlock-with-pass', requireAuth, async (req, res) => {
+    try {
+        const { matchId } = req.body;
+        if (!matchId) return res.status(400).json({ success: false, msg: 'matchId is required' });
+
+        const user = await User.findById(req.user.id);
+        if (!user || (user.freePasses || 0) < 1) {
+            return res.status(400).json({
+                success: false,
+                msg: 'You do not have any Free Passes available. Please purchase with Razorpay.'
+            });
+        }
+
+        const match = await Match.findById(matchId);
+        if (!match) return res.status(404).json({ success: false, msg: 'Match not found' });
+
+        // Check if already unlocked
+        const existingPurchase = await Purchase.findOne({
+            userId: req.user.id,
+            matchId: match._id,
+            status: 'SUCCESS'
+        });
+
+        if (existingPurchase) {
+            return res.json({
+                success: true,
+                alreadyPurchased: true,
+                remainingPasses: user.freePasses,
+                msg: 'This match prediction is already unlocked!'
+            });
+        }
+
+        // Deduct 1 pass
+        user.freePasses = Math.max(0, (user.freePasses || 1) - 1);
+        await user.save();
+
+        // Create unlocked purchase record
+        const passPurchase = new Purchase({
+            userId: user._id,
+            userEmail: user.email || user.username,
+            matchId: match._id,
+            merchantTransactionId: `PASS_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
+            amount: 0,
+            currency: 'INR',
+            status: 'SUCCESS',
+            paymentMethod: 'FREE_PASS'
+        });
+        await passPurchase.save();
+
+        res.json({
+            success: true,
+            isUnlocked: true,
+            remainingPasses: user.freePasses,
+            msg: 'Match prediction unlocked for FREE using 1 Replacement Pass!'
+        });
+    } catch (err) {
+        console.error('Error unlocking with pass:', err);
+        res.status(500).json({ success: false, msg: 'Server Error' });
+    }
+});
+
+/**
+ * @route   POST /api/insights/match/:matchId/resolve-prediction
+ * @desc    Admin resolves match prediction outcome: 'WON', 'LOST', or 'VOID'
+ *          If 'LOST' or 'VOID': Automatically awards 1 Free Pass to all users who purchased!
+ * @access  Admin Only
+ */
+router.post('/match/:matchId/resolve-prediction', adminAuth, async (req, res) => {
+    try {
+        const { matchId } = req.params;
+        const { result, note } = req.body; // 'WON', 'LOST', 'VOID'
+
+        if (!['WON', 'LOST', 'VOID'].includes(result)) {
+            return res.status(400).json({
+                success: false,
+                msg: 'Invalid result. Must be "WON", "LOST", or "VOID"'
+            });
+        }
+
+        const match = await Match.findById(matchId);
+        if (!match) return res.status(404).json({ success: false, msg: 'Match not found' });
+
+        match.predictionResult = result;
+        if (note) match.predictionResultNote = note;
+
+        let compensatedCount = 0;
+
+        // Auto-compensation when prediction fails or match is cancelled
+        if (result === 'LOST' || result === 'VOID') {
+            // Find all successful purchases for this match not yet compensated
+            const eligiblePurchases = await Purchase.find({
+                matchId: match._id,
+                status: 'SUCCESS',
+                isCompensated: { $ne: true }
+            });
+
+            const uniqueUserIds = [...new Set(eligiblePurchases.map(p => String(p.userId)))];
+
+            for (const uid of uniqueUserIds) {
+                try {
+                    if (mongoose.Types.ObjectId.isValid(uid)) {
+                        await User.findByIdAndUpdate(uid, { $inc: { freePasses: 1 } });
+                    } else {
+                        await User.findOneAndUpdate(
+                            { $or: [{ _id: uid }, { username: uid }, { googleId: uid }] },
+                            { $inc: { freePasses: 1 } }
+                        );
+                    }
+                    compensatedCount++;
+                } catch (userErr) {
+                    console.warn(`Could not credit pass to user ${uid}:`, userErr.message);
+                }
+            }
+
+            // Mark purchases as compensated
+            await Purchase.updateMany(
+                { matchId: match._id, status: 'SUCCESS', isCompensated: { $ne: true } },
+                { $set: { isCompensated: true } }
+            );
+
+            match.compensatedCount = (match.compensatedCount || 0) + compensatedCount;
+            match.compensatedAt = new Date();
+
+            // Broadcast FCM notification about free replacement pass
+            try {
+                await fcmService.sendMatchInsightNotification({
+                    matchId: String(match._id),
+                    teamA: match.teamA,
+                    teamB: match.teamB,
+                    advantage: 'Free Pass Credited 🎁',
+                    summary: `${match.teamA} vs ${match.teamB} prediction result: ${result}. A 100% Free Replacement Pass has been credited to your account for your next match!`
+                });
+            } catch (notifyErr) {
+                console.warn('FCM broadcast notification error:', notifyErr.message);
+            }
+        }
+
+        await match.save();
+
+        res.json({
+            success: true,
+            predictionResult: match.predictionResult,
+            compensatedCount,
+            msg: (result === 'LOST' || result === 'VOID')
+                ? `Prediction marked as ${result}! 1 Free Replacement Pass credited to ${compensatedCount} user(s).`
+                : `Prediction marked as ${result}! Great win.`
+        });
+    } catch (err) {
+        console.error('Error resolving prediction:', err);
+        res.status(500).json({ success: false, msg: 'Server Error' });
     }
 });
 

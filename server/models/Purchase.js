@@ -24,6 +24,17 @@ const PurchaseSchema = new mongoose.Schema({
     phonepeTransactionId: {
         type: String
     },
+    razorpayOrderId: {
+        type: String,
+        index: true
+    },
+    razorpayPaymentId: {
+        type: String,
+        index: true
+    },
+    razorpaySignature: {
+        type: String
+    },
     amount: {
         type: Number,
         required: true
@@ -39,7 +50,14 @@ const PurchaseSchema = new mongoose.Schema({
         index: true
     },
     paymentMethod: {
-        type: String
+        type: String,
+        enum: ['PHONEPE', 'RAZORPAY', 'FREE_PASS', 'ADMIN_GRANT', 'OTHER'],
+        default: 'RAZORPAY'
+    },
+    isCompensated: {
+        type: Boolean,
+        default: false,
+        index: true
     },
     rawResponse: {
         type: mongoose.Schema.Types.Mixed

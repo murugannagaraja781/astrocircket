@@ -39,6 +39,14 @@ const MatchSchema = new mongoose.Schema({
         type: String,
         default: 'T20'
     },
+    series: {
+        type: String,
+        default: ''
+    },
+    toss: {
+        type: String,
+        default: ''
+    },
     subStatus: String,
     leagueId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -103,8 +111,21 @@ const MatchSchema = new mongoose.Schema({
     },
     result: {
         winner: String,
-        score: String
+        score: String,
+        margin: String
     },
+    predictionResult: {
+        type: String,
+        enum: ['PENDING', 'WON', 'LOST', 'VOID'],
+        default: 'PENDING',
+        index: true
+    },
+    predictionResultNote: String,
+    compensatedCount: {
+        type: Number,
+        default: 0
+    },
+    compensatedAt: Date,
     createdAt: {
         type: Date,
         default: Date.now

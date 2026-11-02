@@ -22,10 +22,12 @@ class MatchProvider with ChangeNotifier {
   String _selectedGender = 'all'; // 'all', 'men', 'women'
   String _selectedFormat = 'all'; // 'all', 't20', 'odi', 'test'
   bool _onlyPredicted = false; // Filter: only matches with Astro Predictions
+  int _freePasses = 0; // Number of available Free Replacement Passes
 
   String get selectedGender => _selectedGender;
   String get selectedFormat => _selectedFormat;
   bool get onlyPredicted => _onlyPredicted;
+  int get freePasses => _freePasses;
 
   int get livePredictedCount => _liveMatches.where((m) => m.insight.isPublished).length;
   int get upcomingPredictedCount => _upcomingMatches.where((m) => m.insight.isPublished).length;
@@ -221,6 +223,38 @@ class MatchProvider with ChangeNotifier {
   void selectMatch(MatchModel match) {
     _selectedMatch = match;
     notifyListeners();
+  }
+
+  void setFreePasses(int count) {
+    _freePasses = count;
+    notifyListeners();
+  }
+
+  Future<void> fetchUserPasses() async {
+    try {
+      final count = await _apiService.getUserPasses();
+      _freePasses = count;
+      notifyListeners();
+    } catch (_) {}
+  }
+
+  Future<Map<String, dynamic>> unlockWithFreePass(String matchId) async {
+    try {
+      final res = await _apiService.unlockWithPass(matchId: matchId);
+      if (res['success'] == true) {
+        if (res['remainingPasses'] != null && res['remainingPasses'] is num) {
+          _freePasses = (res['remainingPasses'] as num).toInt();
+        } else {
+          _freePasses = (_freePasses > 0) ? _freePasses - 1 : 0;
+        }
+
+        markMatchUnlocked(matchId);
+        notifyListeners();
+      }
+      return res;
+    } catch (e) {
+      return {'success': false, 'msg': 'Error: $e'};
+    }
   }
 
   void markMatchUnlocked(String matchId) {

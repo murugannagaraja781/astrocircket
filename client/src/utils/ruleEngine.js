@@ -117,6 +117,9 @@ class RuleContext {
         this.sureFlopBat = false;
         this.sureFlopBowl = false;
         this.isRule2DirectActive = false;
+        this.isZigZagBatting = false;
+        this.isDirectBatting = false;
+        this.battingLagnaBonusApplied = false;
 
         // Mars relevance: active only if player's rasi/star lord is Mars, or both lords are conjunct
         this.isMarsRelevant = (this.playerRasiLord === 'Mars' || this.playerStarLord === 'Mars') ||
@@ -154,37 +157,63 @@ class RuleContext {
 
 /** General Rules Index (Redex Method) **/
 const GENERAL_RULES = [
-    // Rule 1: Zig-Zag
+    // Rule 1: Zig-Zag (25 Pts Flat - Top Priority)
     (ctx) => {
         if (ctx.isMatchStarLordRahuKetu) return;
         if (ctx.matchRasiLord === ctx.playerStarLord && ctx.matchStarLord === ctx.playerRasiLord) {
-            ctx.addRule('BAT Rule 1: Zig-Zag', 12, 'bat', false, 'பேட்டிங் விதி 1: ஜிக்-ஜாக்');
-            ctx.addRule('BOWL Rule 1: Zig-Zag', 12, 'bowl', false, 'பவுலிங் விதி 1: ஜிக்-ஜாக்');
-            ctx.applyBonuses(ctx.playerRasiLord, 4);
+            ctx.isZigZagBatting = true;
+            ctx.addRule('BAT Rule 1: Zig-Zag', 25, 'bat', true, 'பேட்டிங் விதி 1: ஜிக்-ஜாக் (25 Pts)');
+            ctx.addRule('BOWL Rule 1: Zig-Zag', 25, 'bowl', true, 'பவுலிங் விதி 1: ஜிக்-ஜாக் (25 Pts)');
         }
     },
-    // Rule 2: Direct
+    // Rule 2: Direct (10 Pts Batting, Sure Flop Bowling)
     (ctx) => {
         if (ctx.matchRasiLord === ctx.playerRasiLord && ctx.matchStarLord === ctx.playerStarLord) {
             ctx.isRule2DirectActive = true;
-            ctx.addRule('BAT Rule 2: Direct', 6, 'bat', false, 'பேட்டிங் விதி 2: நேரடி விதி');
-            ctx.applyBonuses(ctx.playerRasiLord, 4, 'bat');
-            ctx.setSureFlop('BOWL Rule 2: Same Rasi & Star', 'பவுலிங் விதி 2: ஒரே ராசி & நட்சத்திரம்', 'bowl');
-        }
-    },
-    // Rule 3: Star
-    (ctx) => {
-        if (ctx.matchStarLord === ctx.playerRasiLord || ctx.matchStarLord === ctx.playerStarLord) {
-            ctx.addRule('BAT Rule 3: Star', 4, 'bat', false, 'பேட்டிங் விதி 3: நட்சத்திர விதி');
-            ctx.applyBonuses(ctx.matchStarLord, 4, 'bat');
-            ctx.addRule('BOWL Rule 3: Star', 3, 'bowl', false, 'பவுலிங் விதி 3: நட்சத்திர விதி');
-            if (isExalted(ctx.matchStarLord, ctx.P[ctx.matchStarLord]) || isOwnSign(ctx.matchStarLord, ctx.P[ctx.matchStarLord])) {
-                ctx.addRule('BOWL Rule 3: Bonus', 6, 'bowl', false, 'பவுலிங் விதி 3: போனஸ்');
+            if (!ctx.isZigZagBatting) {
+                ctx.isDirectBatting = true;
+                ctx.addRule('BAT Rule 2: Direct', 10, 'bat', false, 'பேட்டிங் விதி 2: நேரடி விதி (10 Pts)');
             }
+            ctx.setSureFlop('BOWL Rule 2: Same Rasi & Star', 'பவுலிங் விதி 2: ஒரே ராசி & நட்சத்திரம் (Sure Flop)', 'bowl');
         }
     },
-    // Rule 4: Conjunction
+    // Rule 3 & 4: Star vs Conjunction (Priority / Non-Stacking)
     (ctx) => {
+        // --- 1. Evaluate Star Candidate ---
+        let starBatCandidate = null;
+        let starBowlCandidate = null;
+
+        const starMatches = (ctx.matchStarLord === ctx.playerRasiLord || ctx.matchStarLord === ctx.playerStarLord);
+        if (starMatches) {
+            let bScore = 10;
+            const starSign = ctx.P[ctx.matchStarLord];
+            const isStarStrong = starSign && (isExalted(ctx.matchStarLord, starSign) || isOwnSign(ctx.matchStarLord, starSign));
+            if (isStarStrong) bScore += 5;
+
+            // Lagna match check
+            const lagnaMatches = ctx.matchLagnas.some(l => l.lord === ctx.playerRasiLord || l.lagna === ctx.P[ctx.matchStarLord]);
+            if (lagnaMatches) bScore += 5;
+
+            starBatCandidate = {
+                name: 'BAT Rule 3: Star',
+                nameTamil: 'பேட்டிங் விதி 3: நட்சத்திர விதி',
+                score: bScore,
+                hasLagna: lagnaMatches
+            };
+
+            let bowlScore = 5;
+            if (isStarStrong) bowlScore += 5;
+            starBowlCandidate = {
+                name: 'BOWL Rule 3: Star',
+                nameTamil: 'பவுலிங் விதி 3: நட்சத்திர விதி',
+                score: bowlScore
+            };
+        }
+
+        // --- 2. Evaluate Conjunction Candidate ---
+        let conjBatCandidate = null;
+        let conjBowlCandidate = null;
+
         const pRasiLordPos = ctx.P[ctx.playerRasiLord];
         const pStarLordPos = ctx.P[ctx.playerStarLord];
         const mStarLordPos = ctx.P[ctx.matchStarLord];
@@ -198,57 +227,86 @@ const GENERAL_RULES = [
         };
 
         if (mStarLordPos) {
+            let matchedConjunction = null;
             if (pRasiLordPos && mStarLordPos === pRasiLordPos) {
-                const isStrong = isPlanetStrong(ctx.playerRasiLord) || isPlanetStrong(ctx.matchStarLord);
-                const score = isStrong ? 8 : 4;
-                ctx.addRule('BAT Rule 4: Conjunction (Rasi Lord)', score, 'bat', false, 'பேட்டிங் விதி 4: சேர்க்கை விதி (ராசி அதிபதி)');
-                ctx.addRule('BOWL Rule 4: Conjunction Star (Rasi Lord)', score, 'bowl', false, 'பவுலிங் விதி 4: சேர்க்கை விதி (நட்சத்திர அதிபதி)');
-                if (ctx.matchLagnaSignBat === mStarLordPos) ctx.addRule('Lagna Match Bonus', 2, 'bat');
-                if (ctx.matchLagnaSignBowl === mStarLordPos) ctx.addRule('Lagna Match Bonus', 2, 'bowl');
-
-                // Dynamic Lagna Bonus Check
-                ctx.matchLagnas.forEach(lagna => {
-                    if (lagna.lagna === mStarLordPos) {
-                        const startTime = new Date(lagna.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                        const endTime = new Date(lagna.end).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                        ctx.addRule(`Lagna Match Bonus (${lagna.lagna} [${startTime} - ${endTime}])`, 2, 'bat');
-                        ctx.addRule(`Lagna Match Bonus (${lagna.lagna} [${startTime} - ${endTime}])`, 2, 'bowl');
-                    }
-                });
+                matchedConjunction = ctx.playerRasiLord;
             } else if (pStarLordPos && mStarLordPos === pStarLordPos) {
-                const isStrong = isPlanetStrong(ctx.playerStarLord) || isPlanetStrong(ctx.matchStarLord);
-                const score = isStrong ? 8 : 4;
-                ctx.addRule('BAT Rule 4: Conjunction (Star Lord)', score, 'bat', false, 'பேட்டிங் விதி 4: சேர்க்கை விதி (நட்சத்திர அதிபதி)');
-                ctx.addRule('BOWL Rule 4: Conjunction Star (Star Lord)', score, 'bowl', false, 'பவுலிங் விதி 4: சேர்க்கை விதி (நட்சத்திர அதிபதி)');
-                if (ctx.matchLagnaSignBat === mStarLordPos) ctx.addRule('Lagna Match Bonus', 2, 'bat');
-                if (ctx.matchLagnaSignBowl === mStarLordPos) ctx.addRule('Lagna Match Bonus', 2, 'bowl');
+                matchedConjunction = ctx.playerStarLord;
+            }
 
-                // Dynamic Lagna Bonus Check
-                ctx.matchLagnas.forEach(lagna => {
-                    if (lagna.lagna === mStarLordPos) {
-                        const startTime = new Date(lagna.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                        const endTime = new Date(lagna.end).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                        ctx.addRule(`Lagna Match Bonus (${lagna.lagna} [${startTime} - ${endTime}])`, 2, 'bat');
-                        ctx.addRule(`Lagna Match Bonus (${lagna.lagna} [${startTime} - ${endTime}])`, 2, 'bowl');
-                    }
-                });
+            if (matchedConjunction) {
+                let cScore = 5;
+                const isStrong = isPlanetStrong(matchedConjunction) || isPlanetStrong(ctx.matchStarLord);
+                if (isStrong) cScore += 5; // total 10
+
+                // Lagna match check
+                const lagnaMatches = ctx.matchLagnas.some(l => l.lagna === mStarLordPos || l.lord === ctx.playerRasiLord);
+                if (lagnaMatches) cScore += 5; // total 15-20
+
+                conjBatCandidate = {
+                    name: `BAT Rule 4: Conjunction (${matchedConjunction})`,
+                    nameTamil: `பேட்டிங் விதி 4: சேர்க்கை விதி (${matchedConjunction})`,
+                    score: cScore,
+                    hasLagna: lagnaMatches
+                };
+
+                conjBowlCandidate = {
+                    name: `BOWL Rule 4: Conjunction Star (${matchedConjunction})`,
+                    nameTamil: `பவுலிங் விதி 4: சேர்க்கை விதி (${matchedConjunction})`,
+                    score: isStrong ? 10 : 5
+                };
             }
         }
-        if (mRasiLordPos) {
-            if (pRasiLordPos && mRasiLordPos === pRasiLordPos) {
-                const isStrong = isPlanetStrong(ctx.playerRasiLord) || isPlanetStrong(ctx.matchRasiLord);
-                const score = isStrong ? 8 : 4;
-                ctx.addRule('BOWL Rule 4: Conjunction Rasi (Rasi Lord)', score, 'bowl', false, 'பவுலிங் விதி 4: மேட்ச் ராசி அதிபதி சேர்க்கை');
-            } else if (pStarLordPos && mRasiLordPos === pStarLordPos) {
-                const isStrong = isPlanetStrong(ctx.playerStarLord) || isPlanetStrong(ctx.matchRasiLord);
-                const score = isStrong ? 8 : 4;
-                ctx.addRule('BOWL Rule 4: Conjunction Rasi (Star Lord)', score, 'bowl', false, 'பவுலிங் விதி 4: மேட்ச் ராசி அதிபதி சேர்க்கை');
+
+        if (mRasiLordPos && !conjBowlCandidate) {
+            let matchedRasiConj = null;
+            if (pRasiLordPos && mRasiLordPos === pRasiLordPos) matchedRasiConj = ctx.playerRasiLord;
+            else if (pStarLordPos && mRasiLordPos === pStarLordPos) matchedRasiConj = ctx.playerStarLord;
+
+            if (matchedRasiConj) {
+                const isStrong = isPlanetStrong(matchedRasiConj) || isPlanetStrong(ctx.matchRasiLord);
+                conjBowlCandidate = {
+                    name: `BOWL Rule 4: Conjunction Rasi (${matchedRasiConj})`,
+                    nameTamil: `பவுலிங் விதி 4: மேட்ச் ராசி அதிபதி சேர்க்கை (${matchedRasiConj})`,
+                    score: isStrong ? 8 : 4
+                };
+            }
+        }
+
+        // --- 3. Batting: Pick Highest between Star and Conjunction (No Stacking) ---
+        if (!ctx.isZigZagBatting && !ctx.isDirectBatting) {
+            let winningBatCandidate = null;
+            if (starBatCandidate && conjBatCandidate) {
+                winningBatCandidate = conjBatCandidate.score > starBatCandidate.score ? conjBatCandidate : starBatCandidate;
+            } else {
+                winningBatCandidate = starBatCandidate || conjBatCandidate;
+            }
+
+            if (winningBatCandidate) {
+                ctx.addRule(winningBatCandidate.name, winningBatCandidate.score, 'bat', false, winningBatCandidate.nameTamil);
+                if (winningBatCandidate.hasLagna) {
+                    ctx.battingLagnaBonusApplied = true;
+                }
+            }
+        }
+
+        // --- 4. Bowling: Pick Highest between Star and Conjunction (No Stacking) ---
+        if (!ctx.isRule2DirectActive && ctx.bowling.score < 25) {
+            let winningBowlCandidate = null;
+            if (starBowlCandidate && conjBowlCandidate) {
+                winningBowlCandidate = conjBowlCandidate.score > starBowlCandidate.score ? conjBowlCandidate : starBowlCandidate;
+            } else {
+                winningBowlCandidate = starBowlCandidate || conjBowlCandidate;
+            }
+
+            if (winningBowlCandidate) {
+                ctx.addRule(winningBowlCandidate.name, winningBowlCandidate.score, 'bowl', false, winningBowlCandidate.nameTamil);
             }
         }
     },
     // Rule 5: Same House
     (ctx) => {
-        if (ctx.isMatchStarLordRahuKetu) return;
+        if (ctx.isMatchStarLordRahuKetu || ctx.isZigZagBatting) return;
         const ownedByMatchStar = OWN_SIGNS[ctx.matchStarLord] || [];
         const ownedByMatchRasi = OWN_SIGNS[ctx.matchRasiLord] || [];
         const pRasiLordPos = ctx.P[ctx.playerRasiLord];
@@ -271,7 +329,7 @@ const GENERAL_RULES = [
     },
     // Rule 6: Match Lords in Player Houses
     (ctx) => {
-        if (ctx.isMatchStarLordRahuKetu) return;
+        if (ctx.isMatchStarLordRahuKetu || ctx.isZigZagBatting) return;
 
         const prlHouses = OWN_SIGNS[ctx.playerRasiLord] || [];
         const pslHouses = OWN_SIGNS[ctx.playerStarLord] || [];
@@ -291,6 +349,7 @@ const GENERAL_RULES = [
     },
     // Rule 7: Rahu/Ketu
     (ctx) => {
+        if (ctx.isZigZagBatting) return;
         if (['Rahu', 'Ketu'].includes(ctx.playerStarLord)) {
             const matchStarSigns = OWN_SIGNS[ctx.matchStarLord] || [];
             if (matchStarSigns.includes(ctx.playerRasi)) {
@@ -320,33 +379,35 @@ const GENERAL_RULES = [
             }
             if (lagnaLord === ctx.playerRasiLord && !processedLignasBat.has(lagnaName)) {
                 processedLignasBat.add(lagnaName); // Avoid double counting same lagna name if multiple segments
-                const suffix = ctx.matchLagnas.length > 1 ? ` (${lagnaName} [${timeRange}])` : '';
-                ctx.addRule(`BAT Rule 8: Lagna${suffix}`, 2, 'bat', false, `பேட்டிங் விதி 8: லக்ன விதி${suffix}`);
+                if (!ctx.isZigZagBatting && !ctx.battingLagnaBonusApplied) {
+                    const suffix = ctx.matchLagnas.length > 1 ? ` (${lagnaName} [${timeRange}])` : '';
+                    ctx.addRule(`BAT Rule 8: Lagna${suffix}`, 5, 'bat', false, `பேட்டிங் விதி 8: லக்ன விதி${suffix} (5 Pts)`);
 
-                // Bonuses / Deductions
-                const sign = ctx.P[ctx.playerRasiLord];
-                if (isExalted(ctx.playerRasiLord, sign) || isOwnSign(ctx.playerRasiLord, sign)) {
-                    ctx.addRule(`BAT Rule 8: Strong Bonus${suffix}`, 4, 'bat', false, `பேட்டிங் விதி 8: ஆட்சி/உச்சம் போனஸ்${suffix}`);
-                } else if (isDebilitated(ctx.playerRasiLord, sign)) {
-                    ctx.addRule(`BAT Rule 8: Neecham Deduction${suffix}`, -2, 'bat', false, `பேட்டிங் விதி 8: நீசம் குறைப்பு${suffix}`);
+                    // Bonuses / Deductions
+                    const sign = ctx.P[ctx.playerRasiLord];
+                    if (isExalted(ctx.playerRasiLord, sign) || isOwnSign(ctx.playerRasiLord, sign)) {
+                        ctx.addRule(`BAT Rule 8: Strong Bonus${suffix}`, 5, 'bat', false, `பேட்டிங் விதி 8: ஆட்சி/உச்சம் போனஸ்${suffix} (+5)`);
+                    } else if (isDebilitated(ctx.playerRasiLord, sign)) {
+                        ctx.addRule(`BAT Rule 8: Neecham Deduction${suffix}`, -2, 'bat', false, `பேட்டிங் விதி 8: நீசம் குறைப்பு${suffix} (-2)`);
+                    }
                 }
             }
 
-            // Bowling Lagna Check
+            // Bowling Lagna Check (Lagna Priority: 5 pts base, 10 pts strong bonus -> total 15 pts)
             if (lagnaLord === ctx.playerRasiLord) {
                 ctx.bowling.matchedLagnas.push({ lord: lagnaLord, index: lagnaObj.lSeq || (index + 1) });
             }
             if (lagnaLord === ctx.playerRasiLord && !processedLignasBowl.has(lagnaName)) {
                 processedLignasBowl.add(lagnaName);
                 const suffix = ctx.matchLagnas.length > 1 ? ` (${lagnaName} [${timeRange}])` : '';
-                ctx.addRule(`BOWL Rule 8: Lagna${suffix}`, 6, 'bowl', false, `பவுலிங் விதி 8: லக்ன விதி${suffix}`);
+                ctx.addRule(`BOWL Rule 8: Lagna${suffix}`, 5, 'bowl', false, `பவுலிங் விதி 8: லக்ன விதி${suffix} (5 Pts)`);
 
                 // Bonuses / Deductions
                 const sign = ctx.P[ctx.playerRasiLord];
                 if (isExalted(ctx.playerRasiLord, sign) || isOwnSign(ctx.playerRasiLord, sign)) {
-                    ctx.addRule(`BOWL Rule 8: Strong Bonus${suffix}`, 6, 'bowl', false, `பவுலிங் விதி 8: ஆட்சி/உச்சம் போனஸ்${suffix}`);
+                    ctx.addRule(`BOWL Rule 8: Strong Bonus${suffix}`, 10, 'bowl', false, `பவுலிங் விதி 8: ஆட்சி/உச்சம் போனஸ்${suffix} (+10 Pts)`);
                 } else if (isDebilitated(ctx.playerRasiLord, sign)) {
-                    ctx.addRule(`BOWL Rule 8: Neecham Deduction${suffix}`, -2, 'bowl', false, `பவுலிங் விதி 8: நீசம் குறைப்பு${suffix}`);
+                    ctx.addRule(`BOWL Rule 8: Neecham Deduction${suffix}`, -2, 'bowl', false, `பவுலிங் விதி 8: நீசம் குறைப்பு${suffix} (-2)`);
                 }
 
                 const planetsInLagna = Object.keys(ctx.P).filter(p => ctx.P[p] === lagnaName);
@@ -590,6 +651,10 @@ export function getPrediction(player, match, transit) {
     // Execute Nakshatra Specific Rules
     const nakRule = NAKSHATRA_RULES[ctx.matchStar];
     if (nakRule) nakRule(ctx);
+
+    // Max Points Cap: 25 points maximum per customer requirement
+    if (ctx.batting.score > 25) ctx.batting.score = 25;
+    if (ctx.bowling.score > 25) ctx.bowling.score = 25;
 
     // Handle Sure Flops
     if (ctx.sureFlopBat) { ctx.batting.score = 0; ctx.batting.status = 'SURE FLOP'; }

@@ -182,6 +182,7 @@ const AdminPredictionManager = () => {
     // Dialog States
     const [openMatchDialog, setOpenMatchDialog] = useState(false);
     const [openInsightDialog, setOpenInsightDialog] = useState(false);
+    const [resolveDialog, setResolveDialog] = useState({ open: false, match: null, result: 'LOST', note: '' });
     const [selectedMatch, setSelectedMatch] = useState(null);
     const [submitting, setSubmitting] = useState(false);
     const [statusMsg, setStatusMsg] = useState({ type: '', text: '' });
@@ -541,6 +542,48 @@ const AdminPredictionManager = () => {
         } catch (err) {
             console.error("Error publishing insights:", err);
             setStatusMsg({ type: 'error', text: 'Failed to post insights to mobile app' });
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const handleOpenResolveDialog = (match, result) => {
+        setResolveDialog({
+            open: true,
+            match,
+            result,
+            note: result === 'LOST'
+                ? 'Prediction did not match final outcome. 1 Free Replacement Pass will be refunded to all purchasers.'
+                : result === 'VOID'
+                    ? 'Match abandoned / no result. 1 Free Pass refunded to purchasers.'
+                    : 'Astrological prediction was accurate!'
+        });
+    };
+
+    const handleConfirmResolve = async () => {
+        if (!resolveDialog.match) return;
+        setSubmitting(true);
+        try {
+            const authToken = token || localStorage.getItem('token');
+            const matchId = resolveDialog.match._id || resolveDialog.match.id;
+            const res = await axios.post(`${baseUrl}/api/insights/match/${matchId}/resolve-prediction`, {
+                result: resolveDialog.result,
+                note: resolveDialog.note
+            }, {
+                headers: { 'x-auth-token': authToken }
+            });
+
+            if (res.data?.success) {
+                setStatusMsg({
+                    type: 'success',
+                    text: res.data.msg || `Prediction outcome marked as ${resolveDialog.result} successfully!`
+                });
+                setResolveDialog({ open: false, match: null, result: 'LOST', note: '' });
+                await fetchMatches(true);
+            }
+        } catch (err) {
+            console.error("Error resolving prediction:", err);
+            setStatusMsg({ type: 'error', text: err.response?.data?.msg || 'Failed to update prediction outcome' });
         } finally {
             setSubmitting(false);
         }
@@ -1100,6 +1143,112 @@ const AdminPredictionManager = () => {
                                                 <Typography variant="caption" sx={{ color: '#94A3B8 !important' }}>
                                                     ⏳ Awaiting Astrological Prediction & Analysis Posting
                                                 </Typography>
+                                            </Box>
+                                        )}
+
+                                        {/* Outcome Resolution & Pass Refund Controls (Method 1) */}
+                                        {hasInsight && (
+                                            <Box
+                                                sx={{
+                                                    p: 1.5,
+                                                    mb: 2,
+                                                    borderRadius: '14px',
+                                                    backgroundColor: 'rgba(15, 23, 42, 0.7)',
+                                                    border: '1px solid rgba(255, 255, 255, 0.08)'
+                                                }}
+                                            >
+                                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.2 }}>
+                                                    <Typography variant="caption" sx={{ color: '#94A3B8 !important', fontWeight: 700, letterSpacing: 0.5 }}>
+                                                        PREDICTION OUTCOME:
+                                                    </Typography>
+                                                    <Chip
+                                                        size="small"
+                                                        label={
+                                                            match.predictionResult === 'WON'
+                                                                ? '🟢 PREDICTION WON'
+                                                                : match.predictionResult === 'LOST'
+                                                                    ? `🔴 LOST (${match.compensatedCount || 0} PASSES REFUNDED)`
+                                                                    : match.predictionResult === 'VOID'
+                                                                        ? '⚪ VOID / REFUNDED'
+                                                                        : '⏳ OUTCOME PENDING'
+                                                        }
+                                                        sx={{
+                                                            fontWeight: 800,
+                                                            fontSize: '0.68rem',
+                                                            backgroundColor: match.predictionResult === 'WON'
+                                                                ? 'rgba(34, 197, 94, 0.2) !important'
+                                                                : match.predictionResult === 'LOST'
+                                                                    ? 'rgba(239, 68, 68, 0.2) !important'
+                                                                    : 'rgba(255, 255, 255, 0.08) !important',
+                                                            color: match.predictionResult === 'WON'
+                                                                ? '#4ADE80 !important'
+                                                                : match.predictionResult === 'LOST'
+                                                                    ? '#F87171 !important'
+                                                                    : '#CBD5E1 !important',
+                                                            border: '1px solid',
+                                                            borderColor: match.predictionResult === 'WON' ? '#22C55E' : match.predictionResult === 'LOST' ? '#EF4444' : 'rgba(255, 255, 255, 0.15)',
+                                                            '& .MuiChip-label': {
+                                                                color: match.predictionResult === 'WON' ? '#4ADE80 !important' : match.predictionResult === 'LOST' ? '#F87171 !important' : '#CBD5E1 !important'
+                                                            }
+                                                        }}
+                                                    />
+                                                </Box>
+
+                                                {/* Action Buttons to mark WON / LOST */}
+                                                <Stack direction="row" spacing={1}>
+                                                    <Button
+                                                        size="small"
+                                                        variant="outlined"
+                                                        disabled={match.predictionResult === 'WON'}
+                                                        onClick={() => handleOpenResolveDialog(match, 'WON')}
+                                                        sx={{
+                                                            flex: 1,
+                                                            fontSize: '0.72rem',
+                                                            fontWeight: 700,
+                                                            borderRadius: '8px',
+                                                            borderColor: match.predictionResult === 'WON' ? '#22C55E' : 'rgba(34, 197, 94, 0.4)',
+                                                            color: '#4ADE80 !important',
+                                                            backgroundColor: match.predictionResult === 'WON' ? 'rgba(34, 197, 94, 0.15) !important' : 'transparent',
+                                                            '&:hover': { backgroundColor: 'rgba(34, 197, 94, 0.2) !important', borderColor: '#22C55E' }
+                                                        }}
+                                                    >
+                                                        ✓ Mark Won
+                                                    </Button>
+                                                    <Button
+                                                        size="small"
+                                                        variant="outlined"
+                                                        disabled={match.predictionResult === 'LOST'}
+                                                        onClick={() => handleOpenResolveDialog(match, 'LOST')}
+                                                        sx={{
+                                                            flex: 1.4,
+                                                            fontSize: '0.72rem',
+                                                            fontWeight: 700,
+                                                            borderRadius: '8px',
+                                                            borderColor: match.predictionResult === 'LOST' ? '#EF4444' : 'rgba(239, 68, 68, 0.4)',
+                                                            color: '#F87171 !important',
+                                                            backgroundColor: match.predictionResult === 'LOST' ? 'rgba(239, 68, 68, 0.15) !important' : 'transparent',
+                                                            '&:hover': { backgroundColor: 'rgba(239, 68, 68, 0.2) !important', borderColor: '#EF4444' }
+                                                        }}
+                                                    >
+                                                        ✗ Lost (Refund Pass)
+                                                    </Button>
+                                                    <Button
+                                                        size="small"
+                                                        variant="outlined"
+                                                        disabled={match.predictionResult === 'VOID'}
+                                                        onClick={() => handleOpenResolveDialog(match, 'VOID')}
+                                                        sx={{
+                                                            fontSize: '0.72rem',
+                                                            fontWeight: 600,
+                                                            borderRadius: '8px',
+                                                            borderColor: 'rgba(255, 255, 255, 0.2)',
+                                                            color: '#94A3B8 !important',
+                                                            '&:hover': { borderColor: '#94A3B8' }
+                                                        }}
+                                                    >
+                                                        Void
+                                                    </Button>
+                                                </Stack>
                                             </Box>
                                         )}
 
@@ -1712,6 +1861,87 @@ const AdminPredictionManager = () => {
                             }}
                         >
                             {submitting ? 'Publishing & Syncing...' : 'Publish & Sync to Mobile App'}
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
+                {/* Resolve Prediction Confirmation Dialog (Method 1) */}
+                <Dialog
+                    open={resolveDialog.open}
+                    onClose={() => setResolveDialog({ open: false, match: null, result: 'LOST', note: '' })}
+                    fullWidth
+                    maxWidth="xs"
+                    PaperProps={{
+                        sx: {
+                            backgroundColor: '#1E293B',
+                            color: '#FFFFFF',
+                            borderRadius: '20px',
+                            border: '1.5px solid',
+                            borderColor: resolveDialog.result === 'WON' ? '#22C55E' : resolveDialog.result === 'LOST' ? '#EF4444' : 'rgba(255, 255, 255, 0.15)',
+                            p: 1
+                        }
+                    }}
+                >
+                    <DialogTitle sx={{ fontWeight: 'bold', color: '#FFFFFF !important', pb: 1 }}>
+                        {resolveDialog.result === 'WON'
+                            ? '🟢 Confirm: Mark Prediction as WON'
+                            : resolveDialog.result === 'LOST'
+                                ? '🔴 Confirm: Mark Prediction as LOST'
+                                : '⚪ Confirm: Mark Match as VOID'}
+                    </DialogTitle>
+                    <DialogContent>
+                        {resolveDialog.match && (
+                            <Box sx={{ mt: 1 }}>
+                                <Typography variant="subtitle2" fontWeight="bold" sx={{ color: '#38BDF8 !important', mb: 0.5 }}>
+                                    {resolveDialog.match.teamA} vs {resolveDialog.match.teamB}
+                                </Typography>
+                                <Typography variant="caption" sx={{ color: '#CBD5E1 !important', display: 'block', mb: 2 }}>
+                                    Astrological Advantage: <strong>{resolveDialog.match.insight?.astrologicalAdvantage || resolveDialog.match.insightData?.astrologicalAdvantage || 'Calculated'}</strong>
+                                </Typography>
+
+                                {resolveDialog.result === 'LOST' && (
+                                    <Alert severity="warning" sx={{ mb: 2, borderRadius: '12px', backgroundColor: 'rgba(245, 158, 11, 0.15)', color: '#FDE68A' }}>
+                                        <strong>Auto Pass Refund (Method 1):</strong> Every user who purchased this match prediction will automatically receive <strong>+1 Free Replacement Pass</strong> credited to their mobile app account!
+                                    </Alert>
+                                )}
+
+                                {resolveDialog.result === 'VOID' && (
+                                    <Alert severity="info" sx={{ mb: 2, borderRadius: '12px' }}>
+                                        Marking as VOID will refund 1 Free Replacement Pass to all users who unlocked this match.
+                                    </Alert>
+                                )}
+
+                                <TextField
+                                    fullWidth
+                                    size="small"
+                                    label="Resolution Note (Optional)"
+                                    placeholder="e.g. Outcome did not match astrological chart."
+                                    value={resolveDialog.note}
+                                    onChange={(e) => setResolveDialog({ ...resolveDialog, note: e.target.value })}
+                                    sx={{ mt: 1 }}
+                                />
+                            </Box>
+                        )}
+                    </DialogContent>
+                    <DialogActions sx={{ p: 2 }}>
+                        <Button
+                            onClick={() => setResolveDialog({ open: false, match: null, result: 'LOST', note: '' })}
+                            sx={{ color: '#94A3B8 !important', fontWeight: 600 }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            variant="contained"
+                            disabled={submitting}
+                            onClick={handleConfirmResolve}
+                            sx={{
+                                borderRadius: '10px',
+                                fontWeight: 'bold',
+                                px: 2.5,
+                                backgroundColor: resolveDialog.result === 'WON' ? '#10B981 !important' : resolveDialog.result === 'LOST' ? '#EF4444 !important' : '#64748B !important'
+                            }}
+                        >
+                            {submitting ? 'Updating...' : `Confirm ${resolveDialog.result}`}
                         </Button>
                     </DialogActions>
                 </Dialog>

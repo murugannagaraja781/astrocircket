@@ -165,6 +165,9 @@ class MatchModel {
   final String? subStatus;
   final Map<String, dynamic>? location;
   final Map<String, dynamic>? result;
+  final String predictionResult; // 'PENDING', 'WON', 'LOST', 'VOID'
+  final String? predictionResultNote;
+  final int compensatedCount;
   final InsightData insight;
   final bool isUnlocked;
 
@@ -181,6 +184,9 @@ class MatchModel {
     this.subStatus,
     this.location,
     this.result,
+    this.predictionResult = 'PENDING',
+    this.predictionResultNote,
+    this.compensatedCount = 0,
     required this.insight,
     this.isUnlocked = false,
   });
@@ -272,6 +278,9 @@ class MatchModel {
       subStatus: json['subStatus'],
       location: json['location'],
       result: json['result'],
+      predictionResult: json['predictionResult'] ?? 'PENDING',
+      predictionResultNote: json['predictionResultNote'],
+      compensatedCount: (json['compensatedCount'] is num) ? (json['compensatedCount'] as num).toInt() : 0,
       insight: json['insight'] != null
           ? InsightData.fromJson(json['insight'])
           : InsightData(),
@@ -293,6 +302,9 @@ class MatchModel {
     'subStatus': subStatus,
     'location': location,
     'result': result,
+    'predictionResult': predictionResult,
+    'predictionResultNote': predictionResultNote,
+    'compensatedCount': compensatedCount,
     'insight': insight.toJson(),
     'isUnlocked': isUnlocked,
   };
