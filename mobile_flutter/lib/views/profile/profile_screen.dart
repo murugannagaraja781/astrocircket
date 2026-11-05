@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/constants/app_constants.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -157,7 +158,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       Text('App Version', style: TextStyle(color: colors.textSecondary)),
                       Text(
-                        '1.0.0',
+                        AppConstants.appVersion,
                         style: TextStyle(color: colors.textPrimary, fontWeight: FontWeight.bold),
                       ),
                     ],
