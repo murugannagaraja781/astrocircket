@@ -875,6 +875,103 @@ router.post('/purchase/razorpay/verify', requireAuth, async (req, res) => {
 });
 
 /**
+ * @route   POST /api/insights/purchase/razorpay/webhook
+ * @desc    Razorpay Webhook listener to automatically confirm payments and unlock insights
+ * @access  Public (Signature-verified)
+ */
+router.post('/purchase/razorpay/webhook', async (req, res) => {
+    try {
+        const signature = req.headers['x-razorpay-signature'];
+        const rawBody = req.rawBody || JSON.stringify(req.body);
+
+        // Verify webhook signature if configured
+        const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET || process.env.RAZORPAY_KEY_SECRET;
+        if (webhookSecret && signature) {
+            const isValid = razorpayService.verifyWebhookSignature(rawBody, signature, webhookSecret);
+            if (!isValid) {
+                console.warn('[Razorpay Webhook] Invalid webhook signature received');
+                return res.status(400).json({ success: false, msg: 'Invalid webhook signature' });
+            }
+        }
+
+        const event = req.body.event;
+        const payload = req.body.payload || {};
+        console.log(`[Razorpay Webhook] Event received: ${event}`);
+
+        // Handle payment captured or order paid
+        if (event === 'payment.captured' || event === 'order.paid') {
+            const paymentEntity = payload.payment?.entity;
+            const orderEntity = payload.order?.entity;
+
+            const orderId = paymentEntity?.order_id || orderEntity?.id;
+            const paymentId = paymentEntity?.id;
+            const notes = paymentEntity?.notes || orderEntity?.notes || {};
+            const matchId = notes.matchId;
+            const userId = notes.userId;
+            const amountInPaise = paymentEntity?.amount || orderEntity?.amount || 0;
+            const amountInINR = amountInPaise > 0 ? amountInPaise / 100 : 49;
+            const userEmail = paymentEntity?.email || '';
+
+            if (orderId || matchId) {
+                // Find existing purchase or create one
+                let purchase = null;
+                if (orderId) {
+                    purchase = await Purchase.findOne({ razorpayOrderId: orderId });
+                }
+                if (!purchase && userId && matchId) {
+                    purchase = await Purchase.findOne({ userId, matchId, status: 'PENDING' });
+                }
+
+                if (purchase) {
+                    purchase.status = 'SUCCESS';
+                    if (paymentId) purchase.razorpayPaymentId = paymentId;
+                    if (orderId) purchase.razorpayOrderId = orderId;
+                    purchase.paymentMethod = 'RAZORPAY';
+                    purchase.updatedAt = new Date();
+                    await purchase.save();
+                    console.log(`[Razorpay Webhook] Purchase updated to SUCCESS for Order: ${orderId}, Match: ${purchase.matchId}`);
+                } else if (userId && matchId) {
+                    // Create new confirmed purchase
+                    purchase = new Purchase({
+                        userId: userId,
+                        userEmail: userEmail,
+                        matchId: matchId,
+                        merchantTransactionId: orderId || `RZP_WH_${Date.now()}`,
+                        razorpayOrderId: orderId,
+                        razorpayPaymentId: paymentId,
+                        amount: amountInINR,
+                        currency: 'INR',
+                        status: 'SUCCESS',
+                        paymentMethod: 'RAZORPAY'
+                    });
+                    await purchase.save();
+                    console.log(`[Razorpay Webhook] New purchase created as SUCCESS for Order: ${orderId}, Match: ${matchId}`);
+                }
+            }
+        } else if (event === 'payment.failed') {
+            const paymentEntity = payload.payment?.entity;
+            const orderId = paymentEntity?.order_id;
+            if (orderId) {
+                const purchase = await Purchase.findOne({ razorpayOrderId: orderId });
+                if (purchase && purchase.status === 'PENDING') {
+                    purchase.status = 'FAILED';
+                    purchase.updatedAt = new Date();
+                    await purchase.save();
+                    console.log(`[Razorpay Webhook] Purchase marked FAILED for Order: ${orderId}`);
+                }
+            }
+        }
+
+        // Always acknowledge Razorpay webhooks quickly with 200 OK
+        res.status(200).json({ status: 'ok', received: true });
+    } catch (err) {
+        console.error('[Razorpay Webhook] Processing error:', err);
+        // Return 200 so Razorpay does not retry broken payload infinitely
+        res.status(200).json({ status: 'error', message: err.message });
+    }
+});
+
+/**
  * @route   POST /api/insights/purchase/unlock-with-pass
  * @desc    Unlock match insight prediction using 1 Free Replacement Pass
  * @access  Private

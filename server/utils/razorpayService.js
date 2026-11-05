@@ -67,8 +67,37 @@ const verifyPaymentSignature = (orderId, paymentId, signature) => {
     }
 };
 
+/**
+ * Verify Razorpay Webhook Signature
+ * formula: hmac_sha256(rawBody, webhookSecret) == signature
+ */
+const verifyWebhookSignature = (rawBody, signature, customSecret = null) => {
+    try {
+        const secret = customSecret || process.env.RAZORPAY_WEBHOOK_SECRET || getKeySecret();
+        if (!signature) {
+            console.warn('[RazorpayService] No webhook signature provided in header');
+            return false;
+        }
+
+        const bodyData = Buffer.isBuffer(rawBody)
+            ? rawBody
+            : (typeof rawBody === 'string' ? rawBody : JSON.stringify(rawBody));
+
+        const expectedSignature = crypto
+            .createHmac('sha256', secret)
+            .update(bodyData)
+            .digest('hex');
+
+        return expectedSignature === signature;
+    } catch (err) {
+        console.error('[RazorpayService] Webhook signature verification error:', err.message);
+        return false;
+    }
+};
+
 module.exports = {
     createOrder,
     verifyPaymentSignature,
+    verifyWebhookSignature,
     getKeyId
 };

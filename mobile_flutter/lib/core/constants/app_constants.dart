@@ -11,10 +11,14 @@ class AppConstants {
   static const String paymentApiUrl = 'https://sbastro.com/app/payment_api.php';
   static const String paymentVerifyUrl = 'https://sbastro.com/app/verify_payment.php';
 
+  // Razorpay Payment Gateway (Live Credentials)
+  static const String razorpayKeyId = 'rzp_live_TwPJ7uTSHWh6sd';
+
   // SharedPreferences Keys
   static const String keyToken = 'auth_token';
   static const String keyUser = 'user_data';
   static const String keyBaseUrl = 'custom_base_url';
+  static const String keyUserPhone = 'user_phone';
 
   // Safe Terminology for Google Play Compliance
   static const String termMatchAnalysis = 'Match Analysis';

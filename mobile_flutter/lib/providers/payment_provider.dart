@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../services/api_service.dart';
+import '../core/constants/app_constants.dart';
 import 'match_provider.dart';
 
 class PaymentProvider with ChangeNotifier {
@@ -70,7 +71,10 @@ class PaymentProvider with ChangeNotifier {
       }
 
       final String razorpayOrderId = orderRes['orderId'];
-      final String keyId = orderRes['keyId'] ?? 'rzp_test_placeholder';
+      final String? backendKey = orderRes['keyId'] as String?;
+      final String keyId = (backendKey != null && backendKey.isNotEmpty && backendKey != 'rzp_test_placeholder')
+          ? backendKey
+          : AppConstants.razorpayKeyId;
       final int amountInPaise = (orderRes['amount'] is num)
           ? (orderRes['amount'] as num).toInt()
           : (amount * 100).toInt();
@@ -127,24 +131,58 @@ class PaymentProvider with ChangeNotifier {
       });
 
       // 3. Launch Razorpay Checkout Bottom Sheet
+      final Map<String, dynamic> prefill = {};
+      if (userPhone != null && userPhone.trim().isNotEmpty) {
+        prefill['contact'] = userPhone.trim();
+      }
+      if (userEmail != null && userEmail.trim().isNotEmpty) {
+        prefill['email'] = userEmail.trim();
+      } else {
+        prefill['email'] = 'user@astrocricket.com';
+      }
+      if (userName != null && userName.trim().isNotEmpty) {
+        prefill['name'] = userName.trim();
+      } else {
+        prefill['name'] = 'Cricket Fan';
+      }
+
       final options = {
         'key': keyId,
         'amount': amountInPaise,
+        'currency': 'INR',
         'name': 'AstroCricket Insights',
         'description': matchTitle,
         'order_id': razorpayOrderId,
         'timeout': 300, // 5 minutes
-        'prefill': {
-          'contact': userPhone ?? '9999999999',
-          'email': userEmail ?? 'user@astrocricket.com',
-          'name': userName ?? 'Cricket Fan'
+        'prefill': prefill,
+        'config': {
+          'display': {
+            'blocks': {
+              'upi': {
+                'name': 'Pay via UPI / QR Code',
+                'instruments': [
+                  {
+                    'method': 'upi',
+                  },
+                ],
+              },
+            },
+            'sequence': ['block.upi'],
+            'preferences': {
+              'show_default_blocks': true,
+            },
+          },
         },
         'theme': {
           'color': '#0C2340',
         },
         'modal': {
-          'confirm_close': true
-        }
+          'confirm_close': true,
+        },
+        'retry': {
+          'enabled': true,
+          'max_count': 1,
+        },
       };
 
       _statusMessage = 'Opening Razorpay Payment Checkout...';

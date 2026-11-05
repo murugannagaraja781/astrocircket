@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_constants.dart';
 import '../../models/match_model.dart';
@@ -7,6 +8,7 @@ import '../../providers/match_provider.dart';
 import '../../providers/payment_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
+import '../auth/login_screen.dart';
 
 class MatchInsightsScreen extends StatelessWidget {
   final MatchModel match;
@@ -560,14 +562,58 @@ class MatchInsightsScreen extends StatelessWidget {
                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     onPressed: () async {
-                      final matchProvider = Provider.of<MatchProvider>(context, listen: false);
                       final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                      final matchProvider = Provider.of<MatchProvider>(context, listen: false);
                       final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+                      // 1. Enforce Login first so purchase is saved to user account
+                      if (!authProvider.isAuthenticated) {
+                        final shouldLogin = await showDialog<bool>(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            backgroundColor: colors.surface,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                            title: Text('Login Required', style: TextStyle(color: colors.textPrimary, fontWeight: FontWeight.bold)),
+                            content: Text(
+                              'Please login or create an account to unlock match insights and access them across all your devices.',
+                              style: TextStyle(color: colors.textSecondary),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(ctx, false),
+                                child: Text('Cancel', style: TextStyle(color: colors.textMuted)),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: colors.primary,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                ),
+                                onPressed: () => Navigator.pop(ctx, true),
+                                child: const Text('Login / Sign Up', style: TextStyle(color: Colors.white)),
+                              ),
+                            ],
+                          ),
+                        );
+
+                        if (shouldLogin == true && context.mounted) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const LoginScreen()),
+                          );
+                        }
+                        return;
+                      }
+
+                      // 2. Get saved mobile number or prompt once
+                      final userPhone = await _getOrPromptUserPhone(context, colors);
+                      if (userPhone == null) return; // User cancelled prompt
+
                       final success = await paymentProvider.processRazorpayPayment(
                         context: context,
                         matchId: match.id,
                         amount: match.insight.price,
                         matchProvider: matchProvider,
+                        userPhone: userPhone,
                         userEmail: authProvider.currentUser?.email ?? authProvider.currentUser?.username,
                         userName: authProvider.currentUser?.displayName ?? authProvider.currentUser?.username,
                       );
@@ -669,9 +715,14 @@ class MatchInsightsScreen extends StatelessWidget {
                   children: [
                     Icon(Icons.lock_outline, size: 13, color: colors.textMuted),
                     const SizedBox(width: 4),
-                    Text(
-                      '100% Safe & Secure via Razorpay (UPI, GPay, Cards, NetBanking)',
-                      style: TextStyle(color: colors.textMuted, fontSize: 10),
+                    Flexible(
+                      child: Text(
+                        '100% Safe & Secure via Razorpay (UPI, GPay, Cards, NetBanking)',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: colors.textMuted, fontSize: 10),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
@@ -1154,5 +1205,114 @@ class MatchInsightsScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<String?> _getOrPromptUserPhone(BuildContext context, AppColorPalette colors) async {
+    final prefs = await SharedPreferences.getInstance();
+    String? savedPhone = prefs.getString(AppConstants.keyUserPhone);
+    if (savedPhone != null && savedPhone.trim().length >= 10) {
+      return savedPhone.trim();
+    }
+
+    if (!context.mounted) return null;
+
+    final phoneController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+
+    final phone = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: colors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return Padding(
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 20,
+            bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
+          ),
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.phone_android_rounded, color: colors.primary),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Mobile Number Required',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: colors.textPrimary,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Razorpay requires your 10-digit mobile number for secure payment confirmation and receipt.',
+                  style: TextStyle(fontSize: 13, color: colors.textSecondary),
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: phoneController,
+                  keyboardType: TextInputType.phone,
+                  maxLength: 10,
+                  autofocus: true,
+                  style: TextStyle(color: colors.textPrimary),
+                  decoration: InputDecoration(
+                    prefixText: '+91 ',
+                    prefixStyle: TextStyle(
+                      color: colors.textPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    hintText: 'Enter 10-digit mobile number',
+                    hintStyle: TextStyle(color: colors.textMuted),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                    counterText: '',
+                  ),
+                  validator: (val) {
+                    final clean = val?.trim() ?? '';
+                    if (clean.length != 10 || int.tryParse(clean) == null || !['6', '7', '8', '9'].contains(clean[0])) {
+                      return 'Please enter a valid 10-digit mobile number';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: colors.primary,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  onPressed: () {
+                    if (formKey.currentState?.validate() ?? false) {
+                      Navigator.pop(ctx, phoneController.text.trim());
+                    }
+                  },
+                  child: const Text(
+                    'Continue to Payment',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    if (phone != null && phone.trim().length == 10) {
+      await prefs.setString(AppConstants.keyUserPhone, phone.trim());
+      return phone.trim();
+    }
+    return null;
   }
 }

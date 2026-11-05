@@ -50,7 +50,11 @@ app.use(cors(corsOptions));
 // Enable compression
 app.use(compression());
 
-app.use(express.json());
+app.use(express.json({
+    verify: (req, res, buf) => {
+        req.rawBody = buf;
+    }
+}));
 
 // Serve static uploads (Only if directory exists, to avoid Vercel crashes)
 const fs = require('fs');
@@ -104,6 +108,12 @@ app.use('/api/leagues', require('./routes/leagues'));
 app.use('/api/matches', require('./routes/matches'));
 app.use('/api/insights', require('./routes/insights'));
 app.use('/api/captain-astro', require('./routes/captainAstro'));
+
+// Razorpay Webhook Aliases
+app.post(['/api/razorpay/webhook', '/api/payment/razorpay/webhook'], (req, res, next) => {
+    req.url = '/purchase/razorpay/webhook';
+    require('./routes/insights')(req, res, next);
+});
 
 // Serve Static Assets (Frontend)
 const possibleBuildPaths = [
