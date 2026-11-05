@@ -30,6 +30,14 @@
           }
         },
         {
+          "client_id": "722820496843-gq7k0v9vla7tneoaoqqkb19qei121e9p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.spastro.app",
+            "certificate_hash": "cc330c22c5e54ffac9da5165c9652785dad0ed29"
+          }
+        },
+        {
           "client_id": "722820496843-i1vha1di714tnd5t7bu51ikdf10iuk1b.apps.googleusercontent.com",
           "client_type": 3
         }
