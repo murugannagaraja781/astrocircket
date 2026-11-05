@@ -1,8 +1,8 @@
 class AppConstants {
   static const String appName = 'AstroCricket Insights';
   static const String appTagline = 'KP Astrological Match Analysis & Player Analytics';
-  static const String appVersion = '1.0.1';
-  static const int appBuildNumber = 2;
+  static const String appVersion = '1.0.2';
+  static const int appBuildNumber = 3;
 
   // Backend API Base URL (Railway Production)
   static const String defaultBaseUrl = 'https://mindful-enchantment-production.up.railway.app';
