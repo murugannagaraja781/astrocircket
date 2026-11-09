@@ -20,6 +20,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CloseIcon from '@mui/icons-material/Close';
 import AuthContext from '../context/AuthContext';
 
 // Isolated Dark Theme to guarantee 100% text contrast and override parent theme styles
@@ -183,6 +184,14 @@ const AdminPredictionManager = () => {
     const [openMatchDialog, setOpenMatchDialog] = useState(false);
     const [openInsightDialog, setOpenInsightDialog] = useState(false);
     const [resolveDialog, setResolveDialog] = useState({ open: false, match: null, result: 'LOST', note: '' });
+    const [openNotificationDialog, setOpenNotificationDialog] = useState(false);
+    const [notificationForm, setNotificationForm] = useState({
+        title: '🏏 S&B Astro Alert',
+        body: '',
+        topic: 'match_insights'
+    });
+    const [sendingNotification, setSendingNotification] = useState(false);
+    const [notificationError, setNotificationError] = useState('');
     const [selectedMatch, setSelectedMatch] = useState(null);
     const [submitting, setSubmitting] = useState(false);
     const [statusMsg, setStatusMsg] = useState({ type: '', text: '' });
@@ -589,26 +598,54 @@ const AdminPredictionManager = () => {
         }
     };
 
-    const handleSendTestNotification = async () => {
+    const handleOpenNotificationDialog = () => {
+        setNotificationForm({
+            title: '🏏 S&B Astro Alert',
+            body: '',
+            topic: 'match_insights'
+        });
+        setNotificationError('');
+        setOpenNotificationDialog(true);
+    };
+
+    const handleSendCustomNotification = async (e) => {
+        if (e) e.preventDefault();
+        if (!notificationForm.body.trim()) {
+            setNotificationError('Please enter a notification message.');
+            return;
+        }
+
         try {
+            setSendingNotification(true);
+            setNotificationError('');
             const authToken = token || localStorage.getItem('token');
-            setStatusMsg({ type: 'info', text: 'Dispatching test push notification to mobile app...' });
+            
             const res = await axios.post(`${baseUrl}/api/insights/test-notification`, {
-                title: '🏏 S&B Astro Test Alert',
-                body: 'Firebase Cloud Messaging push alert is working live!'
+                title: notificationForm.title.trim() || '🏏 S&B Astro Alert',
+                body: notificationForm.body.trim(),
+                topic: notificationForm.topic || 'match_insights'
             }, {
                 headers: { 'x-auth-token': authToken }
             });
+
             if (res.data?.success) {
-                setStatusMsg({ type: 'success', text: '✅ Test Notification broadcasted to all mobile app users!' });
+                setOpenNotificationDialog(false);
+                setStatusMsg({ 
+                    type: 'success', 
+                    text: `✅ Push Notification "${notificationForm.title.trim() || 'S&B Astro Alert'}" broadcasted to mobile app users!` 
+                });
             } else {
-                setStatusMsg({ type: 'error', text: 'FCM Error: ' + (res.data?.error || 'Failed to dispatch') });
+                setNotificationError('FCM Error: ' + (res.data?.error || 'Failed to dispatch notification'));
             }
         } catch (err) {
-            console.error('Error sending test notification:', err);
-            setStatusMsg({ type: 'error', text: 'Failed to send test push notification: ' + (err.response?.data?.error || err.message) });
+            console.error('Error sending push notification:', err);
+            setNotificationError('Failed to send push notification: ' + (err.response?.data?.error || err.message));
+        } finally {
+            setSendingNotification(false);
         }
     };
+
+    const handleSendTestNotification = handleOpenNotificationDialog;
 
     const handleDeleteMatch = async (id) => {
         if (!window.confirm("Are you sure you want to delete this match?")) return;
@@ -1942,6 +1979,188 @@ const AdminPredictionManager = () => {
                             }}
                         >
                             {submitting ? 'Updating...' : `Confirm ${resolveDialog.result}`}
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
+                {/* Push Notification Custom Message Dialog */}
+                <Dialog
+                    open={openNotificationDialog}
+                    onClose={() => !sendingNotification && setOpenNotificationDialog(false)}
+                    fullWidth
+                    maxWidth="sm"
+                    PaperProps={{
+                        sx: {
+                            borderRadius: '16px',
+                            border: '1px solid rgba(245, 158, 11, 0.3)',
+                            boxShadow: '0 20px 40px -10px rgba(0,0,0,0.7)',
+                            backgroundColor: '#111827'
+                        }
+                    }}
+                >
+                    <DialogTitle sx={{ 
+                        fontWeight: 'bold', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'space-between',
+                        color: '#FFFFFF !important', 
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                        pb: 2
+                    }}>
+                        <Stack direction="row" spacing={1.5} alignItems="center">
+                            <Box sx={{
+                                width: 38,
+                                height: 38,
+                                borderRadius: '10px',
+                                background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.3) 100%)',
+                                border: '1px solid rgba(245, 158, 11, 0.4)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <NotificationsActiveIcon sx={{ color: '#F59E0B', fontSize: 22 }} />
+                            </Box>
+                            <Box>
+                                <Typography variant="h6" sx={{ fontWeight: 700, fontSize: '1.1rem', color: '#F8FAFC' }}>
+                                    Send Push Notification
+                                </Typography>
+                                <Typography variant="caption" sx={{ color: '#94A3B8' }}>
+                                    Broadcast live alert & message to all mobile app users
+                                </Typography>
+                            </Box>
+                        </Stack>
+                        <IconButton 
+                            size="small" 
+                            onClick={() => setOpenNotificationDialog(false)}
+                            disabled={sendingNotification}
+                            sx={{ color: '#94A3B8', '&:hover': { color: '#FFFFFF' } }}
+                        >
+                            <CloseIcon fontSize="small" />
+                        </IconButton>
+                    </DialogTitle>
+
+                    <DialogContent sx={{ pt: 3 }}>
+                        {notificationError && (
+                            <Alert severity="error" sx={{ mb: 2.5, borderRadius: '10px' }} onClose={() => setNotificationError('')}>
+                                {notificationError}
+                            </Alert>
+                        )}
+
+                        <Stack spacing={2.5} sx={{ mt: 1 }}>
+                            <TextField
+                                label="Notification Title"
+                                placeholder="e.g. 🏏 S&B Astro Alert"
+                                fullWidth
+                                value={notificationForm.title}
+                                onChange={(e) => setNotificationForm({ ...notificationForm, title: e.target.value })}
+                                variant="outlined"
+                                helperText="Heading displayed on users' device notification trays"
+                            />
+
+                            <TextField
+                                label="Notification Message"
+                                placeholder="Type your custom push notification message here... (e.g. Today's match prediction is published! Open app to view now.)"
+                                fullWidth
+                                multiline
+                                rows={3}
+                                required
+                                value={notificationForm.body}
+                                onChange={(e) => setNotificationForm({ ...notificationForm, body: e.target.value })}
+                                variant="outlined"
+                                helperText={`${notificationForm.body.length} characters • Appears in device notification body`}
+                            />
+
+                            <FormControl fullWidth>
+                                <InputLabel id="target-topic-label">Target Audience / Topic</InputLabel>
+                                <Select
+                                    labelId="target-topic-label"
+                                    label="Target Audience / Topic"
+                                    value={notificationForm.topic}
+                                    onChange={(e) => setNotificationForm({ ...notificationForm, topic: e.target.value })}
+                                >
+                                    <MenuItem value="match_insights">All Users (Topic: match_insights - Recommended)</MenuItem>
+                                    <MenuItem value="all_matches">Matches Feed Subscribers (Topic: all_matches)</MenuItem>
+                                </Select>
+                            </FormControl>
+
+                            {/* Mobile Notification Live Preview */}
+                            <Box sx={{
+                                p: 2,
+                                borderRadius: '12px',
+                                background: 'rgba(15, 23, 42, 0.8)',
+                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                            }}>
+                                <Typography variant="caption" sx={{ color: '#94A3B8', fontWeight: 600, display: 'block', mb: 1.5, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                    📱 Mobile Notification Preview
+                                </Typography>
+                                <Box sx={{
+                                    p: 1.5,
+                                    borderRadius: '10px',
+                                    backgroundColor: '#1E293B',
+                                    border: '1px solid rgba(56, 189, 248, 0.25)',
+                                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+                                }}>
+                                    <Stack direction="row" spacing={1.5} alignItems="flex-start">
+                                        <Box sx={{
+                                            width: 32,
+                                            height: 32,
+                                            borderRadius: '8px',
+                                            background: 'linear-gradient(135deg, #0284C7 0%, #2563EB 100%)',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            flexShrink: 0
+                                        }}>
+                                            <SportsCricketIcon sx={{ color: '#FFFFFF', fontSize: 18 }} />
+                                        </Box>
+                                        <Box sx={{ flex: 1, minWidth: 0 }}>
+                                            <Stack direction="row" justifyContent="space-between" alignItems="center">
+                                                <Typography variant="caption" sx={{ color: '#38BDF8', fontWeight: 700, fontSize: '0.75rem' }}>
+                                                    S&B ASTRO • now
+                                                </Typography>
+                                            </Stack>
+                                            <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#FFFFFF', mt: 0.3, fontSize: '0.85rem' }}>
+                                                {notificationForm.title || '🏏 S&B Astro Alert'}
+                                            </Typography>
+                                            <Typography variant="body2" sx={{ color: '#CBD5E1', fontSize: '0.8rem', mt: 0.2, whiteSpace: 'pre-wrap' }}>
+                                                {notificationForm.body || 'Type your message above to preview it here...'}
+                                            </Typography>
+                                        </Box>
+                                    </Stack>
+                                </Box>
+                            </Box>
+                        </Stack>
+                    </DialogContent>
+
+                    <DialogActions sx={{ p: 2.5, backgroundColor: '#0F172A', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                        <Button 
+                            onClick={() => setOpenNotificationDialog(false)} 
+                            disabled={sendingNotification}
+                            sx={{ color: '#94A3B8 !important', fontWeight: 600 }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            variant="contained"
+                            onClick={handleSendCustomNotification}
+                            disabled={sendingNotification || !notificationForm.body.trim()}
+                            startIcon={sendingNotification ? <CircularProgress size={18} color="inherit" /> : <SendIcon />}
+                            sx={{
+                                background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                                color: '#000000',
+                                fontWeight: 'bold',
+                                px: 3,
+                                borderRadius: '10px',
+                                '&:hover': {
+                                    background: 'linear-gradient(135deg, #D97706 0%, #B45309 100%)',
+                                },
+                                '&:disabled': {
+                                    opacity: 0.5,
+                                    color: '#64748B'
+                                }
+                            }}
+                        >
+                            {sendingNotification ? 'Sending Notification...' : 'Send Notification'}
                         </Button>
                     </DialogActions>
                 </Dialog>

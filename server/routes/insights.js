@@ -697,21 +697,29 @@ router.get('/fcm-status', (req, res) => {
 
 /**
  * @route   POST /api/insights/test-notification
- * @desc    Send a test broadcast notification to all app users
+ * @desc    Send a custom broadcast notification to all app users
  * @access  Admin
  */
 router.post('/test-notification', adminAuth, async (req, res) => {
     try {
-        const { title = '🏏 AstroCricket Test Notification', body = 'Push notifications are working perfectly!' } = req.body;
-        const result = await fcmService.sendMatchInsightNotification({
-            matchId: 'test_alert',
-            teamA: 'Team Alpha',
-            teamB: 'Team Beta',
-            advantage: 'Live Test Alert',
-            summary: body
+        const { 
+            title = '🏏 S&B Astro Alert', 
+            body = 'Push notifications are working perfectly!',
+            topic = 'match_insights'
+        } = req.body;
+
+        if (!body || !String(body).trim()) {
+            return res.status(400).json({ success: false, error: 'Notification message body is required' });
+        }
+
+        const result = await fcmService.sendBroadcastNotification({
+            title: String(title).trim() || '🏏 S&B Astro Alert',
+            body: String(body).trim(),
+            topic: topic || 'match_insights'
         });
         res.json({ success: true, result });
     } catch (err) {
+        console.error('Error in /api/insights/test-notification:', err);
         res.status(500).json({ success: false, error: err.message });
     }
 });

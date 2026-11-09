@@ -146,6 +146,76 @@ class FCMService {
     }
 
     /**
+     * Send Broadcast / Custom Push Notification to Topic (e.g. 'match_insights' or 'all_matches')
+     */
+    async sendBroadcastNotification({ title, body, topic = 'match_insights', data = {} }) {
+        initFirebase();
+        const notificationTitle = title || '🏏 S&B Astro Alert';
+        const notificationBody = body || 'New update available!';
+
+        const payload = {
+            topic: topic || 'match_insights',
+            notification: {
+                title: notificationTitle,
+                body: notificationBody
+            },
+            data: {
+                type: 'CUSTOM_BROADCAST',
+                title: String(notificationTitle),
+                body: String(notificationBody),
+                click_action: 'FLUTTER_NOTIFICATION_CLICK',
+                ...Object.fromEntries(
+                    Object.entries(data).map(([k, v]) => [k, String(v ?? '')])
+                )
+            },
+            android: {
+                priority: 'high',
+                notification: {
+                    channelId: 'astrocricket_high_importance_channel',
+                    priority: 'max',
+                    defaultSound: true,
+                    defaultVibrateTimings: true,
+                    visibility: 'public',
+                    sound: 'default'
+                }
+            },
+            apns: {
+                headers: {
+                    'apns-priority': '10'
+                },
+                payload: {
+                    aps: {
+                        alert: {
+                            title: notificationTitle,
+                            body: notificationBody
+                        },
+                        sound: 'default',
+                        badge: 1,
+                        contentAvailable: true
+                    }
+                }
+            }
+        };
+
+        console.log(`[FCM Notification] Sending broadcast notification to topic '${topic}':`, JSON.stringify(payload));
+
+        if (getApps().length > 0) {
+            try {
+                const messaging = getMessaging();
+                const response = await messaging.send(payload);
+                console.log('✅ [FCM Notification] Successfully sent message:', response);
+                return { success: true, messageId: response };
+            } catch (error) {
+                console.error('❌ [FCM Notification] Error sending notification:', error);
+                return { success: false, error: error.message };
+            }
+        } else {
+            console.log('ℹ️ [FCM Notification] Firebase Admin not configured. Notification simulated in local mode.');
+            return { success: true, simulated: true };
+        }
+    }
+
+    /**
      * Send direct message to a specific user FCM token
      */
     async sendDirectNotification(fcmToken, { title, body, data = {} }) {
