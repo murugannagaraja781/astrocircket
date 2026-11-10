@@ -313,7 +313,8 @@ const GENERAL_RULES = [
         const pStarLordPos = ctx.P[ctx.playerStarLord];
 
         if (isSignInList(pRasiLordPos, ownedByMatchStar) && isSignInList(pStarLordPos, ownedByMatchStar)) {
-            ctx.addRule('Rule 5: Same House (Star Lord)', 4, 'both', false, 'விதி 5: ஒரே ராசி (நட்சத்திர அதிபதி)');
+            ctx.addRule('Rule 5: Same House (Star Lord)', 10, 'bat', false, 'விதி 5: ஒரே ராசி (நட்சத்திர அதிபதி)');
+            ctx.addRule('Rule 5: Same House (Star Lord)', 4, 'bowl', false, 'விதி 5: ஒரே ராசி (நட்சத்திர அதிபதி)');
             if (isExalted(ctx.playerRasiLord, ctx.playerRasi) || isOwnSign(ctx.playerRasiLord, ctx.playerRasi)) ctx.addRule('Rule 5: Bonus', 2);
         }
         if (isSignInList(pRasiLordPos, ownedByMatchRasi) && isSignInList(pStarLordPos, ownedByMatchRasi)) {

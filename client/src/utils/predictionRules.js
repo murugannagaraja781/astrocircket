@@ -234,7 +234,7 @@ export const evaluateBatsman = (playerChart, matchChart) => {
 
     // Rule 5: SAME HOUSE RULE
     if (!isRahuKetuMatchStar && OWN_SIGNS[matchStarLord]?.includes(pMoon?.sign) && OWN_SIGNS[matchStarLord]?.includes(getPlanet(playerChart, playerStarLord)?.sign)) {
-        addRule('BAT Rule 5: Same House', 4, 'bat', false, 'பேட்டிங் விதி 5: ஒரே ராசி');
+        addRule('BAT Rule 5: Same House', 10, 'bat', false, 'பேட்டிங் விதி 5: ஒரே ராசி');
         if (isExalted(playerRasiLord, pMoon?.sign) || isOwnSign(playerRasiLord, pMoon?.sign)) addRule('BAT Rule 5: Bonus', 2, 'bat', false, 'பேட்டிங் விதி 5: போனஸ்');
     }
 

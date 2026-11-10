@@ -352,7 +352,8 @@ const GENERAL_RULES = [
         const pMoonPos = ctx.getP("Moon");
 
         if (pRasiPos && pStarPos && ownedByMatchStar.includes(pRasiPos.signId) && ownedByMatchStar.includes(pStarPos.signId)) {
-            ctx.addRule('Rule 5: Same House (Star Lord)', 4, 'both', false, 'விதி 5: ஒரே ராசி (நட்சத்திர அதிபதி)');
+            ctx.addRule('Rule 5: Same House (Star Lord)', 10, 'bat', false, 'விதி 5: ஒரே ராசி (நட்சத்திர அதிபதி)');
+            ctx.addRule('Rule 5: Same House (Star Lord)', 4, 'bowl', false, 'விதி 5: ஒரே ராசி (நட்சத்திர அதிபதி)');
             if (isExalted(ctx.playerRasiLord, pMoonPos.longitude) || isOwnSign(ctx.playerRasiLord, pMoonPos.longitude)) ctx.addRule('Rule 5: Bonus', 2);
         }
         if (pStarPos && ownedByMatchRasi.includes(pMoonPos.signId) && ownedByMatchRasi.includes(pStarPos.signId)) {

@@ -454,7 +454,7 @@ const RulesView = () => {
                                 { rule: 'BAT Rule 2', tamil: 'நேரடி விதி', points: '+6' },
                                 { rule: 'BAT Rule 3', tamil: 'நட்சத்திர விதி', points: '+4' },
                                 { rule: 'BAT Rule 4', tamil: 'சேர்க்கை விதி', points: '+4' },
-                                { rule: 'BAT Rule 5', tamil: 'ஒரே ராசி விதி', points: '+4' },
+                                { rule: 'BAT Rule 5', tamil: 'ஒரே ராசி விதி', points: '+10' },
                                 { rule: 'BAT Rule 6', tamil: 'ராசி அதிபதி வீடு', points: '+6' },
                                 { rule: 'BAT Rule 7', tamil: 'ராகு/கேது விதி', points: '+4' },
                                 { rule: 'BAT Rule 8', tamil: 'லக்ன விதி', points: '+2' },

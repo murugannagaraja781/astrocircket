@@ -29,7 +29,7 @@
    - Lagna Match: +5 Pts (Total Max: 15-20 Pts)
    *Note: Between Star & Conjunction, highest candidate score is selected. No stacking!
 🟩 Rule 5: SAME HOUSE RULE
-   - In Match Star Lord signs: 4 Pts
+   - In Match Star Lord signs: 10 Pts
    - In Match Rasi Lord signs: SURE FLOP (0 Pts)
 🟩 Rule 6: MATCH LORDS IN PLAYER HOUSES -> 6 Pts
 🟩 Rule 7: RAHU / KETU PLAYER RULE -> 4 Pts
