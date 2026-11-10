@@ -1,0 +1,146 @@
+[
+  {
+    "cricbuzzMatchId": "1793631200000",
+    "teamA": "Sudur Paschim Royals",
+    "teamB": "Chitwan Rhinos",
+    "matchDate": "2026-11-02",
+    "matchTime": "04:30:00 PM",
+    "venue": "Kirtipur, Nepal (Tribhuvan University Ground)",
+    "format": "T20",
+    "series": "Nepal Premier League",
+    "toss": "Sudur Paschim Royals won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sudur Paschim Royals won by 5 wkts",
+    "location": {
+      "name": "Kirtipur, Nepal (Tribhuvan University Ground)",
+      "lat": 27.6792,
+      "lng": 85.2818,
+      "timezone": 5.75
+    },
+    "result": {
+      "winner": "Sudur Paschim Royals",
+      "score": "",
+      "margin": "Sudur Paschim Royals won by 5 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "1793631300000",
+    "teamA": "Kathmandu Gorkhas",
+    "teamB": "Karnali Yaks",
+    "matchDate": "2026-11-02",
+    "matchTime": "12:30:00 PM",
+    "venue": "Kirtipur, Nepal (Tribhuvan University Ground)",
+    "format": "T20",
+    "series": "Nepal Premier League",
+    "toss": "Kathmandu Gorkhas won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Kathmandu Gorkhas won by 4 wkts",
+    "location": {
+      "name": "Kirtipur, Nepal (Tribhuvan University Ground)",
+      "lat": 27.6792,
+      "lng": 85.2818,
+      "timezone": 5.75
+    },
+    "result": {
+      "winner": "Kathmandu Gorkhas",
+      "score": "",
+      "margin": "Kathmandu Gorkhas won by 4 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "1793631400000",
+    "teamA": "Biratnagar Kings",
+    "teamB": "Sudur Paschim Royals",
+    "matchDate": "2026-10-31",
+    "matchTime": "04:30:00 PM",
+    "venue": "Kirtipur, Nepal (Tribhuvan University Ground)",
+    "format": "T20",
+    "series": "Nepal Premier League",
+    "toss": "Sudur Paschim Royals won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Biratnagar Kings won by 35 runs",
+    "location": {
+      "name": "Kirtipur, Nepal (Tribhuvan University Ground)",
+      "lat": 27.6792,
+      "lng": 85.2818,
+      "timezone": 5.75
+    },
+    "result": {
+      "winner": "Biratnagar Kings",
+      "score": "",
+      "margin": "Biratnagar Kings won by 35 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "1793631500000",
+    "teamA": "Janakpur Bolts",
+    "teamB": "Kathmandu Gorkhas",
+    "matchDate": "2026-10-29",
+    "matchTime": "12:30:00 PM",
+    "venue": "Kirtipur, Nepal (Tribhuvan University Ground)",
+    "format": "T20",
+    "series": "Nepal Premier League",
+    "toss": "Kathmandu Gorkhas won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Janakpur Bolts won by 8 wkts",
+    "location": {
+      "name": "Kirtipur, Nepal (Tribhuvan University Ground)",
+      "lat": 27.6792,
+      "lng": 85.2818,
+      "timezone": 5.75
+    },
+    "result": {
+      "winner": "Janakpur Bolts",
+      "score": "",
+      "margin": "Janakpur Bolts won by 8 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "1793631600000",
+    "teamA": "Karnali Yaks",
+    "teamB": "Janakpur Bolts",
+    "matchDate": "2026-10-27",
+    "matchTime": "04:30:00 PM",
+    "venue": "Kirtipur, Nepal (Tribhuvan University Ground)",
+    "format": "T20",
+    "series": "Nepal Premier League",
+    "toss": "Janakpur Bolts won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Karnali Yaks won by 19 runs",
+    "location": {
+      "name": "Kirtipur, Nepal (Tribhuvan University Ground)",
+      "lat": 27.6792,
+      "lng": 85.2818,
+      "timezone": 5.75
+    },
+    "result": {
+      "winner": "Karnali Yaks",
+      "score": "",
+      "margin": "Karnali Yaks won by 19 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "1793631700000",
+    "teamA": "Chitwan Rhinos",
+    "teamB": "Biratnagar Kings",
+    "matchDate": "2026-10-27",
+    "matchTime": "12:30:00 PM",
+    "venue": "Kirtipur, Nepal (Tribhuvan University Ground)",
+    "format": "T20",
+    "series": "Nepal Premier League",
+    "toss": "Biratnagar Kings won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Chitwan Rhinos won by 8 runs",
+    "location": {
+      "name": "Kirtipur, Nepal (Tribhuvan University Ground)",
+      "lat": 27.6792,
+      "lng": 85.2818,
+      "timezone": 5.75
+    },
+    "result": {
+      "winner": "Chitwan Rhinos",
+      "score": "",
+      "margin": "Chitwan Rhinos won by 8 runs"
+    }
+  }
+]

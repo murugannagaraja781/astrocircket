@@ -1,0 +1,530 @@
+[
+  {
+    "cricbuzzMatchId": "139560",
+    "teamA": "Mumbai Indians Women",
+    "teamB": "Royal Challengers Bengaluru Women",
+    "matchDate": "2026-01-09",
+    "matchTime": "07:30:00 PM",
+    "venue": "Navi Mumbai (டி.ஒய். பாட்டீல் அரங்கம்)",
+    "format": "T20",
+    "series": "Women's Premier League 2026",
+    "toss": "Royal Challengers Bengaluru Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Royal Challengers Bengaluru Women won by 3 wkts",
+    "location": {
+      "name": "Navi Mumbai (டி.ஒய். பாட்டீல் அரங்கம்)",
+      "lat": 19.033,
+      "lng": 73.0297,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Royal Challengers Bengaluru Women",
+      "score": "",
+      "margin": "Royal Challengers Bengaluru Women won by 3 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "139571",
+    "teamA": "Gujarat Giants Women",
+    "teamB": "UP Warriorz",
+    "matchDate": "2026-01-10",
+    "matchTime": "03:00:00 PM",
+    "venue": "Navi Mumbai (டி.ஒய். பாட்டீல் அரங்கம்)",
+    "format": "T20",
+    "series": "Women's Premier League 2026",
+    "toss": "UP Warriorz won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Gujarat Giants Women won by 10 runs",
+    "location": {
+      "name": "Navi Mumbai (டி.ஒய். பாட்டீல் அரங்கம்)",
+      "lat": 19.033,
+      "lng": 73.0297,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Gujarat Giants Women",
+      "score": "",
+      "margin": "Gujarat Giants Women won by 10 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "139582",
+    "teamA": "Mumbai Indians Women",
+    "teamB": "Delhi Capitals Women",
+    "matchDate": "2026-01-10",
+    "matchTime": "07:30:00 PM",
+    "venue": "Navi Mumbai (டி.ஒய். பாட்டீல் அரங்கம்)",
+    "format": "T20",
+    "series": "Women's Premier League 2026",
+    "toss": "Delhi Capitals Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Mumbai Indians Women won by 50 runs",
+    "location": {
+      "name": "Navi Mumbai (டி.ஒய். பாட்டீல் அரங்கம்)",
+      "lat": 19.033,
+      "lng": 73.0297,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Mumbai Indians Women",
+      "score": "",
+      "margin": "Mumbai Indians Women won by 50 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "139593",
+    "teamA": "Delhi Capitals Women",
+    "teamB": "Gujarat Giants Women",
+    "matchDate": "2026-01-11",
+    "matchTime": "07:30:00 PM",
+    "venue": "Navi Mumbai (டி.ஒய். பாட்டீல் அரங்கம்)",
+    "format": "T20",
+    "series": "Women's Premier League 2026",
+    "toss": "Delhi Capitals Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Gujarat Giants Women won by 4 runs",
+    "location": {
+      "name": "Navi Mumbai (டி.ஒய். பாட்டீல் அரங்கம்)",
+      "lat": 19.033,
+      "lng": 73.0297,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Gujarat Giants Women",
+      "score": "",
+      "margin": "Gujarat Giants Women won by 4 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "139604",
+    "teamA": "Royal Challengers Bengaluru Women",
+    "teamB": "UP Warriorz",
+    "matchDate": "2026-01-12",
+    "matchTime": "07:30:00 PM",
+    "venue": "Navi Mumbai (டி.ஒய். பாட்டீல் அரங்கம்)",
+    "format": "T20",
+    "series": "Women's Premier League 2026",
+    "toss": "Royal Challengers Bengaluru Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Royal Challengers Bengaluru Women won by 9 wkts",
+    "location": {
+      "name": "Navi Mumbai (டி.ஒய். பாட்டீல் அரங்கம்)",
+      "lat": 19.033,
+      "lng": 73.0297,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Royal Challengers Bengaluru Women",
+      "score": "",
+      "margin": "Royal Challengers Bengaluru Women won by 9 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "139615",
+    "teamA": "Mumbai Indians Women",
+    "teamB": "Gujarat Giants Women",
+    "matchDate": "2026-01-13",
+    "matchTime": "07:30:00 PM",
+    "venue": "Navi Mumbai (டி.ஒய். பாட்டீல் அரங்கம்)",
+    "format": "T20",
+    "series": "Women's Premier League 2026",
+    "toss": "Mumbai Indians Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Mumbai Indians Women won by 7 wkts",
+    "location": {
+      "name": "Navi Mumbai (டி.ஒய். பாட்டீல் அரங்கம்)",
+      "lat": 19.033,
+      "lng": 73.0297,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Mumbai Indians Women",
+      "score": "",
+      "margin": "Mumbai Indians Women won by 7 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "139626",
+    "teamA": "Delhi Capitals Women",
+    "teamB": "UP Warriorz",
+    "matchDate": "2026-01-14",
+    "matchTime": "07:30:00 PM",
+    "venue": "Navi Mumbai (டி.ஒய். பாட்டீல் அரங்கம்)",
+    "format": "T20",
+    "series": "Women's Premier League 2026",
+    "toss": "Delhi Capitals Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Delhi Capitals Women won by 7 wkts",
+    "location": {
+      "name": "Navi Mumbai (டி.ஒய். பாட்டீல் அரங்கம்)",
+      "lat": 19.033,
+      "lng": 73.0297,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Delhi Capitals Women",
+      "score": "",
+      "margin": "Delhi Capitals Women won by 7 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "139637",
+    "teamA": "Mumbai Indians Women",
+    "teamB": "UP Warriorz",
+    "matchDate": "2026-01-15",
+    "matchTime": "07:30:00 PM",
+    "venue": "Navi Mumbai (டி.ஒய். பாட்டீல் அரங்கம்)",
+    "format": "T20",
+    "series": "Women's Premier League 2026",
+    "toss": "UP Warriorz won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "UP Warriorz Women won by 7 wkts",
+    "location": {
+      "name": "Navi Mumbai (டி.ஒய். பாட்டீல் அரங்கம்)",
+      "lat": 19.033,
+      "lng": 73.0297,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "UP Warriorz",
+      "score": "",
+      "margin": "UP Warriorz Women won by 7 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "139648",
+    "teamA": "Royal Challengers Bengaluru Women",
+    "teamB": "Gujarat Giants Women",
+    "matchDate": "2026-01-16",
+    "matchTime": "07:30:00 PM",
+    "venue": "Navi Mumbai (டி.ஒய். பாட்டீல் அரங்கம்)",
+    "format": "T20",
+    "series": "Women's Premier League 2026",
+    "toss": "Gujarat Giants Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Royal Challengers Bengaluru Women won by 32 runs",
+    "location": {
+      "name": "Navi Mumbai (டி.ஒய். பாட்டீல் அரங்கம்)",
+      "lat": 19.033,
+      "lng": 73.0297,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Royal Challengers Bengaluru Women",
+      "score": "",
+      "margin": "Royal Challengers Bengaluru Women won by 32 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "139659",
+    "teamA": "UP Warriorz",
+    "teamB": "Mumbai Indians Women",
+    "matchDate": "2026-01-17",
+    "matchTime": "03:00:00 PM",
+    "venue": "Navi Mumbai (டி.ஒய். பாட்டீல் அரங்கம்)",
+    "format": "T20",
+    "series": "Women's Premier League 2026",
+    "toss": "Mumbai Indians Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "UP Warriorz Women won by 22 runs",
+    "location": {
+      "name": "Navi Mumbai (டி.ஒய். பாட்டீல் அரங்கம்)",
+      "lat": 19.033,
+      "lng": 73.0297,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "UP Warriorz",
+      "score": "",
+      "margin": "UP Warriorz Women won by 22 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "139670",
+    "teamA": "Delhi Capitals Women",
+    "teamB": "Royal Challengers Bengaluru Women",
+    "matchDate": "2026-01-17",
+    "matchTime": "07:30:00 PM",
+    "venue": "Navi Mumbai (டி.ஒய். பாட்டீல் அரங்கம்)",
+    "format": "T20",
+    "series": "Women's Premier League 2026",
+    "toss": "Royal Challengers Bengaluru Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Royal Challengers Bengaluru Women won by 8 wkts",
+    "location": {
+      "name": "Navi Mumbai (டி.ஒய். பாட்டீல் அரங்கம்)",
+      "lat": 19.033,
+      "lng": 73.0297,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Royal Challengers Bengaluru Women",
+      "score": "",
+      "margin": "Royal Challengers Bengaluru Women won by 8 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "139681",
+    "teamA": "Gujarat Giants Women",
+    "teamB": "Royal Challengers Bengaluru Women",
+    "matchDate": "2026-01-19",
+    "matchTime": "07:30:00 PM",
+    "venue": "Vadodara, Gujarat (கோடாம்பி கிரிக்கெட் அரங்கம்)",
+    "format": "T20",
+    "series": "Women's Premier League 2026",
+    "toss": "Gujarat Giants Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Royal Challengers Bengaluru Women won by 61 runs",
+    "location": {
+      "name": "Vadodara, Gujarat (கோடாம்பி கிரிக்கெட் அரங்கம்)",
+      "lat": 22.3381,
+      "lng": 73.3444,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Royal Challengers Bengaluru Women",
+      "score": "",
+      "margin": "Royal Challengers Bengaluru Women won by 61 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "139692",
+    "teamA": "Delhi Capitals Women",
+    "teamB": "Mumbai Indians Women",
+    "matchDate": "2026-01-20",
+    "matchTime": "07:30:00 PM",
+    "venue": "Vadodara, Gujarat (கோடாம்பி கிரிக்கெட் அரங்கம்)",
+    "format": "T20",
+    "series": "Women's Premier League 2026",
+    "toss": "Delhi Capitals Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Delhi Capitals Women won by 7 wkts",
+    "location": {
+      "name": "Vadodara, Gujarat (கோடாம்பி கிரிக்கெட் அரங்கம்)",
+      "lat": 22.3381,
+      "lng": 73.3444,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Delhi Capitals Women",
+      "score": "",
+      "margin": "Delhi Capitals Women won by 7 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "139703",
+    "teamA": "UP Warriorz",
+    "teamB": "Gujarat Giants Women",
+    "matchDate": "2026-01-22",
+    "matchTime": "07:30:00 PM",
+    "venue": "Vadodara, Gujarat (கோடாம்பி கிரிக்கெட் அரங்கம்)",
+    "format": "T20",
+    "series": "Women's Premier League 2026",
+    "toss": "UP Warriorz won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Gujarat Giants Women won by 45 runs",
+    "location": {
+      "name": "Vadodara, Gujarat (கோடாம்பி கிரிக்கெட் அரங்கம்)",
+      "lat": 22.3381,
+      "lng": 73.3444,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Gujarat Giants Women",
+      "score": "",
+      "margin": "Gujarat Giants Women won by 45 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "139709",
+    "teamA": "Royal Challengers Bengaluru Women",
+    "teamB": "Delhi Capitals Women",
+    "matchDate": "2026-01-24",
+    "matchTime": "07:30:00 PM",
+    "venue": "Vadodara, Gujarat (கோடாம்பி கிரிக்கெட் அரங்கம்)",
+    "format": "T20",
+    "series": "Women's Premier League 2026",
+    "toss": "Delhi Capitals Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Delhi Capitals Women won by 7 wkts",
+    "location": {
+      "name": "Vadodara, Gujarat (கோடாம்பி கிரிக்கெட் அரங்கம்)",
+      "lat": 22.3381,
+      "lng": 73.3444,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Delhi Capitals Women",
+      "score": "",
+      "margin": "Delhi Capitals Women won by 7 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "139720",
+    "teamA": "Royal Challengers Bengaluru Women",
+    "teamB": "Mumbai Indians Women",
+    "matchDate": "2026-01-26",
+    "matchTime": "07:30:00 PM",
+    "venue": "Vadodara, Gujarat (கோடாம்பி கிரிக்கெட் அரங்கம்)",
+    "format": "T20",
+    "series": "Women's Premier League 2026",
+    "toss": "Royal Challengers Bengaluru Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Mumbai Indians Women won by 15 runs",
+    "location": {
+      "name": "Vadodara, Gujarat (கோடாம்பி கிரிக்கெட் அரங்கம்)",
+      "lat": 22.3381,
+      "lng": 73.3444,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Mumbai Indians Women",
+      "score": "",
+      "margin": "Mumbai Indians Women won by 15 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "139731",
+    "teamA": "Delhi Capitals Women",
+    "teamB": "Gujarat Giants Women",
+    "matchDate": "2026-01-27",
+    "matchTime": "07:30:00 PM",
+    "venue": "Vadodara, Gujarat (கோடாம்பி கிரிக்கெட் அரங்கம்)",
+    "format": "T20",
+    "series": "Women's Premier League 2026",
+    "toss": "Delhi Capitals Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Gujarat Giants Women won by 3 runs",
+    "location": {
+      "name": "Vadodara, Gujarat (கோடாம்பி கிரிக்கெட் அரங்கம்)",
+      "lat": 22.3381,
+      "lng": 73.3444,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Gujarat Giants Women",
+      "score": "",
+      "margin": "Gujarat Giants Women won by 3 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "139742",
+    "teamA": "Royal Challengers Bengaluru Women",
+    "teamB": "UP Warriorz",
+    "matchDate": "2026-01-29",
+    "matchTime": "07:30:00 PM",
+    "venue": "Vadodara, Gujarat (கோடாம்பி கிரிக்கெட் அரங்கம்)",
+    "format": "T20",
+    "series": "Women's Premier League 2026",
+    "toss": "Royal Challengers Bengaluru Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Royal Challengers Bengaluru Women won by 8 wkts",
+    "location": {
+      "name": "Vadodara, Gujarat (கோடாம்பி கிரிக்கெட் அரங்கம்)",
+      "lat": 22.3381,
+      "lng": 73.3444,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Royal Challengers Bengaluru Women",
+      "score": "",
+      "margin": "Royal Challengers Bengaluru Women won by 8 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "139753",
+    "teamA": "Mumbai Indians Women",
+    "teamB": "Gujarat Giants Women",
+    "matchDate": "2026-01-30",
+    "matchTime": "07:30:00 PM",
+    "venue": "Vadodara, Gujarat (கோடாம்பி கிரிக்கெட் அரங்கம்)",
+    "format": "T20",
+    "series": "Women's Premier League 2026",
+    "toss": "Gujarat Giants Women won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Gujarat Giants Women won by 11 runs",
+    "location": {
+      "name": "Vadodara, Gujarat (கோடாம்பி கிரிக்கெட் அரங்கம்)",
+      "lat": 22.3381,
+      "lng": 73.3444,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Gujarat Giants Women",
+      "score": "",
+      "margin": "Gujarat Giants Women won by 11 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "139764",
+    "teamA": "Delhi Capitals Women",
+    "teamB": "UP Warriorz",
+    "matchDate": "2026-02-01",
+    "matchTime": "07:30:00 PM",
+    "venue": "Vadodara, Gujarat (கோடாம்பி கிரிக்கெட் அரங்கம்)",
+    "format": "T20",
+    "series": "Women's Premier League 2026",
+    "toss": "Delhi Capitals Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Delhi Capitals Women won by 5 wkts",
+    "location": {
+      "name": "Vadodara, Gujarat (கோடாம்பி கிரிக்கெட் அரங்கம்)",
+      "lat": 22.3381,
+      "lng": 73.3444,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Delhi Capitals Women",
+      "score": "",
+      "margin": "Delhi Capitals Women won by 5 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "139775",
+    "teamA": "Gujarat Giants Women",
+    "teamB": "Delhi Capitals Women",
+    "matchDate": "2026-02-03",
+    "matchTime": "07:30:00 PM",
+    "venue": "Vadodara, Gujarat (கோடாம்பி கிரிக்கெட் அரங்கம்)",
+    "format": "T20",
+    "series": "Women's Premier League 2026",
+    "toss": "Delhi Capitals Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Delhi Capitals Women won by 7 wkts",
+    "location": {
+      "name": "Vadodara, Gujarat (கோடாம்பி கிரிக்கெட் அரங்கம்)",
+      "lat": 22.3381,
+      "lng": 73.3444,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Delhi Capitals Women",
+      "score": "",
+      "margin": "Delhi Capitals Women won by 7 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "139786",
+    "teamA": "Royal Challengers Bengaluru Women",
+    "teamB": "Delhi Capitals Women",
+    "matchDate": "2026-02-05",
+    "matchTime": "07:30:00 PM",
+    "venue": "Vadodara, Gujarat (கோடாம்பி கிரிக்கெட் அரங்கம்)",
+    "format": "T20",
+    "series": "Women's Premier League 2026",
+    "toss": "Royal Challengers Bengaluru Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Royal Challengers Bengaluru Women won by 6 wkts",
+    "location": {
+      "name": "Vadodara, Gujarat (கோடாம்பி கிரிக்கெட் அரங்கம்)",
+      "lat": 22.3381,
+      "lng": 73.3444,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Royal Challengers Bengaluru Women",
+      "score": "",
+      "margin": "Royal Challengers Bengaluru Women won by 6 wkts"
+    }
+  }
+]

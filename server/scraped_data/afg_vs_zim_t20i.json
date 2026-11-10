@@ -1,0 +1,26 @@
+[
+  {
+    "cricbuzzMatchId": "1793630900000",
+    "teamA": "Afghanistan",
+    "teamB": "Zimbabwe",
+    "matchDate": "2026-11-01",
+    "matchTime": "06:30:00 PM",
+    "venue": "Sharjah, UAE (Sharjah Cricket Stadium (ஷார்ஜா மைதானம்))",
+    "format": "T20",
+    "series": "AFG vs ZIM T20I",
+    "toss": "Afghanistan won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Afghanistan won by 7 wkts",
+    "location": {
+      "name": "Sharjah, UAE (Sharjah Cricket Stadium (ஷார்ஜா மைதானம்))",
+      "lat": 25.3289,
+      "lng": 55.4209,
+      "timezone": 4
+    },
+    "result": {
+      "winner": "Afghanistan",
+      "score": "",
+      "margin": "Afghanistan won by 7 wkts"
+    }
+  }
+]

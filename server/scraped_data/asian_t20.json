@@ -1,0 +1,74 @@
+[
+  {
+    "cricbuzzMatchId": "1793631800000",
+    "teamA": "Malaysia",
+    "teamB": "Saudi Arabia",
+    "matchDate": "2026-10-09",
+    "matchTime": "02:00:00 PM",
+    "venue": "Klang / Selangor, Malaysia (Bayuemas Oval (பாயுமஸ் ஓவல் - கிள்ளான்))",
+    "format": "T20",
+    "series": "Asian T20",
+    "toss": "Malaysia won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Saudi Arabia won by 6 wkts",
+    "location": {
+      "name": "Klang / Selangor, Malaysia (Bayuemas Oval (பாயுமஸ் ஓவல் - கிள்ளான்))",
+      "lat": 2.9912,
+      "lng": 101.4422,
+      "timezone": 8
+    },
+    "result": {
+      "winner": "Saudi Arabia",
+      "score": "",
+      "margin": "Saudi Arabia won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "1793631900000",
+    "teamA": "Malaysia",
+    "teamB": "Hong Kong, China",
+    "matchDate": "2026-10-08",
+    "matchTime": "02:00:00 PM",
+    "venue": "Seri Kembangan / Selangor, Malaysia (Selangor Turf Club (சிலாங்கூர் டர்ஃப் கிளப்))",
+    "format": "T20",
+    "series": "Asian T20",
+    "toss": "Hong Kong, China won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Hong Kong won by 42 runs",
+    "location": {
+      "name": "Seri Kembangan / Selangor, Malaysia (Selangor Turf Club (சிலாங்கூர் டர்ஃப் கிளப்))",
+      "lat": 3.0456,
+      "lng": 101.7136,
+      "timezone": 8
+    },
+    "result": {
+      "winner": "Hong Kong, China",
+      "score": "",
+      "margin": "Hong Kong won by 42 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "1793632000000",
+    "teamA": "Saudi Arabia",
+    "teamB": "Singapore",
+    "matchDate": "2026-10-08",
+    "matchTime": "02:00:00 PM",
+    "venue": "Bangi / Selangor, Malaysia (YSD-UKM Cricket Oval (YSD-UKM ஓவல் - பாங்கி))",
+    "format": "T20",
+    "series": "Asian T20",
+    "toss": "Saudi Arabia won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Saudi Arabia won by 5 wkts",
+    "location": {
+      "name": "Bangi / Selangor, Malaysia (YSD-UKM Cricket Oval (YSD-UKM ஓவல் - பாங்கி))",
+      "lat": 2.93,
+      "lng": 101.7806,
+      "timezone": 8
+    },
+    "result": {
+      "winner": "Saudi Arabia",
+      "score": "",
+      "margin": "Saudi Arabia won by 5 wkts"
+    }
+  }
+]

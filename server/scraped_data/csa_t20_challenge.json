@@ -1,0 +1,26 @@
+[
+  {
+    "cricbuzzMatchId": "1793631100000",
+    "teamA": "Lions",
+    "teamB": "Titans",
+    "matchDate": "2026-11-01",
+    "matchTime": "02:30:00 PM",
+    "venue": "Johannesburg, South Africa (Wanderers Stadium (வாண்டரர்ஸ்))",
+    "format": "T20",
+    "series": "CSA T20 Challenge",
+    "toss": "Lions won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Lions won by 15 runs",
+    "location": {
+      "name": "Johannesburg, South Africa (Wanderers Stadium (வாண்டரர்ஸ்))",
+      "lat": -26.1317,
+      "lng": 28.0578,
+      "timezone": 2
+    },
+    "result": {
+      "winner": "Lions",
+      "score": "",
+      "margin": "Lions won by 15 runs"
+    }
+  }
+]

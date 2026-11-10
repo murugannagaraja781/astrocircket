@@ -1,0 +1,1034 @@
+[
+  {
+    "cricbuzzMatchId": "162683",
+    "teamA": "Melbourne Renegades Women",
+    "teamB": "Sydney Thunder Women",
+    "matchDate": "2026-10-29",
+    "matchTime": "10:10:00 AM",
+    "venue": "Melbourne (ஜங்ஷன் ஓவல் / Junction Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Sydney Thunder Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sydney Thunder Women won by 6 wkts",
+    "location": {
+      "name": "Melbourne (ஜங்ஷன் ஓவல் / Junction Oval)",
+      "lat": -37.8594,
+      "lng": 144.9819,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Sydney Thunder Women",
+      "score": "",
+      "margin": "Sydney Thunder Women won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162693",
+    "teamA": "Melbourne Stars Women",
+    "teamB": "Hobart Hurricanes Women",
+    "matchDate": "2026-10-29",
+    "matchTime": "01:40:00 PM",
+    "venue": "Melbourne (ஜங்ஷன் ஓவல் / Junction Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Hobart Hurricanes Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Melbourne Stars Women won by 18 runs",
+    "location": {
+      "name": "Melbourne (ஜங்ஷன் ஓவல் / Junction Oval)",
+      "lat": -37.8594,
+      "lng": 144.9819,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Melbourne Stars Women",
+      "score": "",
+      "margin": "Melbourne Stars Women won by 18 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162711",
+    "teamA": "Brisbane Heat Women",
+    "teamB": "Sydney Sixers Women",
+    "matchDate": "2026-10-30",
+    "matchTime": "01:40:00 PM",
+    "venue": "Brisbane (ஆலன் பார்டர் ஃபீல்ட் / Allan Border Field)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Sydney Sixers Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sydney Sixers Women won by 4 wkts",
+    "location": {
+      "name": "Brisbane (ஆலன் பார்டர் ஃபீல்ட் / Allan Border Field)",
+      "lat": -27.4339,
+      "lng": 153.0139,
+      "timezone": 10
+    },
+    "result": {
+      "winner": "Sydney Sixers Women",
+      "score": "",
+      "margin": "Sydney Sixers Women won by 4 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162713",
+    "teamA": "Adelaide Strikers Women",
+    "teamB": "Melbourne Stars Women",
+    "matchDate": "2026-10-31",
+    "matchTime": "10:10:00 AM",
+    "venue": "Adelaide (கரேன் ரோல்டன் ஓவல் / Karen Rolton Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Melbourne Stars Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Adelaide Strikers Women won by 21 runs",
+    "location": {
+      "name": "Adelaide (கரேன் ரோல்டன் ஓவல் / Karen Rolton Oval)",
+      "lat": -34.9228,
+      "lng": 138.5816,
+      "timezone": 10.5
+    },
+    "result": {
+      "winner": "Adelaide Strikers Women",
+      "score": "",
+      "margin": "Adelaide Strikers Women won by 21 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162731",
+    "teamA": "Melbourne Renegades Women",
+    "teamB": "Perth Scorchers Women",
+    "matchDate": "2026-10-31",
+    "matchTime": "01:40:00 PM",
+    "venue": "Perth (வாக்கா அரங்கம் / WACA Ground)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Perth Scorchers Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Perth Scorchers Women won by 9 wkts",
+    "location": {
+      "name": "Perth (வாக்கா அரங்கம் / WACA Ground)",
+      "lat": -31.9598,
+      "lng": 115.8797,
+      "timezone": 8
+    },
+    "result": {
+      "winner": "Perth Scorchers Women",
+      "score": "",
+      "margin": "Perth Scorchers Women won by 9 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162733",
+    "teamA": "Brisbane Heat Women",
+    "teamB": "Sydney Thunder Women",
+    "matchDate": "2026-11-01",
+    "matchTime": "10:10:00 AM",
+    "venue": "Sydney (டிரம்மோய்ன் ஓவல் / Drummoyne Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Brisbane Heat Women won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Sydney Thunder Women won by 6 wkts",
+    "location": {
+      "name": "Sydney (டிரம்மோய்ன் ஓவல் / Drummoyne Oval)",
+      "lat": -33.8517,
+      "lng": 151.1542,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Sydney Thunder Women",
+      "score": "",
+      "margin": "Sydney Thunder Women won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162747",
+    "teamA": "Sydney Sixers Women",
+    "teamB": "Hobart Hurricanes Women",
+    "matchDate": "2026-11-01",
+    "matchTime": "01:40:00 PM",
+    "venue": "Sydney (டிரம்மோய்ன் ஓவல் / Drummoyne Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Hobart Hurricanes Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sydney Sixers Women won by 87 runs",
+    "location": {
+      "name": "Sydney (டிரம்மோய்ன் ஓவல் / Drummoyne Oval)",
+      "lat": -33.8517,
+      "lng": 151.1542,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Sydney Sixers Women",
+      "score": "",
+      "margin": "Sydney Sixers Women won by 87 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162753",
+    "teamA": "Perth Scorchers Women",
+    "teamB": "Melbourne Stars Women",
+    "matchDate": "2026-11-02",
+    "matchTime": "01:40:00 PM",
+    "venue": "Melbourne (ஜங்ஷன் ஓவல் / Junction Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Melbourne Stars Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Perth Scorchers Women won by 15 runs",
+    "location": {
+      "name": "Melbourne (ஜங்ஷன் ஓவல் / Junction Oval)",
+      "lat": -37.8594,
+      "lng": 144.9819,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Perth Scorchers Women",
+      "score": "",
+      "margin": "Perth Scorchers Women won by 15 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162763",
+    "teamA": "Hobart Hurricanes Women",
+    "teamB": "Melbourne Renegades Women",
+    "matchDate": "2026-11-04",
+    "matchTime": "01:40:00 PM",
+    "venue": "Hobart (ஹோபார்ட் - பிளண்ட்ஸ்டோன் அரங்கம் / Bellerive Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Melbourne Renegades Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Melbourne Renegades Women won by 4 wkts",
+    "location": {
+      "name": "Hobart (ஹோபார்ட் - பிளண்ட்ஸ்டோன் அரங்கம் / Bellerive Oval)",
+      "lat": -42.8772,
+      "lng": 147.3739,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Melbourne Renegades Women",
+      "score": "",
+      "margin": "Melbourne Renegades Women won by 4 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162773",
+    "teamA": "Brisbane Heat Women",
+    "teamB": "Adelaide Strikers Women",
+    "matchDate": "2026-11-05",
+    "matchTime": "10:10:00 AM",
+    "venue": "Sydney (டிரம்மோய்ன் ஓவல் / Drummoyne Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Adelaide Strikers Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Brisbane Heat Women won by 14 runs",
+    "location": {
+      "name": "Sydney (டிரம்மோய்ன் ஓவல் / Drummoyne Oval)",
+      "lat": -33.8517,
+      "lng": 151.1542,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Brisbane Heat Women",
+      "score": "",
+      "margin": "Brisbane Heat Women won by 14 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162783",
+    "teamA": "Perth Scorchers Women",
+    "teamB": "Sydney Thunder Women",
+    "matchDate": "2026-11-05",
+    "matchTime": "01:40:00 PM",
+    "venue": "Sydney (டிரம்மோய்ன் ஓவல் / Drummoyne Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Sydney Thunder Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Perth Scorchers Women won by 17 runs",
+    "location": {
+      "name": "Sydney (டிரம்மோய்ன் ஓவல் / Drummoyne Oval)",
+      "lat": -33.8517,
+      "lng": 151.1542,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Perth Scorchers Women",
+      "score": "",
+      "margin": "Perth Scorchers Women won by 17 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162793",
+    "teamA": "Sydney Sixers Women",
+    "teamB": "Melbourne Stars Women",
+    "matchDate": "2026-11-06",
+    "matchTime": "01:40:00 PM",
+    "venue": "Melbourne (ஜங்ஷன் ஓவல் / Junction Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Sydney Sixers Women won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Sydney Sixers Women won by 1 run",
+    "location": {
+      "name": "Melbourne (ஜங்ஷன் ஓவல் / Junction Oval)",
+      "lat": -37.8594,
+      "lng": 144.9819,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Sydney Sixers Women",
+      "score": "",
+      "margin": "Sydney Sixers Women won by 1 run"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162797",
+    "teamA": "Melbourne Renegades Women",
+    "teamB": "Adelaide Strikers Women",
+    "matchDate": "2026-11-07",
+    "matchTime": "10:10:00 AM",
+    "venue": "Melbourne (ஜங்ஷன் ஓவல் / Junction Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Adelaide Strikers Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Melbourne Renegades Women won by 36 runs",
+    "location": {
+      "name": "Melbourne (ஜங்ஷன் ஓவல் / Junction Oval)",
+      "lat": -37.8594,
+      "lng": 144.9819,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Melbourne Renegades Women",
+      "score": "",
+      "margin": "Melbourne Renegades Women won by 36 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162801",
+    "teamA": "Hobart Hurricanes Women",
+    "teamB": "Brisbane Heat Women",
+    "matchDate": "2026-11-07",
+    "matchTime": "01:40:00 PM",
+    "venue": "Brisbane (ஆலன் பார்டர் ஃபீல்ட் / Allan Border Field)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Brisbane Heat Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Brisbane Heat Women won by 4 wkts",
+    "location": {
+      "name": "Brisbane (ஆலன் பார்டர் ஃபீல்ட் / Allan Border Field)",
+      "lat": -27.4339,
+      "lng": 153.0139,
+      "timezone": 10
+    },
+    "result": {
+      "winner": "Brisbane Heat Women",
+      "score": "",
+      "margin": "Brisbane Heat Women won by 4 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162807",
+    "teamA": "Sydney Sixers Women",
+    "teamB": "Sydney Thunder Women",
+    "matchDate": "2026-11-08",
+    "matchTime": "08:10:00 AM",
+    "venue": "Sydney (வடக்கு சிட்னி ஓவல் / North Sydney Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Sydney Thunder Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sydney Sixers Women won by 9 runs (16 Overs game due to rain, DLS target 168)",
+    "location": {
+      "name": "Sydney (வடக்கு சிட்னி ஓவல் / North Sydney Oval)",
+      "lat": -33.8306,
+      "lng": 151.2094,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Sydney Sixers Women",
+      "score": "",
+      "margin": "Sydney Sixers Women won by 9 runs (16 Overs game due to rain, DLS target 168)"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162813",
+    "teamA": "Melbourne Stars Women",
+    "teamB": "Perth Scorchers Women",
+    "matchDate": "2026-11-08",
+    "matchTime": "11:40:00 AM",
+    "venue": "Sydney (வடக்கு சிட்னி ஓவல் / North Sydney Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Melbourne Stars Women won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Perth Scorchers Women won by 6 wkts",
+    "location": {
+      "name": "Sydney (வடக்கு சிட்னி ஓவல் / North Sydney Oval)",
+      "lat": -33.8306,
+      "lng": 151.2094,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Perth Scorchers Women",
+      "score": "",
+      "margin": "Perth Scorchers Women won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162823",
+    "teamA": "Hobart Hurricanes Women",
+    "teamB": "Adelaide Strikers Women",
+    "matchDate": "2026-11-10",
+    "matchTime": "01:40:00 PM",
+    "venue": "Hobart (ஹோபார்ட் - பிளண்ட்ஸ்டோன் அரங்கம் / Bellerive Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Adelaide Strikers Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Adelaide Strikers Women won by 4 wkts",
+    "location": {
+      "name": "Hobart (ஹோபார்ட் - பிளண்ட்ஸ்டோன் அரங்கம் / Bellerive Oval)",
+      "lat": -42.8772,
+      "lng": 147.3739,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Adelaide Strikers Women",
+      "score": "",
+      "margin": "Adelaide Strikers Women won by 4 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162827",
+    "teamA": "Perth Scorchers Women",
+    "teamB": "Sydney Thunder Women",
+    "matchDate": "2026-11-11",
+    "matchTime": "01:40:00 PM",
+    "venue": "Perth (வாக்கா அரங்கம் / WACA Ground)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 11, 08:10 GMT",
+    "location": {
+      "name": "Perth (வாக்கா அரங்கம் / WACA Ground)",
+      "lat": -31.9598,
+      "lng": 115.8797,
+      "timezone": 8
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 11, 08:10 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162837",
+    "teamA": "Melbourne Stars Women",
+    "teamB": "Brisbane Heat Women",
+    "matchDate": "2026-11-12",
+    "matchTime": "10:10:00 AM",
+    "venue": "Melbourne (ஜங்ஷன் ஓவல் / Junction Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 12, 04:40 GMT",
+    "location": {
+      "name": "Melbourne (ஜங்ஷன் ஓவல் / Junction Oval)",
+      "lat": -37.8594,
+      "lng": 144.9819,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 12, 04:40 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162843",
+    "teamA": "Melbourne Renegades Women",
+    "teamB": "Sydney Sixers Women",
+    "matchDate": "2026-11-12",
+    "matchTime": "01:40:00 PM",
+    "venue": "Melbourne (ஜங்ஷன் ஓவல் / Junction Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 12, 08:10 GMT",
+    "location": {
+      "name": "Melbourne (ஜங்ஷன் ஓவல் / Junction Oval)",
+      "lat": -37.8594,
+      "lng": 144.9819,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 12, 08:10 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162851",
+    "teamA": "Hobart Hurricanes Women",
+    "teamB": "Brisbane Heat Women",
+    "matchDate": "2026-11-14",
+    "matchTime": "10:10:00 AM",
+    "venue": "Hobart (ஹோபார்ட் - பிளண்ட்ஸ்டோன் அரங்கம் / Bellerive Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 14, 04:40 GMT",
+    "location": {
+      "name": "Hobart (ஹோபார்ட் - பிளண்ட்ஸ்டோன் அரங்கம் / Bellerive Oval)",
+      "lat": -42.8772,
+      "lng": 147.3739,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 14, 04:40 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162853",
+    "teamA": "Perth Scorchers Women",
+    "teamB": "Adelaide Strikers Women",
+    "matchDate": "2026-11-14",
+    "matchTime": "01:40:00 PM",
+    "venue": "Perth (வாக்கா அரங்கம் / WACA Ground)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 14, 08:10 GMT",
+    "location": {
+      "name": "Perth (வாக்கா அரங்கம் / WACA Ground)",
+      "lat": -31.9598,
+      "lng": 115.8797,
+      "timezone": 8
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 14, 08:10 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162861",
+    "teamA": "Sydney Sixers Women",
+    "teamB": "Melbourne Renegades Women",
+    "matchDate": "2026-11-15",
+    "matchTime": "05:30:00 AM",
+    "venue": "Sydney (வடக்கு சிட்னி ஓவல் / North Sydney Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 15, 00:00 GMT",
+    "location": {
+      "name": "Sydney (வடக்கு சிட்னி ஓவல் / North Sydney Oval)",
+      "lat": -33.8306,
+      "lng": 151.2094,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 15, 00:00 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162863",
+    "teamA": "Sydney Thunder Women",
+    "teamB": "Melbourne Stars Women",
+    "matchDate": "2026-11-16",
+    "matchTime": "01:40:00 PM",
+    "venue": "Sydney (டிரம்மோய்ன் ஓவல் / Drummoyne Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 16, 08:10 GMT",
+    "location": {
+      "name": "Sydney (டிரம்மோய்ன் ஓவல் / Drummoyne Oval)",
+      "lat": -33.8517,
+      "lng": 151.1542,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 16, 08:10 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162867",
+    "teamA": "Adelaide Strikers Women",
+    "teamB": "Sydney Sixers Women",
+    "matchDate": "2026-11-17",
+    "matchTime": "01:40:00 PM",
+    "venue": "Adelaide (கரேன் ரோல்டன் ஓவல் / Karen Rolton Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 17, 08:10 GMT",
+    "location": {
+      "name": "Adelaide (கரேன் ரோல்டன் ஓவல் / Karen Rolton Oval)",
+      "lat": -34.9228,
+      "lng": 138.5816,
+      "timezone": 10.5
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 17, 08:10 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162873",
+    "teamA": "Hobart Hurricanes Women",
+    "teamB": "Perth Scorchers Women",
+    "matchDate": "2026-11-19",
+    "matchTime": "10:10:00 AM",
+    "venue": "Brisbane (ஆலன் பார்டர் ஃபீல்ட் / Allan Border Field)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 19, 04:40 GMT",
+    "location": {
+      "name": "Brisbane (ஆலன் பார்டர் ஃபீல்ட் / Allan Border Field)",
+      "lat": -27.4339,
+      "lng": 153.0139,
+      "timezone": 10
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 19, 04:40 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162877",
+    "teamA": "Brisbane Heat Women",
+    "teamB": "Sydney Thunder Women",
+    "matchDate": "2026-11-19",
+    "matchTime": "01:40:00 PM",
+    "venue": "Brisbane (ஆலன் பார்டர் ஃபீல்ட் / Allan Border Field)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 19, 08:10 GMT",
+    "location": {
+      "name": "Brisbane (ஆலன் பார்டர் ஃபீல்ட் / Allan Border Field)",
+      "lat": -27.4339,
+      "lng": 153.0139,
+      "timezone": 10
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 19, 08:10 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162881",
+    "teamA": "Adelaide Strikers Women",
+    "teamB": "Melbourne Renegades Women",
+    "matchDate": "2026-11-20",
+    "matchTime": "01:40:00 PM",
+    "venue": "Adelaide (அடிலெய்டு ஓவல் / Adelaide Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 20, 08:10 GMT",
+    "location": {
+      "name": "Adelaide (அடிலெய்டு ஓவல் / Adelaide Oval)",
+      "lat": -34.9156,
+      "lng": 138.5961,
+      "timezone": 10.5
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 20, 08:10 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162891",
+    "teamA": "Hobart Hurricanes Women",
+    "teamB": "Sydney Thunder Women",
+    "matchDate": "2026-11-21",
+    "matchTime": "06:30:00 AM",
+    "venue": "Hobart (ஹோபார்ட் - பிளண்ட்ஸ்டோன் அரங்கம் / Bellerive Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 21, 01:00 GMT",
+    "location": {
+      "name": "Hobart (ஹோபார்ட் - பிளண்ட்ஸ்டோன் அரங்கம் / Bellerive Oval)",
+      "lat": -42.8772,
+      "lng": 147.3739,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 21, 01:00 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162897",
+    "teamA": "Sydney Sixers Women",
+    "teamB": "Perth Scorchers Women",
+    "matchDate": "2026-11-21",
+    "matchTime": "10:00:00 AM",
+    "venue": "Sydney (வடக்கு சிட்னி ஓவல் / North Sydney Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 21, 04:30 GMT",
+    "location": {
+      "name": "Sydney (வடக்கு சிட்னி ஓவல் / North Sydney Oval)",
+      "lat": -33.8306,
+      "lng": 151.2094,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 21, 04:30 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162907",
+    "teamA": "Brisbane Heat Women",
+    "teamB": "Adelaide Strikers Women",
+    "matchDate": "2026-11-22",
+    "matchTime": "10:10:00 AM",
+    "venue": "Brisbane (ஆலன் பார்டர் ஃபீல்ட் / Allan Border Field)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 22, 04:40 GMT",
+    "location": {
+      "name": "Brisbane (ஆலன் பார்டர் ஃபீல்ட் / Allan Border Field)",
+      "lat": -27.4339,
+      "lng": 153.0139,
+      "timezone": 10
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 22, 04:40 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162917",
+    "teamA": "Melbourne Stars Women",
+    "teamB": "Melbourne Renegades Women",
+    "matchDate": "2026-11-22",
+    "matchTime": "01:40:00 PM",
+    "venue": "Melbourne (ஜங்ஷன் ஓவல் / Junction Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 22, 08:10 GMT",
+    "location": {
+      "name": "Melbourne (ஜங்ஷன் ஓவல் / Junction Oval)",
+      "lat": -37.8594,
+      "lng": 144.9819,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 22, 08:10 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162921",
+    "teamA": "Melbourne Renegades Women",
+    "teamB": "Brisbane Heat Women",
+    "matchDate": "2026-11-25",
+    "matchTime": "10:10:00 AM",
+    "venue": "Melbourne (ஜங்ஷன் ஓவல் / Junction Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 25, 04:40 GMT",
+    "location": {
+      "name": "Melbourne (ஜங்ஷன் ஓவல் / Junction Oval)",
+      "lat": -37.8594,
+      "lng": 144.9819,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 25, 04:40 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162931",
+    "teamA": "Sydney Thunder Women",
+    "teamB": "Adelaide Strikers Women",
+    "matchDate": "2026-11-26",
+    "matchTime": "10:10:00 AM",
+    "venue": "Sydney (வடக்கு சிட்னி ஓவல் / North Sydney Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 26, 04:40 GMT",
+    "location": {
+      "name": "Sydney (வடக்கு சிட்னி ஓவல் / North Sydney Oval)",
+      "lat": -33.8306,
+      "lng": 151.2094,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 26, 04:40 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162941",
+    "teamA": "Sydney Sixers Women",
+    "teamB": "Melbourne Stars Women",
+    "matchDate": "2026-11-26",
+    "matchTime": "01:40:00 PM",
+    "venue": "Sydney (வடக்கு சிட்னி ஓவல் / North Sydney Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 26, 08:10 GMT",
+    "location": {
+      "name": "Sydney (வடக்கு சிட்னி ஓவல் / North Sydney Oval)",
+      "lat": -33.8306,
+      "lng": 151.2094,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 26, 08:10 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162951",
+    "teamA": "Perth Scorchers Women",
+    "teamB": "Hobart Hurricanes Women",
+    "matchDate": "2026-11-27",
+    "matchTime": "03:40:00 PM",
+    "venue": "Perth (வாக்கா அரங்கம் / WACA Ground)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 27, 10:10 GMT",
+    "location": {
+      "name": "Perth (வாக்கா அரங்கம் / WACA Ground)",
+      "lat": -31.9598,
+      "lng": 115.8797,
+      "timezone": 8
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 27, 10:10 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162961",
+    "teamA": "Melbourne Renegades Women",
+    "teamB": "Melbourne Stars Women",
+    "matchDate": "2026-11-28",
+    "matchTime": "01:40:00 PM",
+    "venue": "Melbourne (ஜங்ஷன் ஓவல் / Junction Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 28, 08:10 GMT",
+    "location": {
+      "name": "Melbourne (ஜங்ஷன் ஓவல் / Junction Oval)",
+      "lat": -37.8594,
+      "lng": 144.9819,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 28, 08:10 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162963",
+    "teamA": "Sydney Thunder Women",
+    "teamB": "Sydney Sixers Women",
+    "matchDate": "2026-11-28",
+    "matchTime": "01:40:00 PM",
+    "venue": "Sydney (டிரம்மோய்ன் ஓவல் / Drummoyne Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 28, 08:10 GMT",
+    "location": {
+      "name": "Sydney (டிரம்மோய்ன் ஓவல் / Drummoyne Oval)",
+      "lat": -33.8517,
+      "lng": 151.1542,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 28, 08:10 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162967",
+    "teamA": "Brisbane Heat Women",
+    "teamB": "Perth Scorchers Women",
+    "matchDate": "2026-11-29",
+    "matchTime": "06:30:00 AM",
+    "venue": "Adelaide (கரேன் ரோல்டன் ஓவல் / Karen Rolton Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 29, 01:00 GMT",
+    "location": {
+      "name": "Adelaide (கரேன் ரோல்டன் ஓவல் / Karen Rolton Oval)",
+      "lat": -34.9228,
+      "lng": 138.5816,
+      "timezone": 10.5
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 29, 01:00 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162977",
+    "teamA": "Adelaide Strikers Women",
+    "teamB": "Hobart Hurricanes Women",
+    "matchDate": "2026-11-29",
+    "matchTime": "10:00:00 AM",
+    "venue": "Adelaide (கரேன் ரோல்டன் ஓவல் / Karen Rolton Oval)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Nov 29, 04:30 GMT",
+    "location": {
+      "name": "Adelaide (கரேன் ரோல்டன் ஓவல் / Karen Rolton Oval)",
+      "lat": -34.9228,
+      "lng": 138.5816,
+      "timezone": 10.5
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Nov 29, 04:30 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162987",
+    "teamA": "TBC",
+    "teamB": "TBC",
+    "matchDate": "2026-12-01",
+    "matchTime": "05:30:00 AM",
+    "venue": "TBC, Australia",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Dec 01, 00:00 GMT",
+    "location": {
+      "name": "TBC, Australia",
+      "lat": -37.82,
+      "lng": 144.9834,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Dec 01, 00:00 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "162993",
+    "teamA": "TBC",
+    "teamB": "TBC",
+    "matchDate": "2026-12-03",
+    "matchTime": "05:30:00 AM",
+    "venue": "TBC, Australia",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Dec 03, 00:00 GMT",
+    "location": {
+      "name": "TBC, Australia",
+      "lat": -37.82,
+      "lng": 144.9834,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Dec 03, 00:00 GMT"
+    }
+  },
+  {
+    "cricbuzzMatchId": "163003",
+    "teamA": "TBC",
+    "teamB": "TBC",
+    "matchDate": "2026-12-05",
+    "matchTime": "05:30:00 AM",
+    "venue": "TBC, Australia",
+    "format": "T20",
+    "series": "Womens Big Bash League 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match starts at Dec 05, 00:00 GMT",
+    "location": {
+      "name": "TBC, Australia",
+      "lat": -37.82,
+      "lng": 144.9834,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match starts at Dec 05, 00:00 GMT"
+    }
+  }
+]

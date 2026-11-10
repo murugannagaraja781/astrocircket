@@ -1,0 +1,1058 @@
+[
+  {
+    "cricbuzzMatchId": "123072",
+    "teamA": "Perth Scorchers",
+    "teamB": "Sydney Sixers",
+    "matchDate": "2025-12-14",
+    "matchTime": "01:45:00 PM",
+    "venue": "Perth (பெர்த் மைதானம் / ஆப்டஸ்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Perth Scorchers won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Perth Scorchers won by 5 wkts (11 Overs game due to rain)",
+    "location": {
+      "name": "Perth (பெர்த் மைதானம் / ஆப்டஸ்)",
+      "lat": -31.9511,
+      "lng": 115.889,
+      "timezone": 8
+    },
+    "result": {
+      "winner": "Perth Scorchers",
+      "score": "",
+      "margin": "Perth Scorchers won by 5 wkts (11 Overs game due to rain)"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123083",
+    "teamA": "Melbourne Renegades",
+    "teamB": "Brisbane Heat",
+    "matchDate": "2025-12-15",
+    "matchTime": "01:45:00 PM",
+    "venue": "Geelong, Victoria (சைமண்ட்ஸ் ஸ்டேடியம்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Brisbane Heat won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Melbourne Renegades won by 14 runs",
+    "location": {
+      "name": "Geelong, Victoria (சைமண்ட்ஸ் ஸ்டேடியம்)",
+      "lat": -38.1581,
+      "lng": 144.3547,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Melbourne Renegades",
+      "score": "",
+      "margin": "Melbourne Renegades won by 14 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123089",
+    "teamA": "Hobart Hurricanes",
+    "teamB": "Sydney Thunder",
+    "matchDate": "2025-12-16",
+    "matchTime": "01:45:00 PM",
+    "venue": "Hobart, Tasmania (பெல்லரிவ் ஓவல்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Hobart Hurricanes won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Hobart Hurricanes won by 4 wkts",
+    "location": {
+      "name": "Hobart, Tasmania (பெல்லரிவ் ஓவல்)",
+      "lat": -42.8772,
+      "lng": 147.3736,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Hobart Hurricanes",
+      "score": "",
+      "margin": "Hobart Hurricanes won by 4 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123094",
+    "teamA": "Sydney Sixers",
+    "teamB": "Adelaide Strikers",
+    "matchDate": "2025-12-17",
+    "matchTime": "01:45:00 PM",
+    "venue": "Sydney (சிட்னி - SCG)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Adelaide Strikers won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Adelaide Strikers won by 3 wkts",
+    "location": {
+      "name": "Sydney (சிட்னி - SCG)",
+      "lat": -33.8915,
+      "lng": 151.2249,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Adelaide Strikers",
+      "score": "",
+      "margin": "Adelaide Strikers won by 3 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123105",
+    "teamA": "Melbourne Stars",
+    "teamB": "Hobart Hurricanes",
+    "matchDate": "2025-12-18",
+    "matchTime": "01:45:00 PM",
+    "venue": "Melbourne (மெல்போர்ன் - MCG)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Melbourne Stars won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Melbourne Stars won by 8 wkts",
+    "location": {
+      "name": "Melbourne (மெல்போர்ன் - MCG)",
+      "lat": -37.82,
+      "lng": 144.9834,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Melbourne Stars",
+      "score": "",
+      "margin": "Melbourne Stars won by 8 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123116",
+    "teamA": "Brisbane Heat",
+    "teamB": "Perth Scorchers",
+    "matchDate": "2025-12-19",
+    "matchTime": "01:45:00 PM",
+    "venue": "Brisbane (பிரிஸ்பேன் - கப்ப)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Brisbane Heat won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Brisbane Heat won by 8 wkts",
+    "location": {
+      "name": "Brisbane (பிரிஸ்பேன் - கப்ப)",
+      "lat": -27.4859,
+      "lng": 153.0381,
+      "timezone": 10
+    },
+    "result": {
+      "winner": "Brisbane Heat",
+      "score": "",
+      "margin": "Brisbane Heat won by 8 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123127",
+    "teamA": "Sydney Thunder",
+    "teamB": "Sydney Sixers",
+    "matchDate": "2025-12-20",
+    "matchTime": "01:45:00 PM",
+    "venue": "Sydney (ஷோகிரவுண்ட் மைதானம்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Sydney Thunder won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sydney Sixers won by 47 runs",
+    "location": {
+      "name": "Sydney (ஷோகிரவுண்ட் மைதானம்)",
+      "lat": -33.8431,
+      "lng": 151.0678,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Sydney Sixers",
+      "score": "",
+      "margin": "Sydney Sixers won by 47 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123133",
+    "teamA": "Melbourne Renegades",
+    "teamB": "Hobart Hurricanes",
+    "matchDate": "2025-12-21",
+    "matchTime": "01:45:00 PM",
+    "venue": "Geelong, Victoria (சைமண்ட்ஸ் ஸ்டேடியம்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Hobart Hurricanes won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Hobart Hurricanes won by 7 wkts",
+    "location": {
+      "name": "Geelong, Victoria (சைமண்ட்ஸ் ஸ்டேடியம்)",
+      "lat": -38.1581,
+      "lng": 144.3547,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Hobart Hurricanes",
+      "score": "",
+      "margin": "Hobart Hurricanes won by 7 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123144",
+    "teamA": "Sydney Thunder",
+    "teamB": "Brisbane Heat",
+    "matchDate": "2025-12-22",
+    "matchTime": "01:45:00 PM",
+    "venue": "Canberra (மனுக்கா ஓவல், ஆஸ்திரேலியா)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Brisbane Heat won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sydney Thunder won by 34 runs",
+    "location": {
+      "name": "Canberra (மனுக்கா ஓவல், ஆஸ்திரேலியா)",
+      "lat": -35.3181,
+      "lng": 149.1347,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Sydney Thunder",
+      "score": "",
+      "margin": "Sydney Thunder won by 34 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123155",
+    "teamA": "Adelaide Strikers",
+    "teamB": "Melbourne Stars",
+    "matchDate": "2025-12-23",
+    "matchTime": "01:45:00 PM",
+    "venue": "Adelaide (அடிலெய்டு ஓவல்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Melbourne Stars won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Melbourne Stars won by 6 wkts",
+    "location": {
+      "name": "Adelaide (அடிலெய்டு ஓவல்)",
+      "lat": -34.9156,
+      "lng": 138.5961,
+      "timezone": 10.5
+    },
+    "result": {
+      "winner": "Melbourne Stars",
+      "score": "",
+      "margin": "Melbourne Stars won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123166",
+    "teamA": "Sydney Sixers",
+    "teamB": "Melbourne Stars",
+    "matchDate": "2025-12-26",
+    "matchTime": "12:35:00 PM",
+    "venue": "Sydney (சிட்னி - SCG)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Melbourne Stars won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Melbourne Stars won by 7 wkts",
+    "location": {
+      "name": "Sydney (சிட்னி - SCG)",
+      "lat": -33.8915,
+      "lng": 151.2249,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Melbourne Stars",
+      "score": "",
+      "margin": "Melbourne Stars won by 7 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123171",
+    "teamA": "Perth Scorchers",
+    "teamB": "Hobart Hurricanes",
+    "matchDate": "2025-12-26",
+    "matchTime": "03:45:00 PM",
+    "venue": "Perth (பெர்த் மைதானம் / ஆப்டஸ்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Hobart Hurricanes won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Hobart Hurricanes won by 4 wkts",
+    "location": {
+      "name": "Perth (பெர்த் மைதானம் / ஆப்டஸ்)",
+      "lat": -31.9511,
+      "lng": 115.889,
+      "timezone": 8
+    },
+    "result": {
+      "winner": "Hobart Hurricanes",
+      "score": "",
+      "margin": "Hobart Hurricanes won by 4 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123182",
+    "teamA": "Brisbane Heat",
+    "teamB": "Adelaide Strikers",
+    "matchDate": "2025-12-27",
+    "matchTime": "01:45:00 PM",
+    "venue": "Brisbane (பிரிஸ்பேன் - கப்ப)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Adelaide Strikers won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Brisbane Heat won by 7 runs",
+    "location": {
+      "name": "Brisbane (பிரிஸ்பேன் - கப்ப)",
+      "lat": -27.4859,
+      "lng": 153.0381,
+      "timezone": 10
+    },
+    "result": {
+      "winner": "Brisbane Heat",
+      "score": "",
+      "margin": "Brisbane Heat won by 7 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123193",
+    "teamA": "Melbourne Stars",
+    "teamB": "Sydney Thunder",
+    "matchDate": "2025-12-28",
+    "matchTime": "01:45:00 PM",
+    "venue": "Canberra (மனுக்கா ஓவல், ஆஸ்திரேலியா)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Melbourne Stars won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Melbourne Stars won by 9 wkts",
+    "location": {
+      "name": "Canberra (மனுக்கா ஓவல், ஆஸ்திரேலியா)",
+      "lat": -35.3181,
+      "lng": 149.1347,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Melbourne Stars",
+      "score": "",
+      "margin": "Melbourne Stars won by 9 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123199",
+    "teamA": "Hobart Hurricanes",
+    "teamB": "Melbourne Renegades",
+    "matchDate": "2025-12-29",
+    "matchTime": "01:45:00 PM",
+    "venue": "Hobart, Tasmania (பெல்லரிவ் ஓவல்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Hobart Hurricanes won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Hobart Hurricanes won by 4 wkts",
+    "location": {
+      "name": "Hobart, Tasmania (பெல்லரிவ் ஓவல்)",
+      "lat": -42.8772,
+      "lng": 147.3736,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Hobart Hurricanes",
+      "score": "",
+      "margin": "Hobart Hurricanes won by 4 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123210",
+    "teamA": "Sydney Thunder",
+    "teamB": "Perth Scorchers",
+    "matchDate": "2025-12-30",
+    "matchTime": "01:45:00 PM",
+    "venue": "Sydney (ஷோகிரவுண்ட் மைதானம்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Sydney Thunder won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Perth Scorchers won by 71 runs",
+    "location": {
+      "name": "Sydney (ஷோகிரவுண்ட் மைதானம்)",
+      "lat": -33.8431,
+      "lng": 151.0678,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Perth Scorchers",
+      "score": "",
+      "margin": "Perth Scorchers won by 71 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123221",
+    "teamA": "Adelaide Strikers",
+    "teamB": "Brisbane Heat",
+    "matchDate": "2025-12-31",
+    "matchTime": "01:45:00 PM",
+    "venue": "Adelaide (அடிலெய்டு ஓவல்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Adelaide Strikers won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Adelaide Strikers won by 7 wkts",
+    "location": {
+      "name": "Adelaide (அடிலெய்டு ஓவல்)",
+      "lat": -34.9156,
+      "lng": 138.5961,
+      "timezone": 10.5
+    },
+    "result": {
+      "winner": "Adelaide Strikers",
+      "score": "",
+      "margin": "Adelaide Strikers won by 7 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123232",
+    "teamA": "Melbourne Renegades",
+    "teamB": "Sydney Sixers",
+    "matchDate": "2026-01-01",
+    "matchTime": "10:30:00 AM",
+    "venue": "Melbourne (டாக்லேண்ட்ஸ் / மார்வெல் மைதானம்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Sydney Sixers won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sydney Sixers won by 6 wkts",
+    "location": {
+      "name": "Melbourne (டாக்லேண்ட்ஸ் / மார்வெல் மைதானம்)",
+      "lat": -37.8165,
+      "lng": 144.9475,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Sydney Sixers",
+      "score": "",
+      "margin": "Sydney Sixers won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123237",
+    "teamA": "Hobart Hurricanes",
+    "teamB": "Perth Scorchers",
+    "matchDate": "2026-01-01",
+    "matchTime": "01:45:00 PM",
+    "venue": "Hobart, Tasmania (பெல்லரிவ் ஓவல்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Hobart Hurricanes won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Perth Scorchers won by 40 runs",
+    "location": {
+      "name": "Hobart, Tasmania (பெல்லரிவ் ஓவல்)",
+      "lat": -42.8772,
+      "lng": 147.3736,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Perth Scorchers",
+      "score": "",
+      "margin": "Perth Scorchers won by 40 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123248",
+    "teamA": "Brisbane Heat",
+    "teamB": "Melbourne Stars",
+    "matchDate": "2026-01-02",
+    "matchTime": "01:45:00 PM",
+    "venue": "Brisbane (பிரிஸ்பேன் - கப்ப)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Brisbane Heat won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Brisbane Heat won by 4 wkts",
+    "location": {
+      "name": "Brisbane (பிரிஸ்பேன் - கப்ப)",
+      "lat": -27.4859,
+      "lng": 153.0381,
+      "timezone": 10
+    },
+    "result": {
+      "winner": "Brisbane Heat",
+      "score": "",
+      "margin": "Brisbane Heat won by 4 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123254",
+    "teamA": "Sydney Thunder",
+    "teamB": "Hobart Hurricanes",
+    "matchDate": "2026-01-03",
+    "matchTime": "01:45:00 PM",
+    "venue": "Sydney (ஷோகிரவுண்ட் மைதானம்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Hobart Hurricanes won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Hobart Hurricanes won by 6 wkts",
+    "location": {
+      "name": "Sydney (ஷோகிரவுண்ட் மைதானம்)",
+      "lat": -33.8431,
+      "lng": 151.0678,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Hobart Hurricanes",
+      "score": "",
+      "margin": "Hobart Hurricanes won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123265",
+    "teamA": "Melbourne Stars",
+    "teamB": "Melbourne Renegades",
+    "matchDate": "2026-01-04",
+    "matchTime": "12:35:00 PM",
+    "venue": "Melbourne (மெல்போர்ன் - MCG)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Melbourne Renegades won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Melbourne Renegades won by 4 wkts",
+    "location": {
+      "name": "Melbourne (மெல்போர்ன் - MCG)",
+      "lat": -37.82,
+      "lng": 144.9834,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Melbourne Renegades",
+      "score": "",
+      "margin": "Melbourne Renegades won by 4 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123270",
+    "teamA": "Perth Scorchers",
+    "teamB": "Adelaide Strikers",
+    "matchDate": "2026-01-04",
+    "matchTime": "03:45:00 PM",
+    "venue": "Perth (பெர்த் மைதானம் / ஆப்டஸ்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Adelaide Strikers won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Perth Scorchers won by 33 runs",
+    "location": {
+      "name": "Perth (பெர்த் மைதானம் / ஆப்டஸ்)",
+      "lat": -31.9511,
+      "lng": 115.889,
+      "timezone": 8
+    },
+    "result": {
+      "winner": "Perth Scorchers",
+      "score": "",
+      "margin": "Perth Scorchers won by 33 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123276",
+    "teamA": "Sydney Sixers",
+    "teamB": "Brisbane Heat",
+    "matchDate": "2026-01-05",
+    "matchTime": "01:45:00 PM",
+    "venue": "Coffs Harbour (இன்டர்நேஷனல் ஸ்போர்ட்ஸ் ஸ்டேடியம்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Sydney Sixers won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sydney Sixers won by 3 wkts",
+    "location": {
+      "name": "Coffs Harbour (இன்டர்நேஷனல் ஸ்போர்ட்ஸ் ஸ்டேடியம்)",
+      "lat": -30.32,
+      "lng": 153.1119,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Sydney Sixers",
+      "score": "",
+      "margin": "Sydney Sixers won by 3 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123287",
+    "teamA": "Adelaide Strikers",
+    "teamB": "Sydney Thunder",
+    "matchDate": "2026-01-06",
+    "matchTime": "01:45:00 PM",
+    "venue": "Adelaide (அடிலெய்டு ஓவல்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Sydney Thunder won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Adelaide Strikers won by 6 runs",
+    "location": {
+      "name": "Adelaide (அடிலெய்டு ஓவல்)",
+      "lat": -34.9156,
+      "lng": 138.5961,
+      "timezone": 10.5
+    },
+    "result": {
+      "winner": "Adelaide Strikers",
+      "score": "",
+      "margin": "Adelaide Strikers won by 6 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123298",
+    "teamA": "Perth Scorchers",
+    "teamB": "Melbourne Renegades",
+    "matchDate": "2026-01-07",
+    "matchTime": "01:45:00 PM",
+    "venue": "Perth (பெர்த் மைதானம் / ஆப்டஸ்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Melbourne Renegades won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Melbourne Renegades won by 4 wkts",
+    "location": {
+      "name": "Perth (பெர்த் மைதானம் / ஆப்டஸ்)",
+      "lat": -31.9511,
+      "lng": 115.889,
+      "timezone": 8
+    },
+    "result": {
+      "winner": "Melbourne Renegades",
+      "score": "",
+      "margin": "Melbourne Renegades won by 4 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123303",
+    "teamA": "Melbourne Stars",
+    "teamB": "Sydney Sixers",
+    "matchDate": "2026-01-08",
+    "matchTime": "01:45:00 PM",
+    "venue": "Melbourne (மெல்போர்ன் - MCG)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Sydney Sixers won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sydney Sixers won by 6 wkts",
+    "location": {
+      "name": "Melbourne (மெல்போர்ன் - MCG)",
+      "lat": -37.82,
+      "lng": 144.9834,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Sydney Sixers",
+      "score": "",
+      "margin": "Sydney Sixers won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123314",
+    "teamA": "Hobart Hurricanes",
+    "teamB": "Adelaide Strikers",
+    "matchDate": "2026-01-09",
+    "matchTime": "01:45:00 PM",
+    "venue": "Hobart, Tasmania (பெல்லரிவ் ஓவல்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Adelaide Strikers won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Hobart Hurricanes won by 37 runs",
+    "location": {
+      "name": "Hobart, Tasmania (பெல்லரிவ் ஓவல்)",
+      "lat": -42.8772,
+      "lng": 147.3736,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Hobart Hurricanes",
+      "score": "",
+      "margin": "Hobart Hurricanes won by 37 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123325",
+    "teamA": "Brisbane Heat",
+    "teamB": "Sydney Thunder",
+    "matchDate": "2026-01-10",
+    "matchTime": "10:30:00 AM",
+    "venue": "Brisbane (பிரிஸ்பேன் - கப்ப)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Sydney Thunder won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Brisbane Heat won by 7 wkts",
+    "location": {
+      "name": "Brisbane (பிரிஸ்பேன் - கப்ப)",
+      "lat": -27.4859,
+      "lng": 153.0381,
+      "timezone": 10
+    },
+    "result": {
+      "winner": "Brisbane Heat",
+      "score": "",
+      "margin": "Brisbane Heat won by 7 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123336",
+    "teamA": "Melbourne Renegades",
+    "teamB": "Melbourne Stars",
+    "matchDate": "2026-01-10",
+    "matchTime": "01:45:00 PM",
+    "venue": "Melbourne (டாக்லேண்ட்ஸ் / மார்வெல் மைதானம்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Melbourne Stars won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Melbourne Stars won by 8 wkts",
+    "location": {
+      "name": "Melbourne (டாக்லேண்ட்ஸ் / மார்வெல் மைதானம்)",
+      "lat": -37.8165,
+      "lng": 144.9475,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Melbourne Stars",
+      "score": "",
+      "margin": "Melbourne Stars won by 8 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123347",
+    "teamA": "Sydney Sixers",
+    "teamB": "Hobart Hurricanes",
+    "matchDate": "2026-01-11",
+    "matchTime": "08:35:00 AM",
+    "venue": "Sydney (சிட்னி - SCG)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Hobart Hurricanes won the toss and opted to bowl",
+    "status": "upcoming",
+    "subStatus": "No result due to rain",
+    "location": {
+      "name": "Sydney (சிட்னி - SCG)",
+      "lat": -33.8915,
+      "lng": 151.2249,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "No result due to rain"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123358",
+    "teamA": "Adelaide Strikers",
+    "teamB": "Perth Scorchers",
+    "matchDate": "2026-01-11",
+    "matchTime": "01:45:00 PM",
+    "venue": "Adelaide (அடிலெய்டு ஓவல்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Adelaide Strikers won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Perth Scorchers won by 32 runs",
+    "location": {
+      "name": "Adelaide (அடிலெய்டு ஓவல்)",
+      "lat": -34.9156,
+      "lng": 138.5961,
+      "timezone": 10.5
+    },
+    "result": {
+      "winner": "Perth Scorchers",
+      "score": "",
+      "margin": "Perth Scorchers won by 32 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123369",
+    "teamA": "Sydney Thunder",
+    "teamB": "Melbourne Renegades",
+    "matchDate": "2026-01-12",
+    "matchTime": "01:45:00 PM",
+    "venue": "Sydney (ஷோகிரவுண்ட் மைதானம்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Sydney Thunder won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sydney Thunder won by 4 wkts (2nd innings reduced to 16 overs due to rain, DLS target 140)",
+    "location": {
+      "name": "Sydney (ஷோகிரவுண்ட் மைதானம்)",
+      "lat": -33.8431,
+      "lng": 151.0678,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Sydney Thunder",
+      "score": "",
+      "margin": "Sydney Thunder won by 4 wkts (2nd innings reduced to 16 overs due to rain, DLS target 140)"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123375",
+    "teamA": "Melbourne Stars",
+    "teamB": "Adelaide Strikers",
+    "matchDate": "2026-01-13",
+    "matchTime": "01:45:00 PM",
+    "venue": "Melbourne (மெல்போர்ன் - MCG)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Melbourne Stars won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Melbourne Stars won by 6 wkts",
+    "location": {
+      "name": "Melbourne (மெல்போர்ன் - MCG)",
+      "lat": -37.82,
+      "lng": 144.9834,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Melbourne Stars",
+      "score": "",
+      "margin": "Melbourne Stars won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123386",
+    "teamA": "Hobart Hurricanes",
+    "teamB": "Brisbane Heat",
+    "matchDate": "2026-01-14",
+    "matchTime": "01:45:00 PM",
+    "venue": "Hobart, Tasmania (பெல்லரிவ் ஓவல்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Hobart Hurricanes won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Brisbane Heat won by 3 runs",
+    "location": {
+      "name": "Hobart, Tasmania (பெல்லரிவ் ஓவல்)",
+      "lat": -42.8772,
+      "lng": 147.3736,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Brisbane Heat",
+      "score": "",
+      "margin": "Brisbane Heat won by 3 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123391",
+    "teamA": "Melbourne Renegades",
+    "teamB": "Perth Scorchers",
+    "matchDate": "2026-01-15",
+    "matchTime": "01:45:00 PM",
+    "venue": "Melbourne (டாக்லேண்ட்ஸ் / மார்வெல் மைதானம்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Melbourne Renegades won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Perth Scorchers won by 50 runs",
+    "location": {
+      "name": "Melbourne (டாக்லேண்ட்ஸ் / மார்வெல் மைதானம்)",
+      "lat": -37.8165,
+      "lng": 144.9475,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Perth Scorchers",
+      "score": "",
+      "margin": "Perth Scorchers won by 50 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123402",
+    "teamA": "Sydney Sixers",
+    "teamB": "Sydney Thunder",
+    "matchDate": "2026-01-16",
+    "matchTime": "01:45:00 PM",
+    "venue": "Sydney (சிட்னி - SCG)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Sydney Sixers won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sydney Sixers won by 5 wkts",
+    "location": {
+      "name": "Sydney (சிட்னி - SCG)",
+      "lat": -33.8915,
+      "lng": 151.2249,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Sydney Sixers",
+      "score": "",
+      "margin": "Sydney Sixers won by 5 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123413",
+    "teamA": "Adelaide Strikers",
+    "teamB": "Melbourne Renegades",
+    "matchDate": "2026-01-17",
+    "matchTime": "11:30:00 AM",
+    "venue": "Adelaide (அடிலெய்டு ஓவல்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Adelaide Strikers won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Adelaide Strikers won by 8 wkts",
+    "location": {
+      "name": "Adelaide (அடிலெய்டு ஓவல்)",
+      "lat": -34.9156,
+      "lng": 138.5961,
+      "timezone": 10.5
+    },
+    "result": {
+      "winner": "Adelaide Strikers",
+      "score": "",
+      "margin": "Adelaide Strikers won by 8 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123424",
+    "teamA": "Perth Scorchers",
+    "teamB": "Melbourne Stars",
+    "matchDate": "2026-01-17",
+    "matchTime": "02:45:00 PM",
+    "venue": "Perth (பெர்த் மைதானம் / ஆப்டஸ்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Perth Scorchers won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Perth Scorchers won by 6 wkts",
+    "location": {
+      "name": "Perth (பெர்த் மைதானம் / ஆப்டஸ்)",
+      "lat": -31.9511,
+      "lng": 115.889,
+      "timezone": 8
+    },
+    "result": {
+      "winner": "Perth Scorchers",
+      "score": "",
+      "margin": "Perth Scorchers won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123430",
+    "teamA": "Brisbane Heat",
+    "teamB": "Sydney Sixers",
+    "matchDate": "2026-01-18",
+    "matchTime": "01:45:00 PM",
+    "venue": "Brisbane (பிரிஸ்பேன் - கப்ப)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Sydney Sixers won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sydney Sixers won by 5 wkts",
+    "location": {
+      "name": "Brisbane (பிரிஸ்பேன் - கப்ப)",
+      "lat": -27.4859,
+      "lng": 153.0381,
+      "timezone": 10
+    },
+    "result": {
+      "winner": "Sydney Sixers",
+      "score": "",
+      "margin": "Sydney Sixers won by 5 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123441",
+    "teamA": "Perth Scorchers",
+    "teamB": "Sydney Sixers",
+    "matchDate": "2026-01-20",
+    "matchTime": "02:00:00 PM",
+    "venue": "Perth (பெர்த் மைதானம் / ஆப்டஸ்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Sydney Sixers won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Perth Scorchers won by 48 runs",
+    "location": {
+      "name": "Perth (பெர்த் மைதானம் / ஆப்டஸ்)",
+      "lat": -31.9511,
+      "lng": 115.889,
+      "timezone": 8
+    },
+    "result": {
+      "winner": "Perth Scorchers",
+      "score": "",
+      "margin": "Perth Scorchers won by 48 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123452",
+    "teamA": "Hobart Hurricanes",
+    "teamB": "Melbourne Stars",
+    "matchDate": "2026-01-21",
+    "matchTime": "02:00:00 PM",
+    "venue": "Hobart, Tasmania (பெல்லரிவ் ஓவல்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Melbourne Stars won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Hobart Hurricanes won by 3 runs (2nd innings reduced to 7 overs due to rain, DLS target 85)",
+    "location": {
+      "name": "Hobart, Tasmania (பெல்லரிவ் ஓவல்)",
+      "lat": -42.8772,
+      "lng": 147.3736,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Hobart Hurricanes",
+      "score": "",
+      "margin": "Hobart Hurricanes won by 3 runs (2nd innings reduced to 7 overs due to rain, DLS target 85)"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123457",
+    "teamA": "Sydney Sixers",
+    "teamB": "Hobart Hurricanes",
+    "matchDate": "2026-01-23",
+    "matchTime": "01:45:00 PM",
+    "venue": "Sydney (சிட்னி - SCG)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Hobart Hurricanes won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sydney Sixers won by 57 runs",
+    "location": {
+      "name": "Sydney (சிட்னி - SCG)",
+      "lat": -33.8915,
+      "lng": 151.2249,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Sydney Sixers",
+      "score": "",
+      "margin": "Sydney Sixers won by 57 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "123468",
+    "teamA": "Perth Scorchers",
+    "teamB": "Sydney Sixers",
+    "matchDate": "2026-01-25",
+    "matchTime": "01:45:00 PM",
+    "venue": "Perth (பெர்த் மைதானம் / ஆப்டஸ்)",
+    "format": "T20",
+    "series": "Big Bash League 2025-26",
+    "toss": "Perth Scorchers won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Perth Scorchers won by 6 wkts",
+    "location": {
+      "name": "Perth (பெர்த் மைதானம் / ஆப்டஸ்)",
+      "lat": -31.9511,
+      "lng": 115.889,
+      "timezone": 8
+    },
+    "result": {
+      "winner": "Perth Scorchers",
+      "score": "",
+      "margin": "Perth Scorchers won by 6 wkts"
+    }
+  }
+]

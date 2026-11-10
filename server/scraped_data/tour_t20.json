@@ -1,0 +1,26 @@
+[
+  {
+    "cricbuzzMatchId": "1793631000000",
+    "teamA": "England Lions",
+    "teamB": "West Indies A",
+    "matchDate": "2026-11-01",
+    "matchTime": "02:00:00 PM",
+    "venue": "Basseterre, St Kitts (Conaree Sports Club)",
+    "format": "T20",
+    "series": "Tour T20",
+    "toss": "England Lions won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "England Lions won by 8 wkts",
+    "location": {
+      "name": "Basseterre, St Kitts (Conaree Sports Club)",
+      "lat": 17.3,
+      "lng": -62.7333,
+      "timezone": -4
+    },
+    "result": {
+      "winner": "England Lions",
+      "score": "",
+      "margin": "England Lions won by 8 wkts"
+    }
+  }
+]

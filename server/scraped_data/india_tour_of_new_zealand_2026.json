@@ -1,968 +1,290 @@
 [
   {
-    "cricbuzzMatchId": "161234",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "New Zealand vs India 5th T20I",
+    "cricbuzzMatchId": "161190",
     "teamA": "New Zealand",
     "teamB": "India",
-    "matchDate": "Tomorrow",
-    "matchTime": "12:30 PM",
-    "venue": "Seddon Park, Hamilton",
-    "city": "Hamilton",
+    "matchDate": "2026-10-22",
+    "matchTime": "08:00:00 PM",
+    "venue": "Christchurch, New Zealand (Hagley Oval)",
+    "format": "T20I",
+    "series": "India tour of New Zealand 2026",
+    "toss": "India won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "India won by 4 wkts",
     "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
+      "name": "Christchurch, New Zealand (Hagley Oval)",
+      "lat": -43.535,
+      "lng": 172.6225,
+      "timezone": 13
     },
-    "format": "T20",
-    "toss": "",
     "result": {
-      "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
+      "winner": "India",
+      "score": "",
+      "margin": "India won by 4 wkts"
+    }
   },
   {
-    "cricbuzzMatchId": "147942",
+    "cricbuzzMatchId": "161201",
+    "teamA": "New Zealand",
+    "teamB": "India",
+    "matchDate": "2026-10-24",
+    "matchTime": "08:00:00 PM",
+    "venue": "Christchurch, New Zealand (Hagley Oval)",
+    "format": "T20I",
     "series": "India tour of New Zealand 2026",
-    "matchTitle": "South Africa vs Australia 3rd Test",
-    "teamA": "South Africa",
-    "teamB": "Australia",
-    "matchDate": "2001-10-26",
-    "matchTime": "2:00 PM",
-    "venue": "Newlands, Cape Town",
-    "city": "Cape Town",
+    "toss": "India won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "India won by 4 wkts",
     "location": {
-      "lat": -33.9249,
-      "lng": 18.4241
+      "name": "Christchurch, New Zealand (Hagley Oval)",
+      "lat": -43.535,
+      "lng": 172.6225,
+      "timezone": 13
     },
-    "format": "TEST",
-    "toss": "Australia won the toss and opt to Bowl",
     "result": {
-      "winner": "South Africa",
-      "margin": "South Africa won by 176 runs",
-      "score": ""
-    },
-    "status": "completed"
+      "winner": "India",
+      "score": "",
+      "margin": "India won by 4 wkts"
+    }
   },
   {
-    "cricbuzzMatchId": "170761",
+    "cricbuzzMatchId": "161212",
+    "teamA": "New Zealand",
+    "teamB": "India",
+    "matchDate": "2026-10-27",
+    "matchTime": "08:00:00 PM",
+    "venue": "Wellington, New Zealand (Sky Stadium)",
+    "format": "T20I",
     "series": "India tour of New Zealand 2026",
-    "matchTitle": "Sri Lanka vs Pakistan Final",
-    "teamA": "Pakistan",
-    "teamB": "Sri Lanka",
-    "matchDate": "Today",
-    "matchTime": "1:30 PM",
-    "venue": "Gaddafi Stadium, Lahore",
-    "city": "Lahore",
+    "toss": "India won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "India won by 6 wkts",
     "location": {
-      "lat": 31.5204,
-      "lng": 74.3587
+      "name": "Wellington, New Zealand (Sky Stadium)",
+      "lat": -41.2729,
+      "lng": 174.7858,
+      "timezone": 13
     },
-    "format": "T20",
-    "toss": "Pakistan won the toss and opt to Bowl",
     "result": {
-      "winner": "Pakistan",
-      "margin": "Pakistan won by 3 wkts",
-      "score": ""
-    },
-    "status": "completed"
+      "winner": "India",
+      "score": "",
+      "margin": "India won by 6 wkts"
+    }
   },
   {
-    "cricbuzzMatchId": "173050",
+    "cricbuzzMatchId": "161223",
+    "teamA": "New Zealand",
+    "teamB": "India",
+    "matchDate": "2026-10-30",
+    "matchTime": "08:00:00 PM",
+    "venue": "Auckland, New Zealand (Eden Park)",
+    "format": "T20I",
     "series": "India tour of New Zealand 2026",
-    "matchTitle": "Bangladesh vs West Indies 1st Test",
-    "teamA": "Bangladesh",
-    "teamB": "West Indies",
-    "matchDate": "2001-10-27",
-    "matchTime": "9:00 AM",
-    "venue": "Shere Bangla National Stadium, Dhaka",
-    "city": "Dhaka",
+    "toss": "India won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "New Zealand won by 87 runs",
     "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
+      "name": "Auckland, New Zealand (Eden Park)",
+      "lat": -36.875,
+      "lng": 174.7447,
+      "timezone": 13
     },
-    "format": "TEST",
-    "toss": "Bangladesh won the toss and opt to Bat",
     "result": {
-      "winner": "West Indies",
-      "margin": "West Indies won by 8 wkts",
-      "score": ""
-    },
-    "status": "completed"
+      "winner": "New Zealand",
+      "score": "",
+      "margin": "New Zealand won by 87 runs"
+    }
   },
   {
-    "cricbuzzMatchId": "174977",
+    "cricbuzzMatchId": "161234",
+    "teamA": "New Zealand",
+    "teamB": "India",
+    "matchDate": "2026-11-01",
+    "matchTime": "08:00:00 PM",
+    "venue": "Hamilton, New Zealand (Seddon Park)",
+    "format": "T20I",
     "series": "India tour of New Zealand 2026",
-    "matchTitle": "Namibia vs Ireland 5th ODI",
-    "teamA": "NAM",
-    "teamB": "Ireland",
-    "matchDate": "Tomorrow",
-    "matchTime": "1:00 PM",
-    "venue": "Namibia Cricket Ground, Windhoek",
-    "city": "Windhoek",
+    "toss": "New Zealand won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "New Zealand won by 7 wkts",
     "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
+      "name": "Hamilton, New Zealand (Seddon Park)",
+      "lat": -37.787,
+      "lng": 175.27,
+      "timezone": 13
     },
+    "result": {
+      "winner": "New Zealand",
+      "score": "",
+      "margin": "New Zealand won by 7 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "161245",
+    "teamA": "New Zealand",
+    "teamB": "India",
+    "matchDate": "2026-11-04",
+    "matchTime": "03:00:00 PM",
+    "venue": "Auckland, New Zealand (Eden Park)",
     "format": "ODI",
-    "toss": "",
+    "series": "India tour of New Zealand 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Upcoming Match",
+    "location": {
+      "name": "Auckland, New Zealand (Eden Park)",
+      "lat": -36.875,
+      "lng": 174.7447,
+      "timezone": 13
+    },
     "result": {
       "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
+      "score": "",
+      "margin": "Upcoming Match"
+    }
   },
   {
-    "cricbuzzMatchId": "172717",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Afghanistan vs Zimbabwe 3rd T20I",
-    "teamA": "Afghanistan",
-    "teamB": "Zimbabwe",
-    "matchDate": "Tomorrow",
-    "matchTime": "8:00 PM",
-    "venue": "Sharjah Cricket Stadium, Sharjah",
-    "city": "Sharjah",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "",
-    "result": {
-      "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "176353",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Netherlands vs United Arab Emirates 143rd Match",
-    "teamA": "UAE",
-    "teamB": "NED",
-    "matchDate": "Today",
-    "matchTime": "11:00 AM",
-    "venue": "ICC Academy Ground, Dubai",
-    "city": "Dubai",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "Netherlands won the toss and opt to Bat",
-    "result": {
-      "winner": "United Arab Emirates",
-      "margin": "United Arab Emirates won by 5 wkts",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "175141",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Oman vs Afghanistan Group D",
-    "teamA": "OMAN",
-    "teamB": "Afghanistan",
-    "matchDate": "Today",
-    "matchTime": "6:15 AM",
-    "venue": "Mission Road Ground, Mong Kok",
-    "city": "Mong Kok",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "Oman won the toss and opt to Bat",
-    "result": {
-      "winner": "Afghanistan",
-      "margin": "Afghanistan won by 4 wkts",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "175150",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Scotland vs Sri Lanka Group B",
-    "teamA": "SCO",
-    "teamB": "Sri Lanka",
-    "matchDate": "Today",
-    "matchTime": "7:10 AM",
-    "venue": "Mission Road Ground, Mong Kok",
-    "city": "Mong Kok",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "Sri Lanka won the toss and opt to Bowl",
-    "result": {
-      "winner": "Scotland",
-      "margin": "Scotland won by 26 runs",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "175153",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "India vs United Arab Emirates Group C",
-    "teamA": "UAE",
+    "cricbuzzMatchId": "161256",
+    "teamA": "New Zealand",
     "teamB": "India",
-    "matchDate": "Today",
-    "matchTime": "8:05 AM",
-    "venue": "Mission Road Ground, Mong Kok",
-    "city": "Mong Kok",
+    "matchDate": "2026-11-07",
+    "matchTime": "03:00:00 PM",
+    "venue": "Wellington, New Zealand (Sky Stadium)",
+    "format": "ODI",
+    "series": "India tour of New Zealand 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Upcoming Match",
     "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
+      "name": "Wellington, New Zealand (Sky Stadium)",
+      "lat": -41.2729,
+      "lng": 174.7858,
+      "timezone": 13
     },
-    "format": "T20",
-    "toss": "United Arab Emirates won the toss and opt to Bowl",
     "result": {
-      "winner": "United Arab Emirates",
-      "margin": "United Arab Emirates won by 6 wkts",
-      "score": ""
-    },
-    "status": "completed"
+      "winner": "",
+      "score": "",
+      "margin": "Upcoming Match"
+    }
   },
   {
-    "cricbuzzMatchId": "175160",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Bangladesh vs South Africa Bowl, Semi Final 1",
-    "teamA": "Bangladesh",
-    "teamB": "South Africa",
-    "matchDate": "Today",
-    "matchTime": "9:00 AM",
-    "venue": "Mission Road Ground, Mong Kok",
-    "city": "Mong Kok",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "South Africa won the toss and opt to Bowl",
-    "result": {
-      "winner": "South Africa",
-      "margin": "South Africa won by 1 wkts",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "175161",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "England vs India Bowl, Semi Final 2",
-    "teamA": "England",
+    "cricbuzzMatchId": "161260",
+    "teamA": "New Zealand",
     "teamB": "India",
-    "matchDate": "Today",
-    "matchTime": "9:55 AM",
-    "venue": "Mission Road Ground, Mong Kok",
-    "city": "Mong Kok",
+    "matchDate": "2026-11-10",
+    "matchTime": "03:00:00 PM",
+    "venue": "Hamilton, New Zealand (Seddon Park)",
+    "format": "ODI",
+    "series": "India tour of New Zealand 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Upcoming Match",
     "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
+      "name": "Hamilton, New Zealand (Seddon Park)",
+      "lat": -37.787,
+      "lng": 175.27,
+      "timezone": 13
     },
-    "format": "T20",
-    "toss": "India won the toss and opt to Bowl",
     "result": {
-      "winner": "England",
-      "margin": "England won by 3 runs",
-      "score": ""
-    },
-    "status": "completed"
+      "winner": "",
+      "score": "",
+      "margin": "Upcoming Match"
+    }
   },
   {
-    "cricbuzzMatchId": "175163",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Sri Lanka vs Oman Plate, Semi Final 1",
-    "teamA": "Sri Lanka",
-    "teamB": "OMAN",
-    "matchDate": "Today",
-    "matchTime": "10:50 AM",
-    "venue": "Mission Road Ground, Mong Kok",
-    "city": "Mong Kok",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "Oman won the toss and opt to Bowl",
-    "result": {
-      "winner": "Oman",
-      "margin": "Oman won by 5 wkts",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "175170",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Hong Kong, China vs Pakistan Plate, Semi Final 2",
-    "teamA": "HKC",
-    "teamB": "Pakistan",
-    "matchDate": "Today",
-    "matchTime": "11:45 AM",
-    "venue": "Mission Road Ground, Mong Kok",
-    "city": "Mong Kok",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "Pakistan won the toss and opt to Bowl",
-    "result": {
-      "winner": "Pakistan",
-      "margin": "Pakistan won by 6 wkts",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "175180",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Australia vs United Arab Emirates Cup, Semi Final 1",
-    "teamA": "Australia",
-    "teamB": "UAE",
-    "matchDate": "Today",
-    "matchTime": "12:40 PM",
-    "venue": "Mission Road Ground, Mong Kok",
-    "city": "Mong Kok",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "Australia won the toss and opt to Bat",
-    "result": {
-      "winner": "Australia",
-      "margin": "Australia won by 53 runs",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "175183",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Afghanistan vs Scotland Cup, Semi Final 2",
-    "teamA": "SCO",
-    "teamB": "Afghanistan",
-    "matchDate": "Today",
-    "matchTime": "1:35 PM",
-    "venue": "Mission Road Ground, Mong Kok",
-    "city": "Mong Kok",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "Scotland won the toss and opt to Bowl",
-    "result": {
-      "winner": "Afghanistan",
-      "margin": "Afghanistan won by 21 runs",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "175190",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Bangladesh vs India 11th/12th Bowl, Play-off",
-    "teamA": "Bangladesh",
+    "cricbuzzMatchId": "161271",
+    "teamA": "New Zealand",
     "teamB": "India",
-    "matchDate": "Tomorrow",
-    "matchTime": "7:10 AM",
-    "venue": "Mission Road Ground, Mong Kok",
-    "city": "Mong Kok",
+    "matchDate": "2026-11-13",
+    "matchTime": "03:00:00 PM",
+    "venue": "Mount Maunganui, New Zealand (Bay Oval)",
+    "format": "ODI",
+    "series": "India tour of New Zealand 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Upcoming Match",
     "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
+      "name": "Mount Maunganui, New Zealand (Bay Oval)",
+      "lat": -37.6667,
+      "lng": 176.1833,
+      "timezone": 13
     },
-    "format": "T20",
-    "toss": "",
     "result": {
       "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
+      "score": "",
+      "margin": "Upcoming Match"
+    }
   },
   {
-    "cricbuzzMatchId": "175193",
+    "cricbuzzMatchId": "161282",
+    "teamA": "New Zealand",
+    "teamB": "India",
+    "matchDate": "2026-11-15",
+    "matchTime": "03:00:00 PM",
+    "venue": "Mount Maunganui, New Zealand (Bay Oval)",
+    "format": "ODI",
     "series": "India tour of New Zealand 2026",
-    "matchTitle": "Sri Lanka vs Hong Kong, China 7th/8th Plate, Play-off",
-    "teamA": "TBC",
-    "teamB": "TBC",
-    "matchDate": "Tomorrow",
-    "matchTime": "8:05 AM",
-    "venue": "Mission Road Ground, Mong Kok",
-    "city": "Mong Kok",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Upcoming Match",
     "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
+      "name": "Mount Maunganui, New Zealand (Bay Oval)",
+      "lat": -37.6667,
+      "lng": 176.1833,
+      "timezone": 13
     },
-    "format": "T20",
-    "toss": "",
     "result": {
       "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
+      "score": "",
+      "margin": "Upcoming Match"
+    }
   },
   {
-    "cricbuzzMatchId": "175200",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "United Arab Emirates vs Scotland 3rd/4th Cup, Play-off",
-    "teamA": "TBC",
-    "teamB": "TBC",
-    "matchDate": "Tomorrow",
-    "matchTime": "9:00 AM",
-    "venue": "Mission Road Ground, Mong Kok",
-    "city": "Mong Kok",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "",
-    "result": {
-      "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "175210",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "South Africa vs England Bowl, Final",
-    "teamA": "TBC",
-    "teamB": "TBC",
-    "matchDate": "Tomorrow",
-    "matchTime": "10:50 AM",
-    "venue": "Mission Road Ground, Mong Kok",
-    "city": "Mong Kok",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "",
-    "result": {
-      "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "175220",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Oman vs Pakistan Plate, Final",
-    "teamA": "TBC",
-    "teamB": "TBC",
-    "matchDate": "Tomorrow",
-    "matchTime": "11:45 AM",
-    "venue": "Mission Road Ground, Mong Kok",
-    "city": "Mong Kok",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "",
-    "result": {
-      "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "175223",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Australia vs Afghanistan Cup, Final",
-    "teamA": "TBC",
-    "teamB": "TBC",
-    "matchDate": "Tomorrow",
-    "matchTime": "12:40 PM",
-    "venue": "Mission Road Ground, Mong Kok",
-    "city": "Mong Kok",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "",
-    "result": {
-      "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "177651",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Chitwan Rhinos vs Lumbini Lions 7th Match",
-    "teamA": "CHR",
-    "teamB": "LUL",
-    "matchDate": "Today",
-    "matchTime": "12:15 PM",
-    "venue": "Tribhuvan University International Cricket Ground, Kirtipur",
-    "city": "Kirtipur",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "",
-    "result": {
-      "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "177661",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Biratnagar Kings vs Sudur Paschim Royals 8th Match",
-    "teamA": "BIK",
-    "teamB": "SPR",
-    "matchDate": "Today",
-    "matchTime": "4:15 PM",
-    "venue": "Tribhuvan University International Cricket Ground, Kirtipur",
-    "city": "Kirtipur",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "Sudur Paschim Royals won the toss and opt to Bowl",
-    "result": {
-      "winner": "Biratnagar Kings",
-      "margin": "Biratnagar Kings won by 35 runs (5 overs game due to wet outfield)",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "177670",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Janakpur Bolts vs Pokhara Avengers 9th Match",
-    "teamA": "JAB",
-    "teamB": "POA",
-    "matchDate": "Tomorrow",
-    "matchTime": "4:15 PM",
-    "venue": "Tribhuvan University International Cricket Ground, Kirtipur",
-    "city": "Kirtipur",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "",
-    "result": {
-      "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "173537",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Eastern Storm vs South Western Districts Super Eights",
-    "teamA": "SWD",
-    "teamB": "ESTORM",
-    "matchDate": "Today",
-    "matchTime": "4:30 PM",
-    "venue": "Recreation Ground, Oudtshoorn",
-    "city": "Oudtshoorn",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "Eastern Storm won the toss and opt to Bat",
-    "result": {
-      "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "173547",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Western Province vs Warriors Super Eights",
-    "teamA": "WAR",
-    "teamB": "WPR",
-    "matchDate": "Today",
-    "matchTime": "9:30 PM",
-    "venue": "St George's Park, Gqeberha",
-    "city": "Gqeberha",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "Warriors won the toss and opt to Bowl",
-    "result": {
-      "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "173557",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Dolphins vs Boland Super Eights",
-    "teamA": "DOL",
-    "teamB": "BOL",
-    "matchDate": "Tomorrow",
-    "matchTime": "1:30 PM",
-    "venue": "Kingsmead, Durban",
-    "city": "Durban",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "",
-    "result": {
-      "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "173567",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Lions vs Titans Super Eights",
-    "teamA": "LIONS",
-    "teamB": "TIT",
-    "matchDate": "Tomorrow",
-    "matchTime": "6:00 PM",
-    "venue": "The Wanderers Stadium, Johannesburg",
-    "city": "Johannesburg",
-    "location": {
-      "lat": -26.2041,
-      "lng": 28.0473
-    },
-    "format": "T20",
-    "toss": "",
-    "result": {
-      "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "171297",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "India A vs New Zealand A 2nd Unofficial Test",
-    "teamA": "NZA",
-    "teamB": "INDA",
-    "matchDate": "2001-10-29",
-    "matchTime": "3:30 AM",
-    "venue": "Hagley Oval, Christchurch",
-    "city": "Christchurch",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
+    "cricbuzzMatchId": "161285",
+    "teamA": "New Zealand",
+    "teamB": "India",
+    "matchDate": "2026-11-19",
+    "matchTime": "11:00:00 AM",
+    "venue": "Wellington, New Zealand (Basin Reserve)",
     "format": "TEST",
-    "toss": "New Zealand A won the toss and opt to Bowl",
+    "series": "India tour of New Zealand 2026",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Upcoming Match",
+    "location": {
+      "name": "Wellington, New Zealand (Basin Reserve)",
+      "lat": -41.2729,
+      "lng": 174.7858,
+      "timezone": 13
+    },
     "result": {
       "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
+      "score": "",
+      "margin": "Upcoming Match"
+    }
   },
   {
-    "cricbuzzMatchId": "175590",
+    "cricbuzzMatchId": "161296",
+    "teamA": "New Zealand",
+    "teamB": "India",
+    "matchDate": "2026-11-27",
+    "matchTime": "11:00:00 AM",
+    "venue": "Christchurch, New Zealand (Hagley Oval)",
+    "format": "TEST",
     "series": "India tour of New Zealand 2026",
-    "matchTitle": "Kenya vs Papua New Guinea 44th Match",
-    "teamA": "KEN",
-    "teamB": "PNG",
-    "matchDate": "Today",
-    "matchTime": "12:15 PM",
-    "venue": "Gymkhana Club Ground, Nairobi",
-    "city": "Nairobi",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Upcoming Match",
     "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
+      "name": "Christchurch, New Zealand (Hagley Oval)",
+      "lat": -43.535,
+      "lng": 172.6225,
+      "timezone": 13
     },
-    "format": "T20",
-    "toss": "Papua New Guinea won the toss and opt to Bowl",
-    "result": {
-      "winner": "Kenya",
-      "margin": "Kenya won by 88 runs - Match reduced to 38 overs due to rain",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "175597",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Jersey vs Qatar 45th Match",
-    "teamA": "QAT",
-    "teamB": "JER",
-    "matchDate": "Today",
-    "matchTime": "12:15 PM",
-    "venue": "Ruaraka Sports Club Ground, Nairobi",
-    "city": "Nairobi",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "Qatar won the toss and opt to Bowl",
-    "result": {
-      "winner": "Jersey",
-      "margin": "Jersey won by 34 runs - Match reduced to 24 overs due to rain",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "166630",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Western Australia vs South Australia 7th Match",
-    "teamA": "SAUS",
-    "teamB": "WA",
-    "matchDate": "2001-10-27",
-    "matchTime": "5:30 AM",
-    "venue": "Adelaide Oval, Adelaide",
-    "city": "Adelaide",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "Western Australia won the toss and opt to Bat",
-    "result": {
-      "winner": "Western Australia",
-      "margin": "Western Australia won by 105 runs",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "166633",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Tasmania vs New South Wales 8th Match",
-    "teamA": "TAS",
-    "teamB": "NSW",
-    "matchDate": "2001-10-28",
-    "matchTime": "5:00 AM",
-    "venue": "Bellerive Oval, Hobart",
-    "city": "Hobart",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "New South Wales won the toss and opt to Bowl",
     "result": {
       "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "166643",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Victoria vs Queensland 9th Match",
-    "teamA": "QL",
-    "teamB": "VIC",
-    "matchDate": "Today",
-    "matchTime": "5:30 AM",
-    "venue": "The Gabba, Brisbane",
-    "city": "Brisbane",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "Queensland won the toss and opt to Bowl",
-    "result": {
-      "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "170457",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Northern Districts vs Auckland 4th Match",
-    "teamA": "ND",
-    "teamB": "AKL",
-    "matchDate": "2001-10-29",
-    "matchTime": "3:00 AM",
-    "venue": "Bay Oval, Mount Maunganui",
-    "city": "Mount Maunganui",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "Auckland won the toss and opt to Bowl",
-    "result": {
-      "winner": "Auckland",
-      "margin": "Auckland won by 4 wkts",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "170460",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Canterbury vs Wellington 5th Match",
-    "teamA": "WEL",
-    "teamB": "CNTBRY",
-    "matchDate": "2001-10-29",
-    "matchTime": "3:00 AM",
-    "venue": "Basin Reserve, Wellington",
-    "city": "Wellington",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "Wellington won the toss and opt to Bowl",
-    "result": {
-      "winner": "Canterbury",
-      "margin": "Canterbury won by 209 runs",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "170470",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Otago vs Central Stags 6th Match",
-    "teamA": "OTG",
-    "teamB": "CEN",
-    "matchDate": "Today",
-    "matchTime": "3:00 AM",
-    "venue": "University Oval, Dunedin",
-    "city": "Dunedin",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "",
-    "result": {
-      "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "162713",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Adelaide Strikers Women vs Melbourne Stars Women 4th Match",
-    "teamA": "ADSW",
-    "teamB": "MLSW",
-    "matchDate": "Today",
-    "matchTime": "10:10 AM",
-    "venue": "Karen Rolton Oval, Adelaide, South Australia",
-    "city": "South Australia",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "Melbourne Stars Women won the toss and opt to Bowl",
-    "result": {
-      "winner": "Adelaide Strikers Women",
-      "margin": "Adelaide Strikers Women won by 21 runs",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "162731",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Melbourne Renegades Women vs Perth Scorchers Women 5th Match",
-    "teamA": "PRSW",
-    "teamB": "MLRW",
-    "matchDate": "Today",
-    "matchTime": "1:40 PM",
-    "venue": "W.A.C.A. Ground, Perth",
-    "city": "Perth",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "Perth Scorchers Women won the toss and opt to Bowl",
-    "result": {
-      "winner": "Perth Scorchers Women",
-      "margin": "Perth Scorchers Women won by 9 wkts",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "162733",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Sydney Thunder Women vs Brisbane Heat Women 6th Match",
-    "teamA": "SYTW",
-    "teamB": "BRHW",
-    "matchDate": "Tomorrow",
-    "matchTime": "10:10 AM",
-    "venue": "Drummoyne Oval, Sydney",
-    "city": "Sydney",
-    "location": {
-      "lat": -33.8688,
-      "lng": 151.2093
-    },
-    "format": "T20",
-    "toss": "",
-    "result": {
-      "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "162747",
-    "series": "India tour of New Zealand 2026",
-    "matchTitle": "Sydney Sixers Women vs Hobart Hurricanes Women 7th Match",
-    "teamA": "SYSW",
-    "teamB": "HBHW",
-    "matchDate": "Tomorrow",
-    "matchTime": "1:40 PM",
-    "venue": "Drummoyne Oval, Sydney",
-    "city": "Sydney",
-    "location": {
-      "lat": -33.8688,
-      "lng": 151.2093
-    },
-    "format": "T20",
-    "toss": "",
-    "result": {
-      "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
+      "score": "",
+      "margin": "Upcoming Match"
+    }
   }
 ]

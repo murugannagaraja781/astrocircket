@@ -1,232 +1,1034 @@
 [
   {
-    "cricbuzzMatchId": "176353",
-    "series": "Womens Big Bash League 2025",
-    "matchTitle": "Netherlands vs United Arab Emirates 143rd Match",
-    "teamA": "UAE",
-    "teamB": "NED",
-    "matchDate": "Today",
-    "matchTime": "11:00 AM",
-    "venue": "ICC Academy Ground, Dubai",
-    "city": "Dubai",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
+    "cricbuzzMatchId": "126658",
+    "teamA": "Brisbane Heat Women",
+    "teamB": "Melbourne Renegades Women",
+    "matchDate": "2025-11-09",
+    "matchTime": "08:10:00 AM",
+    "venue": "Brisbane (ஆலன் பார்டர் ஃபீல்ட்)",
     "format": "T20",
-    "toss": "Netherlands won the toss and opt to Bat",
-    "result": {
-      "winner": "United Arab Emirates",
-      "margin": "United Arab Emirates won by 5 wkts",
-      "score": ""
+    "series": "Womens Big Bash League 2025",
+    "toss": "Melbourne Renegades Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Melbourne Renegades Women won by 7 wkts (2nd innings reduced to 8 overs due to rain, DLS target 66)",
+    "location": {
+      "name": "Brisbane (ஆலன் பார்டர் ஃபீல்ட்)",
+      "lat": -27.4338,
+      "lng": 153.0298,
+      "timezone": 10
     },
-    "status": "completed"
+    "result": {
+      "winner": "Melbourne Renegades Women",
+      "score": "",
+      "margin": "Melbourne Renegades Women won by 7 wkts (2nd innings reduced to 8 overs due to rain, DLS target 66)"
+    }
   },
   {
-    "cricbuzzMatchId": "177651",
-    "series": "Womens Big Bash League 2025",
-    "matchTitle": "Chitwan Rhinos vs Lumbini Lions 7th Match",
-    "teamA": "CHR",
-    "teamB": "LUL",
-    "matchDate": "Today",
-    "matchTime": "12:15 PM",
-    "venue": "Tribhuvan University International Cricket Ground, Kirtipur",
-    "city": "Kirtipur",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
+    "cricbuzzMatchId": "126669",
+    "teamA": "Sydney Thunder Women",
+    "teamB": "Hobart Hurricanes Women",
+    "matchDate": "2025-11-09",
+    "matchTime": "11:40:00 AM",
+    "venue": "Brisbane (ஆலன் பார்டர் ஃபீல்ட்)",
     "format": "T20",
-    "toss": "",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Hobart Hurricanes Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Hobart Hurricanes Women won by 6 wkts",
+    "location": {
+      "name": "Brisbane (ஆலன் பார்டர் ஃபீல்ட்)",
+      "lat": -27.4338,
+      "lng": 153.0298,
+      "timezone": 10
+    },
+    "result": {
+      "winner": "Hobart Hurricanes Women",
+      "score": "",
+      "margin": "Hobart Hurricanes Women won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126680",
+    "teamA": "Perth Scorchers Women",
+    "teamB": "Sydney Sixers Women",
+    "matchDate": "2025-11-09",
+    "matchTime": "03:00:00 PM",
+    "venue": "Perth (வாக்கா மைதானம் / WACA Ground)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Perth Scorchers Women won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Sydney Sixers Women won by 10 wkts",
+    "location": {
+      "name": "Perth (வாக்கா மைதானம் / WACA Ground)",
+      "lat": -31.9599,
+      "lng": 115.8797,
+      "timezone": 8
+    },
+    "result": {
+      "winner": "Sydney Sixers Women",
+      "score": "",
+      "margin": "Sydney Sixers Women won by 10 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126686",
+    "teamA": "Melbourne Stars Women",
+    "teamB": "Adelaide Strikers Women",
+    "matchDate": "2025-11-10",
+    "matchTime": "09:40:00 AM",
+    "venue": "Melbourne (ஜங்ஷன் ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Adelaide Strikers Women won the toss and opted to bowl",
+    "status": "upcoming",
+    "subStatus": "No result - due to rain",
+    "location": {
+      "name": "Melbourne (ஜங்ஷன் ஓவல்)",
+      "lat": -37.8575,
+      "lng": 144.9782,
+      "timezone": 11
+    },
     "result": {
       "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
+      "score": "",
+      "margin": "No result - due to rain"
+    }
   },
   {
-    "cricbuzzMatchId": "177661",
-    "series": "Womens Big Bash League 2025",
-    "matchTitle": "Biratnagar Kings vs Sudur Paschim Royals 8th Match",
-    "teamA": "BIK",
-    "teamB": "SPR",
-    "matchDate": "Today",
-    "matchTime": "4:15 PM",
-    "venue": "Tribhuvan University International Cricket Ground, Kirtipur",
-    "city": "Kirtipur",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
+    "cricbuzzMatchId": "126691",
+    "teamA": "Melbourne Renegades Women",
+    "teamB": "Sydney Thunder Women",
+    "matchDate": "2025-11-11",
+    "matchTime": "09:40:00 AM",
+    "venue": "Melbourne (ஜங்ஷன் ஓவல்)",
     "format": "T20",
-    "toss": "Sudur Paschim Royals won the toss and opt to Bowl",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Melbourne Renegades Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Melbourne Renegades Women won by 4 wkts",
+    "location": {
+      "name": "Melbourne (ஜங்ஷன் ஓவல்)",
+      "lat": -37.8575,
+      "lng": 144.9782,
+      "timezone": 11
+    },
     "result": {
-      "winner": "Biratnagar Kings",
-      "margin": "Biratnagar Kings won by 35 runs (5 overs game due to wet outfield)",
-      "score": ""
-    },
-    "status": "completed"
+      "winner": "Melbourne Renegades Women",
+      "score": "",
+      "margin": "Melbourne Renegades Women won by 4 wkts"
+    }
   },
   {
-    "cricbuzzMatchId": "177670",
-    "series": "Womens Big Bash League 2025",
-    "matchTitle": "Janakpur Bolts vs Pokhara Avengers 9th Match",
-    "teamA": "JAB",
-    "teamB": "POA",
-    "matchDate": "Tomorrow",
-    "matchTime": "4:15 PM",
-    "venue": "Tribhuvan University International Cricket Ground, Kirtipur",
-    "city": "Kirtipur",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
+    "cricbuzzMatchId": "126702",
+    "teamA": "Brisbane Heat Women",
+    "teamB": "Perth Scorchers Women",
+    "matchDate": "2025-11-12",
+    "matchTime": "01:40:00 PM",
+    "venue": "Brisbane (ஆலன் பார்டர் ஃபீல்ட்)",
     "format": "T20",
-    "toss": "",
-    "result": {
-      "winner": "",
-      "margin": "",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "175590",
     "series": "Womens Big Bash League 2025",
-    "matchTitle": "Kenya vs Papua New Guinea 44th Match",
-    "teamA": "KEN",
-    "teamB": "PNG",
-    "matchDate": "Today",
-    "matchTime": "12:15 PM",
-    "venue": "Gymkhana Club Ground, Nairobi",
-    "city": "Nairobi",
+    "toss": "Brisbane Heat Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Perth Scorchers Women won by 23 runs",
     "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
+      "name": "Brisbane (ஆலன் பார்டர் ஃபீல்ட்)",
+      "lat": -27.4338,
+      "lng": 153.0298,
+      "timezone": 10
     },
-    "format": "T20",
-    "toss": "Papua New Guinea won the toss and opt to Bowl",
-    "result": {
-      "winner": "Kenya",
-      "margin": "Kenya won by 88 runs - Match reduced to 38 overs due to rain",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "175597",
-    "series": "Womens Big Bash League 2025",
-    "matchTitle": "Jersey vs Qatar 45th Match",
-    "teamA": "QAT",
-    "teamB": "JER",
-    "matchDate": "Today",
-    "matchTime": "12:15 PM",
-    "venue": "Ruaraka Sports Club Ground, Nairobi",
-    "city": "Nairobi",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "Qatar won the toss and opt to Bowl",
-    "result": {
-      "winner": "Jersey",
-      "margin": "Jersey won by 34 runs - Match reduced to 24 overs due to rain",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "162713",
-    "series": "Womens Big Bash League 2025",
-    "matchTitle": "Adelaide Strikers Women vs Melbourne Stars Women 4th Match",
-    "teamA": "ADSW",
-    "teamB": "MLSW",
-    "matchDate": "Today",
-    "matchTime": "10:10 AM",
-    "venue": "Karen Rolton Oval, Adelaide, South Australia",
-    "city": "South Australia",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "Melbourne Stars Women won the toss and opt to Bowl",
-    "result": {
-      "winner": "Adelaide Strikers Women",
-      "margin": "Adelaide Strikers Women won by 21 runs",
-      "score": ""
-    },
-    "status": "completed"
-  },
-  {
-    "cricbuzzMatchId": "162731",
-    "series": "Womens Big Bash League 2025",
-    "matchTitle": "Melbourne Renegades Women vs Perth Scorchers Women 5th Match",
-    "teamA": "PRSW",
-    "teamB": "MLRW",
-    "matchDate": "Today",
-    "matchTime": "1:40 PM",
-    "venue": "W.A.C.A. Ground, Perth",
-    "city": "Perth",
-    "location": {
-      "lat": 20.5937,
-      "lng": 78.9629
-    },
-    "format": "T20",
-    "toss": "Perth Scorchers Women won the toss and opt to Bowl",
     "result": {
       "winner": "Perth Scorchers Women",
-      "margin": "Perth Scorchers Women won by 9 wkts",
-      "score": ""
-    },
-    "status": "completed"
+      "score": "",
+      "margin": "Perth Scorchers Women won by 23 runs"
+    }
   },
   {
-    "cricbuzzMatchId": "162733",
-    "series": "Womens Big Bash League 2025",
-    "matchTitle": "Sydney Thunder Women vs Brisbane Heat Women 6th Match",
-    "teamA": "SYTW",
-    "teamB": "BRHW",
-    "matchDate": "Tomorrow",
-    "matchTime": "10:10 AM",
-    "venue": "Drummoyne Oval, Sydney",
-    "city": "Sydney",
-    "location": {
-      "lat": -33.8688,
-      "lng": 151.2093
-    },
+    "cricbuzzMatchId": "126713",
+    "teamA": "Sydney Sixers Women",
+    "teamB": "Hobart Hurricanes Women",
+    "matchDate": "2025-11-13",
+    "matchTime": "01:40:00 PM",
+    "venue": "Sydney (நார்த் சிட்னி ஓவல்)",
     "format": "T20",
-    "toss": "",
-    "result": {
-      "winner": "",
-      "margin": "",
-      "score": ""
+    "series": "Womens Big Bash League 2025",
+    "toss": "Hobart Hurricanes Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Hobart Hurricanes Women won by 6 wkts",
+    "location": {
+      "name": "Sydney (நார்த் சிட்னி ஓவல்)",
+      "lat": -33.8306,
+      "lng": 151.2104,
+      "timezone": 11
     },
-    "status": "completed"
+    "result": {
+      "winner": "Hobart Hurricanes Women",
+      "score": "",
+      "margin": "Hobart Hurricanes Women won by 6 wkts"
+    }
   },
   {
-    "cricbuzzMatchId": "162747",
-    "series": "Womens Big Bash League 2025",
-    "matchTitle": "Sydney Sixers Women vs Hobart Hurricanes Women 7th Match",
-    "teamA": "SYSW",
-    "teamB": "HBHW",
-    "matchDate": "Tomorrow",
-    "matchTime": "1:40 PM",
-    "venue": "Drummoyne Oval, Sydney",
-    "city": "Sydney",
-    "location": {
-      "lat": -33.8688,
-      "lng": 151.2093
-    },
+    "cricbuzzMatchId": "126724",
+    "teamA": "Perth Scorchers Women",
+    "teamB": "Melbourne Stars Women",
+    "matchDate": "2025-11-14",
+    "matchTime": "10:10:00 AM",
+    "venue": "Adelaide (கரேன் ரோல்டன் ஓவல்)",
     "format": "T20",
-    "toss": "",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Perth Scorchers Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Melbourne Stars Women won by 16 runs (DLS Method)",
+    "location": {
+      "name": "Adelaide (கரேன் ரோல்டன் ஓவல்)",
+      "lat": -34.9228,
+      "lng": 138.5804,
+      "timezone": 10.5
+    },
+    "result": {
+      "winner": "Melbourne Stars Women",
+      "score": "",
+      "margin": "Melbourne Stars Women won by 16 runs (DLS Method)"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126730",
+    "teamA": "Adelaide Strikers Women",
+    "teamB": "Melbourne Renegades Women",
+    "matchDate": "2025-11-14",
+    "matchTime": "01:40:00 PM",
+    "venue": "Adelaide (கரேன் ரோல்டன் ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Adelaide Strikers Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Adelaide Strikers Women won by 7 wkts",
+    "location": {
+      "name": "Adelaide (கரேன் ரோல்டன் ஓவல்)",
+      "lat": -34.9228,
+      "lng": 138.5804,
+      "timezone": 10.5
+    },
+    "result": {
+      "winner": "Adelaide Strikers Women",
+      "score": "",
+      "margin": "Adelaide Strikers Women won by 7 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126741",
+    "teamA": "Hobart Hurricanes Women",
+    "teamB": "Brisbane Heat Women",
+    "matchDate": "2025-11-15",
+    "matchTime": "10:10:00 AM",
+    "venue": "Sydney (டிரம்மோய்ன் ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Brisbane Heat Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Hobart Hurricanes Women won by 16 runs (DLS Method)",
+    "location": {
+      "name": "Sydney (டிரம்மோய்ன் ஓவல்)",
+      "lat": -33.8504,
+      "lng": 151.1578,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Hobart Hurricanes Women",
+      "score": "",
+      "margin": "Hobart Hurricanes Women won by 16 runs (DLS Method)"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126746",
+    "teamA": "Sydney Thunder Women",
+    "teamB": "Sydney Sixers Women",
+    "matchDate": "2025-11-15",
+    "matchTime": "01:40:00 PM",
+    "venue": "Sydney (டிரம்மோய்ன் ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Sydney Thunder Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sydney Sixers Women won by 24 runs",
+    "location": {
+      "name": "Sydney (டிரம்மோய்ன் ஓவல்)",
+      "lat": -33.8504,
+      "lng": 151.1578,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Sydney Sixers Women",
+      "score": "",
+      "margin": "Sydney Sixers Women won by 24 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126752",
+    "teamA": "Adelaide Strikers Women",
+    "teamB": "Perth Scorchers Women",
+    "matchDate": "2025-11-16",
+    "matchTime": "04:40:00 AM",
+    "venue": "Melbourne (ஜங்ஷன் ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Perth Scorchers Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Perth Scorchers Women won by 9 runs (DLS method)",
+    "location": {
+      "name": "Melbourne (ஜங்ஷன் ஓவல்)",
+      "lat": -37.8575,
+      "lng": 144.9782,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Perth Scorchers Women",
+      "score": "",
+      "margin": "Perth Scorchers Women won by 9 runs (DLS method)"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126757",
+    "teamA": "Melbourne Stars Women",
+    "teamB": "Melbourne Renegades Women",
+    "matchDate": "2025-11-16",
+    "matchTime": "08:10:00 AM",
+    "venue": "Melbourne (ஜங்ஷன் ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Melbourne Renegades Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Melbourne Renegades Women won by 4 wkts",
+    "location": {
+      "name": "Melbourne (ஜங்ஷன் ஓவல்)",
+      "lat": -37.8575,
+      "lng": 144.9782,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Melbourne Renegades Women",
+      "score": "",
+      "margin": "Melbourne Renegades Women won by 4 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126768",
+    "teamA": "Hobart Hurricanes Women",
+    "teamB": "Adelaide Strikers Women",
+    "matchDate": "2025-11-18",
+    "matchTime": "01:40:00 PM",
+    "venue": "Hobart, Tasmania (பெல்லரிவ் ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Hobart Hurricanes Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Hobart Hurricanes Women won by 4 wkts",
+    "location": {
+      "name": "Hobart, Tasmania (பெல்லரிவ் ஓவல்)",
+      "lat": -42.8772,
+      "lng": 147.3736,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Hobart Hurricanes Women",
+      "score": "",
+      "margin": "Hobart Hurricanes Women won by 4 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126779",
+    "teamA": "Sydney Thunder Women",
+    "teamB": "Perth Scorchers Women",
+    "matchDate": "2025-11-19",
+    "matchTime": "01:40:00 PM",
+    "venue": "Sydney (டிரம்மோய்ன் ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Sydney Thunder Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sydney Thunder Women won by 9 wkts",
+    "location": {
+      "name": "Sydney (டிரம்மோய்ன் ஓவல்)",
+      "lat": -33.8504,
+      "lng": 151.1578,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Sydney Thunder Women",
+      "score": "",
+      "margin": "Sydney Thunder Women won by 9 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126785",
+    "teamA": "Hobart Hurricanes Women",
+    "teamB": "Melbourne Renegades Women",
+    "matchDate": "2025-11-20",
+    "matchTime": "10:10:00 AM",
+    "venue": "Sydney (நார்த் சிட்னி ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Hobart Hurricanes Women won the toss and opted to bowl",
+    "status": "upcoming",
+    "subStatus": "Hobart Hurricanes won by 6 wickets (DLS method)",
+    "location": {
+      "name": "Sydney (நார்த் சிட்னி ஓவல்)",
+      "lat": -33.8306,
+      "lng": 151.2104,
+      "timezone": 11
+    },
     "result": {
       "winner": "",
-      "margin": "",
-      "score": ""
+      "score": "",
+      "margin": "Hobart Hurricanes won by 6 wickets (DLS method)"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126796",
+    "teamA": "Sydney Sixers Women",
+    "teamB": "Melbourne Stars Women",
+    "matchDate": "2025-11-20",
+    "matchTime": "01:40:00 PM",
+    "venue": "Sydney (நார்த் சிட்னி ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Sydney Sixers Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Melbourne Stars Women won by 111 runs (DLS method)",
+    "location": {
+      "name": "Sydney (நார்த் சிட்னி ஓவல்)",
+      "lat": -33.8306,
+      "lng": 151.2104,
+      "timezone": 11
     },
-    "status": "completed"
+    "result": {
+      "winner": "Melbourne Stars Women",
+      "score": "",
+      "margin": "Melbourne Stars Women won by 111 runs (DLS method)"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126801",
+    "teamA": "Brisbane Heat Women",
+    "teamB": "Sydney Thunder Women",
+    "matchDate": "2025-11-21",
+    "matchTime": "02:40:00 PM",
+    "venue": "Brisbane (ஆலன் பார்டர் ஃபீல்ட்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Brisbane Heat Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sydney Thunder Women won by 41 runs",
+    "location": {
+      "name": "Brisbane (ஆலன் பார்டர் ஃபீல்ட்)",
+      "lat": -27.4338,
+      "lng": 153.0298,
+      "timezone": 10
+    },
+    "result": {
+      "winner": "Sydney Thunder Women",
+      "score": "",
+      "margin": "Sydney Thunder Women won by 41 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126807",
+    "teamA": "Hobart Hurricanes Women",
+    "teamB": "Sydney Sixers Women",
+    "matchDate": "2025-11-22",
+    "matchTime": "04:30:00 AM",
+    "venue": "Hobart, Tasmania (பெல்லரிவ் ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Sydney Sixers Women won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Sydney Sixers Women won by 11 runs",
+    "location": {
+      "name": "Hobart, Tasmania (பெல்லரிவ் ஓவல்)",
+      "lat": -42.8772,
+      "lng": 147.3736,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Sydney Sixers Women",
+      "score": "",
+      "margin": "Sydney Sixers Women won by 11 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126812",
+    "teamA": "Perth Scorchers Women",
+    "teamB": "Adelaide Strikers Women",
+    "matchDate": "2025-11-22",
+    "matchTime": "03:20:00 PM",
+    "venue": "Perth (வாக்கா மைதானம் / WACA Ground)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Adelaide Strikers Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Perth Scorchers Women won by 1 run",
+    "location": {
+      "name": "Perth (வாக்கா மைதானம் / WACA Ground)",
+      "lat": -31.9599,
+      "lng": 115.8797,
+      "timezone": 8
+    },
+    "result": {
+      "winner": "Perth Scorchers Women",
+      "score": "",
+      "margin": "Perth Scorchers Women won by 1 run"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126823",
+    "teamA": "Sydney Thunder Women",
+    "teamB": "Melbourne Renegades Women",
+    "matchDate": "2025-11-23",
+    "matchTime": "04:30:00 AM",
+    "venue": "Sydney (டிரம்மோய்ன் ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Melbourne Renegades Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Melbourne Renegades Women won by 8 wkts",
+    "location": {
+      "name": "Sydney (டிரம்மோய்ன் ஓவல்)",
+      "lat": -33.8504,
+      "lng": 151.1578,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Melbourne Renegades Women",
+      "score": "",
+      "margin": "Melbourne Renegades Women won by 8 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126834",
+    "teamA": "Brisbane Heat Women",
+    "teamB": "Melbourne Stars Women",
+    "matchDate": "2025-11-23",
+    "matchTime": "02:40:00 PM",
+    "venue": "Brisbane (ஆலன் பார்டர் ஃபீல்ட்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Melbourne Stars Women won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Melbourne Stars Women won by 18 runs",
+    "location": {
+      "name": "Brisbane (ஆலன் பார்டர் ஃபீல்ட்)",
+      "lat": -27.4338,
+      "lng": 153.0298,
+      "timezone": 10
+    },
+    "result": {
+      "winner": "Melbourne Stars Women",
+      "score": "",
+      "margin": "Melbourne Stars Women won by 18 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126840",
+    "teamA": "Adelaide Strikers Women",
+    "teamB": "Brisbane Heat Women",
+    "matchDate": "2025-11-25",
+    "matchTime": "01:40:00 PM",
+    "venue": "Adelaide (கரேன் ரோல்டன் ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Adelaide Strikers Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Adelaide Strikers Women won by 6 wkts",
+    "location": {
+      "name": "Adelaide (கரேன் ரோல்டன் ஓவல்)",
+      "lat": -34.9228,
+      "lng": 138.5804,
+      "timezone": 10.5
+    },
+    "result": {
+      "winner": "Adelaide Strikers Women",
+      "score": "",
+      "margin": "Adelaide Strikers Women won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126856",
+    "teamA": "Melbourne Stars Women",
+    "teamB": "Hobart Hurricanes Women",
+    "matchDate": "2025-11-26",
+    "matchTime": "09:40:00 AM",
+    "venue": "Melbourne (ஜங்ஷன் ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Hobart Hurricanes Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Melbourne Stars Women won by 37 runs",
+    "location": {
+      "name": "Melbourne (ஜங்ஷன் ஓவல்)",
+      "lat": -37.8575,
+      "lng": 144.9782,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Melbourne Stars Women",
+      "score": "",
+      "margin": "Melbourne Stars Women won by 37 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126867",
+    "teamA": "Melbourne Renegades Women",
+    "teamB": "Perth Scorchers Women",
+    "matchDate": "2025-11-27",
+    "matchTime": "09:40:00 AM",
+    "venue": "Melbourne (ஜங்ஷன் ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Perth Scorchers Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Perth Scorchers Women won by 4 wkts",
+    "location": {
+      "name": "Melbourne (ஜங்ஷன் ஓவல்)",
+      "lat": -37.8575,
+      "lng": 144.9782,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Perth Scorchers Women",
+      "score": "",
+      "margin": "Perth Scorchers Women won by 4 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126878",
+    "teamA": "Brisbane Heat Women",
+    "teamB": "Sydney Sixers Women",
+    "matchDate": "2025-11-28",
+    "matchTime": "10:10:00 AM",
+    "venue": "Adelaide (அடிலெய்டு ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Toss details unavailable",
+    "status": "upcoming",
+    "subStatus": "Match abandoned without a ball bowled",
+    "location": {
+      "name": "Adelaide (அடிலெய்டு ஓவல்)",
+      "lat": -34.9156,
+      "lng": 138.5961,
+      "timezone": 10.5
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "Match abandoned without a ball bowled"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126884",
+    "teamA": "Adelaide Strikers Women",
+    "teamB": "Sydney Thunder Women",
+    "matchDate": "2025-11-28",
+    "matchTime": "01:40:00 PM",
+    "venue": "Adelaide (அடிலெய்டு ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Sydney Thunder Women won the toss and opted to bowl",
+    "status": "upcoming",
+    "subStatus": "No result",
+    "location": {
+      "name": "Adelaide (அடிலெய்டு ஓவல்)",
+      "lat": -34.9156,
+      "lng": 138.5961,
+      "timezone": 10.5
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "No result"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126889",
+    "teamA": "Melbourne Renegades Women",
+    "teamB": "Melbourne Stars Women",
+    "matchDate": "2025-11-29",
+    "matchTime": "09:40:00 AM",
+    "venue": "Melbourne (ஜங்ஷன் ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Melbourne Renegades Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Melbourne Stars Women won by 45 runs",
+    "location": {
+      "name": "Melbourne (ஜங்ஷன் ஓவல்)",
+      "lat": -37.8575,
+      "lng": 144.9782,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Melbourne Stars Women",
+      "score": "",
+      "margin": "Melbourne Stars Women won by 45 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126900",
+    "teamA": "Hobart Hurricanes Women",
+    "teamB": "Perth Scorchers Women",
+    "matchDate": "2025-11-29",
+    "matchTime": "01:40:00 PM",
+    "venue": "Hobart, Tasmania (பெல்லரிவ் ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Hobart Hurricanes Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Hobart Hurricanes Women won by 7 wkts",
+    "location": {
+      "name": "Hobart, Tasmania (பெல்லரிவ் ஓவல்)",
+      "lat": -42.8772,
+      "lng": 147.3736,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Hobart Hurricanes Women",
+      "score": "",
+      "margin": "Hobart Hurricanes Women won by 7 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126922",
+    "teamA": "Adelaide Strikers Women",
+    "teamB": "Brisbane Heat Women",
+    "matchDate": "2025-11-30",
+    "matchTime": "06:40:00 AM",
+    "venue": "Sydney (நார்த் சிட்னி ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Adelaide Strikers Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Adelaide Strikers Women won by 6 wkts",
+    "location": {
+      "name": "Sydney (நார்த் சிட்னி ஓவல்)",
+      "lat": -33.8306,
+      "lng": 151.2104,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Adelaide Strikers Women",
+      "score": "",
+      "margin": "Adelaide Strikers Women won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126928",
+    "teamA": "Sydney Sixers Women",
+    "teamB": "Sydney Thunder Women",
+    "matchDate": "2025-11-30",
+    "matchTime": "10:10:00 AM",
+    "venue": "Sydney (நார்த் சிட்னி ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Sydney Sixers Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sydney Sixers Women won by 6 wkts",
+    "location": {
+      "name": "Sydney (நார்த் சிட்னி ஓவல்)",
+      "lat": -33.8306,
+      "lng": 151.2104,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Sydney Sixers Women",
+      "score": "",
+      "margin": "Sydney Sixers Women won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126939",
+    "teamA": "Hobart Hurricanes Women",
+    "teamB": "Melbourne Stars Women",
+    "matchDate": "2025-12-01",
+    "matchTime": "01:40:00 PM",
+    "venue": "Hobart, Tasmania (பெல்லரிவ் ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Melbourne Stars Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Hobart Hurricanes Women won by 81 runs (DLS Method)",
+    "location": {
+      "name": "Hobart, Tasmania (பெல்லரிவ் ஓவல்)",
+      "lat": -42.8772,
+      "lng": 147.3736,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Hobart Hurricanes Women",
+      "score": "",
+      "margin": "Hobart Hurricanes Women won by 81 runs (DLS Method)"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126944",
+    "teamA": "Perth Scorchers Women",
+    "teamB": "Melbourne Renegades Women",
+    "matchDate": "2025-12-02",
+    "matchTime": "02:40:00 PM",
+    "venue": "Perth (வாக்கா மைதானம் / WACA Ground)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Melbourne Renegades Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Perth Scorchers Women won by 30 runs",
+    "location": {
+      "name": "Perth (வாக்கா மைதானம் / WACA Ground)",
+      "lat": -31.9599,
+      "lng": 115.8797,
+      "timezone": 8
+    },
+    "result": {
+      "winner": "Perth Scorchers Women",
+      "score": "",
+      "margin": "Perth Scorchers Women won by 30 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126950",
+    "teamA": "Sydney Sixers Women",
+    "teamB": "Melbourne Stars Women",
+    "matchDate": "2025-12-03",
+    "matchTime": "10:10:00 AM",
+    "venue": "Sydney (டிரம்மோய்ன் ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Sydney Sixers Women won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Sydney Sixers Women won by 16 runs",
+    "location": {
+      "name": "Sydney (டிரம்மோய்ன் ஓவல்)",
+      "lat": -33.8504,
+      "lng": 151.1578,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Sydney Sixers Women",
+      "score": "",
+      "margin": "Sydney Sixers Women won by 16 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126955",
+    "teamA": "Sydney Thunder Women",
+    "teamB": "Brisbane Heat Women",
+    "matchDate": "2025-12-03",
+    "matchTime": "01:40:00 PM",
+    "venue": "Sydney (டிரம்மோய்ன் ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Brisbane Heat Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sydney Thunder Women won by 23 runs",
+    "location": {
+      "name": "Sydney (டிரம்மோய்ன் ஓவல்)",
+      "lat": -33.8504,
+      "lng": 151.1578,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Sydney Thunder Women",
+      "score": "",
+      "margin": "Sydney Thunder Women won by 23 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126961",
+    "teamA": "Melbourne Renegades Women",
+    "teamB": "Sydney Sixers Women",
+    "matchDate": "2025-12-05",
+    "matchTime": "05:10:00 AM",
+    "venue": "Melbourne (ஜங்ஷன் ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Melbourne Renegades Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Melbourne Renegades Women won by 6 wkts",
+    "location": {
+      "name": "Melbourne (ஜங்ஷன் ஓவல்)",
+      "lat": -37.8575,
+      "lng": 144.9782,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Melbourne Renegades Women",
+      "score": "",
+      "margin": "Melbourne Renegades Women won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126972",
+    "teamA": "Adelaide Strikers Women",
+    "teamB": "Hobart Hurricanes Women",
+    "matchDate": "2025-12-05",
+    "matchTime": "01:40:00 PM",
+    "venue": "Adelaide (கரேன் ரோல்டன் ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Hobart Hurricanes Women won the toss and opted to bowl",
+    "status": "upcoming",
+    "subStatus": "No result",
+    "location": {
+      "name": "Adelaide (கரேன் ரோல்டன் ஓவல்)",
+      "lat": -34.9228,
+      "lng": 138.5804,
+      "timezone": 10.5
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "No result"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126988",
+    "teamA": "Melbourne Stars Women",
+    "teamB": "Sydney Thunder Women",
+    "matchDate": "2025-12-06",
+    "matchTime": "05:10:00 AM",
+    "venue": "Melbourne (ஜங்ஷன் ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Sydney Thunder Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sydney Thunder Women won by 9 wkts (DLS Method)",
+    "location": {
+      "name": "Melbourne (ஜங்ஷன் ஓவல்)",
+      "lat": -37.8575,
+      "lng": 144.9782,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Sydney Thunder Women",
+      "score": "",
+      "margin": "Sydney Thunder Women won by 9 wkts (DLS Method)"
+    }
+  },
+  {
+    "cricbuzzMatchId": "126999",
+    "teamA": "Perth Scorchers Women",
+    "teamB": "Brisbane Heat Women",
+    "matchDate": "2025-12-06",
+    "matchTime": "01:40:00 PM",
+    "venue": "Perth (வாக்கா மைதானம் / WACA Ground)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Brisbane Heat Women won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Perth Scorchers Women won by 7 wkts",
+    "location": {
+      "name": "Perth (வாக்கா மைதானம் / WACA Ground)",
+      "lat": -31.9599,
+      "lng": 115.8797,
+      "timezone": 8
+    },
+    "result": {
+      "winner": "Perth Scorchers Women",
+      "score": "",
+      "margin": "Perth Scorchers Women won by 7 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "127005",
+    "teamA": "Sydney Sixers Women",
+    "teamB": "Adelaide Strikers Women",
+    "matchDate": "2025-12-07",
+    "matchTime": "05:10:00 AM",
+    "venue": "Sydney (நார்த் சிட்னி ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Adelaide Strikers Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sydney Sixers Women won by 1 run",
+    "location": {
+      "name": "Sydney (நார்த் சிட்னி ஓவல்)",
+      "lat": -33.8306,
+      "lng": 151.2104,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Sydney Sixers Women",
+      "score": "",
+      "margin": "Sydney Sixers Women won by 1 run"
+    }
+  },
+  {
+    "cricbuzzMatchId": "127010",
+    "teamA": "Perth Scorchers Women",
+    "teamB": "Melbourne Stars Women",
+    "matchDate": "2025-12-09",
+    "matchTime": "02:15:00 PM",
+    "venue": "Perth (வாக்கா மைதானம் / WACA Ground)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Perth Scorchers Women won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Perth Scorchers Women won by 28 runs",
+    "location": {
+      "name": "Perth (வாக்கா மைதானம் / WACA Ground)",
+      "lat": -31.9599,
+      "lng": 115.8797,
+      "timezone": 8
+    },
+    "result": {
+      "winner": "Perth Scorchers Women",
+      "score": "",
+      "margin": "Perth Scorchers Women won by 28 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "127016",
+    "teamA": "Sydney Sixers Women",
+    "teamB": "Perth Scorchers Women",
+    "matchDate": "2025-12-11",
+    "matchTime": "01:45:00 PM",
+    "venue": "Sydney (நார்த் சிட்னி ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Sydney Sixers Women won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Perth Scorchers Women won by 11 runs",
+    "location": {
+      "name": "Sydney (நார்த் சிட்னி ஓவல்)",
+      "lat": -33.8306,
+      "lng": 151.2104,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Perth Scorchers Women",
+      "score": "",
+      "margin": "Perth Scorchers Women won by 11 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "127027",
+    "teamA": "Hobart Hurricanes Women",
+    "teamB": "Perth Scorchers Women",
+    "matchDate": "2025-12-13",
+    "matchTime": "01:45:00 PM",
+    "venue": "Hobart, Tasmania (பெல்லரிவ் ஓவல்)",
+    "format": "T20",
+    "series": "Womens Big Bash League 2025",
+    "toss": "Perth Scorchers Women won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Hobart Hurricanes Women won by 8 wkts",
+    "location": {
+      "name": "Hobart, Tasmania (பெல்லரிவ் ஓவல்)",
+      "lat": -42.8772,
+      "lng": 147.3736,
+      "timezone": 11
+    },
+    "result": {
+      "winner": "Hobart Hurricanes Women",
+      "score": "",
+      "margin": "Hobart Hurricanes Women won by 8 wkts"
+    }
   }
 ]

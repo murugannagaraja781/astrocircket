@@ -88,6 +88,7 @@ router.get('/scraped-files', async (req, res) => {
                 try {
                     const content = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
                     if (Array.isArray(content)) matchCount = content.length;
+                    else if (content && Array.isArray(content.matches)) matchCount = content.matches.length;
                 } catch (e) {}
             }
             return {

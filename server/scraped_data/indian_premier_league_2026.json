@@ -1,0 +1,1778 @@
+[
+  {
+    "cricbuzzMatchId": "149618",
+    "teamA": "Royal Challengers Bengaluru",
+    "teamB": "Sunrisers Hyderabad",
+    "matchDate": "2026-03-28",
+    "matchTime": "07:30:00 PM",
+    "venue": "Bengaluru (பெங்களூரு - சின்னசுவாமி)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Royal Challengers Bengaluru won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Royal Challengers Bengaluru won by 6 wkts",
+    "location": {
+      "name": "Bengaluru (பெங்களூரு - சின்னசுவாமி)",
+      "lat": 12.9788,
+      "lng": 77.5996,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Royal Challengers Bengaluru",
+      "score": "",
+      "margin": "Royal Challengers Bengaluru won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "149629",
+    "teamA": "Mumbai Indians",
+    "teamB": "Kolkata Knight Riders",
+    "matchDate": "2026-03-29",
+    "matchTime": "07:30:00 PM",
+    "venue": "Mumbai (மும்பை - வான்கடே)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Mumbai Indians won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Mumbai Indians won by 6 wkts",
+    "location": {
+      "name": "Mumbai (மும்பை - வான்கடே)",
+      "lat": 18.9388,
+      "lng": 72.8258,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Mumbai Indians",
+      "score": "",
+      "margin": "Mumbai Indians won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "149640",
+    "teamA": "Rajasthan Royals",
+    "teamB": "Chennai Super Kings",
+    "matchDate": "2026-03-30",
+    "matchTime": "07:30:00 PM",
+    "venue": "Guwahati (குவஹாத்தி - பார்சபாரா)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Rajasthan Royals won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Rajasthan Royals won by 8 wkts",
+    "location": {
+      "name": "Guwahati (குவஹாத்தி - பார்சபாரா)",
+      "lat": 26.1601,
+      "lng": 91.7371,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Rajasthan Royals",
+      "score": "",
+      "margin": "Rajasthan Royals won by 8 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "149651",
+    "teamA": "Punjab Kings",
+    "teamB": "Gujarat Titans",
+    "matchDate": "2026-03-31",
+    "matchTime": "07:30:00 PM",
+    "venue": "Mullanpur, New Chandigarh (PCA மைதானம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Punjab Kings won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Punjab Kings won by 3 wkts",
+    "location": {
+      "name": "Mullanpur, New Chandigarh (PCA மைதானம்)",
+      "lat": 30.7925,
+      "lng": 76.7196,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Punjab Kings",
+      "score": "",
+      "margin": "Punjab Kings won by 3 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "149662",
+    "teamA": "Lucknow Super Giants",
+    "teamB": "Delhi Capitals",
+    "matchDate": "2026-04-01",
+    "matchTime": "07:30:00 PM",
+    "venue": "Lucknow (லக்னோ - ஏகானா மைதானம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Delhi Capitals won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Delhi Capitals won by 6 wkts",
+    "location": {
+      "name": "Lucknow (லக்னோ - ஏகானா மைதானம்)",
+      "lat": 26.8105,
+      "lng": 80.9934,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Delhi Capitals",
+      "score": "",
+      "margin": "Delhi Capitals won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "149673",
+    "teamA": "Kolkata Knight Riders",
+    "teamB": "Sunrisers Hyderabad",
+    "matchDate": "2026-04-02",
+    "matchTime": "07:30:00 PM",
+    "venue": "Kolkata (கொல்கத்தா - ஈடன் கார்டன்ஸ்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Kolkata Knight Riders won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sunrisers Hyderabad won by 65 runs",
+    "location": {
+      "name": "Kolkata (கொல்கத்தா - ஈடன் கார்டன்ஸ்)",
+      "lat": 22.5646,
+      "lng": 88.3433,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Sunrisers Hyderabad",
+      "score": "",
+      "margin": "Sunrisers Hyderabad won by 65 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "149684",
+    "teamA": "Chennai Super Kings",
+    "teamB": "Punjab Kings",
+    "matchDate": "2026-04-03",
+    "matchTime": "07:30:00 PM",
+    "venue": "Chennai (சென்னை - சேப்பாக்கம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Punjab Kings won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Punjab Kings won by 5 wkts",
+    "location": {
+      "name": "Chennai (சென்னை - சேப்பாக்கம்)",
+      "lat": 13.0628,
+      "lng": 80.2792,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Punjab Kings",
+      "score": "",
+      "margin": "Punjab Kings won by 5 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "149695",
+    "teamA": "Delhi Capitals",
+    "teamB": "Mumbai Indians",
+    "matchDate": "2026-04-04",
+    "matchTime": "03:30:00 PM",
+    "venue": "Delhi (டெல்லி - அருண் ஜெயிட்லி)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Delhi Capitals won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Delhi Capitals won by 6 wkts",
+    "location": {
+      "name": "Delhi (டெல்லி - அருண் ஜெயிட்லி)",
+      "lat": 28.6377,
+      "lng": 77.2424,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Delhi Capitals",
+      "score": "",
+      "margin": "Delhi Capitals won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "149699",
+    "teamA": "Gujarat Titans",
+    "teamB": "Rajasthan Royals",
+    "matchDate": "2026-04-04",
+    "matchTime": "07:30:00 PM",
+    "venue": "Ahmedabad (அகமதாபாத் - நரேந்திர மோடி)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Rajasthan Royals won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Rajasthan Royals won by 6 runs",
+    "location": {
+      "name": "Ahmedabad (அகமதாபாத் - நரேந்திர மோடி)",
+      "lat": 23.0917,
+      "lng": 72.5975,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Rajasthan Royals",
+      "score": "",
+      "margin": "Rajasthan Royals won by 6 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "149710",
+    "teamA": "Sunrisers Hyderabad",
+    "teamB": "Lucknow Super Giants",
+    "matchDate": "2026-04-05",
+    "matchTime": "03:30:00 PM",
+    "venue": "Hyderabad (ஹைதராபாத் - உப்பல் மைதானம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Lucknow Super Giants won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Lucknow Super Giants won by 5 wkts",
+    "location": {
+      "name": "Hyderabad (ஹைதராபாத் - உப்பல் மைதானம்)",
+      "lat": 17.4065,
+      "lng": 78.5505,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Lucknow Super Giants",
+      "score": "",
+      "margin": "Lucknow Super Giants won by 5 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "149721",
+    "teamA": "Royal Challengers Bengaluru",
+    "teamB": "Chennai Super Kings",
+    "matchDate": "2026-04-05",
+    "matchTime": "07:30:00 PM",
+    "venue": "Bengaluru (பெங்களூரு - சின்னசுவாமி)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Chennai Super Kings won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Royal Challengers Bengaluru won by 43 runs",
+    "location": {
+      "name": "Bengaluru (பெங்களூரு - சின்னசுவாமி)",
+      "lat": 12.9788,
+      "lng": 77.5996,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Royal Challengers Bengaluru",
+      "score": "",
+      "margin": "Royal Challengers Bengaluru won by 43 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "149732",
+    "teamA": "Kolkata Knight Riders",
+    "teamB": "Punjab Kings",
+    "matchDate": "2026-04-06",
+    "matchTime": "07:30:00 PM",
+    "venue": "Kolkata (கொல்கத்தா - ஈடன் கார்டன்ஸ்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Kolkata Knight Riders won the toss and opted to bat",
+    "status": "upcoming",
+    "subStatus": "No result (due to rain)",
+    "location": {
+      "name": "Kolkata (கொல்கத்தா - ஈடன் கார்டன்ஸ்)",
+      "lat": 22.5646,
+      "lng": 88.3433,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "",
+      "score": "",
+      "margin": "No result (due to rain)"
+    }
+  },
+  {
+    "cricbuzzMatchId": "149743",
+    "teamA": "Rajasthan Royals",
+    "teamB": "Mumbai Indians",
+    "matchDate": "2026-04-07",
+    "matchTime": "07:30:00 PM",
+    "venue": "Guwahati (குவஹாத்தி - பார்சபாரா)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Mumbai Indians won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Rajasthan Royals won by 27 runs",
+    "location": {
+      "name": "Guwahati (குவஹாத்தி - பார்சபாரா)",
+      "lat": 26.1601,
+      "lng": 91.7371,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Rajasthan Royals",
+      "score": "",
+      "margin": "Rajasthan Royals won by 27 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "149746",
+    "teamA": "Delhi Capitals",
+    "teamB": "Gujarat Titans",
+    "matchDate": "2026-04-08",
+    "matchTime": "07:30:00 PM",
+    "venue": "Delhi (டெல்லி - அருண் ஜெயிட்லி)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Delhi Capitals won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Gujarat Titans won by 1 run",
+    "location": {
+      "name": "Delhi (டெல்லி - அருண் ஜெயிட்லி)",
+      "lat": 28.6377,
+      "lng": 77.2424,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Gujarat Titans",
+      "score": "",
+      "margin": "Gujarat Titans won by 1 run"
+    }
+  },
+  {
+    "cricbuzzMatchId": "149757",
+    "teamA": "Kolkata Knight Riders",
+    "teamB": "Lucknow Super Giants",
+    "matchDate": "2026-04-09",
+    "matchTime": "07:30:00 PM",
+    "venue": "Kolkata (கொல்கத்தா - ஈடன் கார்டன்ஸ்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Lucknow Super Giants won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Lucknow Super Giants won by 3 wkts",
+    "location": {
+      "name": "Kolkata (கொல்கத்தா - ஈடன் கார்டன்ஸ்)",
+      "lat": 22.5646,
+      "lng": 88.3433,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Lucknow Super Giants",
+      "score": "",
+      "margin": "Lucknow Super Giants won by 3 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "149768",
+    "teamA": "Rajasthan Royals",
+    "teamB": "Royal Challengers Bengaluru",
+    "matchDate": "2026-04-10",
+    "matchTime": "07:30:00 PM",
+    "venue": "Guwahati (குவஹாத்தி - பார்சபாரா)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Rajasthan Royals won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Rajasthan Royals won by 6 wkts",
+    "location": {
+      "name": "Guwahati (குவஹாத்தி - பார்சபாரா)",
+      "lat": 26.1601,
+      "lng": 91.7371,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Rajasthan Royals",
+      "score": "",
+      "margin": "Rajasthan Royals won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "149779",
+    "teamA": "Punjab Kings",
+    "teamB": "Sunrisers Hyderabad",
+    "matchDate": "2026-04-11",
+    "matchTime": "03:30:00 PM",
+    "venue": "Mullanpur, New Chandigarh (PCA மைதானம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Punjab Kings won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Punjab Kings won by 6 wkts",
+    "location": {
+      "name": "Mullanpur, New Chandigarh (PCA மைதானம்)",
+      "lat": 30.7925,
+      "lng": 76.7196,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Punjab Kings",
+      "score": "",
+      "margin": "Punjab Kings won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "149790",
+    "teamA": "Chennai Super Kings",
+    "teamB": "Delhi Capitals",
+    "matchDate": "2026-04-11",
+    "matchTime": "07:30:00 PM",
+    "venue": "Chennai (சென்னை - சேப்பாக்கம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Delhi Capitals won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Chennai Super Kings won by 23 runs",
+    "location": {
+      "name": "Chennai (சென்னை - சேப்பாக்கம்)",
+      "lat": 13.0628,
+      "lng": 80.2792,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Chennai Super Kings",
+      "score": "",
+      "margin": "Chennai Super Kings won by 23 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "149801",
+    "teamA": "Lucknow Super Giants",
+    "teamB": "Gujarat Titans",
+    "matchDate": "2026-04-12",
+    "matchTime": "03:30:00 PM",
+    "venue": "Lucknow (லக்னோ - ஏகானா மைதானம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Gujarat Titans won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Gujarat Titans won by 7 wkts",
+    "location": {
+      "name": "Lucknow (லக்னோ - ஏகானா மைதானம்)",
+      "lat": 26.8105,
+      "lng": 80.9934,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Gujarat Titans",
+      "score": "",
+      "margin": "Gujarat Titans won by 7 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "149812",
+    "teamA": "Mumbai Indians",
+    "teamB": "Royal Challengers Bengaluru",
+    "matchDate": "2026-04-12",
+    "matchTime": "07:30:00 PM",
+    "venue": "Mumbai (மும்பை - வான்கடே)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Mumbai Indians won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Royal Challengers Bengaluru won by 18 runs",
+    "location": {
+      "name": "Mumbai (மும்பை - வான்கடே)",
+      "lat": 18.9388,
+      "lng": 72.8258,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Royal Challengers Bengaluru",
+      "score": "",
+      "margin": "Royal Challengers Bengaluru won by 18 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151752",
+    "teamA": "Sunrisers Hyderabad",
+    "teamB": "Rajasthan Royals",
+    "matchDate": "2026-04-13",
+    "matchTime": "07:30:00 PM",
+    "venue": "Hyderabad (ஹைதராபாத் - உப்பல் மைதானம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Rajasthan Royals won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sunrisers Hyderabad won by 57 runs",
+    "location": {
+      "name": "Hyderabad (ஹைதராபாத் - உப்பல் மைதானம்)",
+      "lat": 17.4065,
+      "lng": 78.5505,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Sunrisers Hyderabad",
+      "score": "",
+      "margin": "Sunrisers Hyderabad won by 57 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151763",
+    "teamA": "Chennai Super Kings",
+    "teamB": "Kolkata Knight Riders",
+    "matchDate": "2026-04-14",
+    "matchTime": "07:30:00 PM",
+    "venue": "Chennai (சென்னை - சேப்பாக்கம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Kolkata Knight Riders won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Chennai Super Kings won by 32 runs",
+    "location": {
+      "name": "Chennai (சென்னை - சேப்பாக்கம்)",
+      "lat": 13.0628,
+      "lng": 80.2792,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Chennai Super Kings",
+      "score": "",
+      "margin": "Chennai Super Kings won by 32 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151774",
+    "teamA": "Royal Challengers Bengaluru",
+    "teamB": "Lucknow Super Giants",
+    "matchDate": "2026-04-15",
+    "matchTime": "07:30:00 PM",
+    "venue": "Bengaluru (பெங்களூரு - சின்னசுவாமி)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Royal Challengers Bengaluru won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Royal Challengers Bengaluru won by 5 wkts",
+    "location": {
+      "name": "Bengaluru (பெங்களூரு - சின்னசுவாமி)",
+      "lat": 12.9788,
+      "lng": 77.5996,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Royal Challengers Bengaluru",
+      "score": "",
+      "margin": "Royal Challengers Bengaluru won by 5 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151785",
+    "teamA": "Mumbai Indians",
+    "teamB": "Punjab Kings",
+    "matchDate": "2026-04-16",
+    "matchTime": "07:30:00 PM",
+    "venue": "Mumbai (மும்பை - வான்கடே)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Punjab Kings won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Punjab Kings won by 7 wkts",
+    "location": {
+      "name": "Mumbai (மும்பை - வான்கடே)",
+      "lat": 18.9388,
+      "lng": 72.8258,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Punjab Kings",
+      "score": "",
+      "margin": "Punjab Kings won by 7 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151796",
+    "teamA": "Gujarat Titans",
+    "teamB": "Kolkata Knight Riders",
+    "matchDate": "2026-04-17",
+    "matchTime": "07:30:00 PM",
+    "venue": "Ahmedabad (அகமதாபாத் - நரேந்திர மோடி)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Kolkata Knight Riders won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Gujarat Titans won by 5 wkts",
+    "location": {
+      "name": "Ahmedabad (அகமதாபாத் - நரேந்திர மோடி)",
+      "lat": 23.0917,
+      "lng": 72.5975,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Gujarat Titans",
+      "score": "",
+      "margin": "Gujarat Titans won by 5 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151807",
+    "teamA": "Royal Challengers Bengaluru",
+    "teamB": "Delhi Capitals",
+    "matchDate": "2026-04-18",
+    "matchTime": "03:30:00 PM",
+    "venue": "Bengaluru (பெங்களூரு - சின்னசுவாமி)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Delhi Capitals won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Delhi Capitals won by 6 wkts",
+    "location": {
+      "name": "Bengaluru (பெங்களூரு - சின்னசுவாமி)",
+      "lat": 12.9788,
+      "lng": 77.5996,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Delhi Capitals",
+      "score": "",
+      "margin": "Delhi Capitals won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151818",
+    "teamA": "Sunrisers Hyderabad",
+    "teamB": "Chennai Super Kings",
+    "matchDate": "2026-04-18",
+    "matchTime": "07:30:00 PM",
+    "venue": "Hyderabad (ஹைதராபாத் - உப்பல் மைதானம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Chennai Super Kings won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sunrisers Hyderabad won by 10 runs",
+    "location": {
+      "name": "Hyderabad (ஹைதராபாத் - உப்பல் மைதானம்)",
+      "lat": 17.4065,
+      "lng": 78.5505,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Sunrisers Hyderabad",
+      "score": "",
+      "margin": "Sunrisers Hyderabad won by 10 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151829",
+    "teamA": "Kolkata Knight Riders",
+    "teamB": "Rajasthan Royals",
+    "matchDate": "2026-04-19",
+    "matchTime": "03:30:00 PM",
+    "venue": "Kolkata (கொல்கத்தா - ஈடன் கார்டன்ஸ்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Rajasthan Royals won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Kolkata Knight Riders won by 4 wkts",
+    "location": {
+      "name": "Kolkata (கொல்கத்தா - ஈடன் கார்டன்ஸ்)",
+      "lat": 22.5646,
+      "lng": 88.3433,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Kolkata Knight Riders",
+      "score": "",
+      "margin": "Kolkata Knight Riders won by 4 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151840",
+    "teamA": "Punjab Kings",
+    "teamB": "Lucknow Super Giants",
+    "matchDate": "2026-04-19",
+    "matchTime": "07:30:00 PM",
+    "venue": "Mullanpur, New Chandigarh (PCA மைதானம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Lucknow Super Giants won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Punjab Kings won by 54 runs",
+    "location": {
+      "name": "Mullanpur, New Chandigarh (PCA மைதானம்)",
+      "lat": 30.7925,
+      "lng": 76.7196,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Punjab Kings",
+      "score": "",
+      "margin": "Punjab Kings won by 54 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151845",
+    "teamA": "Gujarat Titans",
+    "teamB": "Mumbai Indians",
+    "matchDate": "2026-04-20",
+    "matchTime": "07:30:00 PM",
+    "venue": "Ahmedabad (அகமதாபாத் - நரேந்திர மோடி)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Gujarat Titans won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Mumbai Indians won by 99 runs",
+    "location": {
+      "name": "Ahmedabad (அகமதாபாத் - நரேந்திர மோடி)",
+      "lat": 23.0917,
+      "lng": 72.5975,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Mumbai Indians",
+      "score": "",
+      "margin": "Mumbai Indians won by 99 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151856",
+    "teamA": "Sunrisers Hyderabad",
+    "teamB": "Delhi Capitals",
+    "matchDate": "2026-04-21",
+    "matchTime": "07:30:00 PM",
+    "venue": "Hyderabad (ஹைதராபாத் - உப்பல் மைதானம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Delhi Capitals won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sunrisers Hyderabad won by 47 runs",
+    "location": {
+      "name": "Hyderabad (ஹைதராபாத் - உப்பல் மைதானம்)",
+      "lat": 17.4065,
+      "lng": 78.5505,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Sunrisers Hyderabad",
+      "score": "",
+      "margin": "Sunrisers Hyderabad won by 47 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151867",
+    "teamA": "Lucknow Super Giants",
+    "teamB": "Rajasthan Royals",
+    "matchDate": "2026-04-22",
+    "matchTime": "07:30:00 PM",
+    "venue": "Lucknow (லக்னோ - ஏகானா மைதானம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Lucknow Super Giants won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Rajasthan Royals won by 40 runs",
+    "location": {
+      "name": "Lucknow (லக்னோ - ஏகானா மைதானம்)",
+      "lat": 26.8105,
+      "lng": 80.9934,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Rajasthan Royals",
+      "score": "",
+      "margin": "Rajasthan Royals won by 40 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151878",
+    "teamA": "Mumbai Indians",
+    "teamB": "Chennai Super Kings",
+    "matchDate": "2026-04-23",
+    "matchTime": "07:30:00 PM",
+    "venue": "Mumbai (மும்பை - வான்கடே)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Mumbai Indians won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Chennai Super Kings won by 103 runs",
+    "location": {
+      "name": "Mumbai (மும்பை - வான்கடே)",
+      "lat": 18.9388,
+      "lng": 72.8258,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Chennai Super Kings",
+      "score": "",
+      "margin": "Chennai Super Kings won by 103 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151889",
+    "teamA": "Royal Challengers Bengaluru",
+    "teamB": "Gujarat Titans",
+    "matchDate": "2026-04-24",
+    "matchTime": "07:30:00 PM",
+    "venue": "Bengaluru (பெங்களூரு - சின்னசுவாமி)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Royal Challengers Bengaluru won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Royal Challengers Bengaluru won by 5 wkts",
+    "location": {
+      "name": "Bengaluru (பெங்களூரு - சின்னசுவாமி)",
+      "lat": 12.9788,
+      "lng": 77.5996,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Royal Challengers Bengaluru",
+      "score": "",
+      "margin": "Royal Challengers Bengaluru won by 5 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151891",
+    "teamA": "Delhi Capitals",
+    "teamB": "Punjab Kings",
+    "matchDate": "2026-04-25",
+    "matchTime": "03:30:00 PM",
+    "venue": "Delhi (டெல்லி - அருண் ஜெயிட்லி)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Delhi Capitals won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Punjab Kings won by 6 wkts",
+    "location": {
+      "name": "Delhi (டெல்லி - அருண் ஜெயிட்லி)",
+      "lat": 28.6377,
+      "lng": 77.2424,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Punjab Kings",
+      "score": "",
+      "margin": "Punjab Kings won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151902",
+    "teamA": "Rajasthan Royals",
+    "teamB": "Sunrisers Hyderabad",
+    "matchDate": "2026-04-25",
+    "matchTime": "07:30:00 PM",
+    "venue": "Jaipur (ஜெய்ப்பூர் - சவாய் மான்சிங்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Sunrisers Hyderabad won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sunrisers Hyderabad won by 5 wkts",
+    "location": {
+      "name": "Jaipur (ஜெய்ப்பூர் - சவாய் மான்சிங்)",
+      "lat": 26.894,
+      "lng": 75.8033,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Sunrisers Hyderabad",
+      "score": "",
+      "margin": "Sunrisers Hyderabad won by 5 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151913",
+    "teamA": "Chennai Super Kings",
+    "teamB": "Gujarat Titans",
+    "matchDate": "2026-04-26",
+    "matchTime": "03:30:00 PM",
+    "venue": "Chennai (சென்னை - சேப்பாக்கம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Gujarat Titans won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Gujarat Titans won by 8 wkts",
+    "location": {
+      "name": "Chennai (சென்னை - சேப்பாக்கம்)",
+      "lat": 13.0628,
+      "lng": 80.2792,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Gujarat Titans",
+      "score": "",
+      "margin": "Gujarat Titans won by 8 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151924",
+    "teamA": "Lucknow Super Giants",
+    "teamB": "Kolkata Knight Riders",
+    "matchDate": "2026-04-26",
+    "matchTime": "07:30:00 PM",
+    "venue": "Lucknow (லக்னோ - ஏகானா மைதானம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Lucknow Super Giants won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Match tied (KKR won the Super Over)",
+    "location": {
+      "name": "Lucknow (லக்னோ - ஏகானா மைதானம்)",
+      "lat": 26.8105,
+      "lng": 80.9934,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Kolkata Knight Riders",
+      "score": "",
+      "margin": "Match tied (KKR won the Super Over)"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151935",
+    "teamA": "Delhi Capitals",
+    "teamB": "Royal Challengers Bengaluru",
+    "matchDate": "2026-04-27",
+    "matchTime": "07:30:00 PM",
+    "venue": "Delhi (டெல்லி - அருண் ஜெயிட்லி)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Royal Challengers Bengaluru won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Royal Challengers Bengaluru won by 9 wkts",
+    "location": {
+      "name": "Delhi (டெல்லி - அருண் ஜெயிட்லி)",
+      "lat": 28.6377,
+      "lng": 77.2424,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Royal Challengers Bengaluru",
+      "score": "",
+      "margin": "Royal Challengers Bengaluru won by 9 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151943",
+    "teamA": "Punjab Kings",
+    "teamB": "Rajasthan Royals",
+    "matchDate": "2026-04-28",
+    "matchTime": "07:30:00 PM",
+    "venue": "Mullanpur, New Chandigarh (PCA மைதானம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Rajasthan Royals won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Rajasthan Royals won by 6 wkts",
+    "location": {
+      "name": "Mullanpur, New Chandigarh (PCA மைதானம்)",
+      "lat": 30.7925,
+      "lng": 76.7196,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Rajasthan Royals",
+      "score": "",
+      "margin": "Rajasthan Royals won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151954",
+    "teamA": "Mumbai Indians",
+    "teamB": "Sunrisers Hyderabad",
+    "matchDate": "2026-04-29",
+    "matchTime": "07:30:00 PM",
+    "venue": "Mumbai (மும்பை - வான்கடே)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Mumbai Indians won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Sunrisers Hyderabad won by 6 wkts",
+    "location": {
+      "name": "Mumbai (மும்பை - வான்கடே)",
+      "lat": 18.9388,
+      "lng": 72.8258,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Sunrisers Hyderabad",
+      "score": "",
+      "margin": "Sunrisers Hyderabad won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151965",
+    "teamA": "Gujarat Titans",
+    "teamB": "Royal Challengers Bengaluru",
+    "matchDate": "2026-04-30",
+    "matchTime": "07:30:00 PM",
+    "venue": "Ahmedabad (அகமதாபாத் - நரேந்திர மோடி)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Gujarat Titans won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Gujarat Titans won by 4 wkts",
+    "location": {
+      "name": "Ahmedabad (அகமதாபாத் - நரேந்திர மோடி)",
+      "lat": 23.0917,
+      "lng": 72.5975,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Gujarat Titans",
+      "score": "",
+      "margin": "Gujarat Titans won by 4 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151976",
+    "teamA": "Rajasthan Royals",
+    "teamB": "Delhi Capitals",
+    "matchDate": "2026-05-01",
+    "matchTime": "07:30:00 PM",
+    "venue": "Jaipur (ஜெய்ப்பூர் - சவாய் மான்சிங்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Rajasthan Royals won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Delhi Capitals won by 7 wkts",
+    "location": {
+      "name": "Jaipur (ஜெய்ப்பூர் - சவாய் மான்சிங்)",
+      "lat": 26.894,
+      "lng": 75.8033,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Delhi Capitals",
+      "score": "",
+      "margin": "Delhi Capitals won by 7 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151987",
+    "teamA": "Chennai Super Kings",
+    "teamB": "Mumbai Indians",
+    "matchDate": "2026-05-02",
+    "matchTime": "07:30:00 PM",
+    "venue": "Chennai (சென்னை - சேப்பாக்கம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Mumbai Indians won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Chennai Super Kings won by 8 wkts",
+    "location": {
+      "name": "Chennai (சென்னை - சேப்பாக்கம்)",
+      "lat": 13.0628,
+      "lng": 80.2792,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Chennai Super Kings",
+      "score": "",
+      "margin": "Chennai Super Kings won by 8 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "151998",
+    "teamA": "Sunrisers Hyderabad",
+    "teamB": "Kolkata Knight Riders",
+    "matchDate": "2026-05-03",
+    "matchTime": "03:30:00 PM",
+    "venue": "Hyderabad (ஹைதராபாத் - உப்பல் மைதானம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Sunrisers Hyderabad won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Kolkata Knight Riders won by 7 wkts",
+    "location": {
+      "name": "Hyderabad (ஹைதராபாத் - உப்பல் மைதானம்)",
+      "lat": 17.4065,
+      "lng": 78.5505,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Kolkata Knight Riders",
+      "score": "",
+      "margin": "Kolkata Knight Riders won by 7 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152009",
+    "teamA": "Gujarat Titans",
+    "teamB": "Punjab Kings",
+    "matchDate": "2026-05-03",
+    "matchTime": "07:30:00 PM",
+    "venue": "Ahmedabad (அகமதாபாத் - நரேந்திர மோடி)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Gujarat Titans won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Gujarat Titans won by 4 wkts",
+    "location": {
+      "name": "Ahmedabad (அகமதாபாத் - நரேந்திர மோடி)",
+      "lat": 23.0917,
+      "lng": 72.5975,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Gujarat Titans",
+      "score": "",
+      "margin": "Gujarat Titans won by 4 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152020",
+    "teamA": "Mumbai Indians",
+    "teamB": "Lucknow Super Giants",
+    "matchDate": "2026-05-04",
+    "matchTime": "07:30:00 PM",
+    "venue": "Mumbai (மும்பை - வான்கடே)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Mumbai Indians won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Mumbai Indians won by 6 wkts",
+    "location": {
+      "name": "Mumbai (மும்பை - வான்கடே)",
+      "lat": 18.9388,
+      "lng": 72.8258,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Mumbai Indians",
+      "score": "",
+      "margin": "Mumbai Indians won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152031",
+    "teamA": "Delhi Capitals",
+    "teamB": "Chennai Super Kings",
+    "matchDate": "2026-05-05",
+    "matchTime": "07:30:00 PM",
+    "venue": "Delhi (டெல்லி - அருண் ஜெயிட்லி)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Delhi Capitals won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Chennai Super Kings won by 8 wkts",
+    "location": {
+      "name": "Delhi (டெல்லி - அருண் ஜெயிட்லி)",
+      "lat": 28.6377,
+      "lng": 77.2424,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Chennai Super Kings",
+      "score": "",
+      "margin": "Chennai Super Kings won by 8 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152042",
+    "teamA": "Sunrisers Hyderabad",
+    "teamB": "Punjab Kings",
+    "matchDate": "2026-05-06",
+    "matchTime": "07:30:00 PM",
+    "venue": "Hyderabad (ஹைதராபாத் - உப்பல் மைதானம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Punjab Kings won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Sunrisers Hyderabad won by 33 runs",
+    "location": {
+      "name": "Hyderabad (ஹைதராபாத் - உப்பல் மைதானம்)",
+      "lat": 17.4065,
+      "lng": 78.5505,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Sunrisers Hyderabad",
+      "score": "",
+      "margin": "Sunrisers Hyderabad won by 33 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152053",
+    "teamA": "Lucknow Super Giants",
+    "teamB": "Royal Challengers Bengaluru",
+    "matchDate": "2026-05-07",
+    "matchTime": "07:30:00 PM",
+    "venue": "Lucknow (லக்னோ - ஏகானா மைதானம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Royal Challengers Bengaluru won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "LSG won by 9 runs (19 Overs game due to rain, DLS Target 213)",
+    "location": {
+      "name": "Lucknow (லக்னோ - ஏகானா மைதானம்)",
+      "lat": 26.8105,
+      "lng": 80.9934,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Lucknow Super Giants",
+      "score": "",
+      "margin": "LSG won by 9 runs (19 Overs game due to rain, DLS Target 213)"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152064",
+    "teamA": "Delhi Capitals",
+    "teamB": "Kolkata Knight Riders",
+    "matchDate": "2026-05-08",
+    "matchTime": "07:30:00 PM",
+    "venue": "Delhi (டெல்லி - அருண் ஜெயிட்லி)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Kolkata Knight Riders won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Kolkata Knight Riders won by 8 wkts",
+    "location": {
+      "name": "Delhi (டெல்லி - அருண் ஜெயிட்லி)",
+      "lat": 28.6377,
+      "lng": 77.2424,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Kolkata Knight Riders",
+      "score": "",
+      "margin": "Kolkata Knight Riders won by 8 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152075",
+    "teamA": "Rajasthan Royals",
+    "teamB": "Gujarat Titans",
+    "matchDate": "2026-05-09",
+    "matchTime": "07:30:00 PM",
+    "venue": "Jaipur (ஜெய்ப்பூர் - சவாய் மான்சிங்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Rajasthan Royals won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Gujarat Titans won by 77 runs",
+    "location": {
+      "name": "Jaipur (ஜெய்ப்பூர் - சவாய் மான்சிங்)",
+      "lat": 26.894,
+      "lng": 75.8033,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Gujarat Titans",
+      "score": "",
+      "margin": "Gujarat Titans won by 77 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152086",
+    "teamA": "Chennai Super Kings",
+    "teamB": "Lucknow Super Giants",
+    "matchDate": "2026-05-10",
+    "matchTime": "03:30:00 PM",
+    "venue": "Chennai (சென்னை - சேப்பாக்கம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Chennai Super Kings won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Chennai Super Kings won by 5 wkts",
+    "location": {
+      "name": "Chennai (சென்னை - சேப்பாக்கம்)",
+      "lat": 13.0628,
+      "lng": 80.2792,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Chennai Super Kings",
+      "score": "",
+      "margin": "Chennai Super Kings won by 5 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152097",
+    "teamA": "Royal Challengers Bengaluru",
+    "teamB": "Mumbai Indians",
+    "matchDate": "2026-05-10",
+    "matchTime": "07:30:00 PM",
+    "venue": "Raipur (ராய்பூர் - ஷஹீத் வீர் நாராயண் சிங்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Royal Challengers Bengaluru won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Royal Challengers Bengaluru won by 2 wkts",
+    "location": {
+      "name": "Raipur (ராய்பூர் - ஷஹீத் வீர் நாராயண் சிங்)",
+      "lat": 21.2505,
+      "lng": 81.8286,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Royal Challengers Bengaluru",
+      "score": "",
+      "margin": "Royal Challengers Bengaluru won by 2 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152108",
+    "teamA": "Punjab Kings",
+    "teamB": "Delhi Capitals",
+    "matchDate": "2026-05-11",
+    "matchTime": "07:30:00 PM",
+    "venue": "Dharamshala (தர்மசாலா - HPCA)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Delhi Capitals won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Delhi Capitals won by 3 wkts",
+    "location": {
+      "name": "Dharamshala (தர்மசாலா - HPCA)",
+      "lat": 32.1976,
+      "lng": 76.3259,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Delhi Capitals",
+      "score": "",
+      "margin": "Delhi Capitals won by 3 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152119",
+    "teamA": "Gujarat Titans",
+    "teamB": "Sunrisers Hyderabad",
+    "matchDate": "2026-05-12",
+    "matchTime": "07:30:00 PM",
+    "venue": "Ahmedabad (அகமதாபாத் - நரேந்திர மோடி)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Sunrisers Hyderabad won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Gujarat Titans won by 82 runs",
+    "location": {
+      "name": "Ahmedabad (அகமதாபாத் - நரேந்திர மோடி)",
+      "lat": 23.0917,
+      "lng": 72.5975,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Gujarat Titans",
+      "score": "",
+      "margin": "Gujarat Titans won by 82 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152130",
+    "teamA": "Royal Challengers Bengaluru",
+    "teamB": "Kolkata Knight Riders",
+    "matchDate": "2026-05-13",
+    "matchTime": "07:30:00 PM",
+    "venue": "Raipur (ராய்பூர் - ஷஹீத் வீர் நாராயண் சிங்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Royal Challengers Bengaluru won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Royal Challengers Bengaluru won by 6 wkts",
+    "location": {
+      "name": "Raipur (ராய்பூர் - ஷஹீத் வீர் நாராயண் சிங்)",
+      "lat": 21.2505,
+      "lng": 81.8286,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Royal Challengers Bengaluru",
+      "score": "",
+      "margin": "Royal Challengers Bengaluru won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152141",
+    "teamA": "Punjab Kings",
+    "teamB": "Mumbai Indians",
+    "matchDate": "2026-05-14",
+    "matchTime": "07:30:00 PM",
+    "venue": "Dharamshala (தர்மசாலா - HPCA)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Mumbai Indians won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Mumbai Indians won by 6 wkts",
+    "location": {
+      "name": "Dharamshala (தர்மசாலா - HPCA)",
+      "lat": 32.1976,
+      "lng": 76.3259,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Mumbai Indians",
+      "score": "",
+      "margin": "Mumbai Indians won by 6 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152152",
+    "teamA": "Lucknow Super Giants",
+    "teamB": "Chennai Super Kings",
+    "matchDate": "2026-05-15",
+    "matchTime": "07:30:00 PM",
+    "venue": "Lucknow (லக்னோ - ஏகானா மைதானம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Lucknow Super Giants won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Lucknow Super Giants won by 7 wkts",
+    "location": {
+      "name": "Lucknow (லக்னோ - ஏகானா மைதானம்)",
+      "lat": 26.8105,
+      "lng": 80.9934,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Lucknow Super Giants",
+      "score": "",
+      "margin": "Lucknow Super Giants won by 7 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152163",
+    "teamA": "Kolkata Knight Riders",
+    "teamB": "Gujarat Titans",
+    "matchDate": "2026-05-16",
+    "matchTime": "07:30:00 PM",
+    "venue": "Kolkata (கொல்கத்தா - ஈடன் கார்டன்ஸ்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Gujarat Titans won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Kolkata Knight Riders won by 29 runs",
+    "location": {
+      "name": "Kolkata (கொல்கத்தா - ஈடன் கார்டன்ஸ்)",
+      "lat": 22.5646,
+      "lng": 88.3433,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Kolkata Knight Riders",
+      "score": "",
+      "margin": "Kolkata Knight Riders won by 29 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152174",
+    "teamA": "Punjab Kings",
+    "teamB": "Royal Challengers Bengaluru",
+    "matchDate": "2026-05-17",
+    "matchTime": "03:30:00 PM",
+    "venue": "Dharamshala (தர்மசாலா - HPCA)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Punjab Kings won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Royal Challengers Bengaluru won by 23 runs",
+    "location": {
+      "name": "Dharamshala (தர்மசாலா - HPCA)",
+      "lat": 32.1976,
+      "lng": 76.3259,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Royal Challengers Bengaluru",
+      "score": "",
+      "margin": "Royal Challengers Bengaluru won by 23 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152185",
+    "teamA": "Delhi Capitals",
+    "teamB": "Rajasthan Royals",
+    "matchDate": "2026-05-17",
+    "matchTime": "07:30:00 PM",
+    "venue": "Delhi (டெல்லி - அருண் ஜெயிட்லி)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Delhi Capitals won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Delhi Capitals won by 5 wkts",
+    "location": {
+      "name": "Delhi (டெல்லி - அருண் ஜெயிட்லி)",
+      "lat": 28.6377,
+      "lng": 77.2424,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Delhi Capitals",
+      "score": "",
+      "margin": "Delhi Capitals won by 5 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152196",
+    "teamA": "Chennai Super Kings",
+    "teamB": "Sunrisers Hyderabad",
+    "matchDate": "2026-05-18",
+    "matchTime": "07:30:00 PM",
+    "venue": "Chennai (சென்னை - சேப்பாக்கம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Chennai Super Kings won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Sunrisers Hyderabad won by 5 wkts",
+    "location": {
+      "name": "Chennai (சென்னை - சேப்பாக்கம்)",
+      "lat": 13.0628,
+      "lng": 80.2792,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Sunrisers Hyderabad",
+      "score": "",
+      "margin": "Sunrisers Hyderabad won by 5 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152207",
+    "teamA": "Rajasthan Royals",
+    "teamB": "Lucknow Super Giants",
+    "matchDate": "2026-05-19",
+    "matchTime": "07:30:00 PM",
+    "venue": "Jaipur (ஜெய்ப்பூர் - சவாய் மான்சிங்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Rajasthan Royals won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Rajasthan Royals won by 7 wkts",
+    "location": {
+      "name": "Jaipur (ஜெய்ப்பூர் - சவாய் மான்சிங்)",
+      "lat": 26.894,
+      "lng": 75.8033,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Rajasthan Royals",
+      "score": "",
+      "margin": "Rajasthan Royals won by 7 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152218",
+    "teamA": "Kolkata Knight Riders",
+    "teamB": "Mumbai Indians",
+    "matchDate": "2026-05-20",
+    "matchTime": "07:30:00 PM",
+    "venue": "Kolkata (கொல்கத்தா - ஈடன் கார்டன்ஸ்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Kolkata Knight Riders won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Kolkata Knight Riders won by 4 wkts",
+    "location": {
+      "name": "Kolkata (கொல்கத்தா - ஈடன் கார்டன்ஸ்)",
+      "lat": 22.5646,
+      "lng": 88.3433,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Kolkata Knight Riders",
+      "score": "",
+      "margin": "Kolkata Knight Riders won by 4 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152229",
+    "teamA": "Gujarat Titans",
+    "teamB": "Chennai Super Kings",
+    "matchDate": "2026-05-21",
+    "matchTime": "07:30:00 PM",
+    "venue": "Ahmedabad (அகமதாபாத் - நரேந்திர மோடி)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Chennai Super Kings won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Gujarat Titans won by 89 runs",
+    "location": {
+      "name": "Ahmedabad (அகமதாபாத் - நரேந்திர மோடி)",
+      "lat": 23.0917,
+      "lng": 72.5975,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Gujarat Titans",
+      "score": "",
+      "margin": "Gujarat Titans won by 89 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152240",
+    "teamA": "Sunrisers Hyderabad",
+    "teamB": "Royal Challengers Bengaluru",
+    "matchDate": "2026-05-22",
+    "matchTime": "07:30:00 PM",
+    "venue": "Hyderabad (ஹைதராபாத் - உப்பல் மைதானம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Sunrisers Hyderabad won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Sunrisers Hyderabad won by 55 runs",
+    "location": {
+      "name": "Hyderabad (ஹைதராபாத் - உப்பல் மைதானம்)",
+      "lat": 17.4065,
+      "lng": 78.5505,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Sunrisers Hyderabad",
+      "score": "",
+      "margin": "Sunrisers Hyderabad won by 55 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152241",
+    "teamA": "Lucknow Super Giants",
+    "teamB": "Punjab Kings",
+    "matchDate": "2026-05-23",
+    "matchTime": "07:30:00 PM",
+    "venue": "Lucknow (லக்னோ - ஏகானா மைதானம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Punjab Kings won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Punjab Kings won by 7 wkts",
+    "location": {
+      "name": "Lucknow (லக்னோ - ஏகானா மைதானம்)",
+      "lat": 26.8105,
+      "lng": 80.9934,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Punjab Kings",
+      "score": "",
+      "margin": "Punjab Kings won by 7 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152252",
+    "teamA": "Mumbai Indians",
+    "teamB": "Rajasthan Royals",
+    "matchDate": "2026-05-24",
+    "matchTime": "03:30:00 PM",
+    "venue": "Mumbai (மும்பை - வான்கடே)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Mumbai Indians won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Rajasthan Royals won by 30 runs",
+    "location": {
+      "name": "Mumbai (மும்பை - வான்கடே)",
+      "lat": 18.9388,
+      "lng": 72.8258,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Rajasthan Royals",
+      "score": "",
+      "margin": "Rajasthan Royals won by 30 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "152263",
+    "teamA": "Kolkata Knight Riders",
+    "teamB": "Delhi Capitals",
+    "matchDate": "2026-05-24",
+    "matchTime": "07:30:00 PM",
+    "venue": "Kolkata (கொல்கத்தா - ஈடன் கார்டன்ஸ்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Kolkata Knight Riders won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Delhi Capitals won by 40 runs",
+    "location": {
+      "name": "Kolkata (கொல்கத்தா - ஈடன் கார்டன்ஸ்)",
+      "lat": 22.5646,
+      "lng": 88.3433,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Delhi Capitals",
+      "score": "",
+      "margin": "Delhi Capitals won by 40 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "155376",
+    "teamA": "Royal Challengers Bengaluru",
+    "teamB": "Gujarat Titans",
+    "matchDate": "2026-05-26",
+    "matchTime": "07:30:00 PM",
+    "venue": "Dharamshala (தர்மசாலா - HPCA)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Gujarat Titans won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Royal Challengers Bengaluru won by 92 runs",
+    "location": {
+      "name": "Dharamshala (தர்மசாலா - HPCA)",
+      "lat": 32.1976,
+      "lng": 76.3259,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Royal Challengers Bengaluru",
+      "score": "",
+      "margin": "Royal Challengers Bengaluru won by 92 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "155387",
+    "teamA": "Sunrisers Hyderabad",
+    "teamB": "Rajasthan Royals",
+    "matchDate": "2026-05-27",
+    "matchTime": "07:30:00 PM",
+    "venue": "Mullanpur, New Chandigarh (PCA மைதானம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Sunrisers Hyderabad won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Rajasthan Royals won by 47 runs",
+    "location": {
+      "name": "Mullanpur, New Chandigarh (PCA மைதானம்)",
+      "lat": 30.7925,
+      "lng": 76.7196,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Rajasthan Royals",
+      "score": "",
+      "margin": "Rajasthan Royals won by 47 runs"
+    }
+  },
+  {
+    "cricbuzzMatchId": "155398",
+    "teamA": "Gujarat Titans",
+    "teamB": "Rajasthan Royals",
+    "matchDate": "2026-05-29",
+    "matchTime": "07:30:00 PM",
+    "venue": "Mullanpur, New Chandigarh (PCA மைதானம்)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Rajasthan Royals won the toss and opted to bat",
+    "status": "completed",
+    "subStatus": "Gujarat Titans won by 7 wkts",
+    "location": {
+      "name": "Mullanpur, New Chandigarh (PCA மைதானம்)",
+      "lat": 30.7925,
+      "lng": 76.7196,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Gujarat Titans",
+      "score": "",
+      "margin": "Gujarat Titans won by 7 wkts"
+    }
+  },
+  {
+    "cricbuzzMatchId": "155409",
+    "teamA": "Royal Challengers Bengaluru",
+    "teamB": "Gujarat Titans",
+    "matchDate": "2026-05-31",
+    "matchTime": "07:30:00 PM",
+    "venue": "Ahmedabad (அகமதாபாத் - நரேந்திர மோடி)",
+    "format": "T20",
+    "series": "Indian Premier League 2026",
+    "toss": "Royal Challengers Bengaluru won the toss and opted to bowl",
+    "status": "completed",
+    "subStatus": "Royal Challengers Bengaluru won by 5 wkts",
+    "location": {
+      "name": "Ahmedabad (அகமதாபாத் - நரேந்திர மோடி)",
+      "lat": 23.0917,
+      "lng": 72.5975,
+      "timezone": 5.5
+    },
+    "result": {
+      "winner": "Royal Challengers Bengaluru",
+      "score": "",
+      "margin": "Royal Challengers Bengaluru won by 5 wkts"
+    }
+  }
+]
