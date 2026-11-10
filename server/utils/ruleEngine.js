@@ -229,9 +229,8 @@ const GENERAL_RULES = [
             const isStarStrong = starPos !== undefined && (isExalted(ctx.matchStarLord, starPos) || isOwnSign(ctx.matchStarLord, starPos));
             if (isStarStrong) bScore += 5;
 
-            // Lagna match check
+            // Lagna match check (evaluated separately)
             const lagnaMatches = ctx.matchLagnas.some(l => l.lord === ctx.playerRasiLord || l.lagna === ctx.P[ctx.matchStarLord]);
-            if (lagnaMatches) bScore += 5;
 
             // Check if player Rasi Lord is conjoined with an Aatchi or Ucham planet (+10 Pts)
             let strongConjoined = null;
@@ -311,9 +310,8 @@ const GENERAL_RULES = [
                 const isStrong = isPlanetStrong(matchedConjunction) || isPlanetStrong(ctx.matchStarLord);
                 if (isStrong) cScore += 5; // total 10
 
-                // Lagna match check
+                // Lagna match check (evaluated separately)
                 const lagnaMatches = ctx.matchLagnas.some(l => l.lagna === mStarLordPos || l.lord === ctx.playerRasiLord);
-                if (lagnaMatches) cScore += 5; // total 15-20
 
                 conjBatCandidate = {
                     name: `BAT Rule 4: Conjunction (${matchedConjunction})`,
@@ -349,7 +347,9 @@ const GENERAL_RULES = [
         if (!ctx.isZigZagBatting && !ctx.isDirectBatting) {
             let winningBatCandidate = null;
             if (starBatCandidate && conjBatCandidate) {
-                winningBatCandidate = conjBatCandidate.score > starBatCandidate.score ? conjBatCandidate : starBatCandidate;
+                const starTotal = starBatCandidate.score + (starBatCandidate.hasLagna ? 5 : 0);
+                const conjTotal = conjBatCandidate.score + (conjBatCandidate.hasLagna ? 5 : 0);
+                winningBatCandidate = conjTotal > starTotal ? conjBatCandidate : starBatCandidate;
             } else {
                 winningBatCandidate = starBatCandidate || conjBatCandidate;
             }
@@ -357,6 +357,9 @@ const GENERAL_RULES = [
             if (winningBatCandidate) {
                 ctx.addRule(winningBatCandidate.name, winningBatCandidate.score, 'bat', false, winningBatCandidate.nameTamil);
                 if (winningBatCandidate.hasLagna) {
+                    const rulePrefix = winningBatCandidate.name.includes('Rule 4') ? 'Rule 4' : 'Rule 3';
+                    const ruleTamilPrefix = winningBatCandidate.name.includes('Rule 4') ? 'விதி 4' : 'விதி 3';
+                    ctx.addRule(`${rulePrefix}: Lagna Match Bonus`, 5, 'bat', false, `${ruleTamilPrefix}: லக்ன பொருத்தம் போனஸ்`);
                     ctx.battingLagnaBonusApplied = true;
                 }
             }
