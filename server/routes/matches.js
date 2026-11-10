@@ -27,22 +27,41 @@ const verifyToken = (req, res, next) => {
 // @access  Public or Protected
 router.get('/old-matches', async (req, res) => {
     try {
-        const { search = '', series = 'all', page = 1, limit = 50, sort = -1 } = req.query;
+        const { search = '', series = 'all', nakshatra = 'all', page = 1, limit = 50, sort = -1 } = req.query;
         const query = { status: { $in: ['completed', 'finished'] } };
 
         if (series && series !== 'all') {
             query.series = series;
         }
 
+        const andConditions = [];
+
+        if (nakshatra && nakshatra !== 'all') {
+            andConditions.push({
+                $or: [
+                    { nakshatra: new RegExp(nakshatra.trim(), 'i') },
+                    { nakshatraTamil: new RegExp(nakshatra.trim(), 'i') }
+                ]
+            });
+        }
+
         if (search && search.trim() !== '') {
             const regex = new RegExp(search.trim(), 'i');
-            query.$or = [
-                { teamA: regex },
-                { teamB: regex },
-                { venue: regex },
-                { series: regex },
-                { 'result.winner': regex }
-            ];
+            andConditions.push({
+                $or: [
+                    { teamA: regex },
+                    { teamB: regex },
+                    { venue: regex },
+                    { series: regex },
+                    { 'result.winner': regex },
+                    { nakshatra: regex },
+                    { nakshatraTamil: regex }
+                ]
+            });
+        }
+
+        if (andConditions.length > 0) {
+            query.$and = andConditions;
         }
 
         const pageNum = Math.max(1, parseInt(page) || 1);
@@ -50,10 +69,11 @@ router.get('/old-matches', async (req, res) => {
         const skip = (pageNum - 1) * limitNum;
         const sortVal = parseInt(sort) === 1 ? 1 : -1;
 
-        const [matches, total, seriesList] = await Promise.all([
+        const [matches, total, seriesList, nakshatraList] = await Promise.all([
             Match.find(query).sort({ matchDate: sortVal, matchTime: -1 }).skip(skip).limit(limitNum),
             Match.countDocuments(query),
-            Match.distinct('series', { status: { $in: ['completed', 'finished'] }, series: { $ne: '' } })
+            Match.distinct('series', { status: { $in: ['completed', 'finished'] }, series: { $ne: '' } }),
+            Match.distinct('nakshatra', { status: { $in: ['completed', 'finished'] }, nakshatra: { $ne: null, $ne: '' } })
         ]);
 
         res.json({
@@ -62,7 +82,9 @@ router.get('/old-matches', async (req, res) => {
             page: pageNum,
             pages: Math.ceil(total / limitNum),
             seriesList: seriesList.filter(Boolean),
+            nakshatraList: nakshatraList.filter(Boolean),
             matches
+        });
         });
     } catch (err) {
         console.error('Error fetching old matches:', err);

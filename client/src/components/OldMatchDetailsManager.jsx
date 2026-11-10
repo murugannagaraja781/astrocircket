@@ -23,6 +23,36 @@ import SyncIcon from '@mui/icons-material/Sync';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import AuthContext from '../context/AuthContext';
 
+const ALL_NAKSHATRAS = [
+    { name: 'Ashwini', tamil: 'அஸ்வினி', lord: 'Ketu' },
+    { name: 'Bharani', tamil: 'பரணி', lord: 'Venus' },
+    { name: 'Krittika', tamil: 'கார்த்திகை', lord: 'Sun' },
+    { name: 'Rohini', tamil: 'ரோகிணி', lord: 'Moon' },
+    { name: 'Mrigashirsha', tamil: 'மிருகசீரிஷம்', lord: 'Mars' },
+    { name: 'Ardra', tamil: 'திருவாதிரை', lord: 'Rahu' },
+    { name: 'Punarvasu', tamil: 'புனர்பூசம்', lord: 'Jupiter' },
+    { name: 'Pushya', tamil: 'பூசம்', lord: 'Saturn' },
+    { name: 'Ashlesha', tamil: 'ஆயில்யம்', lord: 'Mercury' },
+    { name: 'Magha', tamil: 'மகம்', lord: 'Ketu' },
+    { name: 'Purva Phalguni', tamil: 'பூரம்', lord: 'Venus' },
+    { name: 'Uttara Phalguni', tamil: 'உத்திரம்', lord: 'Sun' },
+    { name: 'Hasta', tamil: 'ஹஸ்தம்', lord: 'Moon' },
+    { name: 'Chitra', tamil: 'சித்திரை', lord: 'Mars' },
+    { name: 'Swati', tamil: 'சுவாதி', lord: 'Rahu' },
+    { name: 'Vishakha', tamil: 'விசாகம்', lord: 'Jupiter' },
+    { name: 'Anuradha', tamil: 'அனுஷம்', lord: 'Saturn' },
+    { name: 'Jyeshtha', tamil: 'கேட்டை', lord: 'Mercury' },
+    { name: 'Mula', tamil: 'மூலம்', lord: 'Ketu' },
+    { name: 'Purva Ashadha', tamil: 'பூராடம்', lord: 'Venus' },
+    { name: 'Uttara Ashadha', tamil: 'உத்திராடம்', lord: 'Sun' },
+    { name: 'Shravana', tamil: 'திருவோணம்', lord: 'Moon' },
+    { name: 'Dhanishta', tamil: 'அவிட்டம்', lord: 'Mars' },
+    { name: 'Shatabhisha', tamil: 'சதயம்', lord: 'Rahu' },
+    { name: 'Purva Bhadrapada', tamil: 'பூரட்டாதி', lord: 'Jupiter' },
+    { name: 'Uttara Bhadrapada', tamil: 'உத்திரட்டாதி', lord: 'Saturn' },
+    { name: 'Revati', tamil: 'ரேவதி', lord: 'Mercury' }
+];
+
 const OldMatchDetailsManager = () => {
     const { token } = useContext(AuthContext);
     const [currentTab, setCurrentTab] = useState(0);
@@ -36,6 +66,7 @@ const OldMatchDetailsManager = () => {
     // Filters & Pagination
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedSeries, setSelectedSeries] = useState('all');
+    const [selectedNakshatra, setSelectedNakshatra] = useState('all');
     const [sortOrder, setSortOrder] = useState(-1);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(25);
@@ -64,6 +95,7 @@ const OldMatchDetailsManager = () => {
                 params: {
                     search: searchQuery,
                     series: selectedSeries,
+                    nakshatra: selectedNakshatra,
                     page: page + 1,
                     limit: rowsPerPage,
                     sort: sortOrder
@@ -100,7 +132,7 @@ const OldMatchDetailsManager = () => {
 
     useEffect(() => {
         fetchOldMatches();
-    }, [page, rowsPerPage, selectedSeries, sortOrder]);
+    }, [page, rowsPerPage, selectedSeries, selectedNakshatra, sortOrder]);
 
     useEffect(() => {
         fetchScrapedFiles();
@@ -347,7 +379,7 @@ const OldMatchDetailsManager = () => {
                             <TextField
                                 fullWidth
                                 size="small"
-                                placeholder="Search by Team, Venue, Series, or Winner..."
+                                placeholder="Search by Team, Venue, Series, Winner, or Nakshatra (நட்சத்திரம்)..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 InputProps={{
@@ -400,7 +432,30 @@ const OldMatchDetailsManager = () => {
                             </Select>
                         </FormControl>
 
-                        <FormControl size="small" sx={{ minWidth: 150 }}>
+                        <FormControl size="small" sx={{ minWidth: 210 }}>
+                            <InputLabel sx={{ color: '#94A3B8' }}>Filter Nakshatra</InputLabel>
+                            <Select
+                                value={selectedNakshatra}
+                                label="Filter Nakshatra"
+                                onChange={(e) => { setSelectedNakshatra(e.target.value); setPage(0); }}
+                                sx={{
+                                    bgcolor: 'rgba(15, 23, 42, 0.6)',
+                                    color: '#fff',
+                                    borderRadius: '10px',
+                                    '& .MuiSelect-icon': { color: '#94A3B8' },
+                                    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.12)' }
+                                }}
+                            >
+                                <MenuItem value="all">All Nakshatras (அனைத்து நட்சத்திரங்கள்)</MenuItem>
+                                {ALL_NAKSHATRAS.map((nak, idx) => (
+                                    <MenuItem key={idx} value={nak.name}>
+                                        ⭐ {idx + 1}. {nak.tamil} ({nak.name})
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+
+                        <FormControl size="small" sx={{ minWidth: 140 }}>
                             <InputLabel sx={{ color: '#94A3B8' }}>Sort Order</InputLabel>
                             <Select
                                 value={sortOrder}
@@ -433,6 +488,7 @@ const OldMatchDetailsManager = () => {
                                     <TableRow sx={{ '& th': { bgcolor: '#0F172A', color: '#94A3B8', fontWeight: 700, borderColor: 'rgba(255,255,255,0.08)' } }}>
                                         <TableCell>Match & Series</TableCell>
                                         <TableCell>Date & Time</TableCell>
+                                        <TableCell>Nakshatra (நட்சத்திரம்)</TableCell>
                                         <TableCell>Venue & Location</TableCell>
                                         <TableCell>Toss</TableCell>
                                         <TableCell>Winner & Result</TableCell>
@@ -442,7 +498,7 @@ const OldMatchDetailsManager = () => {
                                 <TableBody>
                                     {loadingMatches ? (
                                         <TableRow>
-                                            <TableCell colSpan={6} align="center" sx={{ py: 6 }}>
+                                            <TableCell colSpan={7} align="center" sx={{ py: 6 }}>
                                                 <CircularProgress sx={{ color: '#38BDF8' }} />
                                                 <Typography variant="body2" sx={{ color: '#94A3B8', mt: 1.5 }}>
                                                     Loading Old Matches...
@@ -451,7 +507,7 @@ const OldMatchDetailsManager = () => {
                                         </TableRow>
                                     ) : matches.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={6} align="center" sx={{ py: 6 }}>
+                                            <TableCell colSpan={7} align="center" sx={{ py: 6 }}>
                                                 <Typography variant="body1" sx={{ color: '#94A3B8' }}>
                                                     No matches found matching your filters.
                                                 </Typography>
@@ -495,6 +551,33 @@ const OldMatchDetailsManager = () => {
                                                     <Typography variant="caption" sx={{ color: '#94A3B8' }}>
                                                         {m.matchTime || '19:30'}
                                                     </Typography>
+                                                </TableCell>
+
+                                                {/* Nakshatra (நட்சத்திரம்) */}
+                                                <TableCell>
+                                                    {m.nakshatra ? (
+                                                        <Box>
+                                                            <Chip
+                                                                label={`⭐ ${m.nakshatraTamil ? `${m.nakshatraTamil}` : m.nakshatra}`}
+                                                                size="small"
+                                                                sx={{
+                                                                    bgcolor: 'rgba(168, 85, 247, 0.18)',
+                                                                    color: '#D8B4FE',
+                                                                    fontWeight: 700,
+                                                                    border: '1px solid rgba(168, 85, 247, 0.35)',
+                                                                    fontSize: '0.75rem',
+                                                                    mb: 0.3
+                                                                }}
+                                                            />
+                                                            <Typography variant="caption" sx={{ color: '#94A3B8', display: 'block', fontSize: '0.7rem' }}>
+                                                                {m.nakshatra} {m.nakshatraLord ? `(${m.nakshatraLord})` : ''}
+                                                            </Typography>
+                                                        </Box>
+                                                    ) : (
+                                                        <Typography variant="caption" sx={{ color: '#64748B' }}>
+                                                            —
+                                                        </Typography>
+                                                    )}
                                                 </TableCell>
 
                                                 {/* Venue & Location */}
@@ -825,6 +908,33 @@ const OldMatchDetailsManager = () => {
                                         📅 {selectedMatch.matchDate} at ⏰ {selectedMatch.matchTime || '19:30'}
                                     </Typography>
                                 </Box>
+
+                                {selectedMatch.nakshatra && (
+                                    <>
+                                        <Divider sx={{ borderColor: 'rgba(255,255,255,0.08)' }} />
+                                        <Box>
+                                            <Typography variant="caption" sx={{ color: '#C084FC', textTransform: 'uppercase', fontWeight: 700 }}>
+                                                நட்சத்திரம் & அதிபதி (Match Nakshatra)
+                                            </Typography>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
+                                                <Chip
+                                                    label={`⭐ ${selectedMatch.nakshatraTamil ? `${selectedMatch.nakshatraTamil} (${selectedMatch.nakshatra})` : selectedMatch.nakshatra}`}
+                                                    sx={{
+                                                        fontWeight: 700,
+                                                        bgcolor: 'rgba(168, 85, 247, 0.2)',
+                                                        color: '#E9D5FF',
+                                                        border: '1px solid rgba(168, 85, 247, 0.4)'
+                                                    }}
+                                                />
+                                                {selectedMatch.nakshatraLord && (
+                                                    <Typography variant="body2" sx={{ color: '#94A3B8' }}>
+                                                        Lord: <strong style={{ color: '#FCD34D' }}>{selectedMatch.nakshatraLord}</strong>
+                                                    </Typography>
+                                                )}
+                                            </Box>
+                                        </Box>
+                                    </>
+                                )}
 
                                 <Divider sx={{ borderColor: 'rgba(255,255,255,0.08)' }} />
 

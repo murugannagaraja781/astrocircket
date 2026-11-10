@@ -43,6 +43,17 @@ const MatchSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    nakshatra: {
+        type: String,
+        index: true
+    },
+    nakshatraTamil: {
+        type: String,
+        index: true
+    },
+    nakshatraLord: {
+        type: String
+    },
     toss: {
         type: String,
         default: ''
