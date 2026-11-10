@@ -482,7 +482,14 @@ const OldMatchDetailsManager = () => {
                         border: '1px solid rgba(255, 255, 255, 0.08)',
                         overflow: 'hidden'
                     }}>
-                        <TableContainer sx={{ maxHeight: 600 }}>
+                        <TableContainer sx={{
+                            maxHeight: '65vh',
+                            overflowY: 'auto',
+                            overflowX: 'auto',
+                            '&::-webkit-scrollbar': { width: '8px', height: '8px' },
+                            '&::-webkit-scrollbar-thumb': { bgcolor: 'rgba(56, 189, 248, 0.4)', borderRadius: '4px' },
+                            '&::-webkit-scrollbar-track': { bgcolor: 'rgba(15, 23, 42, 0.6)' }
+                        }}>
                             <Table stickyHeader>
                                 <TableHead>
                                     <TableRow sx={{ '& th': { bgcolor: '#0F172A', color: '#94A3B8', fontWeight: 700, borderColor: 'rgba(255,255,255,0.08)' } }}>

@@ -4670,7 +4670,15 @@ const AdminDashboard = () => {
 
                 <Box
                     component="main"
-                    sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, position: 'relative', zIndex: 1 }}
+                    sx={{
+                        flexGrow: 1,
+                        p: 3,
+                        width: { sm: `calc(100% - ${drawerWidth}px)` },
+                        position: 'relative',
+                        zIndex: 1,
+                        height: '100vh',
+                        overflowY: 'auto'
+                    }}
                 >
                     <Toolbar />
                     {renderContent()}
