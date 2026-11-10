@@ -85,7 +85,6 @@ router.get('/old-matches', async (req, res) => {
             nakshatraList: nakshatraList.filter(Boolean),
             matches
         });
-        });
     } catch (err) {
         console.error('Error fetching old matches:', err);
         res.status(500).json({ success: false, msg: 'Server Error', error: err.message });
