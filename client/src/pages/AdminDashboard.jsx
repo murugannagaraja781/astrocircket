@@ -452,7 +452,7 @@ const RulesView = () => {
                             {[
                                 { rule: 'BAT Rule 1', tamil: 'ஜிக்-ஜாக் விதி', points: '+12' },
                                 { rule: 'BAT Rule 2', tamil: 'நேரடி விதி', points: '+6' },
-                                { rule: 'BAT Rule 3', tamil: 'நட்சத்திர விதி', points: '+4' },
+                                { rule: 'BAT Rule 3', tamil: 'நட்சத்திர விதி', points: '+10 / +20' },
                                 { rule: 'BAT Rule 4', tamil: 'சேர்க்கை விதி', points: '+4' },
                                 { rule: 'BAT Rule 5', tamil: 'ஒரே ராசி விதி', points: '+10' },
                                 { rule: 'BAT Rule 6', tamil: 'ராசி அதிபதி வீடு', points: '+6' },
@@ -490,7 +490,7 @@ const RulesView = () => {
                             {[
                                 { rule: 'BOWL Rule 1', tamil: 'ஜிக்-ஜாக் விதி', points: '+12' },
                                 { rule: 'BOWL Rule 2', tamil: 'நேரடி விதி (எதிர்மறை)', points: 'SURE FLOP', negative: true },
-                                { rule: 'BOWL Rule 3', tamil: 'நட்சத்திர விதி', points: '+3' },
+                                { rule: 'BOWL Rule 3', tamil: 'நட்சத்திர விதி', points: '+5 / +15' },
                                 { rule: 'BOWL Rule 4', tamil: 'சேர்க்கை விதி', points: '+4' },
                                 { rule: 'BOWL Rule 5', tamil: 'ஒரே ராசி விதி', points: '+4' },
                                 { rule: 'BOWL Rule 6', tamil: 'ராசி அதிபதி வீடு', points: '+4' },

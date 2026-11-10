@@ -22,6 +22,7 @@
    - Base: 10 Pts
    - Aatchi / Ucham Bonus: +5 Pts
    - Lagna Match Bonus: +5 Pts (Total Max: 20 Pts)
+   - Player Rasi Lord conjoined with Aatchi / Ucham planet: +10 Pts
 🟩 Rule 4: CONJUNCTION RULE
    Match Star Lord conjoined with Player Rasi Lord or Star Lord:
    - Base: 5 Pts
@@ -43,7 +44,7 @@
 🔵 PART 4: BOWLING RULES
 🟦 Rule 1: ZIG–ZAG RULE -> 25 Pts Flat
 🟦 Rule 2: DIRECT RULE -> SURE FLOP (0 Pts)
-🟦 Rule 3: STAR RULE -> 5 Pts (Aatchi/Ucham +5 Pts)
+🟦 Rule 3: STAR RULE -> 5 Pts (Aatchi/Ucham +5 Pts, Rasi Lord with Aatchi/Ucham +10 Pts)
 🟦 Rule 4: CONJUNCTION RULE -> 5 Pts (Strong +5 Pts)
 🟦 Rule 5: SAME HOUSE RULE:
    - In Match Star Lord signs: 4 Pts

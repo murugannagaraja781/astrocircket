@@ -194,18 +194,50 @@ const GENERAL_RULES = [
             const lagnaMatches = ctx.matchLagnas.some(l => l.lord === ctx.playerRasiLord || l.lagna === ctx.P[ctx.matchStarLord]);
             if (lagnaMatches) bScore += 5;
 
+            // Check if player Rasi Lord is conjoined with an Aatchi or Ucham planet (+10 Pts)
+            let strongConjoined = null;
+            const pRasiLordSign = ctx.P[ctx.playerRasiLord];
+            if (pRasiLordSign) {
+                const ALL_PLANETS = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn", "Rahu", "Ketu"];
+                for (const p of ALL_PLANETS) {
+                    if (p !== ctx.playerRasiLord && ctx.P[p] === pRasiLordSign) {
+                        if (isExalted(p, ctx.P[p]) || isOwnSign(p, ctx.P[p])) {
+                            strongConjoined = p;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (strongConjoined) bScore += 10;
+
+            const batRuleName = strongConjoined 
+                ? `BAT Rule 3: Star (${strongConjoined})` 
+                : 'BAT Rule 3: Star';
+            const batRuleNameTamil = strongConjoined 
+                ? `பேட்டிங் விதி 3: நட்சத்திர விதி (${strongConjoined} ஆட்சி/உச்சம்)` 
+                : 'பேட்டிங் விதி 3: நட்சத்திர விதி';
+
             starBatCandidate = {
-                name: 'BAT Rule 3: Star',
-                nameTamil: 'பேட்டிங் விதி 3: நட்சத்திர விதி',
+                name: batRuleName,
+                nameTamil: batRuleNameTamil,
                 score: bScore,
                 hasLagna: lagnaMatches
             };
 
             let bowlScore = 5;
             if (isStarStrong) bowlScore += 5;
+            if (strongConjoined) bowlScore += 10;
+
+            const bowlRuleName = strongConjoined 
+                ? `BOWL Rule 3: Star (${strongConjoined})` 
+                : 'BOWL Rule 3: Star';
+            const bowlRuleNameTamil = strongConjoined 
+                ? `பவுலிங் விதி 3: நட்சத்திர விதி (${strongConjoined} ஆட்சி/உச்சம்)` 
+                : 'பவுலிங் விதி 3: நட்சத்திர விதி';
+
             starBowlCandidate = {
-                name: 'BOWL Rule 3: Star',
-                nameTamil: 'பவுலிங் விதி 3: நட்சத்திர விதி',
+                name: bowlRuleName,
+                nameTamil: bowlRuleNameTamil,
                 score: bowlScore
             };
         }

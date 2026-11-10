@@ -221,8 +221,22 @@ export const evaluateBatsman = (playerChart, matchChart) => {
 
     // Rule 3: STAR RULE
     if (matchStarLord === playerRasiLord || matchStarLord === playerStarLord) {
-        addRule('BAT Rule 3: Star', 4, 'bat', false, 'பேட்டிங் விதி 3: நட்சத்திர விதி');
-        applyBonuses(matchStarLord, 4);
+        addRule('BAT Rule 3: Star', 10, 'bat', false, 'பேட்டிங் விதி 3: நட்சத்திர விதி');
+        applyBonuses(matchStarLord, 5);
+
+        // Check if player Rasi Lord is conjoined with an Aatchi or Ucham planet (+10 Pts)
+        const pRasiLordObj = getPlanet(playerChart, playerRasiLord);
+        if (pRasiLordObj?.sign) {
+            const ALL_PLANETS = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn", "Rahu", "Ketu"];
+            const strongConjoined = ALL_PLANETS.find(p => {
+                if (p === playerRasiLord) return false;
+                const pObj = getPlanet(playerChart, p);
+                return pObj && pObj.sign === pRasiLordObj.sign && (isExalted(p, pObj.sign) || isOwnSign(p, pObj.sign));
+            });
+            if (strongConjoined) {
+                addRule(`BAT Rule 3: Strong Conjunction (${strongConjoined})`, 10, 'bat', false, `பேட்டிங் விதி 3: சேர்க்கை பலம் (${strongConjoined} ஆட்சி/உச்சம்)`);
+            }
+        }
     }
 
     // Rule 4: CONJUNCTION RULE
@@ -557,8 +571,22 @@ export const evaluateBowler = (playerChart, matchChart) => {
 
     // BOWL Rule 3: STAR RULE
     if (matchStarLord === playerRasiLord || matchStarLord === playerStarLord) {
-        addRule('BOWL Rule 3: Star', 3, 'bowl', false, 'பவுலிங் விதி 3: நட்சத்திர விதி');
-        applyBonuses(matchStarLord, 6);
+        addRule('BOWL Rule 3: Star', 5, 'bowl', false, 'பவுலிங் விதி 3: நட்சத்திர விதி');
+        applyBonuses(matchStarLord, 5);
+
+        // Check if player Rasi Lord is conjoined with an Aatchi or Ucham planet (+10 Pts)
+        const pRasiLordObj = getPlanet(playerChart, playerRasiLord);
+        if (pRasiLordObj?.sign) {
+            const ALL_PLANETS = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn", "Rahu", "Ketu"];
+            const strongConjoined = ALL_PLANETS.find(p => {
+                if (p === playerRasiLord) return false;
+                const pObj = getPlanet(playerChart, p);
+                return pObj && pObj.sign === pRasiLordObj.sign && (isExalted(p, pObj.sign) || isOwnSign(p, pObj.sign));
+            });
+            if (strongConjoined) {
+                addRule(`BOWL Rule 3: Strong Conjunction (${strongConjoined})`, 10, 'bowl', false, `பவுலிங் விதி 3: சேர்க்கை பலம் (${strongConjoined} ஆட்சி/உச்சம்)`);
+            }
+        }
     }
 
     // BOWL Rule 4: CONJUNCTION
