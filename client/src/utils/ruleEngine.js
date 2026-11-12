@@ -316,6 +316,9 @@ const GENERAL_RULES = [
 
             if (winningBatCandidate) {
                 ctx.addRule(winningBatCandidate.name, winningBatCandidate.score, 'bat', false, winningBatCandidate.nameTamil);
+                if (winningBatCandidate.name.includes('Rule 3')) {
+                    ctx.isBatRule3Active = true;
+                }
                 if (winningBatCandidate.hasLagna) {
                     const rulePrefix = winningBatCandidate.name.includes('Rule 4') ? 'Rule 4' : 'Rule 3';
                     const ruleTamilPrefix = winningBatCandidate.name.includes('Rule 4') ? 'விதி 4' : 'விதி 3';
@@ -357,7 +360,7 @@ const GENERAL_RULES = [
             const isSathayamPlayer = ['Shatabhisha', 'Sathayam', 'சதயம்'].includes(ctx.playerStar);
             const isThiruvonamSathayam = isThiruvonamMatch && isSathayamPlayer;
 
-            if (!ctx.isRule2DirectActive && !isThiruvonamSathayam) {
+            if (!ctx.isRule2DirectActive && !isThiruvonamSathayam && !ctx.isBatRule3Active) {
                 ctx.setSureFlop('BAT Rule 5: Match Rasi Same House', 'பேட்டிங் விதி 5: மேட்ச் ராசி அதிபதி வீட்டில் ஒரே ராசி (Sure Flop)', 'bat');
             }
             ctx.addRule('BOWL Rule 5: Same House (Rasi Lord)', 6, 'bowl', false, 'பவுலிங் விதி 5: மேட்ச் ராசி அதிபதி வீட்டில் ஒரே ராசி (+6)');
