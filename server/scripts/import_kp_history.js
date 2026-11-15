@@ -201,7 +201,8 @@ async function importAll() {
         }
 
         const winnerName = m.matchWinner ? getTeamName(m.matchWinner) : '';
-        const isComplete = (m.state === 'Complete' || Boolean(m.matchWinner));
+        const isPastDate = Boolean(date && date < new Date().toISOString().split('T')[0]);
+        const isComplete = (m.state === 'Complete' || Boolean(m.matchWinner) || isPastDate);
 
         const doc = {
             cricbuzzMatchId: id || undefined,

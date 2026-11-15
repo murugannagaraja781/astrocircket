@@ -81,7 +81,7 @@
     "format": "T20",
     "series": "Womens Big Bash League 2025",
     "toss": "Adelaide Strikers Women won the toss and opted to bowl",
-    "status": "upcoming",
+    "status": "completed",
     "subStatus": "No result - due to rain",
     "location": {
       "name": "Melbourne (ஜங்ஷன் ஓவல்)",
@@ -369,7 +369,7 @@
     "format": "T20",
     "series": "Womens Big Bash League 2025",
     "toss": "Hobart Hurricanes Women won the toss and opted to bowl",
-    "status": "upcoming",
+    "status": "completed",
     "subStatus": "Hobart Hurricanes won by 6 wickets (DLS method)",
     "location": {
       "name": "Sydney (நார்த் சிட்னி ஓவல்)",
@@ -609,7 +609,7 @@
     "format": "T20",
     "series": "Womens Big Bash League 2025",
     "toss": "Toss details unavailable",
-    "status": "upcoming",
+    "status": "completed",
     "subStatus": "Match abandoned without a ball bowled",
     "location": {
       "name": "Adelaide (அடிலெய்டு ஓவல்)",
@@ -633,7 +633,7 @@
     "format": "T20",
     "series": "Womens Big Bash League 2025",
     "toss": "Sydney Thunder Women won the toss and opted to bowl",
-    "status": "upcoming",
+    "status": "completed",
     "subStatus": "No result",
     "location": {
       "name": "Adelaide (அடிலெய்டு ஓவல்)",
@@ -873,7 +873,7 @@
     "format": "T20",
     "series": "Womens Big Bash League 2025",
     "toss": "Hobart Hurricanes Women won the toss and opted to bowl",
-    "status": "upcoming",
+    "status": "completed",
     "subStatus": "No result",
     "location": {
       "name": "Adelaide (கரேன் ரோல்டன் ஓவல்)",
