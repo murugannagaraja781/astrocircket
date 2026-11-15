@@ -79,9 +79,14 @@ class FCMService {
     async sendMatchInsightNotification({ matchId, teamA, teamB, advantage, summary }) {
         initFirebase();
         const title = `🏏 ${teamA} vs ${teamB} - Match Insights Live!`;
-        const body = advantage 
-            ? `Astrological Advantage: ${advantage}. Key player analysis is now available.`
-            : `KP Astrological Analysis has been published for ${teamA} vs ${teamB}. Check insights now!`;
+        
+        // Never reveal the winning team/advantage in the notification body
+        let body;
+        if (advantage === 'Free Pass Credited 🎁' || (summary && summary.includes('Free Replacement Pass'))) {
+            body = summary || `🎁 Free Replacement Pass credited for ${teamA} vs ${teamB}!`;
+        } else {
+            body = `Who has the Winning Advantage in ${teamA} vs ${teamB}? Key players & astrology prediction is now live! Tap to unlock. 🔮✨`;
+        }
 
         const payload = {
             topic: 'match_insights',

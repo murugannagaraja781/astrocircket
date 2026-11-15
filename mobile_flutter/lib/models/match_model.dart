@@ -87,7 +87,7 @@ class InsightData {
   InsightData({
     this.isPublished = false,
     this.isUnlocked = false,
-    this.price = 49.0,
+    this.price = 300.0,
     this.publishedAt,
     this.astrologicalAdvantage,
     this.keyBatsmen = const [],
@@ -127,7 +127,7 @@ class InsightData {
     return InsightData(
       isPublished: json['isPublished'] ?? false,
       isUnlocked: json['isUnlocked'] ?? false,
-      price: (json['price'] is num) ? (json['price'] as num).toDouble() : 49.0,
+      price: (json['price'] is num) ? (json['price'] as num).toDouble() : 300.0,
       publishedAt: json['publishedAt'] != null ? DateTime.tryParse(json['publishedAt'].toString()) : null,
       astrologicalAdvantage: json['astrologicalAdvantage'],
       keyBatsmen: batsmenList,

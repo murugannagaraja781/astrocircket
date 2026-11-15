@@ -106,7 +106,7 @@ const MatchSchema = new mongoose.Schema({
         }],
         price: {
             type: Number,
-            default: 49
+            default: 300
         },
         isPublished: {
             type: Boolean,

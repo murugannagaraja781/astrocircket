@@ -172,7 +172,7 @@ class MatchProvider with ChangeNotifier {
         final updatedInsight = InsightData(
           isPublished: true,
           isUnlocked: existing.insight.isUnlocked,
-          price: (data['price'] != null) ? double.tryParse(data['price'].toString()) ?? 49.0 : existing.insight.price,
+          price: (data['price'] != null) ? double.tryParse(data['price'].toString()) ?? 300.0 : existing.insight.price,
           astrologicalAdvantage: data['astrologicalAdvantage']?.toString() ?? existing.insight.astrologicalAdvantage,
           insightsSummary: data['insightsSummary']?.toString() ?? existing.insight.insightsSummary,
           timelineUpdates: existing.insight.timelineUpdates,

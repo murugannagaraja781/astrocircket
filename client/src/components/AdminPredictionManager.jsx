@@ -219,7 +219,7 @@ const AdminPredictionManager = () => {
         keyBowlers: '',
         insightsSummary: '',
         timelineUpdates: [],
-        price: 49,
+        price: 300,
         notifyUsers: true
     });
 
@@ -360,7 +360,7 @@ const AdminPredictionManager = () => {
 
         const existingPrice = (existingInsights.price !== undefined && existingInsights.price !== null)
             ? existingInsights.price
-            : 49;
+            : 300;
 
         const rawUpdates = existingInsights.timelineUpdates || [];
         let initialUpdates = [];
@@ -968,7 +968,7 @@ const AdminPredictionManager = () => {
                                 ? Number(match.insight.price)
                                 : ((match.insightData?.price !== undefined && match.insightData?.price !== null)
                                     ? Number(match.insightData.price)
-                                    : 49);
+                                    : 300);
                             const isLive = (match.status || '').toLowerCase() === 'live';
                             const isCompleted = (match.status || '').toLowerCase() === 'completed' || (match.status || '').toLowerCase() === 'finished';
 

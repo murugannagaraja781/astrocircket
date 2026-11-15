@@ -101,7 +101,7 @@ router.get('/matches', async (req, res) => {
         // 3. Format MongoDB Matches safely
         const formattedMatches = dbMatches.map(match => {
             const matchObj = match.toObject();
-            const matchPrice = matchObj.insightData?.price !== undefined ? matchObj.insightData.price : 49;
+            const matchPrice = matchObj.insightData?.price !== undefined ? matchObj.insightData.price : 300;
             const isUnlocked = isAdmin || (matchPrice === 0) || purchasedMatchIds.has(match._id.toString());
             const hasInsight = !!(matchObj.insightData && matchObj.insightData.isPublished);
 
@@ -237,7 +237,7 @@ router.get('/match/:id', async (req, res) => {
                     url: foundRealTime.url,
                     insightData: {
                         isPublished: false,
-                        price: 49
+                        price: 300
                     }
                 };
             } else {
@@ -246,7 +246,7 @@ router.get('/match/:id', async (req, res) => {
         }
 
         const hasInsight = !!(matchObj.insightData && matchObj.insightData.isPublished);
-        const matchPrice = matchObj.insightData?.price !== undefined ? matchObj.insightData.price : 49;
+        const matchPrice = matchObj.insightData?.price !== undefined ? matchObj.insightData.price : 300;
 
         const safeInsight = {
             isPublished: hasInsight,
@@ -351,7 +351,7 @@ router.post('/publish/:id', adminAuth, async (req, res) => {
         }
 
         const publishedAt = new Date();
-        const safePrice = (price !== undefined && price !== null && price !== '') ? Math.max(0, Number(price)) : 49;
+        const safePrice = (price !== undefined && price !== null && price !== '') ? Math.max(0, Number(price)) : 300;
 
         // Normalize timeline updates with timestamps
         let normalizedTimeline = [];
@@ -458,7 +458,7 @@ router.post('/payment/initiate', requireAuth, async (req, res) => {
             });
         }
 
-        const amount = match.insightData?.price || 49;
+        const amount = match.insightData?.price || 300;
         const merchantTransactionId = `ASTRO_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
 
         const newPurchase = new Purchase({
@@ -630,7 +630,7 @@ router.post('/purchase/record-completed', async (req, res) => {
                 userEmail: currentUser ? (currentUser.email || currentUser.username) : 'mobile_user@sbastro.com',
                 matchId: matchId,
                 merchantTransactionId: orderId || `SBA_${Date.now()}`,
-                amount: amount || 49,
+                amount: amount || 300,
                 currency: 'INR',
                 status: 'SUCCESS'
             });
@@ -770,7 +770,7 @@ router.post('/purchase/razorpay/create-order', requireAuth, async (req, res) => 
             });
         }
 
-        const amount = match.insightData?.price !== undefined ? match.insightData.price : 49;
+        const amount = match.insightData?.price !== undefined ? match.insightData.price : 300;
         const merchantTransactionId = `RZP_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
 
         const orderResult = await razorpayService.createOrder(amount, merchantTransactionId, {
@@ -855,7 +855,7 @@ router.post('/purchase/razorpay/verify', requireAuth, async (req, res) => {
                 matchId: matchId,
                 merchantTransactionId: razorpayOrderId,
                 razorpayOrderId: razorpayOrderId,
-                amount: 49,
+                amount: 300,
                 currency: 'INR',
                 status: 'SUCCESS',
                 paymentMethod: 'RAZORPAY'
@@ -917,7 +917,7 @@ router.post('/purchase/razorpay/webhook', async (req, res) => {
             const matchId = notes.matchId;
             const userId = notes.userId;
             const amountInPaise = paymentEntity?.amount || orderEntity?.amount || 0;
-            const amountInINR = amountInPaise > 0 ? amountInPaise / 100 : 49;
+            const amountInINR = amountInPaise > 0 ? amountInPaise / 100 : 300;
             const userEmail = paymentEntity?.email || '';
 
             if (orderId || matchId) {

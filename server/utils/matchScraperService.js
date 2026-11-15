@@ -106,7 +106,7 @@ const syncCricbuzzMatchesToDB = async (forceRefresh = false) => {
                         $setOnInsert: {
                             insightData: {
                                 isPublished: false,
-                                price: 49,
+                                price: 300,
                                 astrologicalAdvantage: '',
                                 keyBatsmen: [],
                                 keyBowlers: [],
