@@ -196,6 +196,11 @@ router.get('/match/:id', async (req, res) => {
             match = await Match.findById(id);
         }
 
+        // 2. Try finding by Cricbuzz Match ID if not found
+        if (!match && id) {
+            match = await Match.findOne({ cricbuzzMatchId: String(id).trim() });
+        }
+
         let matchObj;
         let isUnlocked = false;
 
@@ -323,13 +328,22 @@ router.post('/publish/:id', adminAuth, async (req, res) => {
             match = await Match.findById(req.params.id);
         }
 
-        // 2. If not found by ID, try matching by team names
+        // 2. If not found by ObjectId, try finding by Cricbuzz Match ID
+        if (!match && req.params.id) {
+            match = await Match.findOne({ cricbuzzMatchId: String(req.params.id).trim() });
+        }
+
+        // 3. If not found by ID, try matching by team names AND matchDate (never by team names alone)
         if (!match && teamA && teamB) {
             const escapeRegex = (s) => s.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-            match = await Match.findOne({
+            const teamQuery = {
                 teamA: { $regex: new RegExp(`^${escapeRegex(teamA.trim())}$`, 'i') },
                 teamB: { $regex: new RegExp(`^${escapeRegex(teamB.trim())}$`, 'i') }
-            });
+            };
+            if (matchDate) {
+                teamQuery.matchDate = matchDate;
+            }
+            match = await Match.findOne(teamQuery);
         }
 
         // 3. If still not in DB, create new Match document

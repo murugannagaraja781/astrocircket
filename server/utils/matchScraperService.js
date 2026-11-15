@@ -86,7 +86,8 @@ const syncCricbuzzMatchesToDB = async (forceRefresh = false) => {
                             { cricbuzzMatchId: m.match_id },
                             {
                                 teamA: { $regex: new RegExp(`^${parsed.teamA.trim()}$`, 'i') },
-                                teamB: { $regex: new RegExp(`^${parsed.teamB.trim()}$`, 'i') }
+                                teamB: { $regex: new RegExp(`^${parsed.teamB.trim()}$`, 'i') },
+                                matchDate: matchDate
                             }
                         ]
                     },

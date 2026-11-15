@@ -28,3 +28,4 @@ async function updatePrices() {
 }
 
 updatePrices().catch(console.error);
+
