@@ -1022,6 +1022,7 @@ const syncLiveMatchSquad = async (req, res) => {
 
                 await group.save();
                 syncedGroups.push({
+                    id: group._id.toString(),
                     name: group.name,
                     leagueType: group.leagueType,
                     count: group.players.length

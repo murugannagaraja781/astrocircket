@@ -4100,12 +4100,14 @@ const BackupsManager = () => {
     );
 };
 
-const LiveSyncManager = () => {
+const LiveSyncManager = ({ onAnalyzeMatch }) => {
     const { token } = useContext(AuthContext);
     const [matches, setMatches] = useState([]);
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(false);
     const [syncingMatchId, setSyncingMatchId] = useState(null);
+    const [analyzingMatchId, setAnalyzingMatchId] = useState(null);
+    const [syncedGroupsByMatch, setSyncedGroupsByMatch] = useState({});
     const [actionLoadingId, setActionLoadingId] = useState(null);
 
     // Snackbar State
@@ -4153,6 +4155,9 @@ const LiveSyncManager = () => {
                 { headers: { 'x-auth-token': token } }
             );
             const { stats, syncedGroups } = res.data;
+            if (Array.isArray(syncedGroups) && syncedGroups.length > 0) {
+                setSyncedGroupsByMatch(prev => ({ ...prev, [matchId]: syncedGroups }));
+            }
             const groupsText = syncedGroups && syncedGroups.length > 0 
                 ? ` | 🏏 Teams added to Groups: ${syncedGroups.map(g => `${g.name} (${g.count} players)`).join(' & ')}`
                 : '';
@@ -4168,6 +4173,47 @@ const LiveSyncManager = () => {
         } finally {
             setSyncingMatchId(null);
         }
+    };
+
+    const handleAnalyzeMatch = async (match) => {
+        if (!onAnalyzeMatch) return;
+        const matchPart = (match.title || '').split(',')[0] || '';
+        const teams = matchPart.split(/\s+vs\s+/i);
+        const teamAName = (teams[0] || '').trim();
+        const teamBName = (teams[1] || '').trim();
+
+        let groupsForMatch = syncedGroupsByMatch[match.match_id];
+        if (!groupsForMatch || groupsForMatch.length < 2) {
+            setAnalyzingMatchId(match.match_id);
+            try {
+                const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/players/sync-live-squad`,
+                    { matchId: match.match_id, matchTitle: match.title },
+                    { headers: { 'x-auth-token': token } }
+                );
+                if (Array.isArray(res.data?.syncedGroups)) {
+                    groupsForMatch = res.data.syncedGroups;
+                    setSyncedGroupsByMatch(prev => ({ ...prev, [match.match_id]: groupsForMatch }));
+                }
+            } catch (err) {
+                console.error('Auto-sync before analysis failed:', err);
+                showSnackbar(err.response?.data?.msg || 'Squad sync warning — opening Match Analysis anyway', 'warning');
+            } finally {
+                setAnalyzingMatchId(null);
+            }
+        }
+
+        onAnalyzeMatch({
+            matchId: match.match_id,
+            title: match.title,
+            date: match.matchDate || new Date().toISOString().split('T')[0],
+            matchTime: match.matchTime || '',
+            venue: match.venue || '',
+            city: match.city || '',
+            teamAGroupId: groupsForMatch?.[0]?.id || '',
+            teamBGroupId: groupsForMatch?.[1]?.id || '',
+            teamAName,
+            teamBName
+        });
     };
 
     const handleResolve = async (playerId, action) => {
@@ -4212,19 +4258,52 @@ const LiveSyncManager = () => {
                                 <Typography variant="caption" color="text.secondary">
                                     ID: {match.match_id}
                                 </Typography>
-                                <Button
-                                    variant="contained"
-                                    size="small"
-                                    onClick={() => handleSyncSquad(match.match_id, match.title)}
-                                    disabled={syncingMatchId !== null}
-                                    sx={{ 
-                                        borderRadius: '8px', 
-                                        bgcolor: color,
-                                        '&:hover': { bgcolor: color, opacity: 0.9 }
-                                    }}
-                                >
-                                    {syncingMatchId === match.match_id ? 'Syncing...' : '⚡ Sync Squad & 11s to Groups'}
-                                </Button>
+                                {(match.matchDate || match.matchTime || match.venue) && (
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.4, bgcolor: 'rgba(15, 23, 42, 0.04)', p: 1.2, borderRadius: '8px' }}>
+                                        {(match.matchDate || match.matchTime) && (
+                                            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+                                                🕒 {match.matchDate || ''} {match.matchTime ? `• ${match.matchTime}` : ''}
+                                            </Typography>
+                                        )}
+                                        {match.venue && (
+                                            <Typography variant="caption" color="text.secondary">
+                                                📍 {match.venue}
+                                            </Typography>
+                                        )}
+                                    </Box>
+                                )}
+                                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 'auto' }}>
+                                    <Button
+                                        variant="contained"
+                                        size="small"
+                                        onClick={() => handleSyncSquad(match.match_id, match.title)}
+                                        disabled={syncingMatchId !== null || analyzingMatchId !== null}
+                                        sx={{
+                                            flex: 1,
+                                            borderRadius: '8px',
+                                            bgcolor: color,
+                                            '&:hover': { bgcolor: color, opacity: 0.9 }
+                                        }}
+                                    >
+                                        {syncingMatchId === match.match_id ? 'Syncing...' : '⚡ Sync Squad & 11s'}
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        size="small"
+                                        onClick={() => handleAnalyzeMatch(match)}
+                                        disabled={syncingMatchId !== null || analyzingMatchId !== null}
+                                        sx={{
+                                            flex: 1,
+                                            borderRadius: '8px',
+                                            background: 'linear-gradient(90deg, #f59e0b 0%, #ea580c 100%)',
+                                            color: '#fff',
+                                            fontWeight: 700,
+                                            '&:hover': { opacity: 0.92 }
+                                        }}
+                                    >
+                                        {analyzingMatchId === match.match_id ? 'Syncing & Opening...' : '🔮 Analyze Match'}
+                                    </Button>
+                                </Box>
                             </Paper>
                         </Grid>
                     ))}
@@ -4545,6 +4624,13 @@ const AdminDashboard = () => {
         </Box>
     );
 
+    const [pendingAnalysisMatch, setPendingAnalysisMatch] = useState(null);
+
+    const handleAnalyzeFromLiveSync = (matchPayload) => {
+        setPendingAnalysisMatch(matchPayload);
+        setCurrentView('clientDashboard');
+    };
+
     const renderContent = () => {
         switch (currentView) {
             case 'dashboard': return <DashboardHome onNavigate={setCurrentView} />;
@@ -4553,8 +4639,14 @@ const AdminDashboard = () => {
             case 'users': return <UsersManager />;
             case 'players': return <PlayersManager />;
             case 'groups': return <GroupsManager />;
-            case 'liveSync': return <LiveSyncManager />;
-            case 'clientDashboard': return <UserDashboard hideHeader={true} />;
+            case 'liveSync': return <LiveSyncManager onAnalyzeMatch={handleAnalyzeFromLiveSync} />;
+            case 'clientDashboard': return (
+                <UserDashboard
+                    hideHeader={true}
+                    initialAnalysisMatch={pendingAnalysisMatch}
+                    onAnalysisMatchConsumed={() => setPendingAnalysisMatch(null)}
+                />
+            );
             case 'captainAstro': return <CaptainMatchAstro />;
             case 'kpAstrology': return <KPView />;
             case 'myPredictions': return <MyPredictions />;

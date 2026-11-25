@@ -199,12 +199,14 @@ function calculateTaraCount(captainStarNo, matchStarNo) {
 // Dynamically resolve player birth nakshatra, rasi, and planetary lords
 async function resolveCaptainInfo(captainInput, fallbackStar = '') {
     // If passed a full object
+    let objectLookupKey = '';
     if (typeof captainInput === 'object' && captainInput !== null) {
-        if (captainInput.birthChart?.planets?.Moon?.nakshatra) {
-            const nakName = captainInput.birthChart.planets.Moon.nakshatra;
+        const moonObj = captainInput.birthChart?.planets?.Moon || captainInput.birthChart?.data?.planets?.Moon;
+        if (moonObj?.nakshatra) {
+            const nakName = moonObj.nakshatra;
             const starMap = NAKSHATRA_MAP[nakName] || { no: 1, tamil: nakName, lord: 'Ketu' };
-            const pada = captainInput.birthChart.planets.Moon.pada || 1;
-            const moonLong = captainInput.birthChart.planets.Moon.longitude;
+            const pada = moonObj.pada || 1;
+            const moonLong = moonObj.longitude;
             let rasiInfo;
             if (typeof moonLong === 'number') {
                 const sIdx = Math.floor(((moonLong % 360) + 360) % 360 / 30);
@@ -217,7 +219,7 @@ async function resolveCaptainInfo(captainInput, fallbackStar = '') {
                 playerId: captainInput._id || captainInput.id,
                 nakshatra: nakName,
                 starNo: starMap.no,
-                tamil: captainInput.birthChart.planets.Moon.nakshatraTamil || starMap.tamil,
+                tamil: moonObj.nakshatraTamil || starMap.tamil,
                 pada: pada,
                 starLord: starMap.lord,
                 starLordTamil: PLANET_TAMIL[starMap.lord] || starMap.lord,
@@ -230,11 +232,12 @@ async function resolveCaptainInfo(captainInput, fallbackStar = '') {
         if (captainInput.dob) {
             return calculatePlayerNakshatraFromDOB(captainInput);
         }
+        objectLookupKey = (captainInput._id || captainInput.id || captainInput.name || '').toString().trim();
     }
 
-    // If string name or ID
-    if (typeof captainInput === 'string' && captainInput.trim()) {
-        const nameOrId = captainInput.trim();
+    // If string name or ID (or object fallback without birthChart/dob)
+    const nameOrId = (typeof captainInput === 'string' ? captainInput.trim() : objectLookupKey);
+    if (nameOrId) {
         let player = null;
 
         // Try MongoDB find by ID or name
@@ -243,10 +246,15 @@ async function resolveCaptainInfo(captainInput, fallbackStar = '') {
                 player = await Player.findById(nameOrId);
             }
             if (!player) {
-                player = await Player.findOne({ name: new RegExp(`^${nameOrId}$`, 'i') });
+                player = await Player.findOne({ id: nameOrId });
             }
             if (!player) {
-                player = await Player.findOne({ name: new RegExp(nameOrId.split(' ')[0], 'i') });
+                const cleanName = (typeof captainInput === 'object' && captainInput?.name) ? captainInput.name.trim() : nameOrId;
+                const escaped = cleanName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                player = await Player.findOne({ name: new RegExp(`^${escaped}$`, 'i') });
+                if (!player && cleanName.includes(' ')) {
+                    player = await Player.findOne({ name: new RegExp(cleanName.split(' ')[0].replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i') });
+                }
             }
         } catch (e) {
             console.error('Player DB lookup error:', e);

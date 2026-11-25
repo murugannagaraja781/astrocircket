@@ -138,6 +138,84 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
         }, 120);
     };
 
+    const resolveTimezoneForCity = (val) => {
+        const long = parseFloat(val.longitude);
+        let tz = 5.5;
+        if (val.countryCode === 'IN') {
+            return 5.5;
+        }
+        try {
+            const timezones = ct.getTimezonesForCountry(val.countryCode);
+            if (timezones && timezones.length === 1) {
+                tz = timezones[0].utcOffset / 60;
+            } else if (timezones && timezones.length > 1) {
+                let bestTz = timezones[0];
+                let minDiff = 999;
+                timezones.forEach(t => {
+                    const tzNominalLong = (t.utcOffset / 60) * 15;
+                    const diff = Math.abs(tzNominalLong - long);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        bestTz = t;
+                    }
+                });
+                tz = bestTz.utcOffset / 60;
+            } else {
+                tz = calculateTimezone(long);
+            }
+        } catch (e) {
+            tz = calculateTimezone(long);
+        }
+        return tz;
+    };
+
+    const parseIstTime24 = (matchTimeStr) => {
+        if (!matchTimeStr || typeof matchTimeStr !== 'string') return '19:30';
+        // Look for "HH:MM AM/PM IST"
+        const istMatch = matchTimeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)\s*IST/i)
+            || matchTimeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+        if (istMatch) {
+            let h = parseInt(istMatch[1], 10);
+            const m = istMatch[2];
+            const ampm = istMatch[3].toUpperCase();
+            if (ampm === 'PM' && h < 12) h += 12;
+            if (ampm === 'AM' && h === 12) h = 0;
+            return `${String(h).padStart(2, '0')}:${m}`;
+        }
+        const h24Match = matchTimeStr.match(/^(\d{1,2}):(\d{2})/);
+        if (h24Match) {
+            return `${String(parseInt(h24Match[1], 10)).padStart(2, '0')}:${h24Match[2]}`;
+        }
+        return '19:30';
+    };
+
+    const findBestCityMatch = (venue, city) => {
+        const candidates = [];
+        if (city && typeof city === 'string') candidates.push(city.trim());
+        if (venue && typeof venue === 'string') {
+            const parts = venue.split(',').map(p => p.trim()).filter(Boolean);
+            for (let i = parts.length - 1; i >= 0; i--) {
+                candidates.push(parts[i]);
+            }
+        }
+        if (candidates.length === 0) return null;
+
+        const all = City.getAllCities();
+        for (const rawQuery of candidates) {
+            const q = rawQuery.toLowerCase();
+            if (q.length < 2) continue;
+            const exact = all.find(c => c.name.toLowerCase() === q);
+            if (exact) return exact;
+        }
+        for (const rawQuery of candidates) {
+            const q = rawQuery.toLowerCase();
+            if (q.length < 3) continue;
+            const partial = all.find(c => c.name.toLowerCase().includes(q) || q.includes(c.name.toLowerCase()));
+            if (partial) return partial;
+        }
+        return null;
+    };
+
     const handleLocationSelect = (event, val) => {
         if (val) {
             const country = Country.getCountryByCode(val.countryCode);
@@ -145,34 +223,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
             const locationName = `${val.name}, ${state?.name || val.stateCode}, ${country?.name || val.countryCode}`;
             const lat = parseFloat(val.latitude);
             const long = parseFloat(val.longitude);
-            let tz = 5.5;
-
-            if (val.countryCode === 'IN') {
-                tz = 5.5;
-            } else {
-                try {
-                    const timezones = ct.getTimezonesForCountry(val.countryCode);
-                    if (timezones && timezones.length === 1) {
-                        tz = timezones[0].utcOffset / 60;
-                    } else if (timezones && timezones.length > 1) {
-                        let bestTz = timezones[0];
-                        let minDiff = 999;
-                        timezones.forEach(t => {
-                            const tzNominalLong = (t.utcOffset / 60) * 15;
-                            const diff = Math.abs(tzNominalLong - long);
-                            if (diff < minDiff) {
-                                minDiff = diff;
-                                bestTz = t;
-                            }
-                        });
-                        tz = bestTz.utcOffset / 60;
-                    } else {
-                        tz = calculateTimezone(long);
-                    }
-                } catch (e) {
-                    tz = calculateTimezone(long);
-                }
-            }
+            const tz = resolveTimezoneForCity(val);
 
             const currentIst = matchDetails.istTime || convertLocalToIst(matchDetails.time, matchDetails.timezone) || '19:30';
             const newLocalTime = convertIstToLocal(currentIst, tz);
@@ -191,13 +242,14 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
 
 
 
-    const handleRun = async () => {
+    const handleRun = async (overrideDetails = null) => {
+        const activeDetails = overrideDetails && overrideDetails.date ? overrideDetails : matchDetails;
         setLoading(true);
         if (onPredictionStart) onPredictionStart();
         setError('');
         try {
-            const [year, month, day] = matchDetails.date.split('-');
-            const [hour, minute] = matchDetails.time.split(':');
+            const [year, month, day] = activeDetails.date.split('-');
+            const [hour, minute] = activeDetails.time.split(':');
 
             const payload = {
                 day: parseInt(day),
@@ -205,20 +257,20 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                 year: parseInt(year),
                 hour: parseInt(hour),
                 minute: parseInt(minute),
-                latitude: matchDetails.lat,
-                longitude: matchDetails.long,
-                timezone: matchDetails.timezone,
-                ayanamsa: matchDetails.ayanamsa || 'Lahiri'
+                latitude: activeDetails.lat,
+                longitude: activeDetails.long,
+                timezone: activeDetails.timezone,
+                ayanamsa: activeDetails.ayanamsa || 'Lahiri'
             };
 
             // Add Batting/Bowling times if present
-            if (matchDetails.battingTime) {
-                const [bh, bm] = matchDetails.battingTime.split(':');
+            if (activeDetails.battingTime) {
+                const [bh, bm] = activeDetails.battingTime.split(':');
                 payload.battingHour = parseInt(bh);
                 payload.battingMinute = parseInt(bm);
             }
-            if (matchDetails.bowlingTime) {
-                const [bwh, bwm] = matchDetails.bowlingTime.split(':');
+            if (activeDetails.bowlingTime) {
+                const [bwh, bwm] = activeDetails.bowlingTime.split(':');
                 payload.bowlingHour = parseInt(bwh);
                 payload.bowlingMinute = parseInt(bwm);
             }
@@ -233,7 +285,7 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
             setMatchChartResult(res.data);
 
             // Pass the derived Match Chart parent
-            onPredictionComplete(res.data, matchDetails);
+            onPredictionComplete(res.data, activeDetails);
 
         } catch (err) {
             console.error("Match Chart Error", err);
@@ -243,8 +295,45 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
         }
     };
 
+    const applyMatchConfig = (config, autoRun = true) => {
+        if (!config) return;
+        const ist24 = parseIstTime24(config.matchTime);
+        const cityMatch = findBestCityMatch(config.venue, config.city);
+
+        let locationName = config.venue || matchDetails.location;
+        let lat = matchDetails.lat;
+        let long = matchDetails.long;
+        let tz = matchDetails.timezone;
+
+        if (cityMatch) {
+            const country = Country.getCountryByCode(cityMatch.countryCode);
+            const state = State.getStateByCodeAndCountry(cityMatch.stateCode, cityMatch.countryCode);
+            locationName = `${cityMatch.name}, ${state?.name || cityMatch.stateCode}, ${country?.name || cityMatch.countryCode}`;
+            lat = parseFloat(cityMatch.latitude);
+            long = parseFloat(cityMatch.longitude);
+            tz = resolveTimezoneForCity(cityMatch);
+        }
+
+        const localTime = convertIstToLocal(ist24, tz);
+        const nextDetails = {
+            ...matchDetails,
+            date: config.date || matchDetails.date,
+            istTime: ist24,
+            time: localTime,
+            location: locationName,
+            lat,
+            long,
+            timezone: tz
+        };
+        setMatchDetails(nextDetails);
+        if (autoRun) {
+            handleRun(nextDetails);
+        }
+    };
+
     useImperativeHandle(ref, () => ({
-        runPrediction: handleRun
+        runPrediction: () => handleRun(),
+        applyMatchConfig
     }));
 
     const handleViewChart = async () => {

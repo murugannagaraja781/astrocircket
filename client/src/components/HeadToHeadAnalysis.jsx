@@ -14,7 +14,9 @@ import {
     FormControl,
     InputLabel,
     IconButton,
-    Tooltip
+    Tooltip,
+    CircularProgress,
+    Alert
 } from '@mui/material';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
@@ -63,8 +65,119 @@ const HeadToHeadAnalysis = ({
     timelineData = null,
     batFirstTeam = 'teamA',
     matchStartTime = '19:30',
+    matchDate = new Date().toISOString().split('T')[0],
+    matchIstTime = '19:30',
+    matchVenue = '',
     token = null
 }) => {
+    // Captain Head-to-Head (Tara Bala) State & Quick Save
+    const [captainAId, setCaptainAId] = useState('');
+    const [captainBId, setCaptainBId] = useState('');
+    const [captainCalcResult, setCaptainCalcResult] = useState(null);
+    const [captainCalcLoading, setCaptainCalcLoading] = useState(false);
+    const [captainSaveLoading, setCaptainSaveLoading] = useState(false);
+    const [captainSaveStatus, setCaptainSaveStatus] = useState(null);
+
+    const getPlayerKey = (p) => p?._id || p?.id || p?.name || '';
+
+    useEffect(() => {
+        const capA = teamAPlayers.find(p => /\(c\)/i.test(p.name || ''));
+        setCaptainAId(capA ? getPlayerKey(capA) : (teamAPlayers[0] ? getPlayerKey(teamAPlayers[0]) : ''));
+        setCaptainCalcResult(null);
+        setCaptainSaveStatus(null);
+    }, [teamAPlayers]);
+
+    useEffect(() => {
+        const capB = teamBPlayers.find(p => /\(c\)/i.test(p.name || ''));
+        setCaptainBId(capB ? getPlayerKey(capB) : (teamBPlayers[0] ? getPlayerKey(teamBPlayers[0]) : ''));
+        setCaptainCalcResult(null);
+        setCaptainSaveStatus(null);
+    }, [teamBPlayers]);
+
+    const selectedCaptainA = useMemo(
+        () => teamAPlayers.find(p => getPlayerKey(p) === captainAId) || null,
+        [teamAPlayers, captainAId]
+    );
+    const selectedCaptainB = useMemo(
+        () => teamBPlayers.find(p => getPlayerKey(p) === captainBId) || null,
+        [teamBPlayers, captainBId]
+    );
+
+    const getBackendBaseUrl = () => import.meta.env.VITE_BACKEND_URL || (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' ? '' : 'http://localhost:5001');
+
+    const handleCalculateCaptainH2H = async () => {
+        if (!selectedCaptainA || !selectedCaptainB) return null;
+        setCaptainCalcLoading(true);
+        setCaptainSaveStatus(null);
+        try {
+            const res = await axios.post(`${getBackendBaseUrl()}/api/captain-astro/calculate`, {
+                date: matchDate,
+                time: matchIstTime || matchStartTime || '19:30',
+                venue: matchVenue || 'Cricket Stadium',
+                team1: teamAName,
+                team1Captain: {
+                    ...selectedCaptainA,
+                    name: (selectedCaptainA.name || '').replace(/\s*\(c\)\s*/i, '').trim()
+                },
+                team2: teamBName,
+                team2Captain: {
+                    ...selectedCaptainB,
+                    name: (selectedCaptainB.name || '').replace(/\s*\(c\)\s*/i, '').trim()
+                }
+            }, {
+                headers: { 'x-auth-token': token || localStorage.getItem('token') }
+            });
+            if (res.data?.success) {
+                setCaptainCalcResult(res.data.data);
+                return res.data.data;
+            }
+        } catch (err) {
+            setCaptainSaveStatus({ type: 'error', text: err.response?.data?.msg || 'Failed to calculate Captain Head-to-Head' });
+        } finally {
+            setCaptainCalcLoading(false);
+        }
+        return null;
+    };
+
+    const handleSaveCaptainH2H = async () => {
+        setCaptainSaveLoading(true);
+        setCaptainSaveStatus(null);
+        try {
+            let calc = captainCalcResult;
+            if (!calc) {
+                calc = await handleCalculateCaptainH2H();
+            }
+            if (!calc) return;
+
+            const payload = {
+                matchTitle: `${calc.team1.name} vs ${calc.team2.name}`,
+                date: calc.date,
+                time: calc.time,
+                venue: calc.venue,
+                matchMoon: calc.matchMoon,
+                team1: calc.team1,
+                team2: calc.team2,
+                astroAdvantage: calc.advantage,
+                predictedWinner: calc.favoredTeam || '',
+                winner: calc.favoredTeam || 'Pending',
+                notes: 'Saved from Match Analysis Head-to-Head',
+                isCompleted: false
+            };
+            const res = await axios.post(`${getBackendBaseUrl()}/api/captain-astro/save`, payload, {
+                headers: { 'x-auth-token': token || localStorage.getItem('token') }
+            });
+            if (res.data?.success) {
+                setCaptainSaveStatus({
+                    type: 'success',
+                    text: `Saved to Captain Match Astro! (${calc.team1.name} vs ${calc.team2.name} • Favored: ${calc.favoredTeam || 'Neutral'})`
+                });
+            }
+        } catch (err) {
+            setCaptainSaveStatus({ type: 'error', text: err.response?.data?.msg || 'Failed to save Captain Head-to-Head' });
+        } finally {
+            setCaptainSaveLoading(false);
+        }
+    };
     // Determine batting & bowling teams based on toss/innings
     const isTeamABatting = batFirstTeam === 'teamA';
     const battingTeamPlayers = isTeamABatting ? teamAPlayers : teamBPlayers;
@@ -354,6 +467,123 @@ const HeadToHeadAnalysis = ({
 
     return (
         <Box sx={{ p: { xs: 1, sm: 2 }, display: 'flex', flexDirection: 'column', gap: 2, bgcolor: '#FAFBFD', minHeight: '100%' }}>
+            {/* 👑 Captain Head-to-Head (Tara Bala) Selector & Quick Save */}
+            <Paper elevation={0} sx={{ p: 2, borderRadius: '16px', border: '2px solid rgba(99, 102, 241, 0.25)', bgcolor: '#FFFFFF' }}>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 1.5, mb: 1.5 }}>
+                    <Box>
+                        <Typography variant="subtitle1" fontWeight="800" sx={{ color: '#312E81' }}>
+                            👑 Captain Head-to-Head (தாரா பலம் & Quick Save)
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                            {matchDate} • {matchIstTime || matchStartTime} IST {matchVenue ? `• ${matchVenue}` : ''}
+                        </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                        <Button
+                            size="small"
+                            variant="outlined"
+                            onClick={handleCalculateCaptainH2H}
+                            disabled={!selectedCaptainA || !selectedCaptainB || captainCalcLoading}
+                            sx={{ borderRadius: '10px', textTransform: 'none', fontWeight: 700, borderColor: '#6366F1', color: '#4F46E5' }}
+                        >
+                            {captainCalcLoading ? <CircularProgress size={16} sx={{ mr: 0.8 }} /> : '🔮 '}
+                            {captainCalcLoading ? 'Checking...' : 'Check Captain H2H'}
+                        </Button>
+                        <Button
+                            size="small"
+                            variant="contained"
+                            onClick={handleSaveCaptainH2H}
+                            disabled={!selectedCaptainA || !selectedCaptainB || captainCalcLoading || captainSaveLoading}
+                            sx={{
+                                borderRadius: '10px',
+                                textTransform: 'none',
+                                fontWeight: 700,
+                                background: 'linear-gradient(90deg, #4F46E5 0%, #7C3AED 100%)',
+                                color: '#fff'
+                            }}
+                        >
+                            {captainSaveLoading ? <CircularProgress size={16} sx={{ color: '#fff', mr: 0.8 }} /> : '💾 '}
+                            {captainSaveLoading ? 'Saving...' : 'Save Captain H2H'}
+                        </Button>
+                    </Box>
+                </Box>
+
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                        <FormControl fullWidth size="small">
+                            <InputLabel>{teamAName} Captain</InputLabel>
+                            <Select
+                                value={captainAId}
+                                label={`${teamAName} Captain`}
+                                onChange={(e) => { setCaptainAId(e.target.value); setCaptainCalcResult(null); }}
+                            >
+                                {teamAPlayers.map(p => (
+                                    <MenuItem key={getPlayerKey(p)} value={getPlayerKey(p)}>
+                                        {p.name} {p.role ? `(${p.role})` : ''}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <FormControl fullWidth size="small">
+                            <InputLabel>{teamBName} Captain</InputLabel>
+                            <Select
+                                value={captainBId}
+                                label={`${teamBName} Captain`}
+                                onChange={(e) => { setCaptainBId(e.target.value); setCaptainCalcResult(null); }}
+                            >
+                                {teamBPlayers.map(p => (
+                                    <MenuItem key={getPlayerKey(p)} value={getPlayerKey(p)}>
+                                        {p.name} {p.role ? `(${p.role})` : ''}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                </Grid>
+
+                {captainCalcResult && (
+                    <Box sx={{ mt: 2, p: 1.5, borderRadius: '12px', bgcolor: '#F5F3FF', border: '1px solid #DDD6FE' }}>
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 1, mb: 1 }}>
+                            <Chip
+                                size="small"
+                                label={`🌙 Match Moon: ${captainCalcResult.matchMoon?.starNo ? `#${captainCalcResult.matchMoon.starNo} ` : ''}${captainCalcResult.matchMoon?.nakshatraTamil || captainCalcResult.matchMoon?.nakshatra} (${captainCalcResult.matchMoon?.rasiTamil || captainCalcResult.matchMoon?.rasi})`}
+                                sx={{ bgcolor: '#EDE9FE', color: '#5B21B6', fontWeight: 700 }}
+                            />
+                            <Chip
+                                size="small"
+                                label={`🏆 Edge: ${captainCalcResult.favoredTeam || 'Neutral'} (${captainCalcResult.advantage || ''})`}
+                                sx={{ bgcolor: '#FEF3C7', color: '#92400E', fontWeight: 800 }}
+                            />
+                        </Box>
+                        <Grid container spacing={1.5}>
+                            {[captainCalcResult.team1, captainCalcResult.team2].map((t, idx) => (
+                                <Grid item xs={12} sm={6} key={idx}>
+                                    <Box sx={{ p: 1.2, borderRadius: '10px', bgcolor: '#fff', border: '1px solid #E2E8F0' }}>
+                                        <Typography variant="caption" fontWeight="800" color="#1E293B" display="block">
+                                            {t.name} • 👑 {t.captain?.name}
+                                        </Typography>
+                                        <Typography variant="caption" color="text.secondary" display="block">
+                                            ⭐ {t.captain?.starNo ? `#${t.captain.starNo} ` : ''}{t.captain?.nakshatraTamil || t.captain?.nakshatra} ({t.captain?.rasiTamil || t.captain?.rasi})
+                                        </Typography>
+                                        <Typography variant="caption" fontWeight="700" sx={{ color: (t.captain?.score || 0) >= 7 ? '#059669' : '#DC2626' }}>
+                                            {t.captain?.distance ? `${t.captain.distance}-வது நட்சத்திரம் • ` : ''}தாரா: {t.captain?.taraTamil || t.captain?.taraName} ({t.captain?.score ?? '-'}/10)
+                                        </Typography>
+                                    </Box>
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </Box>
+                )}
+
+                {captainSaveStatus && (
+                    <Alert severity={captainSaveStatus.type} sx={{ mt: 1.5, borderRadius: '10px' }}>
+                        {captainSaveStatus.text}
+                    </Alert>
+                )}
+            </Paper>
+
             {/* Header: Title & Time Controller */}
             <Paper elevation={0} sx={{ p: 2, borderRadius: '16px', border: `1px solid ${themeColors.cardBorder}`, bgcolor: '#ffffff' }}>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 2, mb: 2 }}>

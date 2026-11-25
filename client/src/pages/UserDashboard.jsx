@@ -1483,7 +1483,7 @@ const TeamSelector = ({ label, value, onChange, groups = [], placeholder = "Sele
 };
 
 const MatchWizardDialog = (props) => {
-    const { open, onClose, groups, token, hideHeader = false } = props;
+    const { open, onClose, groups, token, hideHeader = false, initialAnalysisMatch = null, onAnalysisMatchConsumed = null } = props;
     const dispatch = useDispatch();
     const results = useSelector(state => state.predictions.matchResults);
     const playerPredictions = useSelector(state => state.predictions.playerPredictions);
@@ -1519,6 +1519,8 @@ const MatchWizardDialog = (props) => {
     const [ruleDialogOpen, setRuleDialogOpen] = useState(false);
     const [completedRules, setCompletedRules] = useState([]);
 
+    const appliedMatchIdRef = useRef(null);
+
     // Reset when opening or teams change
     useEffect(() => {
         if (!open) {
@@ -1528,8 +1530,47 @@ const MatchWizardDialog = (props) => {
             dispatch(clearPredictions());
             setRuleDialogOpen(false);
             setCompletedRules([]);
+            appliedMatchIdRef.current = null;
         }
     }, [open, setTeamA, setTeamB, dispatch]);
+
+    // Pre-select teams when opened from Live Match Sync
+    useEffect(() => {
+        if (!open || !initialAnalysisMatch || !Array.isArray(groups) || groups.length === 0) return;
+
+        const findGroupId = (groupId, teamName) => {
+            if (groupId && groups.some(g => g._id === groupId)) return groupId;
+            if (!teamName) return '';
+            const clean = teamName.trim().toLowerCase();
+            const match = groups.find(g => {
+                const gn = (g.name || '').trim().toLowerCase();
+                return gn === clean || gn.includes(clean) || clean.includes(gn);
+            });
+            return match?._id || '';
+        };
+
+        const resolvedA = findGroupId(initialAnalysisMatch.teamAGroupId, initialAnalysisMatch.teamAName);
+        const resolvedB = findGroupId(initialAnalysisMatch.teamBGroupId, initialAnalysisMatch.teamBName);
+
+        if (resolvedA && teamA !== resolvedA) setTeamA(resolvedA);
+        if (resolvedB && teamB !== resolvedB) setTeamB(resolvedB);
+    }, [open, initialAnalysisMatch, groups, teamA, teamB, setTeamA, setTeamB]);
+
+    // Once teams are selected, apply date/time/venue and run prediction
+    useEffect(() => {
+        if (!open || !initialAnalysisMatch || !teamA || !teamB) return;
+        const key = `${initialAnalysisMatch.matchId || initialAnalysisMatch.title}_${teamA}_${teamB}`;
+        if (appliedMatchIdRef.current === key) return;
+
+        const timer = setTimeout(() => {
+            if (wizardPredictionRef.current?.applyMatchConfig) {
+                appliedMatchIdRef.current = key;
+                wizardPredictionRef.current.applyMatchConfig(initialAnalysisMatch, true);
+                if (onAnalysisMatchConsumed) onAnalysisMatchConsumed();
+            }
+        }, 100);
+        return () => clearTimeout(timer);
+    }, [open, initialAnalysisMatch, teamA, teamB, onAnalysisMatchConsumed]);
 
     // Track expanded rules for players
     const [expandedRules, setExpandedRules] = useState({});
@@ -1968,7 +2009,7 @@ const MatchWizardDialog = (props) => {
                                 {filterActive ? '✓ Filtered' : 'Filter Selected'}
                             </Button>
                         </Box>
-                        <TableContainer sx={{ flexGrow: 1, overflow: 'auto', minHeight: 0, maxHeight: 'calc(100vh - 240px)' }}>
+                        <TableContainer sx={{ flexGrow: 1, overflow: 'auto', minHeight: 0, maxHeight: 'calc(100vh - 240px)', pb: 8 }}>
                             <Table size="small" stickyHeader>
                                 <TableHead>
                                     <TableRow>
@@ -2455,6 +2496,9 @@ const MatchWizardDialog = (props) => {
                                     timelineData={timelineData}
                                     batFirstTeam={batFirstTeam}
                                     matchStartTime={matchDetails?.time || '19:30'}
+                                    matchDate={matchDetails?.date || new Date().toISOString().split('T')[0]}
+                                    matchIstTime={matchDetails?.istTime || matchDetails?.time || '19:30'}
+                                    matchVenue={matchDetails?.location || ''}
                                     token={token}
                                 />
                             ) : (
@@ -2474,6 +2518,7 @@ const MatchWizardDialog = (props) => {
                             display: 'flex',
                             gap: 1.5,
                             p: 1.5,
+                            pb: 8,
                             overflow: 'hidden',
                             height: (results && teamA && teamB) ? 'calc(100% - 50px)' : '100%'
                         }}>
@@ -2789,7 +2834,7 @@ const PlayerMobileCard = ({ player, matchChart, isSelected, onSelect, onEdit, on
     );
 };
 
-const UserDashboard = ({ hideHeader = false }) => {
+const UserDashboard = ({ hideHeader = false, initialAnalysisMatch = null, onAnalysisMatchConsumed = null }) => {
     const { logout, token, user } = useContext(AuthContext);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -2952,6 +2997,12 @@ const UserDashboard = ({ hideHeader = false }) => {
     const baseUrl = import.meta.env.VITE_BACKEND_URL || (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' ? '' : 'http://localhost:5001');
 
 
+
+    useEffect(() => {
+        if (initialAnalysisMatch && Array.isArray(groups) && groups.length > 0) {
+            setMatchWizardOpen(true);
+        }
+    }, [initialAnalysisMatch, groups]);
 
     // Fetch Data (Players & Groups)
     useEffect(() => {
@@ -3741,6 +3792,8 @@ const UserDashboard = ({ hideHeader = false }) => {
                             selectedPlayers={selectedPlayerIds}
                             setSelectedPlayers={setSelectedPlayerIds}
                             onSave={handleOpenSaveDialog}
+                            initialAnalysisMatch={initialAnalysisMatch}
+                            onAnalysisMatchConsumed={onAnalysisMatchConsumed}
                         />
                     </ErrorBoundary>
                 )}

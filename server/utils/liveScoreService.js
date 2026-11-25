@@ -114,7 +114,8 @@ const fetchMatchFacts = async (matchId) => {
         const data = {
             matchDate,
             matchTime,
-            venue: fullVenue
+            venue: fullVenue,
+            city: city || null
         };
         matchFactsCache.set(matchId, { data, lastUpdated: Date.now() });
         return data;
@@ -178,6 +179,7 @@ const fetchMatches = async (forceRefresh = false) => {
                     if (facts.matchDate) m.matchDate = facts.matchDate;
                     if (facts.matchTime) m.matchTime = facts.matchTime;
                     if (facts.venue) m.venue = facts.venue;
+                    if (facts.city) m.city = facts.city;
                 }
             } catch (e) {}
         });
