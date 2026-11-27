@@ -249,9 +249,10 @@ const fetchPlayerDetails = async (player) => {
 /**
  * Fetch squad details for a specific match from Cricbuzz
  */
-const fetchSquads = async (matchId, includeDetails = false) => {
-    // Check squad cache (valid for 1 day)
-    const cachedSquad = squadCache.get(matchId);
+const fetchSquads = async (matchId, includeDetails = false, forceRefresh = false) => {
+    const cacheKey = String(matchId);
+    // Check squad cache (valid for 1 day unless forceRefresh is true)
+    const cachedSquad = !forceRefresh ? squadCache.get(cacheKey) : null;
     if (cachedSquad && (Date.now() - cachedSquad.lastUpdated < 86400000)) {
         const firstP = cachedSquad.data?.teams?.team1?.playing_xi?.[0];
         const hasDetails = Boolean(firstP && (firstP.date_of_birth !== null || firstP.birth_place !== null));
@@ -421,10 +422,28 @@ const fetchScore = async (matchId) => {
     }
 };
 
+/**
+ * Manually clear squadCache (for a specific matchId or all cached squads & matches list)
+ */
+const clearSquadCache = (matchId = null) => {
+    if (matchId) {
+        const key = String(matchId);
+        const existed = squadCache.delete(key);
+        matchFactsCache.delete(key);
+        return { mode: 'single', matchId: key, clearedCount: existed ? 1 : 0 };
+    }
+    const clearedCount = squadCache.size;
+    squadCache.clear();
+    matchFactsCache.clear();
+    matchesCache = { data: null, lastUpdated: 0 };
+    return { mode: 'all', clearedCount };
+};
+
 module.exports = {
     fetchMatches,
     fetchMatchFacts,
     fetchSquads,
     fetchScore,
-    fetchPlayerDetails
+    fetchPlayerDetails,
+    clearSquadCache
 };

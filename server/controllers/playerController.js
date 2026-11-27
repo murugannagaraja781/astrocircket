@@ -777,7 +777,7 @@ const syncLiveMatchSquad = async (req, res) => {
         // Fetch squad directly from native liveScoreService
         let squadData;
         try {
-            squadData = await liveScoreService.fetchSquads(matchId, true);
+            squadData = await liveScoreService.fetchSquads(matchId, true, Boolean(req.body.forceRefresh));
         } catch (serviceErr) {
             console.error('Live Score Service fetch error:', serviceErr.message);
             return res.status(500).json({ msg: 'Failed to fetch squad from live score service', error: serviceErr.message });
@@ -1136,6 +1136,24 @@ const getLiveMatches = async (req, res) => {
     }
 };
 
+// Manually clear in-memory Cricbuzz squad cache
+const clearLiveSquadCache = async (req, res) => {
+    try {
+        const matchId = req.body?.matchId || req.query?.matchId || null;
+        const result = liveScoreService.clearSquadCache(matchId);
+        res.json({
+            status: 'success',
+            msg: matchId
+                ? `Cleared squad cache for match ${matchId}`
+                : `Cleared all cached squads (${result.clearedCount} matches)`,
+            ...result
+        });
+    } catch (err) {
+        console.error('Error clearing squad cache:', err.message);
+        res.status(500).json({ msg: 'Failed to clear squad cache', error: err.message });
+    }
+};
+
 module.exports = {
     syncPlayers,
     getPlayers,
@@ -1148,5 +1166,6 @@ module.exports = {
     syncLiveMatchSquad,
     getReviewRequiredPlayers,
     resolvePlayerReview,
-    getLiveMatches
+    getLiveMatches,
+    clearLiveSquadCache
 };

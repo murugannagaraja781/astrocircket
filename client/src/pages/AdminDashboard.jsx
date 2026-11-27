@@ -4107,6 +4107,7 @@ const LiveSyncManager = ({ onAnalyzeMatch }) => {
     const [loading, setLoading] = useState(false);
     const [syncingMatchId, setSyncingMatchId] = useState(null);
     const [analyzingMatchId, setAnalyzingMatchId] = useState(null);
+    const [clearingCache, setClearingCache] = useState(false);
     const [syncedGroupsByMatch, setSyncedGroupsByMatch] = useState({});
     const [actionLoadingId, setActionLoadingId] = useState(null);
 
@@ -4216,6 +4217,23 @@ const LiveSyncManager = ({ onAnalyzeMatch }) => {
         });
     };
 
+    const handleClearSquadCache = async () => {
+        setClearingCache(true);
+        try {
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/players/clear-squad-cache`, {}, {
+                headers: { 'x-auth-token': token }
+            });
+            setSyncedGroupsByMatch({});
+            showSnackbar(res.data?.msg || 'Squad cache cleared! Next Sync/Analyze will fetch fresh Playing XI.', 'success');
+            fetchMatches();
+        } catch (err) {
+            console.error(err);
+            showSnackbar(err.response?.data?.msg || 'Failed to clear squad cache', 'error');
+        } finally {
+            setClearingCache(false);
+        }
+    };
+
     const handleResolve = async (playerId, action) => {
         setActionLoadingId(playerId);
         try {
@@ -4319,9 +4337,20 @@ const LiveSyncManager = ({ onAnalyzeMatch }) => {
                     <Typography variant="h5" fontWeight="800" color="#111827">Live Score Match & Squad Sync</Typography>
                     <Typography variant="body2" color="#6b7280">Fetch live rosters and player profiles from Cricbuzz</Typography>
                 </Box>
-                <Button variant="outlined" startIcon={<SettingsBackupRestoreIcon />} onClick={fetchMatches} disabled={loading}>
-                    Refresh Matches
-                </Button>
+                <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
+                    <Button
+                        variant="outlined"
+                        color="warning"
+                        onClick={handleClearSquadCache}
+                        disabled={clearingCache || loading}
+                        sx={{ borderRadius: '8px', fontWeight: 700 }}
+                    >
+                        {clearingCache ? 'Clearing...' : '🧹 Clear Squad Cache'}
+                    </Button>
+                    <Button variant="outlined" startIcon={<SettingsBackupRestoreIcon />} onClick={fetchMatches} disabled={loading}>
+                        Refresh Matches
+                    </Button>
+                </Box>
             </Box>
 
             {loading ? (

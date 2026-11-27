@@ -11,7 +11,8 @@ const {
     syncLiveMatchSquad,
     getReviewRequiredPlayers,
     resolvePlayerReview,
-    getLiveMatches
+    getLiveMatches,
+    clearLiveSquadCache
 } = require('../controllers/playerController');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
@@ -23,6 +24,7 @@ apiRouter.post('/upload', upload.single('file'), uploadPlayers);
 apiRouter.post('/add', upload.single('image'), addPlayer);
 apiRouter.post('/delete-all', deleteAllPlayers); // Delete all players with password
 apiRouter.post('/sync-live-squad', syncLiveMatchSquad);
+apiRouter.post('/clear-squad-cache', clearLiveSquadCache);
 apiRouter.post('/merge-duplicates', async (req, res) => {
     try {
         const { mergeDuplicatePlayers } = require('../utils/merge_duplicate_players');
