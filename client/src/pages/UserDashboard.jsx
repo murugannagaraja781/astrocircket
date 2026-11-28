@@ -1195,7 +1195,7 @@ const ChartPopup = ({ open, onClose, player, matchChart, initialTab = 0, hideHea
     if (!player) return null;
 
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
+        <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth sx={{ zIndex: 1450 }}>
             <DialogTitle sx={{
                 bgcolor: visionPro.accent,
                 color: visionPro.text,
@@ -1483,7 +1483,7 @@ const TeamSelector = ({ label, value, onChange, groups = [], placeholder = "Sele
 };
 
 const MatchWizardDialog = (props) => {
-    const { open, onClose, groups, token, hideHeader = false, initialAnalysisMatch = null, onAnalysisMatchConsumed = null } = props;
+    const { open, onClose, groups, token, hideHeader = false, initialAnalysisMatch = null, onAnalysisMatchConsumed = null, onOpenPlayerChart = null } = props;
     const dispatch = useDispatch();
     const results = useSelector(state => state.predictions.matchResults);
     const playerPredictions = useSelector(state => state.predictions.playerPredictions);
@@ -2105,16 +2105,39 @@ const MatchWizardDialog = (props) => {
                                                             />
                                                         </TableCell>
                                                         <TableCell>
-                                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                                <Avatar src={p.profile} sx={{ width: 24, height: 24, fontSize: 10 }}>{p.name[0]}</Avatar>
-                                                                <Typography variant="body2" fontWeight={isSel ? 'bold' : 'normal'}>
-                                                                    <span style={{ marginRight: '6px', fontSize: '1rem' }} title={p.role}>
-                                                                        {getRoleIcon(p.role)}
-                                                                    </span>
+                                                            <Tooltip title="ஜாதகம் பார்க்க (View Horoscope)" arrow placement="top">
+                                                                <Box
+                                                                    onClick={(e) => {
+                                                                        if (onOpenPlayerChart) {
+                                                                            e.stopPropagation();
+                                                                            onOpenPlayerChart(p, matchChart);
+                                                                        }
+                                                                    }}
+                                                                    sx={{
+                                                                        display: 'inline-flex',
+                                                                        alignItems: 'center',
+                                                                        gap: 1,
+                                                                        cursor: 'pointer',
+                                                                        borderRadius: '8px',
+                                                                        px: 0.6,
+                                                                        py: 0.3,
+                                                                        mx: -0.6,
+                                                                        '&:hover': {
+                                                                            bgcolor: 'rgba(255, 111, 0, 0.12)',
+                                                                            '& .player-name-text': { color: '#E65100', textDecoration: 'underline' }
+                                                                        }
+                                                                    }}
+                                                                >
+                                                                    <Avatar src={p.profile} sx={{ width: 24, height: 24, fontSize: 10 }}>{p.name[0]}</Avatar>
+                                                                    <Typography className="player-name-text" variant="body2" fontWeight={isSel ? 'bold' : 'normal'}>
+                                                                        <span style={{ marginRight: '6px', fontSize: '1rem' }} title={p.role}>
+                                                                            {getRoleIcon(p.role)}
+                                                                        </span>
 
-                                                                    {p.name}
-                                                                </Typography>
-                                                            </Box>
+                                                                        {p.name}
+                                                                    </Typography>
+                                                                </Box>
+                                                            </Tooltip>
                                                         </TableCell>
                                                         {/* ID Cell Removed */}
                                                         {/* <TableCell>
@@ -3794,6 +3817,12 @@ const UserDashboard = ({ hideHeader = false, initialAnalysisMatch = null, onAnal
                             onSave={handleOpenSaveDialog}
                             initialAnalysisMatch={initialAnalysisMatch}
                             onAnalysisMatchConsumed={onAnalysisMatchConsumed}
+                            onOpenPlayerChart={(player, activeMatchChart) => {
+                                if (activeMatchChart) setMatchChart(activeMatchChart);
+                                setChartPopupPlayer(player);
+                                setChartPopupTab(0);
+                                setChartPopupOpen(true);
+                            }}
                         />
                     </ErrorBoundary>
                 )}
