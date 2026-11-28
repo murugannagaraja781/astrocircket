@@ -1,5 +1,5 @@
-import React, { useState, forwardRef, useImperativeHandle, useRef } from 'react';
-import { Paper, Typography, Box, TextField, Button, Grid, CircularProgress, Alert, Autocomplete, Collapse, Fab, Tooltip } from '@mui/material';
+import React, { useState, useEffect, forwardRef, useImperativeHandle, useRef } from 'react';
+import { Paper, Typography, Box, TextField, Button, Grid, CircularProgress, Alert, Autocomplete, Collapse, Fab, Tooltip, Chip } from '@mui/material';
 import axios from 'axios';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import CloseIcon from '@mui/icons-material/Close';
@@ -31,6 +31,15 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
     const [matchChartResult, setMatchChartResult] = useState(null); // Store result for display
     const [lagnaModalOpen, setLagnaModalOpen] = useState(false);
     const [lagnaLoading, setLagnaLoading] = useState(false);
+    const [nowMs, setNowMs] = useState(() => Date.now());
+
+    useEffect(() => {
+        if (lagnaModalOpen) {
+            setNowMs(Date.now());
+        }
+        const timer = setInterval(() => setNowMs(Date.now()), 15000);
+        return () => clearInterval(timer);
+    }, [lagnaModalOpen]);
 
     // Country-State-City Selection States
     // Single Line Search State
@@ -591,119 +600,165 @@ const MatchPredictionControl = forwardRef(({ onPredictionComplete, onPredictionS
                 </Box>
 
                 {/* Lagna Transit Timeline Table */}
-                {timeline.length > 0 && (
-                    <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '12px', border: '1px solid rgba(255, 111, 0, 0.25)', overflow: 'hidden' }}>
-                        <Table size="small">
-                            <TableHead sx={{ bgcolor: 'rgba(255, 193, 7, 0.18)' }}>
-                                <TableRow>
-                                    <TableCell sx={{ fontWeight: '900', color: '#E65100', fontSize: '0.75rem', px: 1 }}>#</TableCell>
-                                    <TableCell sx={{ fontWeight: '900', color: '#E65100', fontSize: '0.75rem', px: 1 }}>
-                                        தொடக்கம் {matchDetails.timezone !== 5.5 ? '(LOCAL / IST)' : '(LOCAL)'}
-                                    </TableCell>
-                                    <TableCell sx={{ fontWeight: '900', color: '#E65100', fontSize: '0.75rem', px: 1 }}>
-                                        முடிவு {matchDetails.timezone !== 5.5 ? '(LOCAL / IST)' : '(LOCAL)'}
-                                    </TableCell>
-                                    <TableCell sx={{ fontWeight: '900', color: '#E65100', fontSize: '0.75rem', px: 1 }}>லக்னம்</TableCell>
-                                    <TableCell sx={{ fontWeight: '900', color: '#E65100', fontSize: '0.75rem', px: 1 }}>நட்சத்திரம்</TableCell>
-                                    <TableCell sx={{ fontWeight: '900', color: '#E65100', fontSize: '0.75rem', px: 1 }}>அதிபதி</TableCell>
-                                    <TableCell sx={{ fontWeight: '900', color: '#E65100', fontSize: '0.75rem', px: 1 }}>கால அளவு</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {(() => {
-                                    let lagnaCount = 0;
-                                    let nakCount = 0;
-                                    let prevLagna = null;
-                                    let prevNak = null;
-                                    const labeled = timeline.map((slot) => {
-                                        if (slot.lagna !== prevLagna) {
-                                            lagnaCount++;
-                                            prevLagna = slot.lagna;
-                                        }
-                                        if (slot.nakshatra !== prevNak) {
-                                            nakCount++;
-                                            prevNak = slot.nakshatra;
-                                        }
-                                        return { ...slot, lagnaLabel: `L${lagnaCount}`, nakLabel: `N${nakCount}` };
-                                    });
+                {timeline.length > 0 && (() => {
+                    const signMap = {
+                        'Aries': 'மேஷம்', 'Taurus': 'ரிஷபம்', 'Gemini': 'மிதுனம்', 'Cancer': 'கடகம்',
+                        'Leo': 'சிம்மம்', 'Virgo': 'கன்னி', 'Libra': 'துலாம்', 'Scorpio': 'விருச்சிகம்',
+                        'Sagittarius': 'தனுசு', 'Capricorn': 'மகரம்', 'Aquarius': 'கும்பம்', 'Pisces': 'மீனம்'
+                    };
+                    let lagnaCount = 0;
+                    let nakCount = 0;
+                    let prevLagna = null;
+                    let prevNak = null;
+                    const labeled = timeline.map((slot) => {
+                        if (slot.lagna !== prevLagna) {
+                            lagnaCount++;
+                            prevLagna = slot.lagna;
+                        }
+                        if (slot.nakshatra !== prevNak) {
+                            nakCount++;
+                            prevNak = slot.nakshatra;
+                        }
+                        const sMs = new Date(slot.start).getTime();
+                        const eMs = new Date(slot.end).getTime();
+                        const isCurrentLive = Number.isFinite(sMs) && Number.isFinite(eMs) && nowMs >= sMs && nowMs < eMs;
+                        return { ...slot, lagnaLabel: `L${lagnaCount}`, nakLabel: `N${nakCount}`, isCurrentLive };
+                    });
+                    const activeLiveSlot = labeled.find(s => s.isCurrentLive);
 
-                                    return labeled.map((slot, index) => {
-                                        const signMap = {
-                                            'Aries': 'மேஷம்', 'Taurus': 'ரிஷபம்', 'Gemini': 'மிதுனம்', 'Cancer': 'கடகம்',
-                                            'Leo': 'சிம்மம்', 'Virgo': 'கன்னி', 'Libra': 'துலாம்', 'Scorpio': 'விருச்சிகம்',
-                                            'Sagittarius': 'தனுசு', 'Capricorn': 'மகரம்', 'Aquarius': 'கும்பம்', 'Pisces': 'மீனம்'
-                                        };
-                                        const lagnaTamil = signMap[slot.lagna] || slot.lagna;
-                                        const lordTamil = planetFullTamilMap[slot.lord] || slot.lord;
-                                        const nakSlotTamil = slot.nakshatraTamil || nakshatraTamilMap[slot.nakshatra] || slot.nakshatra || '-';
-                                        const nakLordTamil = planetFullTamilMap[slot.nakshatraLord] || slot.nakshatraLord || '-';
+                    return (
+                        <>
+                            {activeLiveSlot && (
+                                <Box sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    flexWrap: 'wrap',
+                                    gap: 1,
+                                    px: 1.5,
+                                    py: 1,
+                                    borderRadius: '10px',
+                                    bgcolor: 'rgba(16, 185, 129, 0.12)',
+                                    border: '1.5px solid #10B981'
+                                }}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+                                        <Chip
+                                            size="small"
+                                            label="🟢 LIVE NOW"
+                                            sx={{ bgcolor: '#059669', color: '#fff', fontWeight: 900, fontSize: '0.7rem', height: 22 }}
+                                        />
+                                        <Typography variant="body2" sx={{ fontWeight: 800, color: '#065F46' }}>
+                                            தற்போதைய லக்னம்: {signMap[activeLiveSlot.lagna] || activeLiveSlot.lagna} ({activeLiveSlot.nakshatraTamil || nakshatraTamilMap[activeLiveSlot.nakshatra] || activeLiveSlot.nakshatra})
+                                        </Typography>
+                                    </Box>
+                                    <Typography variant="caption" sx={{ fontWeight: 700, color: '#047857' }}>
+                                        ⏰ {formatToIST(activeLiveSlot.start)} – {formatToIST(activeLiveSlot.end)} IST
+                                    </Typography>
+                                </Box>
+                            )}
+                            <TableContainer component={Paper} elevation={0} sx={{ borderRadius: '12px', border: '1px solid rgba(255, 111, 0, 0.25)', overflow: 'hidden' }}>
+                                <Table size="small">
+                                    <TableHead sx={{ bgcolor: 'rgba(255, 193, 7, 0.18)' }}>
+                                        <TableRow>
+                                            <TableCell sx={{ fontWeight: '900', color: '#E65100', fontSize: '0.75rem', px: 1 }}>#</TableCell>
+                                            <TableCell sx={{ fontWeight: '900', color: '#E65100', fontSize: '0.75rem', px: 1 }}>
+                                                தொடக்கம் {matchDetails.timezone !== 5.5 ? '(LOCAL / IST)' : '(LOCAL)'}
+                                            </TableCell>
+                                            <TableCell sx={{ fontWeight: '900', color: '#E65100', fontSize: '0.75rem', px: 1 }}>
+                                                முடிவு {matchDetails.timezone !== 5.5 ? '(LOCAL / IST)' : '(LOCAL)'}
+                                            </TableCell>
+                                            <TableCell sx={{ fontWeight: '900', color: '#E65100', fontSize: '0.75rem', px: 1 }}>லக்னம்</TableCell>
+                                            <TableCell sx={{ fontWeight: '900', color: '#E65100', fontSize: '0.75rem', px: 1 }}>நட்சத்திரம்</TableCell>
+                                            <TableCell sx={{ fontWeight: '900', color: '#E65100', fontSize: '0.75rem', px: 1 }}>அதிபதி</TableCell>
+                                            <TableCell sx={{ fontWeight: '900', color: '#E65100', fontSize: '0.75rem', px: 1 }}>கால அளவு</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {labeled.map((slot, index) => {
+                                            const lagnaTamil = signMap[slot.lagna] || slot.lagna;
+                                            const lordTamil = planetFullTamilMap[slot.lord] || slot.lord;
+                                            const nakSlotTamil = slot.nakshatraTamil || nakshatraTamilMap[slot.nakshatra] || slot.nakshatra || '-';
+                                            const nakLordTamil = planetFullTamilMap[slot.nakshatraLord] || slot.nakshatraLord || '-';
 
-                                        const startMs = new Date(slot.start).getTime();
-                                        const endMs = new Date(slot.end).getTime();
-                                        const diffMs = endMs - startMs;
-                                        const diffMin = Math.floor(diffMs / 60000);
-                                        const durationHrs = Math.floor(diffMin / 60);
-                                        const durationMins = diffMin % 60;
-                                        const durationStr = durationHrs > 0 ? `${durationHrs}h ${durationMins}m` : `${durationMins}m`;
+                                            const startMs = new Date(slot.start).getTime();
+                                            const endMs = new Date(slot.end).getTime();
+                                            const diffMs = endMs - startMs;
+                                            const diffMin = Math.floor(diffMs / 60000);
+                                            const durationHrs = Math.floor(diffMin / 60);
+                                            const durationMins = diffMin % 60;
+                                            const durationStr = durationHrs > 0 ? `${durationHrs}h ${durationMins}m` : `${durationMins}m`;
 
-                                        const lagnaColors = ['#FF6F00', '#1565C0', '#2E7D32', '#6A1B9A', '#C62828'];
-                                        const lColor = lagnaColors[(parseInt(slot.lagnaLabel.slice(1)) - 1) % lagnaColors.length];
+                                            const lagnaColors = ['#FF6F00', '#1565C0', '#2E7D32', '#6A1B9A', '#C62828'];
+                                            const lColor = lagnaColors[(parseInt(slot.lagnaLabel.slice(1)) - 1) % lagnaColors.length];
 
-                                        return (
-                                            <TableRow key={index} sx={{
-                                                bgcolor: slot.isMain ? 'rgba(255, 193, 7, 0.1)' : (index % 2 === 0 ? '#fff' : 'rgba(250, 250, 250, 0.8)'),
-                                                '&:hover': { bgcolor: 'rgba(255, 238, 204, 0.3)' }
-                                            }}>
-                                                <TableCell sx={{ fontSize: '0.72rem', px: 1, whiteSpace: 'nowrap' }}>
-                                                    <Box sx={{ display: 'flex', gap: 0.4 }}>
-                                                        <Box sx={{
-                                                            bgcolor: lColor, color: '#fff', px: 0.6, py: 0.15,
-                                                            borderRadius: '4px', fontSize: '0.62rem', fontWeight: 'bold',
-                                                            lineHeight: 1.3, minWidth: '22px', textAlign: 'center'
-                                                        }}>{slot.lagnaLabel}</Box>
-                                                        <Box sx={{
-                                                            bgcolor: '#00897B', color: '#fff', px: 0.6, py: 0.15,
-                                                            borderRadius: '4px', fontSize: '0.62rem', fontWeight: 'bold',
-                                                            lineHeight: 1.3, minWidth: '22px', textAlign: 'center'
-                                                        }}>{slot.nakLabel}</Box>
-                                                    </Box>
-                                                </TableCell>
-                                                <TableCell sx={{ fontSize: '0.75rem', px: 1, whiteSpace: 'nowrap', fontWeight: 'bold' }}>
-                                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.2 }}>
-                                                        <span>{slot.startTime || formatLagnaTime(slot.start)}</span>
-                                                        {matchDetails.timezone !== 5.5 && (
-                                                            <Typography component="span" sx={{ fontSize: '0.65rem', color: '#E65100', bgcolor: 'rgba(255, 111, 0, 0.1)', px: 0.5, py: 0.1, borderRadius: '4px', fontWeight: 'bold', width: 'fit-content' }}>
-                                                                🇮🇳 {formatToIST(slot.start)} IST
-                                                            </Typography>
-                                                        )}
-                                                    </Box>
-                                                </TableCell>
-                                                <TableCell sx={{ fontSize: '0.75rem', px: 1, whiteSpace: 'nowrap', fontWeight: 'bold' }}>
-                                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.2 }}>
-                                                        <span>{slot.endTime || formatLagnaTime(slot.end)}</span>
-                                                        {matchDetails.timezone !== 5.5 && (
-                                                            <Typography component="span" sx={{ fontSize: '0.65rem', color: '#E65100', bgcolor: 'rgba(255, 111, 0, 0.1)', px: 0.5, py: 0.1, borderRadius: '4px', fontWeight: 'bold', width: 'fit-content' }}>
-                                                                🇮🇳 {formatToIST(slot.end)} IST
-                                                            </Typography>
-                                                        )}
-                                                    </Box>
-                                                </TableCell>
-                                                <TableCell sx={{ fontSize: '0.75rem', px: 1, fontWeight: slot.isMain ? 'bold' : 'normal' }}>
-                                                    {lagnaTamil} {slot.isMain ? '⭐' : ''}
-                                                </TableCell>
-                                                <TableCell sx={{ fontSize: '0.75rem', px: 1 }}>{nakSlotTamil}</TableCell>
-                                                <TableCell sx={{ fontSize: '0.75rem', px: 1 }}>
-                                                    {lordTamil} / {nakLordTamil}
-                                                </TableCell>
-                                                <TableCell sx={{ fontSize: '0.75rem', px: 1, color: '#666' }}>{durationStr}</TableCell>
-                                            </TableRow>
-                                        );
-                                    });
-                                })()}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                )}
+                                            return (
+                                                <TableRow key={index} sx={{
+                                                    bgcolor: slot.isCurrentLive
+                                                        ? 'rgba(16, 185, 129, 0.16) !important'
+                                                        : (slot.isMain ? 'rgba(255, 193, 7, 0.1)' : (index % 2 === 0 ? '#fff' : 'rgba(250, 250, 250, 0.8)')),
+                                                    borderLeft: slot.isCurrentLive ? '4px solid #059669' : 'none',
+                                                    '&:hover': { bgcolor: slot.isCurrentLive ? 'rgba(16, 185, 129, 0.22) !important' : 'rgba(255, 238, 204, 0.3)' }
+                                                }}>
+                                                    <TableCell sx={{ fontSize: '0.72rem', px: 1, whiteSpace: 'nowrap' }}>
+                                                        <Box sx={{ display: 'flex', gap: 0.4 }}>
+                                                            <Box sx={{
+                                                                bgcolor: lColor, color: '#fff', px: 0.6, py: 0.15,
+                                                                borderRadius: '4px', fontSize: '0.62rem', fontWeight: 'bold',
+                                                                lineHeight: 1.3, minWidth: '22px', textAlign: 'center'
+                                                            }}>{slot.lagnaLabel}</Box>
+                                                            <Box sx={{
+                                                                bgcolor: '#00897B', color: '#fff', px: 0.6, py: 0.15,
+                                                                borderRadius: '4px', fontSize: '0.62rem', fontWeight: 'bold',
+                                                                lineHeight: 1.3, minWidth: '22px', textAlign: 'center'
+                                                            }}>{slot.nakLabel}</Box>
+                                                        </Box>
+                                                    </TableCell>
+                                                    <TableCell sx={{ fontSize: '0.75rem', px: 1, whiteSpace: 'nowrap', fontWeight: 'bold' }}>
+                                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.2 }}>
+                                                            <span>{slot.startTime || formatLagnaTime(slot.start)}</span>
+                                                            {matchDetails.timezone !== 5.5 && (
+                                                                <Typography component="span" sx={{ fontSize: '0.65rem', color: '#E65100', bgcolor: 'rgba(255, 111, 0, 0.1)', px: 0.5, py: 0.1, borderRadius: '4px', fontWeight: 'bold', width: 'fit-content' }}>
+                                                                    🇮🇳 {formatToIST(slot.start)} IST
+                                                                </Typography>
+                                                            )}
+                                                        </Box>
+                                                    </TableCell>
+                                                    <TableCell sx={{ fontSize: '0.75rem', px: 1, whiteSpace: 'nowrap', fontWeight: 'bold' }}>
+                                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.2 }}>
+                                                            <span>{slot.endTime || formatLagnaTime(slot.end)}</span>
+                                                            {matchDetails.timezone !== 5.5 && (
+                                                                <Typography component="span" sx={{ fontSize: '0.65rem', color: '#E65100', bgcolor: 'rgba(255, 111, 0, 0.1)', px: 0.5, py: 0.1, borderRadius: '4px', fontWeight: 'bold', width: 'fit-content' }}>
+                                                                    🇮🇳 {formatToIST(slot.end)} IST
+                                                                </Typography>
+                                                            )}
+                                                        </Box>
+                                                    </TableCell>
+                                                    <TableCell sx={{ fontSize: '0.75rem', px: 1, fontWeight: (slot.isMain || slot.isCurrentLive) ? 'bold' : 'normal', color: slot.isCurrentLive ? '#065F46' : 'inherit' }}>
+                                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6, flexWrap: 'wrap' }}>
+                                                            <span>{lagnaTamil} {slot.isMain ? '⭐' : ''}</span>
+                                                            {slot.isCurrentLive && (
+                                                                <Chip
+                                                                    size="small"
+                                                                    label="LIVE"
+                                                                    sx={{ height: 18, fontSize: '0.6rem', fontWeight: 900, bgcolor: '#059669', color: '#fff' }}
+                                                                />
+                                                            )}
+                                                        </Box>
+                                                    </TableCell>
+                                                    <TableCell sx={{ fontSize: '0.75rem', px: 1, fontWeight: slot.isCurrentLive ? 'bold' : 'normal', color: slot.isCurrentLive ? '#065F46' : 'inherit' }}>{nakSlotTamil}</TableCell>
+                                                    <TableCell sx={{ fontSize: '0.75rem', px: 1, fontWeight: slot.isCurrentLive ? 'bold' : 'normal', color: slot.isCurrentLive ? '#065F46' : 'inherit' }}>
+                                                        {lordTamil} / {nakLordTamil}
+                                                    </TableCell>
+                                                    <TableCell sx={{ fontSize: '0.75rem', px: 1, color: slot.isCurrentLive ? '#065F46' : '#666', fontWeight: slot.isCurrentLive ? 'bold' : 'normal' }}>{durationStr}</TableCell>
+                                                </TableRow>
+                                            );
+                                        })}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </>
+                    );
+                })()}
             </Box>
         );
     };

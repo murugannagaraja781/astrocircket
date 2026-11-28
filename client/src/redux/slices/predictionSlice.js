@@ -33,6 +33,7 @@ const predictionSlice = createSlice({
 
             if (!matchChart) return;
 
+            state.matchChart = matchChart;
             state.batFirstTeam = batFirstTeam;
             const predictions = {};
             let scoreA = 0, scoreB = 0, countA = 0, countB = 0;

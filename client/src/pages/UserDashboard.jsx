@@ -1488,6 +1488,7 @@ const MatchWizardDialog = (props) => {
     const results = useSelector(state => state.predictions.matchResults);
     const playerPredictions = useSelector(state => state.predictions.playerPredictions);
     const timelineData = useSelector(state => state.predictions.timelineData);
+    const reduxMatchChart = useSelector(state => state.predictions.matchChart);
     const batFirstTeam = useSelector(state => state.predictions.batFirstTeam || 'teamA');
 
     const {
@@ -1520,6 +1521,40 @@ const MatchWizardDialog = (props) => {
     const [completedRules, setCompletedRules] = useState([]);
 
     const appliedMatchIdRef = useRef(null);
+    const [nowMs, setNowMs] = useState(() => Date.now());
+
+    useEffect(() => {
+        if (!open) return;
+        setNowMs(Date.now());
+        const timer = setInterval(() => setNowMs(Date.now()), 15000);
+        return () => clearInterval(timer);
+    }, [open]);
+
+    const liveSlotInfo = useMemo(() => {
+        const activeChart = matchChart || reduxMatchChart;
+        const timeline = activeChart?.lagnaTimeline || activeChart?.data?.lagnaTimeline;
+        if (!Array.isArray(timeline) || timeline.length === 0) return null;
+        let lagnaCount = 0;
+        let nakCount = 0;
+        let prevLagna = null;
+        let prevNak = null;
+        for (const slot of timeline) {
+            if (slot.lagna !== prevLagna) {
+                lagnaCount++;
+                prevLagna = slot.lagna;
+            }
+            if (slot.nakshatra !== prevNak) {
+                nakCount++;
+                prevNak = slot.nakshatra;
+            }
+            const sMs = new Date(slot.start).getTime();
+            const eMs = new Date(slot.end).getTime();
+            if (Number.isFinite(sMs) && Number.isFinite(eMs) && nowMs >= sMs && nowMs < eMs) {
+                return { lagnaIndex: lagnaCount, nakIndex: nakCount, lagna: slot.lagna };
+            }
+        }
+        return null;
+    }, [matchChart, reduxMatchChart, nowMs]);
 
     // Reset when opening or teams change
     useEffect(() => {
@@ -2084,6 +2119,13 @@ const MatchWizardDialog = (props) => {
                                                 (typeof log === 'object' && log.en?.includes('Zig-Zag'))
                                             );
 
+                                            // Live Current Lagna Match Check (e.g. L2 active right now)
+                                            const allMatchedLagnas = [...(res?.bat?.matchedLagnas || []), ...(res?.bowl?.matchedLagnas || [])];
+                                            const hasLiveLagna = Boolean(
+                                                liveSlotInfo?.lagnaIndex &&
+                                                allMatchedLagnas.some(item => typeof item === 'object' && Number(item.index) === liveSlotInfo.lagnaIndex)
+                                            );
+
                                             return (
                                                 <React.Fragment key={p.id}>
                                                     <TableRow
@@ -2091,8 +2133,20 @@ const MatchWizardDialog = (props) => {
                                                         onClick={() => results ? toggleRules(p.id) : togglePlayer(p.id)}
                                                         sx={{
                                                             cursor: 'pointer',
-                                                            bgcolor: isZigZag ? '#ffe0b2 !important' : (isSpecial ? 'rgba(138, 43, 226, 0.35)' : (isSel ? 'rgba(255, 111, 0, 0.08)' : 'inherit')),
-                                                            borderLeft: isZigZag ? '4px solid #ff9800' : (isSpecial ? '4px solid #8A2BE2' : 'none'),
+                                                            bgcolor: isZigZag ? '#ffe0b2 !important' : (isSpecial ? 'rgba(138, 43, 226, 0.35)' : (hasLiveLagna ? 'rgba(16, 185, 129, 0.10) !important' : (isSel ? 'rgba(255, 111, 0, 0.08)' : 'inherit'))),
+                                                            borderLeft: hasLiveLagna ? '4px solid #10B981' : (isZigZag ? '4px solid #ff9800' : (isSpecial ? '4px solid #8A2BE2' : 'none')),
+                                                            ...(hasLiveLagna ? {
+                                                                '& td, & th': {
+                                                                    borderTop: '2px solid #10B981 !important',
+                                                                    borderBottom: '2px solid #10B981 !important'
+                                                                },
+                                                                '& td:first-of-type, & th:first-of-type': {
+                                                                    borderLeft: '4px solid #10B981 !important'
+                                                                },
+                                                                '& td:last-of-type, & th:last-of-type': {
+                                                                    borderRight: '2px solid #10B981 !important'
+                                                                }
+                                                            } : {}),
                                                             opacity: dimmed ? 0.4 : 1,
                                                             transition: 'all 0.2s ease'
                                                         }}
@@ -2136,6 +2190,19 @@ const MatchWizardDialog = (props) => {
 
                                                                         {p.name}
                                                                     </Typography>
+                                                                    {hasLiveLagna && (
+                                                                        <Chip
+                                                                            size="small"
+                                                                            label={`L${liveSlotInfo.lagnaIndex} LIVE`}
+                                                                            sx={{
+                                                                                height: 17,
+                                                                                fontSize: '0.58rem',
+                                                                                fontWeight: 900,
+                                                                                bgcolor: '#10B981',
+                                                                                color: '#fff'
+                                                                            }}
+                                                                        />
+                                                                    )}
                                                                 </Box>
                                                             </Tooltip>
                                                         </TableCell>
